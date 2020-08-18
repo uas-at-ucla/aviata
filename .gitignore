@@ -1,0 +1,10 @@
+# Compiled
+*.class
+*.so
+*.o
+
+# Packages
+*.tar
+*.gz
+*.jar
+*.zip
