@@ -2,6 +2,7 @@
 *.class
 *.so
 *.o
+*.pyc
 
 # Packages
 *.tar
