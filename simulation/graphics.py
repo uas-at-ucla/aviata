@@ -11,8 +11,6 @@ HEIGHT_PIXELS = 480
 V_CAMERA_DISTANCE = 15.0
 H_CAMERA_DISTANCE = 15.0
 
-window = 0
-
 pos = np.array([0.0, 0.0, 0.0])
 att = Quaternion(axis=[0, 0, 1], angle=0)
 
@@ -79,8 +77,8 @@ def DrawGLScene():
 
     glLoadIdentity()
 
-    glRotatef(att.degrees, att.axis[0], att.axis[1], att.axis[2])
     glTranslatef(pos[0], pos[1], pos[2])
+    glRotatef(att.degrees, att.axis[0], att.axis[1], att.axis[2])
 
     makeStructure()
 
@@ -96,30 +94,38 @@ class GraphicsState:
         att = att_arg
 
 
-def main(initFunc=lambda g: None, loopFunc=lambda g: None, noGraphics=False):
-    global window
+def main(loopFunc=lambda g: None, loop_period=1000):
+    glutInit(sys.argv)
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
+    glutInitWindowSize(640,480)
+    glutInitWindowPosition(200,200)
 
-    if noGraphics:
-        initFunc(GraphicsState)
-        while True:
-            loopFunc(GraphicsState)
-    else:
-        glutInit(sys.argv)
-        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
-        glutInitWindowSize(640,480)
-        glutInitWindowPosition(200,200)
+    window = glutCreateWindow('OpenGL Graphics')
 
-        window = glutCreateWindow('OpenGL Graphics')
+    glutDisplayFunc(DrawGLScene)
+    glutIdleFunc(glutPostRedisplay)
+    InitGL(640, 480)
 
-        def idleFunc():
-            glutPostRedisplay()
-            loopFunc(GraphicsState)
+    target_time = 0
 
-        glutDisplayFunc(DrawGLScene)
-        glutIdleFunc(idleFunc)
-        InitGL(640, 480)
-        initFunc(GraphicsState)
-        glutMainLoop()
+    def loopWrapperFunc(value):
+        loopFunc(GraphicsState)
+        nonlocal target_time
+        target_time += loop_period
+        delay = target_time - glutGet(GLUT_ELAPSED_TIME)
+        if delay < 0:
+            print("loop_period is too short!")
+            delay = 0
+        glutTimerFunc(delay, loopWrapperFunc, 0)
+
+    def initLoop(value):
+        nonlocal target_time
+        target_time = glutGet(GLUT_ELAPSED_TIME)
+        loopWrapperFunc(0)
+
+    glutTimerFunc(0, initLoop, 0)
+
+    glutMainLoop()
 
 
 if __name__ == "__main__":

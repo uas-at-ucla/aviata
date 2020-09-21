@@ -91,28 +91,16 @@ def const_forces_test():
     mixer = geometry['mix']['B_px_4dof']
     actuator_effectiveness = geometry['mix']['A_4dof']
 
-    sample_period = 0.05
-    prev_time = 0
+    sample_period_ms = 50
+    sample_period_s = sample_period_ms / 1000
     setpoint = np.array([0.001, 0.0, 0.0, 0.6])
 
-    def init(GraphicsState):
-        nonlocal prev_time
-        GraphicsState.updatePosition(pos, att)
-        prev_time = time.time()
-
     def loop(GraphicsState):
-        nonlocal prev_time
         nonlocal setpoint
-        dt = time.time() - prev_time
-        if dt >= 2*sample_period:
-            print("sample_period is too short!")
-        if dt >= sample_period:
-            prev_time += sample_period
-            simulate_forces(mixer, actuator_effectiveness, setpoint, sample_period)
-            GraphicsState.updatePosition(pos, att)
-            # print(pos)
+        simulate_forces(mixer, actuator_effectiveness, setpoint, sample_period_s)
+        GraphicsState.updatePosition(pos, att)
 
-    graphics.main(init, loop, noGraphics=False)
+    graphics.main(loop, sample_period_ms)
 
 
 if __name__ == '__main__':
