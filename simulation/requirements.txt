@@ -2,3 +2,5 @@ numpy
 scipy
 matplotlib
 pyquaternion
+PyOpenGL
+PyOpenGL_accelerate

@@ -51,16 +51,18 @@ def generate_aviata_matrices(missing_drones=[]):
     geometry['info']['name'] = geometry['info']['key']
     geometry['info']['description'] = "AVIATA with these drones missing: " + ", ".join(map(str, missing_drones))
     
-    header = px4_generate_mixer.generate_mixer_multirotor_header([geometry],
-                                                                 use_normalized_mix=True,
-                                                                 use_6dof=False)
-    return geometry, header
+    return geometry
 
 
 if __name__ == '__main__':
-    geometry, header = generate_aviata_matrices(missing_drones=[])
+    geometry = generate_aviata_matrices(missing_drones=[])
+
+    # header = px4_generate_mixer.generate_mixer_multirotor_header([geometry],
+    #                                                              use_normalized_mix=True,
+    #                                                              use_6dof=False)
     # print(header)
     # print()
+
     print("actuator effectiveness:")
     print(geometry['mix']['A_4dof'])
     print()

@@ -4,8 +4,10 @@ import numpy as np
 import quaternion
 import px4_mixer_multirotor
 import generate_matrices
+import graphics
 import constants
 from pyquaternion import Quaternion
+import time
 
 # position (m)
 pos = np.array([0.0, 0.0, 0.0])
@@ -29,32 +31,35 @@ def simulate_forces(mixer, actuator_effectiveness, setpoint, Ts):
     global ang_acc
     global lin_acc
 
-    if np.linalg.norm(att_rate) != 0:
-        att = Quaternion(axis=(att_rate / np.linalg.norm(att_rate)), angle=(np.linalg.norm(att_rate) * Ts)) * att
+    att_rate_magnitude = np.linalg.norm(att_rate)
+    if att_rate_magnitude != 0:
+        att_rate_direction = att_rate / np.linalg.norm(att_rate)
+        att = Quaternion(axis=att_rate_direction, angle=(att_rate_magnitude * Ts)) * att
     pos += vel * Ts
 
     att_rate += ang_acc * Ts
     vel += lin_acc * Ts
 
-    ideal_forces = actuator_effectiveness * (mixer * setpoint)
+    setpoint = np.matrix(setpoint).T
+    ideal_forces = np.linalg.multi_dot([actuator_effectiveness, mixer, setpoint])
     u, u_final = px4_mixer_multirotor.normal_mode(setpoint, mixer, 0.0, 1.0)
-    actual_forces = actuator_effectiveness * u_final
-    actual_forces = np.array(actual_forces)
+    actual_forces = np.dot(actuator_effectiveness, u_final)
 
-    torques = actual_forces[:3,0]
+    torque = actual_forces[:3]
     force = actual_forces[3,0]
 
-    ang_acc = torques / np.array(constants.I)
+    ang_acc = np.dot(constants.Iinv, torque)[:,0]
     lin_acc = force / constants.M
 
     # transform from body frame to global frame
     ang_acc = att.rotate(ang_acc)
     lin_acc = att.rotate(np.array((0.0, 0.0, lin_acc)))
+    lin_acc[2] += 9.81 # gravity is a thing
 
 
 def mixer_test():
     missing_drones = [] # 0 through 7
-    geometry, header = generate_matrices.generate_aviata_matrices(missing_drones)
+    geometry = generate_matrices.generate_aviata_matrices(missing_drones)
     mixer = geometry['mix']['B_px_4dof']
     actuator_effectiveness = geometry['mix']['A_4dof']
 
@@ -63,7 +68,7 @@ def mixer_test():
     print(setpoint)
     print()
 
-    ideal_forces = actuator_effectiveness * (mixer * setpoint)
+    ideal_forces = np.linalg.multi_dot([actuator_effectiveness, mixer, setpoint])
     print("ideal forces:")
     print(ideal_forces)
     print()
@@ -74,19 +79,41 @@ def mixer_test():
     print(u_final)
     print()
 
-    actual_forces = actuator_effectiveness * u_final
+    actual_forces = np.dot(actuator_effectiveness, u_final)
     print("actual forces:")
     print(actual_forces)
     print()
 
 
-if __name__ == '__main__':
+def const_forces_test():
     missing_drones = [] # 0 through 7
-    geometry, header = generate_matrices.generate_aviata_matrices(missing_drones)
+    geometry = generate_matrices.generate_aviata_matrices(missing_drones)
     mixer = geometry['mix']['B_px_4dof']
     actuator_effectiveness = geometry['mix']['A_4dof']
 
-    setpoint = np.matrix([0, 0, 0, 0.5]).T
-    for i in range(10):
-        simulate_forces(mixer, actuator_effectiveness, setpoint, 0.1)
-        print(pos)
+    sample_period = 0.05
+    prev_time = 0
+    setpoint = np.array([0.001, 0.0, 0.0, 0.6])
+
+    def init(GraphicsState):
+        nonlocal prev_time
+        GraphicsState.updatePosition(pos, att)
+        prev_time = time.time()
+
+    def loop(GraphicsState):
+        nonlocal prev_time
+        nonlocal setpoint
+        dt = time.time() - prev_time
+        if dt >= 2*sample_period:
+            print("sample_period is too short!")
+        if dt >= sample_period:
+            prev_time += sample_period
+            simulate_forces(mixer, actuator_effectiveness, setpoint, sample_period)
+            GraphicsState.updatePosition(pos, att)
+            # print(pos)
+
+    graphics.main(init, loop, noGraphics=False)
+
+
+if __name__ == '__main__':
+    const_forces_test()
