@@ -95,8 +95,9 @@ def makeRotor(x, y, power):
 def makeStructure():
     for i in range(len(GraphicsState.rotors)):
         rotor = GraphicsState.rotors[i]
-        motor_input = GraphicsState.motor_inputs[i]
-        makeRotor(rotor['position'][0], rotor['position'][1], motor_input)
+        if rotor['Ct']:
+            motor_input = GraphicsState.motor_inputs[i]
+            makeRotor(rotor['position'][0], rotor['position'][1], motor_input)
 
 
 def DrawGLScene():
