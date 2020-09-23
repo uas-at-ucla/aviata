@@ -59,7 +59,8 @@ class Structure:
     att_rate = np.array([0.0, 0.0, 0.0]) # angular velocity (rad/s)
     ang_acc = np.array([0.0, 0.0, 0.0]) # angular acceleration (rad/s^2)
     lin_acc = np.array([0.0, 0.0, 0.0]) # linear acceleration (m/s^2)
-    actuator_effectiveness = None
+    u = None
+    geometry = None
 
 
 class PhysicalWorld:
@@ -76,6 +77,7 @@ class PhysicalWorld:
         self.sample_period_s = sample_period_ms / 1000
 
     def set_missing_drones(self, missing_drones):
+        # Logic of assigning drones to locations is not important to the simulation, so we just put it here.
         for drone in self.drones:
             if drone.drone_pos in missing_drones:
                 drone.set_drone_pos(None)
@@ -86,14 +88,14 @@ class PhysicalWorld:
             if drone.drone_pos in empty_slots:
                 empty_slots.remove(drone.drone_pos)
         for drone in self.drones:
-            if drone.drone_pos is None:
-                drone.set_drone_pos(empty_slots.pop(0))
             if len(empty_slots) == 0:
                 break
+            if drone.drone_pos is None:
+                drone.set_drone_pos(empty_slots.pop(0))
 
         self.network.broadcast(Drone.configure_mixer, missing_drones)
 
-        self.structure.actuator_effectiveness = combined_geometries[generate_matrices.geometry_name(missing_drones)]['mix']['A_4dof']
+        self.structure.geometry = combined_geometries[generate_matrices.geometry_name(missing_drones)]
 
     def tick(self):
         att_rate_magnitude = np.linalg.norm(self.structure.att_rate)
@@ -108,14 +110,16 @@ class PhysicalWorld:
         for drone in self.drones:
             drone.control_loop()
 
-        # ideal_forces = np.linalg.multi_dot([actuator_effectiveness, mixer, setpoint])
-        u = np.zeros([constants.num_drones * constants.num_rotors, 1])
+        actuator_effectiveness = self.structure.geometry['mix']['A_4dof']
+        combined_mixer = self.structure.geometry['mix']['B_px_4dof']
+        # ideal_forces = np.linalg.multi_dot([actuator_effectiveness, combined_mixer, setpoint]) # TODO retrieve setpoint from one of the drones
+        self.structure.u = np.zeros([constants.num_drones * constants.num_rotors, 1])
         for drone in self.drones:
             if drone.drone_pos is not None:
                 rotor_start = drone.drone_pos * constants.num_rotors
                 rotor_end = rotor_start + constants.num_rotors
-                u[rotor_start:rotor_end] = drone.motor_inputs
-        forces = np.dot(self.structure.actuator_effectiveness, u)
+                self.structure.u[rotor_start:rotor_end] = drone.motor_inputs
+        forces = np.dot(self.structure.geometry['mix']['A_4dof'], self.structure.u)
 
         torque = forces[:3]
         force = forces[3,0]

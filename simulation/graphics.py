@@ -6,19 +6,32 @@ import numpy as np
 from pyquaternion import Quaternion
 import sys
 
-WIDTH_PIXELS = 640
-HEIGHT_PIXELS = 480
-V_CAMERA_DISTANCE = 15.0
-H_CAMERA_DISTANCE = 15.0
+WIDTH_PIXELS = 1280
+HEIGHT_PIXELS = 720
+V_CAMERA_DISTANCE = 8.0
+H_CAMERA_DISTANCE = 8.0
 
-pos = np.array([0.0, 0.0, 0.0])
-att = Quaternion(axis=[0, 0, 1], angle=0)
+class GraphicsState:
+    pos = np.array([0.0, 0.0, 0.0])
+    att = Quaternion(axis=[0, 0, 1], angle=0)
+    rotors = []
+    motor_imputs = []
+
 
 def InitGL(Width, Height): 
     glClearColor(0.0, 0.0, 0.0, 0.0)
     glClearDepth(1.0)
     glDepthFunc(GL_LESS)
     glEnable(GL_DEPTH_TEST)
+
+    # smooth lines
+    glEnable(GL_LINE_SMOOTH)
+    glHint(GL_LINE_SMOOTH_HINT, GL_FASTEST) # GL_NICEST
+    glEnable(GL_POINT_SMOOTH)
+    glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST) # GL_NICEST
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
     glShadeModel(GL_SMOOTH)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
@@ -27,56 +40,72 @@ def InitGL(Width, Height):
     glMatrixMode(GL_MODELVIEW)
 
 
-def makeStructure():
+def makeRotor(x, y, power):
+    r = 0.05
+    glLineWidth(1.0)
+
+    if power <= 0.0:
+        glColor3f(0.0,1.0,1.0)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+    elif power < 0.5:
+        glColor3f(0.5, 1-power, 1-power)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+    elif power < 1.0:
+        glColor3f(power, 0.5, 0.5)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+    else:
+        glColor3f(1.0,0.0,0.0)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+
     glBegin(GL_QUADS)
 
-    glColor3f(0.0,1.0,0.0)
-    glVertex3f( 1.0, 1.0,-1.0)
-    glVertex3f(-1.0, 1.0,-1.0)
-    glVertex3f(-1.0, 1.0, 1.0)
-    glVertex3f( 1.0, 1.0, 1.0) 
+    glVertex3f(x+r, y+r,-r)
+    glVertex3f(x-r, y+r,-r)
+    glVertex3f(x-r, y+r, r)
+    glVertex3f(x+r, y+r, r) 
 
-    glColor3f(1.0,0.0,0.0)
-    glVertex3f( 1.0,-1.0, 1.0)
-    glVertex3f(-1.0,-1.0, 1.0)
-    glVertex3f(-1.0,-1.0,-1.0)
-    glVertex3f( 1.0,-1.0,-1.0) 
+    glVertex3f(x+r,y-r, r)
+    glVertex3f(x-r,y-r, r)
+    glVertex3f(x-r,y-r,-r)
+    glVertex3f(x+r,y-r,-r) 
 
-    glColor3f(0.0,1.0,1.0)
-    glVertex3f( 1.0, 1.0, 1.0)
-    glVertex3f(-1.0, 1.0, 1.0)
-    glVertex3f(-1.0,-1.0, 1.0)
-    glVertex3f( 1.0,-1.0, 1.0)
+    glVertex3f(x+r,y+r, r)
+    glVertex3f(x-r,y+r, r)
+    glVertex3f(x-r,y-r, r)
+    glVertex3f(x+r,y-r, r)
 
-    glColor3f(1.0,1.0,0.0)
-    glVertex3f( 1.0,-1.0,-1.0)
-    glVertex3f(-1.0,-1.0,-1.0)
-    glVertex3f(-1.0, 1.0,-1.0)
-    glVertex3f( 1.0, 1.0,-1.0)
+    glVertex3f(x+r,y-r,-r)
+    glVertex3f(x-r,y-r,-r)
+    glVertex3f(x-r,y+r,-r)
+    glVertex3f(x+r,y+r,-r)
 
-    glColor3f(0.0,0.0,1.0)
-    glVertex3f(-1.0, 1.0, 1.0) 
-    glVertex3f(-1.0, 1.0,-1.0)
-    glVertex3f(-1.0,-1.0,-1.0) 
-    glVertex3f(-1.0,-1.0, 1.0) 
+    glVertex3f(x-r,y+r, r) 
+    glVertex3f(x-r,y+r,-r)
+    glVertex3f(x-r,y-r,-r) 
+    glVertex3f(x-r,y-r, r) 
 
-    glColor3f(1.0,0.0,1.0)
-    glVertex3f( 1.0, 1.0,-1.0) 
-    glVertex3f( 1.0, 1.0, 1.0)
-    glVertex3f( 1.0,-1.0, 1.0)
-    glVertex3f( 1.0,-1.0,-1.0)
+    glVertex3f(x+r,y+r,-r) 
+    glVertex3f(x+r,y+r, r)
+    glVertex3f(x+r,y-r, r)
+    glVertex3f(x+r,y-r,-r)
 
     glEnd()
 
 
+def makeStructure():
+    for i in range(len(GraphicsState.rotors)):
+        rotor = GraphicsState.rotors[i]
+        motor_input = GraphicsState.motor_inputs[i]
+        makeRotor(rotor['position'][0], rotor['position'][1], motor_input)
+
+
 def DrawGLScene():
-    global pos
-    global att
+    pos = GraphicsState.pos
+    att = GraphicsState.att
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     glLoadIdentity()
-
     glTranslatef(pos[0], pos[1], pos[2])
     glRotatef(att.degrees, att.axis[0], att.axis[1], att.axis[2])
 
@@ -85,36 +114,28 @@ def DrawGLScene():
     glutSwapBuffers()
 
 
-class GraphicsState:
-    @staticmethod
-    def updatePosition(pos_arg, att_arg):
-        global pos
-        global att
-        pos = pos_arg
-        att = att_arg
-
-
 def main(loopFunc=lambda g: None, loop_period=1000):
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
-    glutInitWindowSize(640,480)
-    glutInitWindowPosition(200,200)
+    glutInitWindowSize(WIDTH_PIXELS, HEIGHT_PIXELS)
+    # glutInitWindowPosition(0, 0)
 
     window = glutCreateWindow('OpenGL Graphics')
 
     glutDisplayFunc(DrawGLScene)
-    glutIdleFunc(glutPostRedisplay)
-    InitGL(640, 480)
+    glutIdleFunc(None)
+    InitGL(WIDTH_PIXELS, HEIGHT_PIXELS)
 
     target_time = 0
 
     def loopWrapperFunc(value):
         loopFunc(GraphicsState)
+        glutPostRedisplay()
         nonlocal target_time
         target_time += loop_period
         delay = target_time - glutGet(GLUT_ELAPSED_TIME)
         if delay < 0:
-            print("loop_period is too short!")
+            print("Warning: trouble keeping up with loop_period")
             delay = 0
         glutTimerFunc(delay, loopWrapperFunc, 0)
 
