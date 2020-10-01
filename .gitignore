@@ -9,3 +9,10 @@
 *.gz
 *.jar
 *.zip
+
+# Images and videos
+*.h264
+*.jpg
+*.png
+*.mov
+*.mp4

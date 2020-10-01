@@ -3,14 +3,14 @@ import numpy as np
 import re
 from os import listdir
 
-files = listdir()
-img_regex = re.compile('dots.jpg')
+files = listdir("img")
+img_regex = re.compile('dots.png')
 
 for file in files: 
     if not img_regex.match(file):
         continue
 
-    img = cv2.imread(file)
+    img = cv2.imread("img/" + file)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
     lowerRange = np.array([0, 170, 100])
