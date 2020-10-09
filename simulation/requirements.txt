@@ -4,3 +4,4 @@ matplotlib
 pyquaternion
 PyOpenGL
 PyOpenGL_accelerate
+toml
