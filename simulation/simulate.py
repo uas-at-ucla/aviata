@@ -39,7 +39,7 @@ def mixer_test():
 def const_forces_test():
     missing_drones = [] # 0 through 7
     sample_period_ms = 50
-    forces_setpoint = np.matrix([0.0007, 0.0, 0.2, 0.59]).T
+    forces_setpoint = np.matrix([0.0007, 0.0, 0.2, 0.63]).T
 
     world = PhysicalWorld(constants.num_drones, sample_period_ms)
     world.set_missing_drones(missing_drones)

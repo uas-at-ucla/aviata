@@ -40,7 +40,7 @@ def InitGL(Width, Height):
     glMatrixMode(GL_MODELVIEW)
 
 
-def makeRotor(x, y, power):
+def makeRotor(x, y, z, power):
     r = 0.05
     glLineWidth(1.0)
 
@@ -59,45 +59,46 @@ def makeRotor(x, y, power):
 
     glBegin(GL_QUADS)
 
-    glVertex3f(x+r, y+r,-r)
-    glVertex3f(x-r, y+r,-r)
-    glVertex3f(x-r, y+r, r)
-    glVertex3f(x+r, y+r, r) 
+    glVertex3f(x+r, y+r, z-r)
+    glVertex3f(x-r, y+r, z-r)
+    glVertex3f(x-r, y+r, z+r)
+    glVertex3f(x+r, y+r, z+r) 
 
-    glVertex3f(x+r,y-r, r)
-    glVertex3f(x-r,y-r, r)
-    glVertex3f(x-r,y-r,-r)
-    glVertex3f(x+r,y-r,-r) 
+    glVertex3f(x+r, y-r, z+r)
+    glVertex3f(x-r, y-r, z+r)
+    glVertex3f(x-r, y-r, z-r)
+    glVertex3f(x+r, y-r, z-r) 
 
-    glVertex3f(x+r,y+r, r)
-    glVertex3f(x-r,y+r, r)
-    glVertex3f(x-r,y-r, r)
-    glVertex3f(x+r,y-r, r)
+    glVertex3f(x+r, y+r, z+r)
+    glVertex3f(x-r, y+r, z+r)
+    glVertex3f(x-r, y-r, z+r)
+    glVertex3f(x+r, y-r, z+r)
 
-    glVertex3f(x+r,y-r,-r)
-    glVertex3f(x-r,y-r,-r)
-    glVertex3f(x-r,y+r,-r)
-    glVertex3f(x+r,y+r,-r)
+    glVertex3f(x+r, y-r, z-r)
+    glVertex3f(x-r, y-r, z-r)
+    glVertex3f(x-r, y+r, z-r)
+    glVertex3f(x+r, y+r, z-r)
 
-    glVertex3f(x-r,y+r, r) 
-    glVertex3f(x-r,y+r,-r)
-    glVertex3f(x-r,y-r,-r) 
-    glVertex3f(x-r,y-r, r) 
+    glVertex3f(x-r, y+r, z+r) 
+    glVertex3f(x-r, y+r, z-r)
+    glVertex3f(x-r, y-r, z-r) 
+    glVertex3f(x-r, y-r, z+r) 
 
-    glVertex3f(x+r,y+r,-r) 
-    glVertex3f(x+r,y+r, r)
-    glVertex3f(x+r,y-r, r)
-    glVertex3f(x+r,y-r,-r)
+    glVertex3f(x+r, y+r, z-r) 
+    glVertex3f(x+r, y+r, z+r)
+    glVertex3f(x+r, y-r, z+r)
+    glVertex3f(x+r, y-r, z-r)
 
     glEnd()
 
 
 def makeStructure():
+    makeRotor(0, 0, 0, 0.01) # show center of mass. TODO: don't use "makeRotor" for this.
     for i in range(len(GraphicsState.rotors)):
         rotor = GraphicsState.rotors[i]
         if rotor['Ct']:
             motor_input = GraphicsState.motor_inputs[i]
-            makeRotor(rotor['position'][0], rotor['position'][1], motor_input)
+            makeRotor(rotor['position'][0], rotor['position'][1], rotor['position'][2], motor_input)
 
 
 def DrawGLScene():

@@ -119,13 +119,13 @@ class PhysicalWorld:
                 rotor_start = drone.drone_pos * constants.num_rotors
                 rotor_end = rotor_start + constants.num_rotors
                 self.structure.u[rotor_start:rotor_end] = drone.motor_inputs
-        forces = np.dot(self.structure.geometry['mix']['A_4dof'], self.structure.u)
+        forces = np.dot(actuator_effectiveness, self.structure.u)[:,0]
 
         torque = forces[:3]
-        force = forces[3,0]
+        force = forces[3]
 
-        ang_acc = np.dot(constants.Iinv, torque)[:,0]
-        lin_acc = force / constants.M
+        ang_acc = np.dot(self.structure.geometry['Iinv'], torque - np.cross(self.structure.att_rate, np.dot(self.structure.geometry['I'], self.structure.att_rate)))
+        lin_acc = force / self.structure.geometry['M']
 
         # transform from body frame to global frame
         self.structure.ang_acc = self.structure.att.rotate(ang_acc)

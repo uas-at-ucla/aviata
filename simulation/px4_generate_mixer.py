@@ -218,7 +218,7 @@ def normalize_mix_px4(B):
     B_norm[4] = B_norm[3]
 
     # Scale z thrust separately
-    B_norm[5] = - B_sum[5] / np.count_nonzero(B[:,5])
+    B_norm[5] = - B_sum[5] / len(B[:,5]) # np.count_nonzero(B[:,5])
 
     # Normalize
     B_norm[np.abs(B_norm) < 1e-3] = 1
