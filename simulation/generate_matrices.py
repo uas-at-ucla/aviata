@@ -97,7 +97,7 @@ def generate_aviata_matrices(missing_drones=[]):
             break
 
     geometry['M'] = M
-    geometry['thr_hover'] = (M * 9.81) * thr_scale
+    geometry['thr_hover'] = (M * constants.g) * thr_scale
     geometry['I'] = I
     geometry['Iinv'] = np.linalg.inv(I)
 

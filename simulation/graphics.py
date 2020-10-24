@@ -12,8 +12,9 @@ V_CAMERA_DISTANCE = 8.0
 H_CAMERA_DISTANCE = 8.0
 
 class GraphicsState:
+    pos_target = np.array([0.0, 0.0, 0.0])
     pos = np.array([0.0, 0.0, 0.0])
-    att = Quaternion(axis=[0, 0, 1], angle=0)
+    att = Quaternion()
     rotors = []
     motor_imputs = []
 
@@ -40,7 +41,10 @@ def InitGL(Width, Height):
     glMatrixMode(GL_MODELVIEW)
 
 
-def makeRotor(x, y, z, power):
+def makeRotor(pos, power):
+    x = pos[0]
+    y = pos[1]
+    z = pos[2]
     r = 0.05
     glLineWidth(1.0)
 
@@ -93,12 +97,12 @@ def makeRotor(x, y, z, power):
 
 
 def makeStructure():
-    makeRotor(0, 0, 0, 0.01) # show center of mass. TODO: don't use "makeRotor" for this.
+    makeRotor([0, 0, 0], 0.99) # show center of mass. TODO: don't use "makeRotor" for this.
     for i in range(len(GraphicsState.rotors)):
         rotor = GraphicsState.rotors[i]
         if rotor['Ct']:
             motor_input = GraphicsState.motor_inputs[i]
-            makeRotor(rotor['position'][0], rotor['position'][1], rotor['position'][2], motor_input)
+            makeRotor(rotor['position'], motor_input)
 
 
 def DrawGLScene():
@@ -108,6 +112,9 @@ def DrawGLScene():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     glLoadIdentity()
+
+    makeRotor(GraphicsState.pos_target, 0.01) # show position target. TODO: don't use "makeRotor" for this.
+
     glTranslatef(pos[0], pos[1], pos[2])
     glRotatef(att.degrees, att.axis[0], att.axis[1], att.axis[2])
 

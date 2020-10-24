@@ -39,15 +39,18 @@ def mixer_test():
 def const_forces_test():
     missing_drones = [] # 0 through 7
     sample_period_ms = 50
-    forces_setpoint = np.matrix([0.0007, 0.0, 0.2, 0.63]).T
+    # forces_setpoint = np.matrix([0.0007, 0.0, 0.2, 0.63]).T
+    pos_setpoint = np.array([0.0, 1.0, 0.0])
+    yaw_setpoint = 0
 
     world = PhysicalWorld(constants.num_drones, sample_period_ms)
     world.set_missing_drones(missing_drones)
-    world.network.broadcast(Drone.set_forces_setpoint, forces_setpoint)
+    world.master_drone.set_pos_setpoint(pos_setpoint, yaw_setpoint)
 
     def loop(GraphicsState):
         nonlocal world
         world.tick()
+        GraphicsState.pos_target = pos_setpoint
         GraphicsState.pos = world.structure.pos
         GraphicsState.att = world.structure.att
         GraphicsState.rotors = world.structure.geometry['rotors']
