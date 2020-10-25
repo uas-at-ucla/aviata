@@ -24,7 +24,7 @@ def PID(Kp, Ki, Kd):
         
         P = Kp*e
         I = I + Ki*e*dt
-        D = Kd*(PV_prev - PV)/dt
+        D = Kd*(PV_prev - PV)/dt #TODO could add low-pass filter
         
         MV = P + I + D
         

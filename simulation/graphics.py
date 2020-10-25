@@ -41,25 +41,10 @@ def InitGL(Width, Height):
     glMatrixMode(GL_MODELVIEW)
 
 
-def makeRotor(pos, power):
+def makeCube(pos, r):
     x = pos[0]
     y = pos[1]
     z = pos[2]
-    r = 0.05
-    glLineWidth(1.0)
-
-    if power <= 0.0:
-        glColor3f(0.0,1.0,1.0)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-    elif power < 0.5:
-        glColor3f(0.5, 1-power, 1-power)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-    elif power < 1.0:
-        glColor3f(power, 0.5, 0.5)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-    else:
-        glColor3f(1.0,0.0,0.0)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
     glBegin(GL_QUADS)
 
@@ -96,8 +81,33 @@ def makeRotor(pos, power):
     glEnd()
 
 
+def makeRotor(pos, power):
+    r = 0.05
+    glLineWidth(1.0)
+
+    if power <= 0.0:
+        glColor3f(0.0,1.0,1.0)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+    elif power < 0.5:
+        glColor3f(0.5, 1-power, 1-power)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+    elif power < 1.0:
+        glColor3f(power, 0.5, 0.5)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+    else:
+        glColor3f(1.0,0.0,0.0)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+
+    makeCube(pos, r)
+
+
 def makeStructure():
-    makeRotor([0, 0, 0], 0.99) # show center of mass. TODO: don't use "makeRotor" for this.
+    # show center of mass
+    glLineWidth(1.0)
+    glColor3f(1, 1, 0)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+    makeCube([0, 0, 0], 0.05)
+
     for i in range(len(GraphicsState.rotors)):
         rotor = GraphicsState.rotors[i]
         if rotor['Ct']:
@@ -113,7 +123,11 @@ def DrawGLScene():
 
     glLoadIdentity()
 
-    makeRotor(GraphicsState.pos_target, 0.01) # show position target. TODO: don't use "makeRotor" for this.
+    # show position target
+    glLineWidth(1.0)
+    glColor3f(1, 0.647, 0)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+    makeCube(GraphicsState.pos_target, 0.05)
 
     glTranslatef(pos[0], pos[1], pos[2])
     glRotatef(att.degrees, att.axis[0], att.axis[1], att.axis[2])
@@ -123,7 +137,7 @@ def DrawGLScene():
     glutSwapBuffers()
 
 
-def main(loopFunc=lambda g: None, loop_period=1000):
+def main(loopFunc=lambda g: None, loop_period=1000, keyPressedFunc=lambda k,x,y: None):
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
     glutInitWindowSize(WIDTH_PIXELS, HEIGHT_PIXELS)
@@ -133,6 +147,8 @@ def main(loopFunc=lambda g: None, loop_period=1000):
 
     glutDisplayFunc(DrawGLScene)
     glutIdleFunc(None)
+    glutKeyboardFunc(keyPressedFunc)
+    glutSpecialFunc(keyPressedFunc)
     InitGL(WIDTH_PIXELS, HEIGHT_PIXELS)
 
     target_time = 0

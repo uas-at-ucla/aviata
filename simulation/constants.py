@@ -39,17 +39,27 @@ structpayload_drone_height = (M_structure * structure_drone_height + M_payload *
 drone_prop_height = 0 # vertical distance between a drone's propellers and its center of mass (meters)
 
 # Control Constants
-P_pos = np.array([0.95, 0.95, 1.0])
+P_pos = np.array([0.95, 0.95, 1.0]) / 2
 
-P_vel = np.array([1.8, 1.8, 4.0])
-I_vel = np.array([0.4, 0.4, 2.0])
-D_vel = np.array([0.2, 0.2, 0.0])
+P_vel = np.array([1.8, 1.8, 4.0]) / 2
+I_vel = np.array([0.4, 0.4, 2.0]) / 20
+D_vel = np.array([0.2, 0.2, 0.0]) * 5
 
-P_att = np.array([6.5, 6.5, 2.8])
+P_att = np.array([6.5, 6.5, 2.8]) / 2
 
 P_att_rate = np.array([0.15, 0.15, 0.2])
-I_att_rate = np.array([0.2, 0.2, 0.1])
-D_att_rate = np.array([0.003, 0.003, 0.0])
+I_att_rate = np.array([0.2, 0.2, 0.1]) / 20
+D_att_rate = np.array([0.003, 0.003, 0.0]) * 5
+
+max_vel_hor = 12.0 # m/s
+max_vel_down = 1.0
+max_vel_up = 3.0
+
+max_acc_hor = 5.0 # m/s^2
+max_acc_down = 3.0
+max_acc_up = 4.0
+
+max_att_rate = np.array([3.84, 3.84, 3.49]) # radians/s
 
 # PX4 Defaults:
 # P_pos = np.array([0.95, 0.95, 1.0])
@@ -63,3 +73,13 @@ D_att_rate = np.array([0.003, 0.003, 0.0])
 # P_att_rate = np.array([0.15, 0.15, 0.2])
 # I_att_rate = np.array([0.2, 0.2, 0.1])
 # D_att_rate = np.array([0.003, 0.003, 0.0])
+
+# max_vel_hor = 12.0 # m/s
+# max_vel_down = 1.0
+# max_vel_up = 3.0
+
+# max_acc_hor = 5.0 # m/s^2
+# max_acc_down = 3.0
+# max_acc_up = 4.0
+
+# max_att_rate = np.array([3.84, 3.84, 3.49]) # radians/s

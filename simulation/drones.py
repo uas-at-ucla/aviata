@@ -8,6 +8,17 @@ from pid import PID
 
 combined_geometries, drone_geometries, drone_geometries_list = generate_matrices.generate_aviata_permutations(max_missing_drones=3)
 
+
+def constrain(val, min, max):
+    return np.minimum(max, np.maximum(min, val))
+
+def limit_norm(val, max_norm):
+    norm = np.linalg.norm(val)
+    if norm > max_norm:
+        return (val / norm) * max_norm
+    return val
+
+
 @dataclass
 class DroneSensors:
     pos = np.array([0.0, 0.0, 0.0]) # position (m)
@@ -68,8 +79,12 @@ class Drone:
                 # Roughly based on PX4 v1.11. See https://uasatucla.org/en/subsystems/controls/multirotor-physics-and-controls#part-3-control-the-control-system-architecture
                 pos_err = self.pos_setpoint - self.sensors.pos
                 vel_sp = constants.P_pos * pos_err
+                vel_sp[:2] = limit_norm(vel_sp[:2], constants.max_vel_hor)
+                vel_sp[2] = constrain(vel_sp[2], -constants.max_vel_up, constants.max_vel_down)
 
                 acc_sp = self.vel_pid.send([self.sensors.vel, vel_sp, dt])
+                acc_sp[:2] = limit_norm(acc_sp[:2], constants.max_acc_hor)
+                acc_sp[2] = constrain(acc_sp[2], -constants.max_acc_up, constants.max_acc_down)
 
                 # See https://github.com/PX4/Firmware/blob/release/1.11/src/modules/mc_pos_control/PositionControl/PositionControl.cpp#L192
                 att_z_vec = -np.array([acc_sp[0], acc_sp[1], -constants.g])
@@ -91,9 +106,17 @@ class Drone:
                 att_rot_matrix[:,2] = att_z_vec
                 att_sp = Quaternion(matrix=att_rot_matrix)
 
-                att_err_q = att_sp * self.sensors.att.inverse
-                att_err = self.sensors.att.inverse.rotate(att_err_q.axis) * att_err_q.angle
+                # See https://github.com/PX4/Firmware/blob/release/1.11/src/modules/mc_att_control/AttitudeControl/AttitudeControl.cpp#L83
+                att_err_q = self.sensors.att.inverse * att_sp
+                att_err = 2 * att_err_q.imaginary
                 att_rate_sp = constants.P_att * att_err
+                att_rate_sp = constrain(att_rate_sp, -constants.max_att_rate, constants.max_att_rate)
+
+                # My initial implementation of the above before I looked at the PX4 source code
+                # att_err_q = att_sp * self.sensors.att.inverse
+                # att_err = self.sensors.att.inverse.rotate(att_err_q.axis) * att_err_q.angle
+                # att_rate_sp = constants.P_att * att_err
+                # att_rate_sp = constrain(att_rate_sp, -constants.max_att_rate, constants.max_att_rate)
 
                 torque_sp = self.att_rate_pid.send([self.sensors.att_rate, att_rate_sp, dt])
 
@@ -184,7 +207,7 @@ class PhysicalWorld:
     def tick(self):
         att_rate_magnitude = np.linalg.norm(self.structure.att_rate)
         if att_rate_magnitude != 0:
-            att_rate_direction = self.structure.att_rate / np.linalg.norm(self.structure.att_rate)
+            att_rate_direction = self.structure.att_rate / att_rate_magnitude
             self.structure.att = Quaternion(axis=att_rate_direction, angle=(att_rate_magnitude * self.sample_period_s)) * self.structure.att
         self.structure.pos += self.structure.vel * self.sample_period_s
 
