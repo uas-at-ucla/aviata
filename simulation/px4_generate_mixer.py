@@ -224,7 +224,7 @@ def normalize_mix_px4(B):
     B_norm[np.abs(B_norm) < 1e-3] = 1
     B_px = (B / B_norm)
 
-    return B_px
+    return B_px, B_norm
 
 def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, use_6dof=False):
     '''

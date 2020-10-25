@@ -27,7 +27,7 @@ def parallel_axis_theorem(I, m, R):
     return I + m * (np.dot(R,R)*np.eye(3) - np.outer(R,R))
 
 
-def generate_aviata_matrices(missing_drones=[]):
+def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
     drone_rotors = []
     CW = False
     angle = (TWO_PI/constants.num_rotors) / 2
@@ -78,12 +78,18 @@ def generate_aviata_matrices(missing_drones=[]):
             I += parallel_axis_theorem(constants.I_drone, constants.M_drone, drone_pos - COM)
         angle += (TWO_PI/constants.num_drones)
 
+    inertia = np.array([I[0,0], I[1,1], I[2,2], M, M, M]) # mass & moment of inertia values used to match acceleration scale between configurations
+
     geometry = {'rotors': structure_rotors}
-    A, B = px4_generate_mixer.geometry_to_mix(geometry)
+    A, B = px4_generate_mixer.geometry_to_mix(geometry) #TODO Work on the inverse step in this function
     A_4dof = np.delete(A, [3,4], 0)
-    B_px = B
-    # B_px = np.sign(B_px) # Special AVIATA step: minimize motor saturation TODO np.sign only works when all drones are present
-    B_px = px4_generate_mixer.normalize_mix_px4(B_px)
+    if len(missing_drones) == 0:
+        B_px, B_norm = px4_generate_mixer.normalize_mix_px4(B)
+        acc_scale = 1 / (inertia * B_norm)
+        geometry['acc_scale_prime'] = acc_scale
+    else:
+        B_norm = 1 / (inertia * geometry_prime['acc_scale_prime'])
+        B_px = (B / B_norm)
     B_px_4dof = np.delete(B_px, [3,4], 1)
     B_px_4dof[:,3] *= -1
 
@@ -91,13 +97,8 @@ def generate_aviata_matrices(missing_drones=[]):
     geometry['info'] = {}
     geometry['info']['key'] = geometry_name(missing_drones)
 
-    for i in range(len(B)):
-        if B[i,5] and B_px[i,5] < -1e-2:
-            thr_scale = B[i,5] / B_px[i,5]
-            break
-
     geometry['M'] = M
-    geometry['thr_hover'] = (M * constants.g) * thr_scale
+    geometry['thr_hover'] = (M * constants.g) * B_norm[5]
     geometry['I'] = I
     geometry['Iinv'] = np.linalg.inv(I)
 
@@ -133,11 +134,14 @@ def generate_aviata_permutations(max_missing_drones):
     for i in range(1, max_missing_drones+1):
         missing_drones_permutations += combinations(range(constants.num_drones), i)
 
+    geometry_prime = None
     combined_geometries = {}
     drone_geometries = {}
     drone_geometries_list = []
     for missing_drones in missing_drones_permutations:
-        geometry, geometries = generate_aviata_matrices(missing_drones)
+        geometry, geometries = generate_aviata_matrices(missing_drones, geometry_prime)
+        if len(missing_drones) == 0:
+            geometry_prime = geometry
         combined_geometries[geometry['info']['key']] = geometry
         for drone_geometry in geometries:
             drone_geometries[drone_geometry['info']['key']] = drone_geometry
