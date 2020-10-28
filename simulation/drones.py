@@ -199,14 +199,20 @@ class PhysicalWorld:
         self.structure.geometry = combined_geometries[generate_matrices.geometry_name(missing_drones)]
 
     def tick(self):
-        att_rate_magnitude = np.linalg.norm(self.structure.att_rate)
-        if att_rate_magnitude != 0:
-            att_rate_direction = self.structure.att_rate / att_rate_magnitude
-            self.structure.att = Quaternion(axis=att_rate_direction, angle=(att_rate_magnitude * self.sample_period_s)) * self.structure.att
-        self.structure.pos += self.structure.vel * self.sample_period_s
+        prev_att_rate = self.structure.att_rate
+        prev_vel = self.structure.vel
 
         self.structure.att_rate += self.structure.ang_acc * self.sample_period_s
         self.structure.vel += self.structure.lin_acc * self.sample_period_s
+
+        avg_att_rate = (prev_att_rate + self.structure.att_rate) / 2
+        avg_vel = (prev_vel + self.structure.vel) / 2
+
+        att_rate_magnitude = np.linalg.norm(avg_att_rate)
+        if att_rate_magnitude != 0:
+            att_rate_direction = avg_att_rate / att_rate_magnitude
+            self.structure.att = Quaternion(axis=att_rate_direction, angle=(att_rate_magnitude * self.sample_period_s)) * self.structure.att
+        self.structure.pos += avg_vel * self.sample_period_s
 
         sensors = DroneSensors()
         sensors.pos = self.structure.pos
