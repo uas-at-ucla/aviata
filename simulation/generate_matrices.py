@@ -12,14 +12,14 @@ import px4_generate_mixer
 TWO_PI = math.pi * 2
 
 def geometry_name(missing_drones=[]):
-    return 'aviata_missing_' + '_'.join(map(str, missing_drones))
+    return 'aviata_missing_' + '_'.join(map(str, sorted(missing_drones)))
 
 def mixer_name(drone_pos, missing_drones=[]):
-    return 'aviata_pos_' + str(drone_pos) + '_missing_' + '_'.join(map(str, missing_drones))
+    return 'aviata_pos_' + str(drone_pos) + '_missing_' + '_'.join(map(str, sorted(missing_drones)))
 
 def mixer_name_desc(drone_pos, missing_drones=[]):
     name = mixer_name(drone_pos, missing_drones)
-    description = "AVIATA drone position " + str(drone_pos) + " with these drones missing: " + ", ".join(map(str, missing_drones))
+    description = "AVIATA drone position " + str(drone_pos) + " with these drones missing: " + ", ".join(map(str, sorted(missing_drones)))
     return name, description
 
 
@@ -171,6 +171,10 @@ if __name__ == '__main__':
     print(combined_geometries[key]['thr_hover'], file=sys.stderr)
     print("maximum vertical thrust (relative to max thrust of full structure):", file=sys.stderr)
     print(1/np.max(combined_geometries[key]['mix']['B_px_4dof'][:,3]), file=sys.stderr)
+    print("max hover thrust percentage:", file=sys.stderr)
+    print(combined_geometries[key]['thr_hover'] / (1/np.max(combined_geometries[key]['mix']['B_px_4dof'][:,3])), file=sys.stderr)
+    print("average hover thrust percentage:", file=sys.stderr)
+    print(combined_geometries[key]['thr_hover'] / (1/np.mean(combined_geometries[key]['mix']['B_px_4dof'][:,3][combined_geometries[key]['mix']['B_px_4dof'][:,3] > 1e-4])), file=sys.stderr)
     print("moment of inertia tensor:", file=sys.stderr)
     print(combined_geometries[key]['I'], file=sys.stderr)
     print("inverse of moment of inertia tensor:", file=sys.stderr)
@@ -180,7 +184,7 @@ if __name__ == '__main__':
     y = [0]
     for rotor in combined_geometries[key]['rotors']:
         if rotor['Ct']:
-            x.append(rotor['position'][0])
-            y.append(rotor['position'][1])
+            x.append(rotor['position'][1]) # swap x and y axes so it appears as NED from overhead (North is up)
+            y.append(rotor['position'][0])
     plt.scatter(x, y)
     plt.show()

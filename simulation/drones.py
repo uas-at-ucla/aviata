@@ -74,8 +74,6 @@ class Drone:
     def control_loop(self, dt):
         if self.mixer is not None:
             if self.is_master:
-                #TODO Might want to add hard limits on velocity, acceleration, etc. (more PX4 parameters)
-
                 # Roughly based on PX4 v1.11. See https://uasatucla.org/en/subsystems/controls/multirotor-physics-and-controls#part-3-control-the-control-system-architecture
                 pos_err = self.pos_setpoint - self.sensors.pos
                 vel_sp = constants.P_pos * pos_err
@@ -231,7 +229,7 @@ class PhysicalWorld:
 
         actuator_effectiveness = self.structure.geometry['mix']['A_4dof']
         combined_mixer = self.structure.geometry['mix']['B_px_4dof']
-        # ideal_forces = np.linalg.multi_dot([actuator_effectiveness, combined_mixer, setpoint]) # TODO retrieve setpoint from one of the drones
+        # ideal_forces = np.linalg.multi_dot([actuator_effectiveness, combined_mixer, setpoint]) # TODO retrieve setpoint from one of the drones (this probably isn't important though)
         self.structure.u = np.zeros([constants.num_drones * constants.num_rotors, 1])
         for drone in self.drones:
             if drone.drone_pos is not None:

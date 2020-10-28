@@ -37,7 +37,7 @@ def mixer_test():
     print()
 
 
-def const_forces_test():
+def pos_control_test():
     missing_drones = [0] # 0 through 7
     sample_period_ms = 50
     # forces_setpoint = np.matrix([0.0007, 0.0, 0.2, 0.63]).T
@@ -94,4 +94,4 @@ def const_forces_test():
 
 
 if __name__ == '__main__':
-    const_forces_test()
+    pos_control_test()
