@@ -106,17 +106,13 @@ class Drone:
 
                 # See https://github.com/PX4/Firmware/blob/release/1.11/src/modules/mc_att_control/AttitudeControl/AttitudeControl.cpp#L83
                 att_err_q = self.sensors.att.inverse * att_sp
-                att_err = 2 * att_err_q.imaginary
+                att_err = 2 * att_err_q.imaginary # PX4 approximation of att_err_q.axis * att_err_q.angle = 2 * math.asin(att_err_q.imaginary)
                 att_rate_sp = constants.P_att * att_err
                 att_rate_sp = constrain(att_rate_sp, -constants.max_att_rate, constants.max_att_rate)
 
-                # My initial implementation of the above before I looked at the PX4 source code
-                # att_err_q = att_sp * self.sensors.att.inverse
-                # att_err = self.sensors.att.inverse.rotate(att_err_q.axis) * att_err_q.angle
-                # att_rate_sp = constants.P_att * att_err
-                # att_rate_sp = constrain(att_rate_sp, -constants.max_att_rate, constants.max_att_rate)
 
-                torque_sp = self.att_rate_pid.send([self.sensors.att_rate, att_rate_sp, dt])
+                att_rate_body = self.sensors.att.inverse.rotate(self.sensors.att_rate)
+                torque_sp = self.att_rate_pid.send([att_rate_body, att_rate_sp, dt])
 
                 self.forces_setpoint = np.matrix([0.0, 0.0, 0.0, 0.0]).T
                 self.forces_setpoint[:3,0] = torque_sp[:, np.newaxis]
