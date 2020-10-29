@@ -27,15 +27,21 @@ class DroneSensors:
     att_rate = np.array([0.0, 0.0, 0.0]) # angular velocity (rad/s)
 
 
+CONTROL_MODE_LEADER = "CONTROL_MODE_LEADER"
+CONTROL_MODE_FOLLOWER = "CONTROL_MODE_FOLLOWER"
+CONTROL_MODE_FORCES = "CONTROL_MODE_FORCES"
+
 class Drone:
     def __init__(self):
         self.network = None
         self.drone_pos = None # numbered location on the stucture
-        self.is_master = False
+        self.control_mode = CONTROL_MODE_FORCES
         self.mixer = None
         self.hover_thrust = 0
         self.sensors = DroneSensors()
         self.forces_setpoint = np.matrix([0.0, 0.0, 0.0, 0.0]).T
+        self.att_setpoint = None
+        self.thrust_setpoint = None
         self.pos_setpoint = None
         self.yaw_setpoint = None
         self.vel_pid = None
@@ -58,22 +64,32 @@ class Drone:
         self.sensors = sensors
 
     def set_forces_setpoint(self, setpoint):
-        self.is_master = False
+        self.control_mode = CONTROL_MODE_FORCES
         self.forces_setpoint = setpoint
 
-    def set_pos_setpoint(self, pos_setpoint, yaw_setpoint):
-        if not self.is_master:
-            self.is_master = True
+    def set_att_thrust_setpoint(self, att_sp, thr_body_sp_z):
+        if not self.control_mode == CONTROL_MODE_FOLLOWER:
+            if not self.control_mode == CONTROL_MODE_LEADER:
+                self.att_rate_pid = PID(constants.P_att_rate, constants.I_att_rate, constants.D_att_rate)
+                next(self.att_rate_pid)
+            self.control_mode = CONTROL_MODE_FOLLOWER
+        self.att_setpoint = att_sp
+        self.thrust_setpoint = thr_body_sp_z
+
+    def set_pos_setpoint(self, pos_sp, yaw_sp):
+        if not self.control_mode == CONTROL_MODE_LEADER:
+            if not self.control_mode == CONTROL_MODE_FOLLOWER:
+                self.att_rate_pid = PID(constants.P_att_rate, constants.I_att_rate, constants.D_att_rate)
+                next(self.att_rate_pid)
             self.vel_pid = PID(constants.P_vel, constants.I_vel, constants.D_vel)
             next(self.vel_pid)
-            self.att_rate_pid = PID(constants.P_att_rate, constants.I_att_rate, constants.D_att_rate)
-            next(self.att_rate_pid)
-        self.pos_setpoint = pos_setpoint
-        self.yaw_setpoint = yaw_setpoint
+            self.control_mode = CONTROL_MODE_LEADER
+        self.pos_setpoint = pos_sp
+        self.yaw_setpoint = yaw_sp
 
     def control_loop(self, dt):
         if self.mixer is not None:
-            if self.is_master:
+            if self.control_mode == CONTROL_MODE_LEADER:
                 # Roughly based on PX4 v1.11. See https://uasatucla.org/en/subsystems/controls/multirotor-physics-and-controls#part-3-control-the-control-system-architecture
                 pos_err = self.pos_setpoint - self.sensors.pos
                 vel_sp = constants.P_pos * pos_err
@@ -89,8 +105,8 @@ class Drone:
                 att_z_vec /= np.linalg.norm(att_z_vec)
 
                 # achieve desired vertical thrust assuming we're facing the direction of att_z_vec (might make more sense to use current attitude (?) but this is how PX4 does it)
-                thr_body_sp_z = -acc_sp[2] * (self.hover_thrust / constants.g) + self.hover_thrust
-                thr_body_sp_z /= np.dot(np.array([0, 0, 1]), att_z_vec)
+                self.thrust_setpoint = -acc_sp[2] * (self.hover_thrust / constants.g) + self.hover_thrust
+                self.thrust_setpoint /= np.dot(np.array([0, 0, 1]), att_z_vec)
 
                 # determine att_sp quaternion using att_z_vec and yaw_setpoint (see https://github.com/PX4/Firmware/blob/release/1.11/src/modules/mc_pos_control/PositionControl/ControlMath.cpp#L70)
                 yaw_vec = np.exp(1j * self.yaw_setpoint)
@@ -102,23 +118,23 @@ class Drone:
                 att_rot_matrix[:,0] = att_x_vec
                 att_rot_matrix[:,1] = att_y_vec
                 att_rot_matrix[:,2] = att_z_vec
-                att_sp = Quaternion(matrix=att_rot_matrix)
+                self.att_setpoint = Quaternion(matrix=att_rot_matrix)
 
+                self.network.broadcast_from(self, Drone.set_att_thrust_setpoint, self.att_setpoint, self.thrust_setpoint)
+
+            if self.control_mode == CONTROL_MODE_LEADER or self.control_mode == CONTROL_MODE_FOLLOWER:
                 # See https://github.com/PX4/Firmware/blob/release/1.11/src/modules/mc_att_control/AttitudeControl/AttitudeControl.cpp#L83
-                att_err_q = self.sensors.att.inverse * att_sp
+                att_err_q = self.sensors.att.inverse * self.att_setpoint
                 att_err = 2 * att_err_q.imaginary # PX4 approximation of att_err_q.axis * att_err_q.angle = 2 * math.asin(att_err_q.imaginary)
                 att_rate_sp = constants.P_att * att_err
                 att_rate_sp = constrain(att_rate_sp, -constants.max_att_rate, constants.max_att_rate)
-
 
                 att_rate_body = self.sensors.att.inverse.rotate(self.sensors.att_rate)
                 torque_sp = self.att_rate_pid.send([att_rate_body, att_rate_sp, dt])
 
                 self.forces_setpoint = np.matrix([0.0, 0.0, 0.0, 0.0]).T
                 self.forces_setpoint[:3,0] = torque_sp[:, np.newaxis]
-                self.forces_setpoint[3,0] = thr_body_sp_z
-
-                self.network.broadcast_from(self, Drone.set_forces_setpoint, self.forces_setpoint)
+                self.forces_setpoint[3,0] = self.thrust_setpoint
 
             u, u_final = px4_mixer_multirotor.normal_mode(self.forces_setpoint, self.mixer, 0.0, 1.0)
             self.motor_inputs = u_final
@@ -157,7 +173,7 @@ class PhysicalWorld:
         self.drones = []
         for i in range(num_drones):
             self.drones.append(Drone())
-        self.master_drone = None
+        self.leader_drone = None
         self.network = Network(self.drones)
         for drone in self.drones:
             drone.set_network(self.network)
@@ -187,11 +203,11 @@ class PhysicalWorld:
                 break
             if drone.drone_pos is None:
                 drone.set_drone_pos(empty_slots.pop(0))
-        # Assign new master if needed:
-        if self.master_drone is None or self.master_drone.drone_pos is None:
+        # Assign new leader if needed:
+        if self.leader_drone is None or self.leader_drone.drone_pos is None:
             for drone in self.drones:
                 if drone.drone_pos is not None:
-                    self.master_drone = drone
+                    self.leader_drone = drone
                     break
 
         self.network.broadcast(Drone.configure_mixer, missing_drones)
@@ -223,10 +239,10 @@ class PhysicalWorld:
             if drone.drone_pos is not None:
                 drone.set_sensors(sensors)
 
-        if self.master_drone:
-            self.master_drone.control_loop(self.sample_period_s)
+        if self.leader_drone:
+            self.leader_drone.control_loop(self.sample_period_s)
         for drone in self.drones:
-            if not drone is self.master_drone:
+            if not drone is self.leader_drone:
                 drone.control_loop(self.sample_period_s)
 
         actuator_effectiveness = self.structure.geometry['mix']['A_4dof']

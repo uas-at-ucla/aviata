@@ -46,7 +46,7 @@ def pos_control_test():
 
     world = PhysicalWorld(constants.num_drones, sample_period_ms)
     world.set_missing_drones(missing_drones)
-    world.master_drone.set_pos_setpoint(pos_setpoint, yaw_setpoint)
+    world.leader_drone.set_pos_setpoint(pos_setpoint, yaw_setpoint)
 
     def keyPressed(key, mouse_x, mouse_y):
         nonlocal pos_setpoint
@@ -82,7 +82,7 @@ def pos_control_test():
         nonlocal world
         nonlocal pos_setpoint
         nonlocal yaw_setpoint
-        world.master_drone.set_pos_setpoint(pos_setpoint, yaw_setpoint)
+        world.leader_drone.set_pos_setpoint(pos_setpoint, yaw_setpoint)
         world.tick()
         GraphicsState.pos_target = pos_setpoint
         GraphicsState.pos = world.structure.pos
