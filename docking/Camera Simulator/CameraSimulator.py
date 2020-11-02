@@ -2,6 +2,7 @@ import constants
 import pygame
 import numpy as np
 import math
+import cv2
 from PIL import Image
 
 #Calculates commonly used scale constant (to reduce runtime cost)
@@ -12,6 +13,7 @@ def updateCurrentImage(aprilTag, scaleConstant, display, relativeAlt,relativeLat
     #Protects against invalid altitude
     if(constants.RELATIVE_ALT<=0):
         print("Altitude too low")
+        return cv2.imread('BACKGROUND.jpg',0)
         pygame.quit()
         quit()
     
@@ -27,11 +29,22 @@ def updateCurrentImage(aprilTag, scaleConstant, display, relativeAlt,relativeLat
     offsetx=display_scale*translationDist*math.cos(math.radians(translationAngle-relativeYaw))/2.0/relativeAlt
     offsety=display_scale*translationDist*math.sin(math.radians(translationAngle-relativeYaw))/2.0/relativeAlt
 
-    #Rotates AprilTag
-    aprilTag=aprilTag.rotate(-1*relativeYaw)
-    #Displays image
+    #Rotates AprilTag without clipping
+    aprilTag=aprilTag.rotate(-1*relativeYaw,expand=True)
+
+    #Displays image for debug
     aprilTag.save("updatedTag.png")
     aprilTag=pygame.image.load("updatedTag.png")
+    white=(255,255,255)
+    display.fill(white)
     display.blit(aprilTag, (display.get_width()*0.50-offsetx-scale/2.0,display.get_height()*0.50+offsety-scale/2.0))
+    
+    #Converts image to OpenCV format and returns it
+    background=Image.open("BACKGROUND.jpg")
+    img=Image.open("updatedTag.png")
+    background=background.resize((display.get_width(),display.get_height()),Image.ANTIALIAS)
+    background.paste(img,(int(display.get_width()*0.50-offsetx-scale/2.0),int(display.get_height()*0.50+offsety-scale/2.0)))
+    opencvImage=cv2.cvtColor(np.array(background),cv2.COLOR_RGB2BGR)
     pygame.display.update()
+    return opencvImage
 
