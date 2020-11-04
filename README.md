@@ -5,5 +5,21 @@ This repository focuses on the software aspects of AVIATA, which include inter-d
 
 Structure:
 * `docking/` - autonomous docking implementation, currently includes code developed for research during the proposal stage 
+* `controls/` - all the non-docking controls code for the Raspberry Pi
 * `mesh/` - mesh networking between drones
 * `ground/` - everything related to the ground station, including communication with drones and coordination/monitoring for swapping
+
+# Building Controls Code
+Installation Requirements:
+* https://mavsdk.mavlink.io/develop/en/getting_started/installation.html
+
+Build:
+```bash
+cd controls
+mkdir build
+cd build
+cmake ..
+make
+```
+
+Run with PX4 simulator: `./aviata udp://:14540`
