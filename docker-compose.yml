@@ -1,0 +1,27 @@
+version: '3.2'
+
+services:
+  cache:
+    image: uasatucla/aviata-dev
+
+  dev:
+    depends_on:
+      - cache
+    build: 
+      context: .devcontainer
+      cache_from:
+        - uasatucla/aviata-dev
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+    image: uasatucla/aviata-dev
+    container_name: aviata-dev
+    volumes:
+      - .:/workspace:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    # more_run_options_go_here:
+    
+  prod:
+    build:
+      context: .
+      dockerfile: prod.Dockerfile
+    image: uasatucla/aviata

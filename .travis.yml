@@ -1,0 +1,20 @@
+os:
+  - linux
+
+script:
+  - "docker-compose up --build -d dev"
+  - "docker-compose exec dev ./build.sh"
+  - "docker-compose exec dev echo \"Running imaginary tests\""
+  - "docker-compose down"
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: bash docker_push.sh
+  on:
+    branch: master
+
+# Encrypted Docker Hub password
+env:
+  global:
+    secure: "WUwX8ws/m6htBYCs7Ivcio87BqENpTBeG1VmHAfoccWwoz85EEa5Y5IfbicqSi5CEuis1BZL/t/0W35kyM+BHr49TgaIglHioGvTcQqaNIHEhrpBkMczK4QZMqKBgvinaagi7Zhjef7qGTBMa2fxq6Yo4e29dYWQrRRE37Vs1/gucnMrjSXTqGo1t+boL9PLgRuDBzb23ZD/LRh8XhGTEV7aVk7X6HhH7ALl5YAl68/Q/azSufdQih/CDu5F06buLLDyd7ta5OmmaROo0nGEVcHIMlIWA8LueU3coERKtg5JyUqOejSCUBjo1f1CTNw91QZEU7byfGv/0DvCNc6spVmnU2QBlR6naxE3dc74usWvis6FfFM3EYkqmNR2dJKG9RTXw91lu0KdwiOBubldr5fJ/sW4GnwpNrwnTQz3MjgD2zMSzqgevlJMEDM5Q3aRHy9QzR45kP1GTgqTP7gZPwqSyWKu1rSQ/EfK5J4LcY10P5BSPmVt/+5fNWY+nqlzIxfnLx6bSk+FwBLgwn5MTL1HEvcSW3lNAp7lUvorn64/VXygGZGU+RPUfgZn6wnFhkx1OtFiK37tMLaVRh1Ym1f7KIcCzVxGo6TDk4n6PlxW9A8uxQXoOh/VLg/+G/GMc8qnIoK1yBpLnFYkFbRN4r6HJAlE5o/t3ispNQ6VbGM="
