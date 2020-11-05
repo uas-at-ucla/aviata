@@ -3,8 +3,10 @@ import pygame
 import numpy as np
 import math
 from PIL import Image
+import cv2
 import CameraSimulator
 
+#Declares display factor constant (determines size of image relative to camera field of view)
 DISPLAY_SCALE=1750
 
 #Initializes display and image
@@ -22,7 +24,8 @@ exited=False
 
 #Main loop, can be used with different values if constantly updating
 while not exited:
-    CameraSimulator.updateCurrentImage(aprilTag, scale, displayWindow, constants.RELATIVE_ALT,constants.RELATIVE_LAT,constants.RELATIVE_LON, constants.RELATIVE_YAW, DISPLAY_SCALE)
+    #Gets simulated image given parameters, updates pygame window for debugging
+    opencvImage=CameraSimulator.updateCurrentImage(aprilTag, scale, displayWindow, constants.RELATIVE_ALT,constants.RELATIVE_LAT,constants.RELATIVE_LON, constants.RELATIVE_YAW, DISPLAY_SCALE)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exited=True

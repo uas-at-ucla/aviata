@@ -4,7 +4,7 @@ RELATIVE_LAT=0.0
 RELATIVE_LON=0.0
 RELATIVE_ALT=22.5
 #Measured degrees counterclockwise from North
-RELATIVE_YAW=90.0
+RELATIVE_YAW=45.0
 
 
 #Camera information

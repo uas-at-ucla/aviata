@@ -1,0 +1,38 @@
+enum DroneState {
+    STANDBY,
+    ARRIVING,
+    DOCKING,
+    DOCKED_FOLLOWER,
+    DOCKED_LEADER,
+    UNDOCKING,
+    DEPARTING,
+    NEEDS_SERVICE
+};
+
+enum Message {
+    REQUEST_SWAP,
+    REQUEST_UNDOCK,
+    REQUEST_DOCK,
+    UNDOCK,
+    DOCK,
+    BECOME_LEADER,
+    REQUEST_NEW_LEADER,
+    LEADER_SETPOINT,
+    FOLLOWER_SETPOINT,
+    FRAME_ARM,
+    FOLLOWER_ARM,
+    FRAME_DISARM,
+    FOLLOWER_DISARM,
+    FRAME_TAKEOFF,
+    FRAME_LAND,
+    CANCEL_DOCKING,
+    TERMINATE_FLIGHT,
+    INITIALIZE_STATE,
+    DRONE_STATUS
+};
+
+// TODO
+void send_message();
+
+// TODO
+void subscribe_to_message();
