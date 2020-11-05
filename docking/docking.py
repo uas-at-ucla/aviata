@@ -1,106 +1,106 @@
 import asyncio
-import random
-import time
+import argparse
+import cv2
 from mavsdk import System
+from mavsdk.offboard import (OffboardError, VelocityNedYaw)
+from image_analyzer import getErrors
 
-# Test set of manual inputs. Format: [roll, pitch, throttle, yaw]
-manual_inputs = [
-    [0, 0, 0.5, 0],  # no movement
-    [-1, 0, 0.5, 0],  # minimum roll
-    [1, 0, 0.5, 0],  # maximum roll
-    [0, -1, 0.5, 0],  # minimum pitch
-    [0, 1, 0.5, 0],  # maximum pitch
-    [0, 0, 0.5, -1],  # minimum yaw
-    [0, 0, 0.5, 1],  # maximum yaw
-    [0, 0, 1, 0],  # max throttle
-    [0, 0, 0, 0],  # minimum throttle
-]
+async def dock():
 
-async def manual_controls():
+    # temporary arguments to get the static image we want to parse
+    parser = argparse.ArgumentParser(
+        description='get the image that the drone should follow')
+
+    parser.add_argument('-i', '--image', metavar='IMAGE', type=str, required=False,
+                        help='path to the image to use')
+
+    options = parser.parse_args()
+
+    image_filename = options.image
+    if image_filename == None:
+        print("Using default image 'sample_apriltags/apriltag-se.jpg'")
+        image_filename = 'sample_apriltags/apriltag-se.jpg'
+    else: 
+        print(f"Using specified image {image_filename}")
+
     # connect to the drone
     drone = System()
     await drone.connect(system_address="udp://:14540")
 
-    # wait until drone is connected
+    # wait until drone is connected and do basic setup checks
     async for state in drone.core.connection_state():
         if state.is_connected:
-                print(f"Connected to drone with UUID: {state.uuid}")
-                break
-    
+            print(f"Connected to drone with UUID: {state.uuid}")
+            break
 
-    # Checking if Global Position Estimate is ok
     async for global_lock in drone.telemetry.health():
         if global_lock.is_global_position_ok:
             print("-- Global position state is ok")
             break
 
-    # set the manual control input after arming
-    await drone.manual_control.set_manual_control_input(
-        float(0), float(0), float(0.5), float(0)
-    )
-
-    # Arming the drone
     print("-- Arming")
     await drone.action.arm()
 
-    # Takeoff the vehicle
+    # Takeoff the vehicle (later, we can assume that the drone is already flying when we run this script)
     print("-- Taking off")
+    await drone.action.set_takeoff_altitude(5.0) # meters
     await drone.action.takeoff()
-    await asyncio.sleep(5)
+    await asyncio.sleep(8)
 
-        # set the manual control input after arming
-    await drone.manual_control.set_manual_control_input(
-        float(0), float(0), float(0.5), float(0)
-    )
+    # start offboard mode (requires setting initial setpoint)
+    print("-- Setting initial setpoint")
+    await drone.offboard.set_velocity_ned(
+        VelocityNedYaw(0.0, 0.0, 0.0, 0.0))
 
-    # start manual control
-    print("-- Starting manual control")
-    await drone.manual_control.start_position_control()
+    print("-- Starting offboard")
+    try:
+        await drone.offboard.start()
+    except OffboardError as error:
+        print(f"Starting offboard mode failed with error code: \
+              {error._result.result}")
+        print("-- Disarming")
+        await drone.action.disarm()
+        return
+
+    await drone.offboard.set_velocity_ned(
+        VelocityNedYaw(0.0, 0.0, -1.0, 60.0))
 
     print_position_task = asyncio.ensure_future(print_position(drone))
 
-    while True:
+    for i in range(0, 5):
+        # 1. get image from camera
+        img = cv2.imread(image_filename) # eventually, send telemetry to camera simulator and get back a frame to process
+        # 2. process image to get errors for center/height/rotation
+        x_err, y_err = getErrors(img)
+        # 3. move according to errors
+        north_velocity = y_err * 2 # no I or D yet
+        east_velocity = x_err * 2 # no I or D yet
+        print(f"Setting velocities to: {north_velocity} north, {east_velocity} east")
 
-        # I made the index 2 so that it would only have roll
-        # this was to test using north/east/down telemetry (position_velocity_ned())
-        # if you run it, you can see that the drone moves east only
-        # it also prints the position, and you can see that the north/down values don't change, and east always increases
-        # this seems to be exactly what we want as inputs to the camera simulator
-        input_index = 2 #random.randint(0, len(manual_inputs) - 1) # grabs a random input from the test list
-        input_list = manual_inputs[input_index]
+        await drone.offboard.set_velocity_ned(
+            VelocityNedYaw(north_velocity, east_velocity, 0.0, 0.0)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
 
-        # get current state of roll axis (between -1 and 1)
-        roll = float(input_list[0])
-        # get current state of pitch axis (between -1 and 1)
-        pitch = float(input_list[1])
-        # get current state of throttle axis (between -1 and 1, but between 0 and 1 is expected)
-        throttle = float(input_list[2])
-        # get current state of yaw axis (between -1 and 1)
-        yaw = float(input_list[3])
+        await asyncio.sleep(1)
+    
+    # Safely stop the drone
+    print("-- Stopping offboard")
+    try:
+        await drone.offboard.stop()
+    except OffboardError as error:
+        print(f"Stopping offboard mode failed with error code: \
+              {error._result.result}")
 
-        # thinking ahead: can store roll/pitch/throttle/yaw
-        # this loop needs to be streamlined; according to docs, set_manual_control_input() "requires manual control to be sent regularly"
-        # update these values in a different thread? should be fine since this thread only reads (no need to worry about volatile since single-threaded)
-        # then set_manual_control_input() just continually sets r/p/t/y while we're changing them
-
-        await drone.manual_control.set_manual_control_input(roll, pitch, throttle, yaw)
-
-        await asyncio.sleep(0.1)
+    print("-- Landing drone")
+    await drone.action.land()
 
 async def print_position(drone):
-    # here we could send the telemetry to the camera simulator and get back a frame to process
-    # (when we actually start using a real drone/camera we can replace this to simply query for the next camera frame)
-
-    # then using the frame we just got, update the roll/pitch/yaw/throttle
-    # throttle will probably be a function of how close we are/somehow use this for altitude as well
-    # roll/pitch will be for centering
-    # yaw for rotation
-
-    # later: think about how to allow for manual override in the real world
+    i = 0
     async for position in drone.telemetry.position_velocity_ned():
-        print(position.position)
+        i += 1
+        if i > 20: # throttle print rate a little bit
+            print(position.position)
+            i = 0
 
 if __name__ == "__main__":
-
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(manual_controls())
+    loop.run_until_complete(dock())
