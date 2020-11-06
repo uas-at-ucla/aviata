@@ -3,9 +3,25 @@ import argparse
 import cv2
 from mavsdk import System
 from mavsdk.offboard import (OffboardError, VelocityNedYaw)
+
+# Camera simulator-related imports
+import math
+import pygame
+import constants
+from CameraSimulator import CameraSimulator
+from PIL import Image
+
+# Other scripts
 from image_analyzer import getErrors
 
+north = 0
+east = 0
+down = -5
+
 async def dock():
+    global north
+    global east
+    global down
 
     # temporary arguments to get the static image we want to parse
     parser = argparse.ArgumentParser(
@@ -22,6 +38,9 @@ async def dock():
         image_filename = 'sample_apriltags/apriltag-se.jpg'
     else: 
         print(f"Using specified image {image_filename}")
+
+    # Start the camera simulator
+    camera_simulator = CameraSimulator(-4, -3) # position of target
 
     # connect to the drone
     drone = System()
@@ -63,24 +82,33 @@ async def dock():
         return
 
     await drone.offboard.set_velocity_ned(
-        VelocityNedYaw(0.0, 0.0, -1.0, 60.0))
+        VelocityNedYaw(0.0, 0.5, 0.0, 60.0))
+    print("Flying away for a bit")
+    await asyncio.sleep(2)
 
-    print_position_task = asyncio.ensure_future(print_position(drone))
+    # Get telemetry periodically from the drone
+    telemetry_task = asyncio.ensure_future(get_telemetry(drone))
 
-    for i in range(0, 5):
+    while True:
         # 1. get image from camera
-        img = cv2.imread(image_filename) # eventually, send telemetry to camera simulator and get back a frame to process
+        # img = cv2.imread(image_filename) # eventually, send telemetry to camera simulator and get back a frame to process
+        img = camera_simulator.updateCurrentImage(down * -1, north, east, 0)
+        print(north, east)
         # 2. process image to get errors for center/height/rotation
         x_err, y_err = getErrors(img)
         # 3. move according to errors
         north_velocity = y_err * 2 # no I or D yet
         east_velocity = x_err * 2 # no I or D yet
-        print(f"Setting velocities to: {north_velocity} north, {east_velocity} east")
+        # print(f"Setting velocities to: {north_velocity} north, {east_velocity} east")
 
         await drone.offboard.set_velocity_ned(
             VelocityNedYaw(north_velocity, east_velocity, 0.0, 0.0)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
 
-        await asyncio.sleep(1)
+        # if y_err < .10 and x_err < .10:
+        #     print("Close enough to target, landing")
+        #     break
+
+        await asyncio.sleep(.1)
     
     # Safely stop the drone
     print("-- Stopping offboard")
@@ -93,13 +121,26 @@ async def dock():
     print("-- Landing drone")
     await drone.action.land()
 
-async def print_position(drone):
-    i = 0
+
+async def get_telemetry(drone):
+    global north
+    global east
+    global down
+    # scale = CameraSimulator.getViewScaleConstant(constants.TARGET_SIZE,1750)
+    # aprilTag=Image.open('camera_simulator/APRILTAG2.png')
+
+    # set update rate
+    await drone.telemetry.set_rate_position_velocity_ned(20) # hertz
+
+    # get telemetry updates at the rate specified above
     async for position in drone.telemetry.position_velocity_ned():
-        i += 1
-        if i > 20: # throttle print rate a little bit
-            print(position.position)
-            i = 0
+        print(position.position)
+        p = position.position
+        north = p.north_m
+        east = p.east_m
+        down = p.down_m
+        print(north, east)
+        # opencvImage = camera_simulator.updateCurrentImage(p.down_m * -1, p.north_m, p.east_m, 0)
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

@@ -42,7 +42,7 @@ def getErrors(img):
 
             # percentage errors
             x_err = x_offset / width
-            y_err = y_offset / width
+            y_err = y_offset / height
 
             return x_err, y_err
 
