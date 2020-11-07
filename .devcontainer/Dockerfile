@@ -67,7 +67,7 @@ RUN cd ~/ros2_foxy \
     && rosdep init \
     && rosdep update \
     && rosdep install --from-paths src --ignore-src --rosdistro foxy -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers" \
-    && colcon build --symlink-install  --packages-skip-by-dep rviz_rendering qt_gui_cpp
+    && colcon build --symlink-install  --packages-skip-by-dep rviz_rendering qt_gui_cpp turtlesim
 ENTRYPOINT ["sh", "-c", "source ~/ros2_foxy/install/setup.sh && \"$@\"", "-s"]
 
 WORKDIR /workspace
