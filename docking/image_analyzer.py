@@ -1,4 +1,5 @@
 import cv2
+import math
 from apriltag import apriltag
 
 TAG16 = "tag16h5" # tag family 
@@ -6,6 +7,8 @@ TAG36 = "tag36h11"
 MIN_MARGIN = 10 # Filter value for tag detection
 RED        = 0,0,255          # Colour of ident & frame (BGR)
 detector = apriltag(TAG36)
+CAM_HORIZ_FOV=62.2
+TAG_SIZE=0.285 #Size of one side of tag in m
 
 def getErrors(img):
     """
@@ -28,6 +31,7 @@ def getErrors(img):
 
     for det in dets:
         if det["margin"] >= MIN_MARGIN:
+            det_corners=det["corners"].astype(int)
             det_center = det["center"].astype(int)
 
             rect = det["lb-rb-rt-lt"].astype(int).reshape((-1,1,2))
@@ -35,6 +39,20 @@ def getErrors(img):
             pos = det_center + (-10,10)
             cv2.putText(img, "x", tuple(pos), cv2.FONT_HERSHEY_SIMPLEX, 1, RED, 2)
             cv2.putText(img, "c", img_center, cv2.FONT_HERSHEY_SIMPLEX, 1, RED, 2)
+
+            #Calculates average side length
+            sidelist=list()
+            for i in range (0,4):
+                for j in range (i,4):
+                    sidelist.append(math.sqrt((det_corners[i][0]-det_corners[j][0])**2+(det_corners[i][1]-det_corners[j][1])))
+            sidelist.sort()
+            sideAvg=0
+            for i in range(4):
+                sideAvg=sideAvg+sidelist[i]
+            sideAvg=sideAvg/4.0
+
+            #Finds absolute difference in height
+            alt_err=0.50/math.tan(CAMERA_HORIZ_FOV*0.50)*width*TAG_SIZE/sideAvg
 
             # raw errors
             x_offset = det_center[0] - img_center[0] # offset north from center
@@ -44,7 +62,7 @@ def getErrors(img):
             x_err = x_offset / width
             y_err = y_offset / height
 
-            return x_err, y_err
+            return x_err, y_err, alt_err
 
             break
 

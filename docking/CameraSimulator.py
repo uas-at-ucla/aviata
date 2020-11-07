@@ -30,7 +30,7 @@ class CameraSimulator:
 
     background_image_name = 'Camera Simulator/BACKGROUND.jpg'
     output_tag_name = 'updatedTag.png'
-    april_tag = Image.open('Camera Simulator/APRILTAG2.png')
+    april_tag = Image.open('Camera Simulator/APRILTAG.png')
 
     def __init__(self, initial_lat, initial_long):
         # self.initial_alt = initial_alt
@@ -50,7 +50,7 @@ class CameraSimulator:
         display_height = DISPLAY_SCALE * \
             math.tan(math.radians(CAMERA_FOV_VERTICAL/2.0))
         white = (255, 255, 255)
-        aprilTag = Image.open('Camera Simulator/APRILTAG2.png')
+        aprilTag = Image.open('Camera Simulator/APRILTAG.png')
         self.display = pygame.display.set_mode(
             (int(display_width), int(display_height)))
         self.display.fill(white)
