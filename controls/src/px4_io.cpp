@@ -3,6 +3,7 @@
  * This file will become a helper for interfacing with PX4.
  */
 
+#include "px4_io.hpp"
 #include <chrono>
 #include <cstdint>
 #include <mavsdk/mavsdk.h>
@@ -10,7 +11,6 @@
 #include <mavsdk/plugins/telemetry/telemetry.h>
 #include <iostream>
 #include <thread>
-#include "px4_io.hpp"
 
 using namespace mavsdk;
 using namespace std::this_thread;

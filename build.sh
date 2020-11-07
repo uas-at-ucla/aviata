@@ -1,5 +1,5 @@
 #!/bin/bash
 mkdir -p controls/build
 cd controls/build
-cmake ..
+cmake -D CMAKE_CXX_FLAGS=-DUSE_ROS ..
 make
