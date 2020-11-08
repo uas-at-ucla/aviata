@@ -34,6 +34,27 @@ def getErrors(img):
             det_corners=det["corners"].astype(int)
             det_center = det["center"].astype(int)
 
+            #Gets rotation matrix
+            #Initializes rotation matrix parameters
+            H=det["homography"]
+            K=np.matrix([CAMERA_FOCUS_X,0,width/2],[0,CAMERA_FOCUS_Y,height/2],[0,0,1])
+            #Decomposes homography matrix into rotation matrix
+            #Not really 100% sure what this does, if there's any issues check the link below
+            #from https://medium.com/analytics-vidhya/using-homography-for-pose-estimation-in-opencv-a7215f260fdd
+            H = H.T
+            h1 = H[0]
+            h2 = H[1]
+            h3 = H[2]
+            K_inv = np.linalg.inv(K)
+            L = 1 / np.linalg.norm(np.dot(K_inv, h1))
+            r1 = L * np.dot(K_inv, h1)
+            r2 = L * np.dot(K_inv, h2)
+            r3 = np.cross(r1, r2)
+            R = np.array([[r1], [r2], [r3]])
+            R = np.reshape(R, (3, 3))
+            #Gets rotation error from rotation matrix
+            rot_err=math.atan2(R[1][0],R[0][0])
+
             rect = det["lb-rb-rt-lt"].astype(int).reshape((-1,1,2))
             cv2.polylines(img, [rect], True, RED, 2)
             pos = det_center + (-10,10)
@@ -62,7 +83,7 @@ def getErrors(img):
             x_err = x_offset / width
             y_err = y_offset / height
 
-            return x_err, y_err, alt_err
+            return x_err, y_err, alt_err, rot_err
 
             break
 

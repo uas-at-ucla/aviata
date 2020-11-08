@@ -95,7 +95,7 @@ async def dock():
         img = camera_simulator.updateCurrentImage(down * -1, north, east, 0)
         print(north, east)
         # 2. process image to get errors for center/height/rotation
-        x_err, y_err, alt_err = getErrors(img)
+        x_err, y_err, alt_err,rot_err = getErrors(img)
         # 3. move according to errors
         north_velocity = y_err * 2 # no I or D yet
         east_velocity = x_err * 2 # no I or D yet
@@ -103,7 +103,7 @@ async def dock():
         # print(f"Setting velocities to: {north_velocity} north, {east_velocity} east")
 
         await drone.offboard.set_velocity_ned(
-            VelocityNedYaw(north_velocity, east_velocity, vert_velocity, 0.0)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
+            VelocityNedYaw(north_velocity, east_velocity, vert_velocity, -1.0*rot_err)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
 
         # if y_err < .10 and x_err < .10:
         #     print("Close enough to target, landing")
