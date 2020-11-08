@@ -9,6 +9,8 @@ RED        = 0,0,255          # Colour of ident & frame (BGR)
 detector = apriltag(TAG36)
 CAM_HORIZ_FOV=62.2
 TAG_SIZE=0.285 #Size of one side of tag in m
+CAMERA_FOCUS_X=0.034
+CAMERA_FOCUS_Y=0.034
 
 def getErrors(img):
     """
