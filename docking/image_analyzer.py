@@ -7,7 +7,7 @@ TAG36 = "tag36h11"
 MIN_MARGIN = 10 # Filter value for tag detection
 RED        = 0,0,255          # Colour of ident & frame (BGR)
 detector = apriltag(TAG36)
-CAM_HORIZ_FOV=62.2
+CAMERA_HORIZ_FOV=62.2
 TAG_SIZE=0.285 #Size of one side of tag in m
 CAMERA_FOCUS_X=0.034
 CAMERA_FOCUS_Y=0.034
@@ -33,30 +33,9 @@ def getErrors(img):
 
     for det in dets:
         if det["margin"] >= MIN_MARGIN:
-            det_corners=det["corners"].astype(int)
             det_center = det["center"].astype(int)
 
-            #Gets rotation matrix
-            #Initializes rotation matrix parameters
-            H=det["homography"]
-            K=np.matrix([CAMERA_FOCUS_X,0,width/2],[0,CAMERA_FOCUS_Y,height/2],[0,0,1])
-            #Decomposes homography matrix into rotation matrix
-            #Not really 100% sure what this does, if there's any issues check the link below
-            #from https://medium.com/analytics-vidhya/using-homography-for-pose-estimation-in-opencv-a7215f260fdd
-            H = H.T
-            h1 = H[0]
-            h2 = H[1]
-            h3 = H[2]
-            K_inv = np.linalg.inv(K)
-            L = 1 / np.linalg.norm(np.dot(K_inv, h1))
-            r1 = L * np.dot(K_inv, h1)
-            r2 = L * np.dot(K_inv, h2)
-            r3 = np.cross(r1, r2)
-            R = np.array([[r1], [r2], [r3]])
-            R = np.reshape(R, (3, 3))
-            #Gets rotation error from rotation matrix
-            rot_err=math.atan2(R[1][0],R[0][0])
-
+            #Draws corners and rectangle
             rect = det["lb-rb-rt-lt"].astype(int).reshape((-1,1,2))
             cv2.polylines(img, [rect], True, RED, 2)
             pos = det_center + (-10,10)
@@ -66,16 +45,21 @@ def getErrors(img):
             #Calculates average side length
             sidelist=list()
             for i in range (0,4):
-                for j in range (i,4):
-                    sidelist.append(math.sqrt((det_corners[i][0]-det_corners[j][0])**2+(det_corners[i][1]-det_corners[j][1])))
+                for j in range (i+1,4):
+                    sidelist.append(math.sqrt((rect[i][0][0]-rect[j][0][0])**2+(rect[i][0][1]-rect[j][0][1])))
+                    print(sidelist)
             sidelist.sort()
             sideAvg=0
             for i in range(4):
                 sideAvg=sideAvg+sidelist[i]
             sideAvg=sideAvg/4.0
 
+            print(sideAvg)
             #Finds absolute difference in height
             alt_err=0.50/math.tan(CAMERA_HORIZ_FOV*0.50)*width*TAG_SIZE/sideAvg
+
+            #Finds difference in rotation
+            rot_err=math.atan2(0.50*(rect[2][0][0]+rect[3][0][1]-rect[0][0][1]-rect[1][0][1]),0.50*(rect[2][0][0]-rect[3][0][0]+rect[1][0][0]-rect[0][0][0]))
 
             # raw errors
             x_offset = det_center[0] - img_center[0] # offset north from center
@@ -84,7 +68,7 @@ def getErrors(img):
             # percentage errors
             x_err = x_offset / width
             y_err = y_offset / height
-
+            print(x_err+" "+y_err+" "+alt_err+" "+rot_err)
             return x_err, y_err, alt_err, rot_err
 
             break
