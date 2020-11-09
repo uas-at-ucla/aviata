@@ -68,8 +68,8 @@ def getErrors(img):
             # percentage errors
             x_err = x_offset / width
             y_err = y_offset / height
-            print(x_err+" "+y_err+" "+alt_err+" "+rot_err)
-            return x_err, y_err, alt_err, rot_err
+            #print(x_err+" "+y_err+" "+alt_err+" "+rot_err)
+            return float(x_err), float(y_err), float(alt_err), float(rot_err)
 
             break
 
