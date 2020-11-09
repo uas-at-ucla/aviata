@@ -9,7 +9,7 @@ from drones import *
 from OpenGL.GLUT import *
 
 
-def mixer_test():
+def mixer_test(): # test
     missing_drones = [] # 0 through 7
     geometry, geometries = generate_matrices.generate_aviata_matrices(missing_drones)
     mixer = geometry['mix']['B_px_4dof']
@@ -50,6 +50,7 @@ def pos_control_test():
 
     def keyPressed(key, mouse_x, mouse_y):
         nonlocal pos_setpoint
+        nonlocal missing_drones
         fine_inc = 0.1
         coarse_inc = 1
         if key == GLUT_KEY_UP:
@@ -77,6 +78,15 @@ def pos_control_test():
             pos_setpoint[2] -= coarse_inc
         elif key == b'f':
             pos_setpoint[2] += coarse_inc
+
+        for drone in range(8):
+            # Drones 0-7 correlate with keys 1-8
+            if key == bytes(str(drone+1), encoding='utf-8'):
+                if drone in missing_drones:
+                    missing_drones.remove(drone)
+                else:
+                    missing_drones.append(drone)
+                world.set_missing_drones(missing_drones)
 
     def loop(GraphicsState):
         nonlocal world
