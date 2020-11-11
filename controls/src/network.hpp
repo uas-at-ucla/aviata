@@ -1,14 +1,3 @@
-enum DroneState {
-    STANDBY,
-    ARRIVING,
-    DOCKING,
-    DOCKED_FOLLOWER,
-    DOCKED_LEADER,
-    UNDOCKING,
-    DEPARTING,
-    NEEDS_SERVICE
-};
-
 enum Message {
     REQUEST_SWAP,
     REQUEST_UNDOCK,
@@ -30,6 +19,8 @@ enum Message {
     INITIALIZE_STATE,
     DRONE_STATUS
 };
+
+void ros2_test();
 
 // TODO
 void send_message();

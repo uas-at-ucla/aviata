@@ -3,7 +3,7 @@ os:
 
 script:
   - "docker-compose up --build -d dev"
-  - "docker-compose exec dev ./build.sh"
+  - "docker-compose exec dev /bin/bash -c \"source ~/.bashrc && ./build.sh\""
   - "docker-compose exec dev echo \"Running imaginary tests\""
   - "docker-compose down"
 
