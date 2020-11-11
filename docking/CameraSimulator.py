@@ -61,8 +61,8 @@ class CameraSimulator:
 
     def updateCurrentImage(self, relativeAlt, relativeLat, relativeLon, relativeYaw):
         # relativeAlt += self.initial_alt
-        relativeLat += self.initial_lat
-        relativeLon += self.initial_long
+        relativeLat -= self.initial_lat
+        relativeLon -= self.initial_long
         # relativeYaw += self.initial_yaw
 
         # Protects against invalid altitude
@@ -112,7 +112,7 @@ class CameraSimulator:
 
 
 if __name__ == "__main__":
-    cs = CameraSimulator(4, -3)
+    cs = CameraSimulator(-4, -3)
 
     while True:
-        cs.updateCurrentImage(5, 0, 0, 0)
+        cs.updateCurrentImage(5, 0, 0, 45)

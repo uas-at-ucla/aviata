@@ -7,7 +7,6 @@ from mavsdk.offboard import (OffboardError, VelocityNedYaw)
 # Camera simulator-related imports
 import math
 import pygame
-import constants
 from CameraSimulator import CameraSimulator
 from PIL import Image
 
