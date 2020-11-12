@@ -40,7 +40,7 @@ async def dock():
         print(f"Using specified image {image_filename}")
 
     # Start the camera simulator
-    camera_simulator = CameraSimulator(-4, -3) # position of target
+    camera_simulator = CameraSimulator() # position of target
 
     # connect to the drone
     drone = System()
@@ -92,24 +92,28 @@ async def dock():
     while True:
         # 1. get image from camera
         # img = cv2.imread(image_filename) # eventually, send telemetry to camera simulator and get back a frame to process
-        img = camera_simulator.updateCurrentImage(down * -1, north, east, 0)
-        print(north, east)
+        img = camera_simulator.updateCurrentImage(east, north, down * -1.0, 0)
+        # print(north, east)
         # 2. process image to get errors for center/height/rotation
-        x_err, y_err, alt_err,rot_err = getErrors(img)
+        errs = getErrors(img)
+        if errs is None:
+            continue
+
+        x_err, y_err, alt_err, rot_err = errs
         # 3. move according to errors
-        north_velocity = y_err * 2 # no I or D yet
-        east_velocity = x_err * 2 # no I or D yet
-        vert_velocity=alt_err-0.05
-        # print(f"Setting velocities to: {north_velocity} north, {east_velocity} east")
+        north_velocity = y_err * 4 # no I or D yet
+        east_velocity = x_err * 4 # no I or D yet
+        down_velocity = alt_err * .2
+        print(f"Setting velocities to: {north_velocity} north, {east_velocity} east, {down_velocity} down")
 
         await drone.offboard.set_velocity_ned(
-            VelocityNedYaw(north_velocity, east_velocity, vert_velocity, -1.0*rot_err)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
+            VelocityNedYaw(north_velocity, east_velocity, down_velocity, -1.0 * rot_err)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
 
         # if y_err < .10 and x_err < .10:
         #     print("Close enough to target, landing")
         #     break
 
-        await asyncio.sleep(.1)
+        await asyncio.sleep(.1) # update drone at 10Hz
     
     # Safely stop the drone
     print("-- Stopping offboard")
@@ -127,21 +131,18 @@ async def get_telemetry(drone):
     global north
     global east
     global down
-    # scale = CameraSimulator.getViewScaleConstant(constants.TARGET_SIZE,1750)
-    # aprilTag=Image.open('camera_simulator/APRILTAG2.png')
 
     # set update rate
     await drone.telemetry.set_rate_position_velocity_ned(20) # hertz
 
     # get telemetry updates at the rate specified above
     async for position in drone.telemetry.position_velocity_ned():
-        print(position.position)
+        # print(position.position)
         p = position.position
         north = p.north_m
         east = p.east_m
         down = p.down_m
-        print(north, east)
-        # opencvImage = camera_simulator.updateCurrentImage(p.down_m * -1, p.north_m, p.east_m, 0)
+        print(east, " ", north, " ", down, " ", 0)
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
