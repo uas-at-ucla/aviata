@@ -17,11 +17,13 @@ from image_analyzer import getErrors
 north = 0
 east = 0
 down = -5
+yaw = 0
 
 async def dock():
     global north
     global east
     global down
+    global yaw
 
     # temporary arguments to get the static image we want to parse
     parser = argparse.ArgumentParser(
@@ -82,32 +84,38 @@ async def dock():
         return
 
     await drone.offboard.set_velocity_ned(
-        VelocityNedYaw(0.0, 0.5, 0.0, 60.0))
-    print("Flying away for a bit")
+        VelocityNedYaw(0.0, 0.0, 0.0, -160.0))
     await asyncio.sleep(2)
+    print("Rotating")
+    # await drone.offboard.set_velocity_ned(
+    #     VelocityNedYaw(0.0, -0.5, 0.0, 0.0))
+    # print("Flying away for a bit")
+    # await asyncio.sleep(5)
+
 
     # Get telemetry periodically from the drone
-    telemetry_task = asyncio.ensure_future(get_telemetry(drone))
+    telemetry_task = asyncio.ensure_future(get_telemetry_position(drone))
+    rotation_task = asyncio.ensure_future(get_telemetry_rotation(drone))
 
     while True:
         # 1. get image from camera
-        # img = cv2.imread(image_filename) # eventually, send telemetry to camera simulator and get back a frame to process
-        img = camera_simulator.updateCurrentImage(east, north, down * -1.0, 0)
-        # print(north, east)
+        img = camera_simulator.updateCurrentImage(east, north, down * -1.0, yaw * -1.0)
+
         # 2. process image to get errors for center/height/rotation
         errs = getErrors(img)
         if errs is None:
             continue
-
         x_err, y_err, alt_err, rot_err = errs
+
         # 3. move according to errors
         north_velocity = y_err * 4 # no I or D yet
         east_velocity = x_err * 4 # no I or D yet
         down_velocity = alt_err * .2
+        rot_velocity = rot_err * -1.0
         print(f"Setting velocities to: {north_velocity} north, {east_velocity} east, {down_velocity} down")
 
         await drone.offboard.set_velocity_ned(
-            VelocityNedYaw(north_velocity, east_velocity, down_velocity, -1.0 * rot_err)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
+            VelocityNedYaw(north_velocity, east_velocity, down_velocity, rot_velocity)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
 
         # if y_err < .10 and x_err < .10:
         #     print("Close enough to target, landing")
@@ -126,16 +134,20 @@ async def dock():
     print("-- Landing drone")
     await drone.action.land()
 
+async def get_telemetry_rotation(drone):
+    global yaw
 
-async def get_telemetry(drone):
+    await drone.telemetry.set_rate_attitude(20) # set update rate, hertz 
+    async for angles in drone.telemetry.attitude_euler():
+        yaw = angles.yaw_deg
+
+
+async def get_telemetry_position(drone):
     global north
     global east
     global down
 
-    # set update rate
-    await drone.telemetry.set_rate_position_velocity_ned(20) # hertz
-
-    # get telemetry updates at the rate specified above
+    await drone.telemetry.set_rate_position_velocity_ned(20) # set update rate, hertz 
     async for position in drone.telemetry.position_velocity_ned():
         # print(position.position)
         p = position.position
