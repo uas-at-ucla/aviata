@@ -32,48 +32,54 @@ class CameraSimulator:
     output_tag_name = 'updatedTag.png'
     april_tag = Image.open('Camera Simulator/tag_36h11.png')
 
-    def __init__(self, initial_lat, initial_long):
-        # self.initial_alt = initial_alt
-        self.initial_lat = initial_lat
-        self.initial_long = initial_long
-        # self.initial_yaw = initial_yaw
+    #Updates target location dynamically
+    def updateTargetLocation(self, targetx,targety,targetalt,targetyaw):
+        self.target_lat=targetx
+        self.target_lon=targety
+        self.target_alt=targetalt
+        self.target_yaw=0
+
+    def __init__(self,targetx,targety,targetalt,targetyaw):
         self.scale_constant = self.getViewScaleConstant(TARGET_SIZE, 1750)
         self.display_scale = 1750
-
-        # Declares display factor constant (determines size of image relative to camera field of view)
+        self.target_lat=targetx
+        self.target_lon=targety
+        self.target_alt=targetalt
+        self.target_yaw=0        # Declares display factor constant (determines size of image relative to camera field of view)
         DISPLAY_SCALE = 1750
 
         # Initializes display and image
         pygame.init()
-        display_width = DISPLAY_SCALE * \
-            math.tan(math.radians(CAMERA_FOV_HORIZONTAL/2.0))
-        display_height = DISPLAY_SCALE * \
-            math.tan(math.radians(CAMERA_FOV_VERTICAL/2.0))
+        display_width = DISPLAY_SCALE * math.tan(math.radians(CAMERA_FOV_HORIZONTAL/2.0))
+        display_height = DISPLAY_SCALE * math.tan(math.radians(CAMERA_FOV_VERTICAL/2.0))
         white = (255, 255, 255)
         aprilTag = Image.open('Camera Simulator/tag_36h11.png')
-        self.display = pygame.display.set_mode(
-            (int(display_width), int(display_height)))
+        self.display = pygame.display.set_mode((int(display_width), int(display_height)))
         self.display.fill(white)
 
     # Calculates commonly used scale constant (to reduce runtime cost)
     def getViewScaleConstant(self, TARGET_SIZE, DISPLAY_SCALE_CONSTANT):
         return DISPLAY_SCALE_CONSTANT*TARGET_SIZE/2.0/100.0
 
-    def updateCurrentImage(self, relativeAlt, relativeLat, relativeLon, relativeYaw):
-        # relativeAlt += self.initial_alt
-        relativeLat += self.initial_lat
-        relativeLon += self.initial_long
-        # relativeYaw += self.initial_yaw
+    def updateCurrentImage(self, absLon, absLat, absAlt, absYaw):
+        """
+        Target faces north; yaw is degrees from north counterclockwise (<- v -> ^)
+        """
+        #Converts from absolute to relative coordinates
+        relativeLat=absLat-self.target_lat
+        relativeLon=absLon-self.target_lon
+        relativeAlt=absAlt-self.target_alt
+        relativeYaw=absYaw-self.target_yaw
 
         # Protects against invalid altitude
-        if(RELATIVE_ALT <= 0):
+        if(relativeAlt <= 0):
             print("Altitude too low")
-            return cv2.imread(self.background_image_name, 0)
             pygame.quit()
+            return cv2.imread(self.background_image_name, 0)
             quit()
 
-        # Resizes Image given the altitude and precomputed scale factor(scale precomputed for efficiency)
-        scale = int(self.scale_constant/relativeAlt)
+        # Resizes Image given the altitude and precomputed scale factor (scale precomputed for efficiency)
+        scale = abs(int(self.scale_constant/relativeAlt))
         april_tag = self.april_tag.resize((scale, scale))
 
         # Sets translation of AprilTag
@@ -89,7 +95,7 @@ class CameraSimulator:
             2.0/relativeAlt
 
         # Rotates AprilTag without clipping
-        april_tag = april_tag.rotate(-1*relativeYaw, expand=True)
+        april_tag = april_tag.rotate(-1*relativeYaw, expand=True, fillcolor="#ffffff")
 
         # Displays image for debug
         april_tag.save(self.output_tag_name)
@@ -112,7 +118,7 @@ class CameraSimulator:
 
 
 if __name__ == "__main__":
-    cs = CameraSimulator(4, -3)
+    cs = CameraSimulator()
 
     while True:
-        cs.updateCurrentImage(5, 0, 0, 0)
+        cs.updateCurrentImage(10, -9, 5, 0)

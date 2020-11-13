@@ -8,6 +8,7 @@ MIN_MARGIN = 10 # Filter value for tag detection
 RED        = 0,0,255          # Colour of ident & frame (BGR)
 detector = apriltag(TAG36)
 CAMERA_HORIZ_FOV=62.2
+CAMERA_VERTICAL_FOV=48.8
 TAG_SIZE=0.285 #Size of one side of tag in m
 CAMERA_FOCUS_X=0.034
 CAMERA_FOCUS_Y=0.034
@@ -35,40 +36,39 @@ def getErrors(img):
         if det["margin"] >= MIN_MARGIN:
             det_center = det["center"].astype(int)
 
-            #Draws corners and rectangle
+            # Draws corners and rectangle
             rect = det["lb-rb-rt-lt"].astype(int).reshape((-1,1,2))
             cv2.polylines(img, [rect], True, RED, 2)
             pos = det_center + (-10,10)
             cv2.putText(img, "x", tuple(pos), cv2.FONT_HERSHEY_SIMPLEX, 1, RED, 2)
             cv2.putText(img, "c", img_center, cv2.FONT_HERSHEY_SIMPLEX, 1, RED, 2)
 
-            #Calculates average side length
-            sidelist=list()
+            # Calculates average side length 
+            sidelist = list()
             for i in range (0,4):
                 for j in range (i+1,4):
-                    sidelist.append(math.sqrt((rect[i][0][0]-rect[j][0][0])**2+(rect[i][0][1]-rect[j][0][1])))
-                    print(sidelist)
+                    sidelist.append(math.sqrt((rect[i][0][0] - rect[j][0][0]) ** 2 + (rect[i][0][1] - rect[j][0][1]) ** 2))
+                    # print(sidelist)
             sidelist.sort()
-            sideAvg=0
+            sideAvg = 0
             for i in range(4):
-                sideAvg=sideAvg+sidelist[i]
-            sideAvg=sideAvg/4.0
+                sideAvg = sideAvg+sidelist[i]
+            sideAvg = sideAvg/4.0
+            tag_pixel_ratio = TAG_SIZE / sideAvg
 
-            print(sideAvg)
-            #Finds absolute difference in height
-            alt_err=0.50/math.tan(CAMERA_HORIZ_FOV*0.50)*width*TAG_SIZE/sideAvg
+            # Absolute difference in height (meters)
+            alt_err = 0.50 / math.tan(math.radians(CAMERA_HORIZ_FOV * 0.50)) * width * tag_pixel_ratio
 
-            #Finds difference in rotation
+            # Finds difference in rotation
             rot_err=math.atan2(0.50*(rect[2][0][0]+rect[3][0][1]-rect[0][0][1]-rect[1][0][1]),0.50*(rect[2][0][0]-rect[3][0][0]+rect[1][0][0]-rect[0][0][0]))
 
-            # raw errors
-            x_offset = det_center[0] - img_center[0] # offset north from center
-            y_offset = img_center[1] - det_center[1] # offset east from center
+            # Absolute horizontal difference (meters)
+            x_offset = det_center[0] - img_center[0] # offset east from center
+            y_offset = img_center[1] - det_center[1] # offset north from center
+            x_err = x_offset * tag_pixel_ratio
+            y_err = y_offset * tag_pixel_ratio
 
-            # percentage errors
-            x_err = x_offset / width
-            y_err = y_offset / height
-            #print(x_err+" "+y_err+" "+alt_err+" "+rot_err)
+            print("Errors: ", x_err, " ", y_err, " ", alt_err, " ", rot_err)
             return float(x_err), float(y_err), float(alt_err), float(rot_err)
 
             break
