@@ -14,13 +14,18 @@ TWO_PI = math.pi * 2
 def geometry_name(missing_drones=[]):
     return 'aviata_missing_' + '_'.join(map(str, sorted(missing_drones)))
 
-def mixer_name(drone_pos, missing_drones=[]):
-    return 'aviata_pos_' + str(drone_pos) + '_missing_' + '_'.join(map(str, sorted(missing_drones)))
-
-def mixer_name_desc(drone_pos, missing_drones=[]):
-    name = mixer_name(drone_pos, missing_drones)
-    description = "AVIATA drone position " + str(drone_pos) + " with these drones missing: " + ", ".join(map(str, sorted(missing_drones)))
+def geometry_name_desc(missing_drones=[]):
+    name = geometry_name(missing_drones)
+    description = "AVIATA with these drones missing: " + ", ".join(map(str, sorted(missing_drones)))
     return name, description
+
+# def mixer_name(drone_pos, missing_drones=[]):
+#     return 'aviata_pos_' + str(drone_pos) + '_missing_' + '_'.join(map(str, sorted(missing_drones)))
+
+# def mixer_name_desc(drone_pos, missing_drones=[]):
+#     name = mixer_name(drone_pos, missing_drones)
+#     description = "AVIATA drone position " + str(drone_pos) + " with these drones missing: " + ", ".join(map(str, sorted(missing_drones)))
+#     return name, description
 
 
 def parallel_axis_theorem(I, m, R):
@@ -94,8 +99,11 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
     B_px_4dof[:,3] *= -1
 
     geometry['mix'] = {'A': A, 'A_4dof': A_4dof, 'B': B, 'B_px': B_px, 'B_px_4dof': np.matrix(B_px_4dof)}
+    name, description = geometry_name_desc(missing_drones)
     geometry['info'] = {}
-    geometry['info']['key'] = geometry_name(missing_drones)
+    geometry['info']['key'] = name
+    geometry['info']['name'] = name
+    geometry['info']['description'] = description
 
     geometry['M'] = M
     geometry['thr_hover'] = (M * constants.g) * B_norm[5]
@@ -103,30 +111,30 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
     geometry['Iinv'] = np.linalg.inv(I)
 
     # break up into a mixer for each individual drone
-    geometries = []
-    for i in range(constants.num_drones):
-        if not i in missing_drones:
-            rotor_start = i * constants.num_rotors
-            rotor_end = rotor_start + constants.num_rotors
-            drone_geometry = {}
-            drone_geometry['rotors'] = geometry['rotors'][rotor_start:rotor_end]
-            drone_geometry['mix'] = {}
-            drone_geometry['mix']['A'] = geometry['mix']['A'][:,rotor_start:rotor_end]
-            drone_geometry['mix']['A_4dof'] = geometry['mix']['A_4dof'][:,rotor_start:rotor_end]
-            drone_geometry['mix']['B'] = geometry['mix']['B'][rotor_start:rotor_end]
-            drone_geometry['mix']['B_px'] = geometry['mix']['B_px'][rotor_start:rotor_end]
-            drone_geometry['mix']['B_px_4dof'] = geometry['mix']['B_px_4dof'][rotor_start:rotor_end]
+    # geometries = []
+    # for i in range(constants.num_drones):
+    #     if not i in missing_drones:
+    #         rotor_start = i * constants.num_rotors
+    #         rotor_end = rotor_start + constants.num_rotors
+    #         drone_geometry = {}
+    #         drone_geometry['rotors'] = geometry['rotors'][rotor_start:rotor_end]
+    #         drone_geometry['mix'] = {}
+    #         drone_geometry['mix']['A'] = geometry['mix']['A'][:,rotor_start:rotor_end]
+    #         drone_geometry['mix']['A_4dof'] = geometry['mix']['A_4dof'][:,rotor_start:rotor_end]
+    #         drone_geometry['mix']['B'] = geometry['mix']['B'][rotor_start:rotor_end]
+    #         drone_geometry['mix']['B_px'] = geometry['mix']['B_px'][rotor_start:rotor_end]
+    #         drone_geometry['mix']['B_px_4dof'] = geometry['mix']['B_px_4dof'][rotor_start:rotor_end]
 
-            name, description = mixer_name_desc(i, missing_drones)
-            drone_geometry['info'] = {}
-            drone_geometry['info']['key'] = name
-            drone_geometry['info']['name'] = name
-            drone_geometry['info']['description'] = description
+    #         name, description = mixer_name_desc(i, missing_drones)
+    #         drone_geometry['info'] = {}
+    #         drone_geometry['info']['key'] = name
+    #         drone_geometry['info']['name'] = name
+    #         drone_geometry['info']['description'] = description
 
-            drone_geometry['thr_hover'] = geometry['thr_hover']
-            geometries.append(drone_geometry)
+    #         drone_geometry['thr_hover'] = geometry['thr_hover']
+    #         geometries.append(drone_geometry)
 
-    return geometry, geometries
+    return geometry
 
 
 def generate_aviata_permutations(max_missing_drones):
@@ -136,23 +144,25 @@ def generate_aviata_permutations(max_missing_drones):
 
     geometry_prime = None
     combined_geometries = {}
-    drone_geometries = {}
-    drone_geometries_list = []
+    combined_geometries_list = []
+    # drone_geometries = {}
+    # drone_geometries_list = []
     for missing_drones in missing_drones_permutations:
-        geometry, geometries = generate_aviata_matrices(missing_drones, geometry_prime)
+        geometry = generate_aviata_matrices(missing_drones, geometry_prime)
         if len(missing_drones) == 0:
             geometry_prime = geometry
         combined_geometries[geometry['info']['key']] = geometry
-        for drone_geometry in geometries:
-            drone_geometries[drone_geometry['info']['key']] = drone_geometry
-        drone_geometries_list += geometries
-    return combined_geometries, drone_geometries, drone_geometries_list
+        combined_geometries_list.append(geometry)
+        # for drone_geometry in geometries:
+        #     drone_geometries[drone_geometry['info']['key']] = drone_geometry
+        # drone_geometries_list += geometries
+    return combined_geometries, combined_geometries_list
 
 
 if __name__ == '__main__':
-    combined_geometries, drone_geometries, drone_geometries_list = generate_aviata_permutations(max_missing_drones=3)
+    combined_geometries, combined_geometries_list = generate_aviata_permutations(max_missing_drones=4)
 
-    header = px4_generate_mixer.generate_mixer_multirotor_header(drone_geometries_list,
+    header = px4_generate_mixer.generate_mixer_multirotor_header(combined_geometries_list,
                                                                  use_normalized_mix=True,
                                                                  use_6dof=False)
     print(header)

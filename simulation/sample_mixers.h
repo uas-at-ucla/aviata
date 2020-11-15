@@ -6,587 +6,217 @@
 #define _MIXER_MULTI_TABLES
 
 enum class MultirotorGeometry : MultirotorGeometryUnderlyingType {
-	AVIATA_POS_0_MISSING_,         // AVIATA drone position 0 with these drones missing:  (text key aviata_pos_0_missing_)
-	AVIATA_POS_1_MISSING_,         // AVIATA drone position 1 with these drones missing:  (text key aviata_pos_1_missing_)
-	AVIATA_POS_2_MISSING_,         // AVIATA drone position 2 with these drones missing:  (text key aviata_pos_2_missing_)
-	AVIATA_POS_3_MISSING_,         // AVIATA drone position 3 with these drones missing:  (text key aviata_pos_3_missing_)
-	AVIATA_POS_4_MISSING_,         // AVIATA drone position 4 with these drones missing:  (text key aviata_pos_4_missing_)
-	AVIATA_POS_5_MISSING_,         // AVIATA drone position 5 with these drones missing:  (text key aviata_pos_5_missing_)
-	AVIATA_POS_6_MISSING_,         // AVIATA drone position 6 with these drones missing:  (text key aviata_pos_6_missing_)
-	AVIATA_POS_7_MISSING_,         // AVIATA drone position 7 with these drones missing:  (text key aviata_pos_7_missing_)
-	AVIATA_POS_1_MISSING_0,        // AVIATA drone position 1 with these drones missing: 0 (text key aviata_pos_1_missing_0)
-	AVIATA_POS_2_MISSING_0,        // AVIATA drone position 2 with these drones missing: 0 (text key aviata_pos_2_missing_0)
-	AVIATA_POS_3_MISSING_0,        // AVIATA drone position 3 with these drones missing: 0 (text key aviata_pos_3_missing_0)
-	AVIATA_POS_4_MISSING_0,        // AVIATA drone position 4 with these drones missing: 0 (text key aviata_pos_4_missing_0)
-	AVIATA_POS_5_MISSING_0,        // AVIATA drone position 5 with these drones missing: 0 (text key aviata_pos_5_missing_0)
-	AVIATA_POS_6_MISSING_0,        // AVIATA drone position 6 with these drones missing: 0 (text key aviata_pos_6_missing_0)
-	AVIATA_POS_7_MISSING_0,        // AVIATA drone position 7 with these drones missing: 0 (text key aviata_pos_7_missing_0)
-	AVIATA_POS_0_MISSING_1,        // AVIATA drone position 0 with these drones missing: 1 (text key aviata_pos_0_missing_1)
-	AVIATA_POS_2_MISSING_1,        // AVIATA drone position 2 with these drones missing: 1 (text key aviata_pos_2_missing_1)
-	AVIATA_POS_3_MISSING_1,        // AVIATA drone position 3 with these drones missing: 1 (text key aviata_pos_3_missing_1)
-	AVIATA_POS_4_MISSING_1,        // AVIATA drone position 4 with these drones missing: 1 (text key aviata_pos_4_missing_1)
-	AVIATA_POS_5_MISSING_1,        // AVIATA drone position 5 with these drones missing: 1 (text key aviata_pos_5_missing_1)
-	AVIATA_POS_6_MISSING_1,        // AVIATA drone position 6 with these drones missing: 1 (text key aviata_pos_6_missing_1)
-	AVIATA_POS_7_MISSING_1,        // AVIATA drone position 7 with these drones missing: 1 (text key aviata_pos_7_missing_1)
-	AVIATA_POS_0_MISSING_2,        // AVIATA drone position 0 with these drones missing: 2 (text key aviata_pos_0_missing_2)
-	AVIATA_POS_1_MISSING_2,        // AVIATA drone position 1 with these drones missing: 2 (text key aviata_pos_1_missing_2)
-	AVIATA_POS_3_MISSING_2,        // AVIATA drone position 3 with these drones missing: 2 (text key aviata_pos_3_missing_2)
-	AVIATA_POS_4_MISSING_2,        // AVIATA drone position 4 with these drones missing: 2 (text key aviata_pos_4_missing_2)
-	AVIATA_POS_5_MISSING_2,        // AVIATA drone position 5 with these drones missing: 2 (text key aviata_pos_5_missing_2)
-	AVIATA_POS_6_MISSING_2,        // AVIATA drone position 6 with these drones missing: 2 (text key aviata_pos_6_missing_2)
-	AVIATA_POS_7_MISSING_2,        // AVIATA drone position 7 with these drones missing: 2 (text key aviata_pos_7_missing_2)
-	AVIATA_POS_0_MISSING_3,        // AVIATA drone position 0 with these drones missing: 3 (text key aviata_pos_0_missing_3)
-	AVIATA_POS_1_MISSING_3,        // AVIATA drone position 1 with these drones missing: 3 (text key aviata_pos_1_missing_3)
-	AVIATA_POS_2_MISSING_3,        // AVIATA drone position 2 with these drones missing: 3 (text key aviata_pos_2_missing_3)
-	AVIATA_POS_4_MISSING_3,        // AVIATA drone position 4 with these drones missing: 3 (text key aviata_pos_4_missing_3)
-	AVIATA_POS_5_MISSING_3,        // AVIATA drone position 5 with these drones missing: 3 (text key aviata_pos_5_missing_3)
-	AVIATA_POS_6_MISSING_3,        // AVIATA drone position 6 with these drones missing: 3 (text key aviata_pos_6_missing_3)
-	AVIATA_POS_7_MISSING_3,        // AVIATA drone position 7 with these drones missing: 3 (text key aviata_pos_7_missing_3)
-	AVIATA_POS_0_MISSING_4,        // AVIATA drone position 0 with these drones missing: 4 (text key aviata_pos_0_missing_4)
-	AVIATA_POS_1_MISSING_4,        // AVIATA drone position 1 with these drones missing: 4 (text key aviata_pos_1_missing_4)
-	AVIATA_POS_2_MISSING_4,        // AVIATA drone position 2 with these drones missing: 4 (text key aviata_pos_2_missing_4)
-	AVIATA_POS_3_MISSING_4,        // AVIATA drone position 3 with these drones missing: 4 (text key aviata_pos_3_missing_4)
-	AVIATA_POS_5_MISSING_4,        // AVIATA drone position 5 with these drones missing: 4 (text key aviata_pos_5_missing_4)
-	AVIATA_POS_6_MISSING_4,        // AVIATA drone position 6 with these drones missing: 4 (text key aviata_pos_6_missing_4)
-	AVIATA_POS_7_MISSING_4,        // AVIATA drone position 7 with these drones missing: 4 (text key aviata_pos_7_missing_4)
-	AVIATA_POS_0_MISSING_5,        // AVIATA drone position 0 with these drones missing: 5 (text key aviata_pos_0_missing_5)
-	AVIATA_POS_1_MISSING_5,        // AVIATA drone position 1 with these drones missing: 5 (text key aviata_pos_1_missing_5)
-	AVIATA_POS_2_MISSING_5,        // AVIATA drone position 2 with these drones missing: 5 (text key aviata_pos_2_missing_5)
-	AVIATA_POS_3_MISSING_5,        // AVIATA drone position 3 with these drones missing: 5 (text key aviata_pos_3_missing_5)
-	AVIATA_POS_4_MISSING_5,        // AVIATA drone position 4 with these drones missing: 5 (text key aviata_pos_4_missing_5)
-	AVIATA_POS_6_MISSING_5,        // AVIATA drone position 6 with these drones missing: 5 (text key aviata_pos_6_missing_5)
-	AVIATA_POS_7_MISSING_5,        // AVIATA drone position 7 with these drones missing: 5 (text key aviata_pos_7_missing_5)
-	AVIATA_POS_0_MISSING_6,        // AVIATA drone position 0 with these drones missing: 6 (text key aviata_pos_0_missing_6)
-	AVIATA_POS_1_MISSING_6,        // AVIATA drone position 1 with these drones missing: 6 (text key aviata_pos_1_missing_6)
-	AVIATA_POS_2_MISSING_6,        // AVIATA drone position 2 with these drones missing: 6 (text key aviata_pos_2_missing_6)
-	AVIATA_POS_3_MISSING_6,        // AVIATA drone position 3 with these drones missing: 6 (text key aviata_pos_3_missing_6)
-	AVIATA_POS_4_MISSING_6,        // AVIATA drone position 4 with these drones missing: 6 (text key aviata_pos_4_missing_6)
-	AVIATA_POS_5_MISSING_6,        // AVIATA drone position 5 with these drones missing: 6 (text key aviata_pos_5_missing_6)
-	AVIATA_POS_7_MISSING_6,        // AVIATA drone position 7 with these drones missing: 6 (text key aviata_pos_7_missing_6)
-	AVIATA_POS_0_MISSING_7,        // AVIATA drone position 0 with these drones missing: 7 (text key aviata_pos_0_missing_7)
-	AVIATA_POS_1_MISSING_7,        // AVIATA drone position 1 with these drones missing: 7 (text key aviata_pos_1_missing_7)
-	AVIATA_POS_2_MISSING_7,        // AVIATA drone position 2 with these drones missing: 7 (text key aviata_pos_2_missing_7)
-	AVIATA_POS_3_MISSING_7,        // AVIATA drone position 3 with these drones missing: 7 (text key aviata_pos_3_missing_7)
-	AVIATA_POS_4_MISSING_7,        // AVIATA drone position 4 with these drones missing: 7 (text key aviata_pos_4_missing_7)
-	AVIATA_POS_5_MISSING_7,        // AVIATA drone position 5 with these drones missing: 7 (text key aviata_pos_5_missing_7)
-	AVIATA_POS_6_MISSING_7,        // AVIATA drone position 6 with these drones missing: 7 (text key aviata_pos_6_missing_7)
-	AVIATA_POS_2_MISSING_0_1,      // AVIATA drone position 2 with these drones missing: 0, 1 (text key aviata_pos_2_missing_0_1)
-	AVIATA_POS_3_MISSING_0_1,      // AVIATA drone position 3 with these drones missing: 0, 1 (text key aviata_pos_3_missing_0_1)
-	AVIATA_POS_4_MISSING_0_1,      // AVIATA drone position 4 with these drones missing: 0, 1 (text key aviata_pos_4_missing_0_1)
-	AVIATA_POS_5_MISSING_0_1,      // AVIATA drone position 5 with these drones missing: 0, 1 (text key aviata_pos_5_missing_0_1)
-	AVIATA_POS_6_MISSING_0_1,      // AVIATA drone position 6 with these drones missing: 0, 1 (text key aviata_pos_6_missing_0_1)
-	AVIATA_POS_7_MISSING_0_1,      // AVIATA drone position 7 with these drones missing: 0, 1 (text key aviata_pos_7_missing_0_1)
-	AVIATA_POS_1_MISSING_0_2,      // AVIATA drone position 1 with these drones missing: 0, 2 (text key aviata_pos_1_missing_0_2)
-	AVIATA_POS_3_MISSING_0_2,      // AVIATA drone position 3 with these drones missing: 0, 2 (text key aviata_pos_3_missing_0_2)
-	AVIATA_POS_4_MISSING_0_2,      // AVIATA drone position 4 with these drones missing: 0, 2 (text key aviata_pos_4_missing_0_2)
-	AVIATA_POS_5_MISSING_0_2,      // AVIATA drone position 5 with these drones missing: 0, 2 (text key aviata_pos_5_missing_0_2)
-	AVIATA_POS_6_MISSING_0_2,      // AVIATA drone position 6 with these drones missing: 0, 2 (text key aviata_pos_6_missing_0_2)
-	AVIATA_POS_7_MISSING_0_2,      // AVIATA drone position 7 with these drones missing: 0, 2 (text key aviata_pos_7_missing_0_2)
-	AVIATA_POS_1_MISSING_0_3,      // AVIATA drone position 1 with these drones missing: 0, 3 (text key aviata_pos_1_missing_0_3)
-	AVIATA_POS_2_MISSING_0_3,      // AVIATA drone position 2 with these drones missing: 0, 3 (text key aviata_pos_2_missing_0_3)
-	AVIATA_POS_4_MISSING_0_3,      // AVIATA drone position 4 with these drones missing: 0, 3 (text key aviata_pos_4_missing_0_3)
-	AVIATA_POS_5_MISSING_0_3,      // AVIATA drone position 5 with these drones missing: 0, 3 (text key aviata_pos_5_missing_0_3)
-	AVIATA_POS_6_MISSING_0_3,      // AVIATA drone position 6 with these drones missing: 0, 3 (text key aviata_pos_6_missing_0_3)
-	AVIATA_POS_7_MISSING_0_3,      // AVIATA drone position 7 with these drones missing: 0, 3 (text key aviata_pos_7_missing_0_3)
-	AVIATA_POS_1_MISSING_0_4,      // AVIATA drone position 1 with these drones missing: 0, 4 (text key aviata_pos_1_missing_0_4)
-	AVIATA_POS_2_MISSING_0_4,      // AVIATA drone position 2 with these drones missing: 0, 4 (text key aviata_pos_2_missing_0_4)
-	AVIATA_POS_3_MISSING_0_4,      // AVIATA drone position 3 with these drones missing: 0, 4 (text key aviata_pos_3_missing_0_4)
-	AVIATA_POS_5_MISSING_0_4,      // AVIATA drone position 5 with these drones missing: 0, 4 (text key aviata_pos_5_missing_0_4)
-	AVIATA_POS_6_MISSING_0_4,      // AVIATA drone position 6 with these drones missing: 0, 4 (text key aviata_pos_6_missing_0_4)
-	AVIATA_POS_7_MISSING_0_4,      // AVIATA drone position 7 with these drones missing: 0, 4 (text key aviata_pos_7_missing_0_4)
-	AVIATA_POS_1_MISSING_0_5,      // AVIATA drone position 1 with these drones missing: 0, 5 (text key aviata_pos_1_missing_0_5)
-	AVIATA_POS_2_MISSING_0_5,      // AVIATA drone position 2 with these drones missing: 0, 5 (text key aviata_pos_2_missing_0_5)
-	AVIATA_POS_3_MISSING_0_5,      // AVIATA drone position 3 with these drones missing: 0, 5 (text key aviata_pos_3_missing_0_5)
-	AVIATA_POS_4_MISSING_0_5,      // AVIATA drone position 4 with these drones missing: 0, 5 (text key aviata_pos_4_missing_0_5)
-	AVIATA_POS_6_MISSING_0_5,      // AVIATA drone position 6 with these drones missing: 0, 5 (text key aviata_pos_6_missing_0_5)
-	AVIATA_POS_7_MISSING_0_5,      // AVIATA drone position 7 with these drones missing: 0, 5 (text key aviata_pos_7_missing_0_5)
-	AVIATA_POS_1_MISSING_0_6,      // AVIATA drone position 1 with these drones missing: 0, 6 (text key aviata_pos_1_missing_0_6)
-	AVIATA_POS_2_MISSING_0_6,      // AVIATA drone position 2 with these drones missing: 0, 6 (text key aviata_pos_2_missing_0_6)
-	AVIATA_POS_3_MISSING_0_6,      // AVIATA drone position 3 with these drones missing: 0, 6 (text key aviata_pos_3_missing_0_6)
-	AVIATA_POS_4_MISSING_0_6,      // AVIATA drone position 4 with these drones missing: 0, 6 (text key aviata_pos_4_missing_0_6)
-	AVIATA_POS_5_MISSING_0_6,      // AVIATA drone position 5 with these drones missing: 0, 6 (text key aviata_pos_5_missing_0_6)
-	AVIATA_POS_7_MISSING_0_6,      // AVIATA drone position 7 with these drones missing: 0, 6 (text key aviata_pos_7_missing_0_6)
-	AVIATA_POS_1_MISSING_0_7,      // AVIATA drone position 1 with these drones missing: 0, 7 (text key aviata_pos_1_missing_0_7)
-	AVIATA_POS_2_MISSING_0_7,      // AVIATA drone position 2 with these drones missing: 0, 7 (text key aviata_pos_2_missing_0_7)
-	AVIATA_POS_3_MISSING_0_7,      // AVIATA drone position 3 with these drones missing: 0, 7 (text key aviata_pos_3_missing_0_7)
-	AVIATA_POS_4_MISSING_0_7,      // AVIATA drone position 4 with these drones missing: 0, 7 (text key aviata_pos_4_missing_0_7)
-	AVIATA_POS_5_MISSING_0_7,      // AVIATA drone position 5 with these drones missing: 0, 7 (text key aviata_pos_5_missing_0_7)
-	AVIATA_POS_6_MISSING_0_7,      // AVIATA drone position 6 with these drones missing: 0, 7 (text key aviata_pos_6_missing_0_7)
-	AVIATA_POS_0_MISSING_1_2,      // AVIATA drone position 0 with these drones missing: 1, 2 (text key aviata_pos_0_missing_1_2)
-	AVIATA_POS_3_MISSING_1_2,      // AVIATA drone position 3 with these drones missing: 1, 2 (text key aviata_pos_3_missing_1_2)
-	AVIATA_POS_4_MISSING_1_2,      // AVIATA drone position 4 with these drones missing: 1, 2 (text key aviata_pos_4_missing_1_2)
-	AVIATA_POS_5_MISSING_1_2,      // AVIATA drone position 5 with these drones missing: 1, 2 (text key aviata_pos_5_missing_1_2)
-	AVIATA_POS_6_MISSING_1_2,      // AVIATA drone position 6 with these drones missing: 1, 2 (text key aviata_pos_6_missing_1_2)
-	AVIATA_POS_7_MISSING_1_2,      // AVIATA drone position 7 with these drones missing: 1, 2 (text key aviata_pos_7_missing_1_2)
-	AVIATA_POS_0_MISSING_1_3,      // AVIATA drone position 0 with these drones missing: 1, 3 (text key aviata_pos_0_missing_1_3)
-	AVIATA_POS_2_MISSING_1_3,      // AVIATA drone position 2 with these drones missing: 1, 3 (text key aviata_pos_2_missing_1_3)
-	AVIATA_POS_4_MISSING_1_3,      // AVIATA drone position 4 with these drones missing: 1, 3 (text key aviata_pos_4_missing_1_3)
-	AVIATA_POS_5_MISSING_1_3,      // AVIATA drone position 5 with these drones missing: 1, 3 (text key aviata_pos_5_missing_1_3)
-	AVIATA_POS_6_MISSING_1_3,      // AVIATA drone position 6 with these drones missing: 1, 3 (text key aviata_pos_6_missing_1_3)
-	AVIATA_POS_7_MISSING_1_3,      // AVIATA drone position 7 with these drones missing: 1, 3 (text key aviata_pos_7_missing_1_3)
-	AVIATA_POS_0_MISSING_1_4,      // AVIATA drone position 0 with these drones missing: 1, 4 (text key aviata_pos_0_missing_1_4)
-	AVIATA_POS_2_MISSING_1_4,      // AVIATA drone position 2 with these drones missing: 1, 4 (text key aviata_pos_2_missing_1_4)
-	AVIATA_POS_3_MISSING_1_4,      // AVIATA drone position 3 with these drones missing: 1, 4 (text key aviata_pos_3_missing_1_4)
-	AVIATA_POS_5_MISSING_1_4,      // AVIATA drone position 5 with these drones missing: 1, 4 (text key aviata_pos_5_missing_1_4)
-	AVIATA_POS_6_MISSING_1_4,      // AVIATA drone position 6 with these drones missing: 1, 4 (text key aviata_pos_6_missing_1_4)
-	AVIATA_POS_7_MISSING_1_4,      // AVIATA drone position 7 with these drones missing: 1, 4 (text key aviata_pos_7_missing_1_4)
-	AVIATA_POS_0_MISSING_1_5,      // AVIATA drone position 0 with these drones missing: 1, 5 (text key aviata_pos_0_missing_1_5)
-	AVIATA_POS_2_MISSING_1_5,      // AVIATA drone position 2 with these drones missing: 1, 5 (text key aviata_pos_2_missing_1_5)
-	AVIATA_POS_3_MISSING_1_5,      // AVIATA drone position 3 with these drones missing: 1, 5 (text key aviata_pos_3_missing_1_5)
-	AVIATA_POS_4_MISSING_1_5,      // AVIATA drone position 4 with these drones missing: 1, 5 (text key aviata_pos_4_missing_1_5)
-	AVIATA_POS_6_MISSING_1_5,      // AVIATA drone position 6 with these drones missing: 1, 5 (text key aviata_pos_6_missing_1_5)
-	AVIATA_POS_7_MISSING_1_5,      // AVIATA drone position 7 with these drones missing: 1, 5 (text key aviata_pos_7_missing_1_5)
-	AVIATA_POS_0_MISSING_1_6,      // AVIATA drone position 0 with these drones missing: 1, 6 (text key aviata_pos_0_missing_1_6)
-	AVIATA_POS_2_MISSING_1_6,      // AVIATA drone position 2 with these drones missing: 1, 6 (text key aviata_pos_2_missing_1_6)
-	AVIATA_POS_3_MISSING_1_6,      // AVIATA drone position 3 with these drones missing: 1, 6 (text key aviata_pos_3_missing_1_6)
-	AVIATA_POS_4_MISSING_1_6,      // AVIATA drone position 4 with these drones missing: 1, 6 (text key aviata_pos_4_missing_1_6)
-	AVIATA_POS_5_MISSING_1_6,      // AVIATA drone position 5 with these drones missing: 1, 6 (text key aviata_pos_5_missing_1_6)
-	AVIATA_POS_7_MISSING_1_6,      // AVIATA drone position 7 with these drones missing: 1, 6 (text key aviata_pos_7_missing_1_6)
-	AVIATA_POS_0_MISSING_1_7,      // AVIATA drone position 0 with these drones missing: 1, 7 (text key aviata_pos_0_missing_1_7)
-	AVIATA_POS_2_MISSING_1_7,      // AVIATA drone position 2 with these drones missing: 1, 7 (text key aviata_pos_2_missing_1_7)
-	AVIATA_POS_3_MISSING_1_7,      // AVIATA drone position 3 with these drones missing: 1, 7 (text key aviata_pos_3_missing_1_7)
-	AVIATA_POS_4_MISSING_1_7,      // AVIATA drone position 4 with these drones missing: 1, 7 (text key aviata_pos_4_missing_1_7)
-	AVIATA_POS_5_MISSING_1_7,      // AVIATA drone position 5 with these drones missing: 1, 7 (text key aviata_pos_5_missing_1_7)
-	AVIATA_POS_6_MISSING_1_7,      // AVIATA drone position 6 with these drones missing: 1, 7 (text key aviata_pos_6_missing_1_7)
-	AVIATA_POS_0_MISSING_2_3,      // AVIATA drone position 0 with these drones missing: 2, 3 (text key aviata_pos_0_missing_2_3)
-	AVIATA_POS_1_MISSING_2_3,      // AVIATA drone position 1 with these drones missing: 2, 3 (text key aviata_pos_1_missing_2_3)
-	AVIATA_POS_4_MISSING_2_3,      // AVIATA drone position 4 with these drones missing: 2, 3 (text key aviata_pos_4_missing_2_3)
-	AVIATA_POS_5_MISSING_2_3,      // AVIATA drone position 5 with these drones missing: 2, 3 (text key aviata_pos_5_missing_2_3)
-	AVIATA_POS_6_MISSING_2_3,      // AVIATA drone position 6 with these drones missing: 2, 3 (text key aviata_pos_6_missing_2_3)
-	AVIATA_POS_7_MISSING_2_3,      // AVIATA drone position 7 with these drones missing: 2, 3 (text key aviata_pos_7_missing_2_3)
-	AVIATA_POS_0_MISSING_2_4,      // AVIATA drone position 0 with these drones missing: 2, 4 (text key aviata_pos_0_missing_2_4)
-	AVIATA_POS_1_MISSING_2_4,      // AVIATA drone position 1 with these drones missing: 2, 4 (text key aviata_pos_1_missing_2_4)
-	AVIATA_POS_3_MISSING_2_4,      // AVIATA drone position 3 with these drones missing: 2, 4 (text key aviata_pos_3_missing_2_4)
-	AVIATA_POS_5_MISSING_2_4,      // AVIATA drone position 5 with these drones missing: 2, 4 (text key aviata_pos_5_missing_2_4)
-	AVIATA_POS_6_MISSING_2_4,      // AVIATA drone position 6 with these drones missing: 2, 4 (text key aviata_pos_6_missing_2_4)
-	AVIATA_POS_7_MISSING_2_4,      // AVIATA drone position 7 with these drones missing: 2, 4 (text key aviata_pos_7_missing_2_4)
-	AVIATA_POS_0_MISSING_2_5,      // AVIATA drone position 0 with these drones missing: 2, 5 (text key aviata_pos_0_missing_2_5)
-	AVIATA_POS_1_MISSING_2_5,      // AVIATA drone position 1 with these drones missing: 2, 5 (text key aviata_pos_1_missing_2_5)
-	AVIATA_POS_3_MISSING_2_5,      // AVIATA drone position 3 with these drones missing: 2, 5 (text key aviata_pos_3_missing_2_5)
-	AVIATA_POS_4_MISSING_2_5,      // AVIATA drone position 4 with these drones missing: 2, 5 (text key aviata_pos_4_missing_2_5)
-	AVIATA_POS_6_MISSING_2_5,      // AVIATA drone position 6 with these drones missing: 2, 5 (text key aviata_pos_6_missing_2_5)
-	AVIATA_POS_7_MISSING_2_5,      // AVIATA drone position 7 with these drones missing: 2, 5 (text key aviata_pos_7_missing_2_5)
-	AVIATA_POS_0_MISSING_2_6,      // AVIATA drone position 0 with these drones missing: 2, 6 (text key aviata_pos_0_missing_2_6)
-	AVIATA_POS_1_MISSING_2_6,      // AVIATA drone position 1 with these drones missing: 2, 6 (text key aviata_pos_1_missing_2_6)
-	AVIATA_POS_3_MISSING_2_6,      // AVIATA drone position 3 with these drones missing: 2, 6 (text key aviata_pos_3_missing_2_6)
-	AVIATA_POS_4_MISSING_2_6,      // AVIATA drone position 4 with these drones missing: 2, 6 (text key aviata_pos_4_missing_2_6)
-	AVIATA_POS_5_MISSING_2_6,      // AVIATA drone position 5 with these drones missing: 2, 6 (text key aviata_pos_5_missing_2_6)
-	AVIATA_POS_7_MISSING_2_6,      // AVIATA drone position 7 with these drones missing: 2, 6 (text key aviata_pos_7_missing_2_6)
-	AVIATA_POS_0_MISSING_2_7,      // AVIATA drone position 0 with these drones missing: 2, 7 (text key aviata_pos_0_missing_2_7)
-	AVIATA_POS_1_MISSING_2_7,      // AVIATA drone position 1 with these drones missing: 2, 7 (text key aviata_pos_1_missing_2_7)
-	AVIATA_POS_3_MISSING_2_7,      // AVIATA drone position 3 with these drones missing: 2, 7 (text key aviata_pos_3_missing_2_7)
-	AVIATA_POS_4_MISSING_2_7,      // AVIATA drone position 4 with these drones missing: 2, 7 (text key aviata_pos_4_missing_2_7)
-	AVIATA_POS_5_MISSING_2_7,      // AVIATA drone position 5 with these drones missing: 2, 7 (text key aviata_pos_5_missing_2_7)
-	AVIATA_POS_6_MISSING_2_7,      // AVIATA drone position 6 with these drones missing: 2, 7 (text key aviata_pos_6_missing_2_7)
-	AVIATA_POS_0_MISSING_3_4,      // AVIATA drone position 0 with these drones missing: 3, 4 (text key aviata_pos_0_missing_3_4)
-	AVIATA_POS_1_MISSING_3_4,      // AVIATA drone position 1 with these drones missing: 3, 4 (text key aviata_pos_1_missing_3_4)
-	AVIATA_POS_2_MISSING_3_4,      // AVIATA drone position 2 with these drones missing: 3, 4 (text key aviata_pos_2_missing_3_4)
-	AVIATA_POS_5_MISSING_3_4,      // AVIATA drone position 5 with these drones missing: 3, 4 (text key aviata_pos_5_missing_3_4)
-	AVIATA_POS_6_MISSING_3_4,      // AVIATA drone position 6 with these drones missing: 3, 4 (text key aviata_pos_6_missing_3_4)
-	AVIATA_POS_7_MISSING_3_4,      // AVIATA drone position 7 with these drones missing: 3, 4 (text key aviata_pos_7_missing_3_4)
-	AVIATA_POS_0_MISSING_3_5,      // AVIATA drone position 0 with these drones missing: 3, 5 (text key aviata_pos_0_missing_3_5)
-	AVIATA_POS_1_MISSING_3_5,      // AVIATA drone position 1 with these drones missing: 3, 5 (text key aviata_pos_1_missing_3_5)
-	AVIATA_POS_2_MISSING_3_5,      // AVIATA drone position 2 with these drones missing: 3, 5 (text key aviata_pos_2_missing_3_5)
-	AVIATA_POS_4_MISSING_3_5,      // AVIATA drone position 4 with these drones missing: 3, 5 (text key aviata_pos_4_missing_3_5)
-	AVIATA_POS_6_MISSING_3_5,      // AVIATA drone position 6 with these drones missing: 3, 5 (text key aviata_pos_6_missing_3_5)
-	AVIATA_POS_7_MISSING_3_5,      // AVIATA drone position 7 with these drones missing: 3, 5 (text key aviata_pos_7_missing_3_5)
-	AVIATA_POS_0_MISSING_3_6,      // AVIATA drone position 0 with these drones missing: 3, 6 (text key aviata_pos_0_missing_3_6)
-	AVIATA_POS_1_MISSING_3_6,      // AVIATA drone position 1 with these drones missing: 3, 6 (text key aviata_pos_1_missing_3_6)
-	AVIATA_POS_2_MISSING_3_6,      // AVIATA drone position 2 with these drones missing: 3, 6 (text key aviata_pos_2_missing_3_6)
-	AVIATA_POS_4_MISSING_3_6,      // AVIATA drone position 4 with these drones missing: 3, 6 (text key aviata_pos_4_missing_3_6)
-	AVIATA_POS_5_MISSING_3_6,      // AVIATA drone position 5 with these drones missing: 3, 6 (text key aviata_pos_5_missing_3_6)
-	AVIATA_POS_7_MISSING_3_6,      // AVIATA drone position 7 with these drones missing: 3, 6 (text key aviata_pos_7_missing_3_6)
-	AVIATA_POS_0_MISSING_3_7,      // AVIATA drone position 0 with these drones missing: 3, 7 (text key aviata_pos_0_missing_3_7)
-	AVIATA_POS_1_MISSING_3_7,      // AVIATA drone position 1 with these drones missing: 3, 7 (text key aviata_pos_1_missing_3_7)
-	AVIATA_POS_2_MISSING_3_7,      // AVIATA drone position 2 with these drones missing: 3, 7 (text key aviata_pos_2_missing_3_7)
-	AVIATA_POS_4_MISSING_3_7,      // AVIATA drone position 4 with these drones missing: 3, 7 (text key aviata_pos_4_missing_3_7)
-	AVIATA_POS_5_MISSING_3_7,      // AVIATA drone position 5 with these drones missing: 3, 7 (text key aviata_pos_5_missing_3_7)
-	AVIATA_POS_6_MISSING_3_7,      // AVIATA drone position 6 with these drones missing: 3, 7 (text key aviata_pos_6_missing_3_7)
-	AVIATA_POS_0_MISSING_4_5,      // AVIATA drone position 0 with these drones missing: 4, 5 (text key aviata_pos_0_missing_4_5)
-	AVIATA_POS_1_MISSING_4_5,      // AVIATA drone position 1 with these drones missing: 4, 5 (text key aviata_pos_1_missing_4_5)
-	AVIATA_POS_2_MISSING_4_5,      // AVIATA drone position 2 with these drones missing: 4, 5 (text key aviata_pos_2_missing_4_5)
-	AVIATA_POS_3_MISSING_4_5,      // AVIATA drone position 3 with these drones missing: 4, 5 (text key aviata_pos_3_missing_4_5)
-	AVIATA_POS_6_MISSING_4_5,      // AVIATA drone position 6 with these drones missing: 4, 5 (text key aviata_pos_6_missing_4_5)
-	AVIATA_POS_7_MISSING_4_5,      // AVIATA drone position 7 with these drones missing: 4, 5 (text key aviata_pos_7_missing_4_5)
-	AVIATA_POS_0_MISSING_4_6,      // AVIATA drone position 0 with these drones missing: 4, 6 (text key aviata_pos_0_missing_4_6)
-	AVIATA_POS_1_MISSING_4_6,      // AVIATA drone position 1 with these drones missing: 4, 6 (text key aviata_pos_1_missing_4_6)
-	AVIATA_POS_2_MISSING_4_6,      // AVIATA drone position 2 with these drones missing: 4, 6 (text key aviata_pos_2_missing_4_6)
-	AVIATA_POS_3_MISSING_4_6,      // AVIATA drone position 3 with these drones missing: 4, 6 (text key aviata_pos_3_missing_4_6)
-	AVIATA_POS_5_MISSING_4_6,      // AVIATA drone position 5 with these drones missing: 4, 6 (text key aviata_pos_5_missing_4_6)
-	AVIATA_POS_7_MISSING_4_6,      // AVIATA drone position 7 with these drones missing: 4, 6 (text key aviata_pos_7_missing_4_6)
-	AVIATA_POS_0_MISSING_4_7,      // AVIATA drone position 0 with these drones missing: 4, 7 (text key aviata_pos_0_missing_4_7)
-	AVIATA_POS_1_MISSING_4_7,      // AVIATA drone position 1 with these drones missing: 4, 7 (text key aviata_pos_1_missing_4_7)
-	AVIATA_POS_2_MISSING_4_7,      // AVIATA drone position 2 with these drones missing: 4, 7 (text key aviata_pos_2_missing_4_7)
-	AVIATA_POS_3_MISSING_4_7,      // AVIATA drone position 3 with these drones missing: 4, 7 (text key aviata_pos_3_missing_4_7)
-	AVIATA_POS_5_MISSING_4_7,      // AVIATA drone position 5 with these drones missing: 4, 7 (text key aviata_pos_5_missing_4_7)
-	AVIATA_POS_6_MISSING_4_7,      // AVIATA drone position 6 with these drones missing: 4, 7 (text key aviata_pos_6_missing_4_7)
-	AVIATA_POS_0_MISSING_5_6,      // AVIATA drone position 0 with these drones missing: 5, 6 (text key aviata_pos_0_missing_5_6)
-	AVIATA_POS_1_MISSING_5_6,      // AVIATA drone position 1 with these drones missing: 5, 6 (text key aviata_pos_1_missing_5_6)
-	AVIATA_POS_2_MISSING_5_6,      // AVIATA drone position 2 with these drones missing: 5, 6 (text key aviata_pos_2_missing_5_6)
-	AVIATA_POS_3_MISSING_5_6,      // AVIATA drone position 3 with these drones missing: 5, 6 (text key aviata_pos_3_missing_5_6)
-	AVIATA_POS_4_MISSING_5_6,      // AVIATA drone position 4 with these drones missing: 5, 6 (text key aviata_pos_4_missing_5_6)
-	AVIATA_POS_7_MISSING_5_6,      // AVIATA drone position 7 with these drones missing: 5, 6 (text key aviata_pos_7_missing_5_6)
-	AVIATA_POS_0_MISSING_5_7,      // AVIATA drone position 0 with these drones missing: 5, 7 (text key aviata_pos_0_missing_5_7)
-	AVIATA_POS_1_MISSING_5_7,      // AVIATA drone position 1 with these drones missing: 5, 7 (text key aviata_pos_1_missing_5_7)
-	AVIATA_POS_2_MISSING_5_7,      // AVIATA drone position 2 with these drones missing: 5, 7 (text key aviata_pos_2_missing_5_7)
-	AVIATA_POS_3_MISSING_5_7,      // AVIATA drone position 3 with these drones missing: 5, 7 (text key aviata_pos_3_missing_5_7)
-	AVIATA_POS_4_MISSING_5_7,      // AVIATA drone position 4 with these drones missing: 5, 7 (text key aviata_pos_4_missing_5_7)
-	AVIATA_POS_6_MISSING_5_7,      // AVIATA drone position 6 with these drones missing: 5, 7 (text key aviata_pos_6_missing_5_7)
-	AVIATA_POS_0_MISSING_6_7,      // AVIATA drone position 0 with these drones missing: 6, 7 (text key aviata_pos_0_missing_6_7)
-	AVIATA_POS_1_MISSING_6_7,      // AVIATA drone position 1 with these drones missing: 6, 7 (text key aviata_pos_1_missing_6_7)
-	AVIATA_POS_2_MISSING_6_7,      // AVIATA drone position 2 with these drones missing: 6, 7 (text key aviata_pos_2_missing_6_7)
-	AVIATA_POS_3_MISSING_6_7,      // AVIATA drone position 3 with these drones missing: 6, 7 (text key aviata_pos_3_missing_6_7)
-	AVIATA_POS_4_MISSING_6_7,      // AVIATA drone position 4 with these drones missing: 6, 7 (text key aviata_pos_4_missing_6_7)
-	AVIATA_POS_5_MISSING_6_7,      // AVIATA drone position 5 with these drones missing: 6, 7 (text key aviata_pos_5_missing_6_7)
-	AVIATA_POS_3_MISSING_0_1_2,    // AVIATA drone position 3 with these drones missing: 0, 1, 2 (text key aviata_pos_3_missing_0_1_2)
-	AVIATA_POS_4_MISSING_0_1_2,    // AVIATA drone position 4 with these drones missing: 0, 1, 2 (text key aviata_pos_4_missing_0_1_2)
-	AVIATA_POS_5_MISSING_0_1_2,    // AVIATA drone position 5 with these drones missing: 0, 1, 2 (text key aviata_pos_5_missing_0_1_2)
-	AVIATA_POS_6_MISSING_0_1_2,    // AVIATA drone position 6 with these drones missing: 0, 1, 2 (text key aviata_pos_6_missing_0_1_2)
-	AVIATA_POS_7_MISSING_0_1_2,    // AVIATA drone position 7 with these drones missing: 0, 1, 2 (text key aviata_pos_7_missing_0_1_2)
-	AVIATA_POS_2_MISSING_0_1_3,    // AVIATA drone position 2 with these drones missing: 0, 1, 3 (text key aviata_pos_2_missing_0_1_3)
-	AVIATA_POS_4_MISSING_0_1_3,    // AVIATA drone position 4 with these drones missing: 0, 1, 3 (text key aviata_pos_4_missing_0_1_3)
-	AVIATA_POS_5_MISSING_0_1_3,    // AVIATA drone position 5 with these drones missing: 0, 1, 3 (text key aviata_pos_5_missing_0_1_3)
-	AVIATA_POS_6_MISSING_0_1_3,    // AVIATA drone position 6 with these drones missing: 0, 1, 3 (text key aviata_pos_6_missing_0_1_3)
-	AVIATA_POS_7_MISSING_0_1_3,    // AVIATA drone position 7 with these drones missing: 0, 1, 3 (text key aviata_pos_7_missing_0_1_3)
-	AVIATA_POS_2_MISSING_0_1_4,    // AVIATA drone position 2 with these drones missing: 0, 1, 4 (text key aviata_pos_2_missing_0_1_4)
-	AVIATA_POS_3_MISSING_0_1_4,    // AVIATA drone position 3 with these drones missing: 0, 1, 4 (text key aviata_pos_3_missing_0_1_4)
-	AVIATA_POS_5_MISSING_0_1_4,    // AVIATA drone position 5 with these drones missing: 0, 1, 4 (text key aviata_pos_5_missing_0_1_4)
-	AVIATA_POS_6_MISSING_0_1_4,    // AVIATA drone position 6 with these drones missing: 0, 1, 4 (text key aviata_pos_6_missing_0_1_4)
-	AVIATA_POS_7_MISSING_0_1_4,    // AVIATA drone position 7 with these drones missing: 0, 1, 4 (text key aviata_pos_7_missing_0_1_4)
-	AVIATA_POS_2_MISSING_0_1_5,    // AVIATA drone position 2 with these drones missing: 0, 1, 5 (text key aviata_pos_2_missing_0_1_5)
-	AVIATA_POS_3_MISSING_0_1_5,    // AVIATA drone position 3 with these drones missing: 0, 1, 5 (text key aviata_pos_3_missing_0_1_5)
-	AVIATA_POS_4_MISSING_0_1_5,    // AVIATA drone position 4 with these drones missing: 0, 1, 5 (text key aviata_pos_4_missing_0_1_5)
-	AVIATA_POS_6_MISSING_0_1_5,    // AVIATA drone position 6 with these drones missing: 0, 1, 5 (text key aviata_pos_6_missing_0_1_5)
-	AVIATA_POS_7_MISSING_0_1_5,    // AVIATA drone position 7 with these drones missing: 0, 1, 5 (text key aviata_pos_7_missing_0_1_5)
-	AVIATA_POS_2_MISSING_0_1_6,    // AVIATA drone position 2 with these drones missing: 0, 1, 6 (text key aviata_pos_2_missing_0_1_6)
-	AVIATA_POS_3_MISSING_0_1_6,    // AVIATA drone position 3 with these drones missing: 0, 1, 6 (text key aviata_pos_3_missing_0_1_6)
-	AVIATA_POS_4_MISSING_0_1_6,    // AVIATA drone position 4 with these drones missing: 0, 1, 6 (text key aviata_pos_4_missing_0_1_6)
-	AVIATA_POS_5_MISSING_0_1_6,    // AVIATA drone position 5 with these drones missing: 0, 1, 6 (text key aviata_pos_5_missing_0_1_6)
-	AVIATA_POS_7_MISSING_0_1_6,    // AVIATA drone position 7 with these drones missing: 0, 1, 6 (text key aviata_pos_7_missing_0_1_6)
-	AVIATA_POS_2_MISSING_0_1_7,    // AVIATA drone position 2 with these drones missing: 0, 1, 7 (text key aviata_pos_2_missing_0_1_7)
-	AVIATA_POS_3_MISSING_0_1_7,    // AVIATA drone position 3 with these drones missing: 0, 1, 7 (text key aviata_pos_3_missing_0_1_7)
-	AVIATA_POS_4_MISSING_0_1_7,    // AVIATA drone position 4 with these drones missing: 0, 1, 7 (text key aviata_pos_4_missing_0_1_7)
-	AVIATA_POS_5_MISSING_0_1_7,    // AVIATA drone position 5 with these drones missing: 0, 1, 7 (text key aviata_pos_5_missing_0_1_7)
-	AVIATA_POS_6_MISSING_0_1_7,    // AVIATA drone position 6 with these drones missing: 0, 1, 7 (text key aviata_pos_6_missing_0_1_7)
-	AVIATA_POS_1_MISSING_0_2_3,    // AVIATA drone position 1 with these drones missing: 0, 2, 3 (text key aviata_pos_1_missing_0_2_3)
-	AVIATA_POS_4_MISSING_0_2_3,    // AVIATA drone position 4 with these drones missing: 0, 2, 3 (text key aviata_pos_4_missing_0_2_3)
-	AVIATA_POS_5_MISSING_0_2_3,    // AVIATA drone position 5 with these drones missing: 0, 2, 3 (text key aviata_pos_5_missing_0_2_3)
-	AVIATA_POS_6_MISSING_0_2_3,    // AVIATA drone position 6 with these drones missing: 0, 2, 3 (text key aviata_pos_6_missing_0_2_3)
-	AVIATA_POS_7_MISSING_0_2_3,    // AVIATA drone position 7 with these drones missing: 0, 2, 3 (text key aviata_pos_7_missing_0_2_3)
-	AVIATA_POS_1_MISSING_0_2_4,    // AVIATA drone position 1 with these drones missing: 0, 2, 4 (text key aviata_pos_1_missing_0_2_4)
-	AVIATA_POS_3_MISSING_0_2_4,    // AVIATA drone position 3 with these drones missing: 0, 2, 4 (text key aviata_pos_3_missing_0_2_4)
-	AVIATA_POS_5_MISSING_0_2_4,    // AVIATA drone position 5 with these drones missing: 0, 2, 4 (text key aviata_pos_5_missing_0_2_4)
-	AVIATA_POS_6_MISSING_0_2_4,    // AVIATA drone position 6 with these drones missing: 0, 2, 4 (text key aviata_pos_6_missing_0_2_4)
-	AVIATA_POS_7_MISSING_0_2_4,    // AVIATA drone position 7 with these drones missing: 0, 2, 4 (text key aviata_pos_7_missing_0_2_4)
-	AVIATA_POS_1_MISSING_0_2_5,    // AVIATA drone position 1 with these drones missing: 0, 2, 5 (text key aviata_pos_1_missing_0_2_5)
-	AVIATA_POS_3_MISSING_0_2_5,    // AVIATA drone position 3 with these drones missing: 0, 2, 5 (text key aviata_pos_3_missing_0_2_5)
-	AVIATA_POS_4_MISSING_0_2_5,    // AVIATA drone position 4 with these drones missing: 0, 2, 5 (text key aviata_pos_4_missing_0_2_5)
-	AVIATA_POS_6_MISSING_0_2_5,    // AVIATA drone position 6 with these drones missing: 0, 2, 5 (text key aviata_pos_6_missing_0_2_5)
-	AVIATA_POS_7_MISSING_0_2_5,    // AVIATA drone position 7 with these drones missing: 0, 2, 5 (text key aviata_pos_7_missing_0_2_5)
-	AVIATA_POS_1_MISSING_0_2_6,    // AVIATA drone position 1 with these drones missing: 0, 2, 6 (text key aviata_pos_1_missing_0_2_6)
-	AVIATA_POS_3_MISSING_0_2_6,    // AVIATA drone position 3 with these drones missing: 0, 2, 6 (text key aviata_pos_3_missing_0_2_6)
-	AVIATA_POS_4_MISSING_0_2_6,    // AVIATA drone position 4 with these drones missing: 0, 2, 6 (text key aviata_pos_4_missing_0_2_6)
-	AVIATA_POS_5_MISSING_0_2_6,    // AVIATA drone position 5 with these drones missing: 0, 2, 6 (text key aviata_pos_5_missing_0_2_6)
-	AVIATA_POS_7_MISSING_0_2_6,    // AVIATA drone position 7 with these drones missing: 0, 2, 6 (text key aviata_pos_7_missing_0_2_6)
-	AVIATA_POS_1_MISSING_0_2_7,    // AVIATA drone position 1 with these drones missing: 0, 2, 7 (text key aviata_pos_1_missing_0_2_7)
-	AVIATA_POS_3_MISSING_0_2_7,    // AVIATA drone position 3 with these drones missing: 0, 2, 7 (text key aviata_pos_3_missing_0_2_7)
-	AVIATA_POS_4_MISSING_0_2_7,    // AVIATA drone position 4 with these drones missing: 0, 2, 7 (text key aviata_pos_4_missing_0_2_7)
-	AVIATA_POS_5_MISSING_0_2_7,    // AVIATA drone position 5 with these drones missing: 0, 2, 7 (text key aviata_pos_5_missing_0_2_7)
-	AVIATA_POS_6_MISSING_0_2_7,    // AVIATA drone position 6 with these drones missing: 0, 2, 7 (text key aviata_pos_6_missing_0_2_7)
-	AVIATA_POS_1_MISSING_0_3_4,    // AVIATA drone position 1 with these drones missing: 0, 3, 4 (text key aviata_pos_1_missing_0_3_4)
-	AVIATA_POS_2_MISSING_0_3_4,    // AVIATA drone position 2 with these drones missing: 0, 3, 4 (text key aviata_pos_2_missing_0_3_4)
-	AVIATA_POS_5_MISSING_0_3_4,    // AVIATA drone position 5 with these drones missing: 0, 3, 4 (text key aviata_pos_5_missing_0_3_4)
-	AVIATA_POS_6_MISSING_0_3_4,    // AVIATA drone position 6 with these drones missing: 0, 3, 4 (text key aviata_pos_6_missing_0_3_4)
-	AVIATA_POS_7_MISSING_0_3_4,    // AVIATA drone position 7 with these drones missing: 0, 3, 4 (text key aviata_pos_7_missing_0_3_4)
-	AVIATA_POS_1_MISSING_0_3_5,    // AVIATA drone position 1 with these drones missing: 0, 3, 5 (text key aviata_pos_1_missing_0_3_5)
-	AVIATA_POS_2_MISSING_0_3_5,    // AVIATA drone position 2 with these drones missing: 0, 3, 5 (text key aviata_pos_2_missing_0_3_5)
-	AVIATA_POS_4_MISSING_0_3_5,    // AVIATA drone position 4 with these drones missing: 0, 3, 5 (text key aviata_pos_4_missing_0_3_5)
-	AVIATA_POS_6_MISSING_0_3_5,    // AVIATA drone position 6 with these drones missing: 0, 3, 5 (text key aviata_pos_6_missing_0_3_5)
-	AVIATA_POS_7_MISSING_0_3_5,    // AVIATA drone position 7 with these drones missing: 0, 3, 5 (text key aviata_pos_7_missing_0_3_5)
-	AVIATA_POS_1_MISSING_0_3_6,    // AVIATA drone position 1 with these drones missing: 0, 3, 6 (text key aviata_pos_1_missing_0_3_6)
-	AVIATA_POS_2_MISSING_0_3_6,    // AVIATA drone position 2 with these drones missing: 0, 3, 6 (text key aviata_pos_2_missing_0_3_6)
-	AVIATA_POS_4_MISSING_0_3_6,    // AVIATA drone position 4 with these drones missing: 0, 3, 6 (text key aviata_pos_4_missing_0_3_6)
-	AVIATA_POS_5_MISSING_0_3_6,    // AVIATA drone position 5 with these drones missing: 0, 3, 6 (text key aviata_pos_5_missing_0_3_6)
-	AVIATA_POS_7_MISSING_0_3_6,    // AVIATA drone position 7 with these drones missing: 0, 3, 6 (text key aviata_pos_7_missing_0_3_6)
-	AVIATA_POS_1_MISSING_0_3_7,    // AVIATA drone position 1 with these drones missing: 0, 3, 7 (text key aviata_pos_1_missing_0_3_7)
-	AVIATA_POS_2_MISSING_0_3_7,    // AVIATA drone position 2 with these drones missing: 0, 3, 7 (text key aviata_pos_2_missing_0_3_7)
-	AVIATA_POS_4_MISSING_0_3_7,    // AVIATA drone position 4 with these drones missing: 0, 3, 7 (text key aviata_pos_4_missing_0_3_7)
-	AVIATA_POS_5_MISSING_0_3_7,    // AVIATA drone position 5 with these drones missing: 0, 3, 7 (text key aviata_pos_5_missing_0_3_7)
-	AVIATA_POS_6_MISSING_0_3_7,    // AVIATA drone position 6 with these drones missing: 0, 3, 7 (text key aviata_pos_6_missing_0_3_7)
-	AVIATA_POS_1_MISSING_0_4_5,    // AVIATA drone position 1 with these drones missing: 0, 4, 5 (text key aviata_pos_1_missing_0_4_5)
-	AVIATA_POS_2_MISSING_0_4_5,    // AVIATA drone position 2 with these drones missing: 0, 4, 5 (text key aviata_pos_2_missing_0_4_5)
-	AVIATA_POS_3_MISSING_0_4_5,    // AVIATA drone position 3 with these drones missing: 0, 4, 5 (text key aviata_pos_3_missing_0_4_5)
-	AVIATA_POS_6_MISSING_0_4_5,    // AVIATA drone position 6 with these drones missing: 0, 4, 5 (text key aviata_pos_6_missing_0_4_5)
-	AVIATA_POS_7_MISSING_0_4_5,    // AVIATA drone position 7 with these drones missing: 0, 4, 5 (text key aviata_pos_7_missing_0_4_5)
-	AVIATA_POS_1_MISSING_0_4_6,    // AVIATA drone position 1 with these drones missing: 0, 4, 6 (text key aviata_pos_1_missing_0_4_6)
-	AVIATA_POS_2_MISSING_0_4_6,    // AVIATA drone position 2 with these drones missing: 0, 4, 6 (text key aviata_pos_2_missing_0_4_6)
-	AVIATA_POS_3_MISSING_0_4_6,    // AVIATA drone position 3 with these drones missing: 0, 4, 6 (text key aviata_pos_3_missing_0_4_6)
-	AVIATA_POS_5_MISSING_0_4_6,    // AVIATA drone position 5 with these drones missing: 0, 4, 6 (text key aviata_pos_5_missing_0_4_6)
-	AVIATA_POS_7_MISSING_0_4_6,    // AVIATA drone position 7 with these drones missing: 0, 4, 6 (text key aviata_pos_7_missing_0_4_6)
-	AVIATA_POS_1_MISSING_0_4_7,    // AVIATA drone position 1 with these drones missing: 0, 4, 7 (text key aviata_pos_1_missing_0_4_7)
-	AVIATA_POS_2_MISSING_0_4_7,    // AVIATA drone position 2 with these drones missing: 0, 4, 7 (text key aviata_pos_2_missing_0_4_7)
-	AVIATA_POS_3_MISSING_0_4_7,    // AVIATA drone position 3 with these drones missing: 0, 4, 7 (text key aviata_pos_3_missing_0_4_7)
-	AVIATA_POS_5_MISSING_0_4_7,    // AVIATA drone position 5 with these drones missing: 0, 4, 7 (text key aviata_pos_5_missing_0_4_7)
-	AVIATA_POS_6_MISSING_0_4_7,    // AVIATA drone position 6 with these drones missing: 0, 4, 7 (text key aviata_pos_6_missing_0_4_7)
-	AVIATA_POS_1_MISSING_0_5_6,    // AVIATA drone position 1 with these drones missing: 0, 5, 6 (text key aviata_pos_1_missing_0_5_6)
-	AVIATA_POS_2_MISSING_0_5_6,    // AVIATA drone position 2 with these drones missing: 0, 5, 6 (text key aviata_pos_2_missing_0_5_6)
-	AVIATA_POS_3_MISSING_0_5_6,    // AVIATA drone position 3 with these drones missing: 0, 5, 6 (text key aviata_pos_3_missing_0_5_6)
-	AVIATA_POS_4_MISSING_0_5_6,    // AVIATA drone position 4 with these drones missing: 0, 5, 6 (text key aviata_pos_4_missing_0_5_6)
-	AVIATA_POS_7_MISSING_0_5_6,    // AVIATA drone position 7 with these drones missing: 0, 5, 6 (text key aviata_pos_7_missing_0_5_6)
-	AVIATA_POS_1_MISSING_0_5_7,    // AVIATA drone position 1 with these drones missing: 0, 5, 7 (text key aviata_pos_1_missing_0_5_7)
-	AVIATA_POS_2_MISSING_0_5_7,    // AVIATA drone position 2 with these drones missing: 0, 5, 7 (text key aviata_pos_2_missing_0_5_7)
-	AVIATA_POS_3_MISSING_0_5_7,    // AVIATA drone position 3 with these drones missing: 0, 5, 7 (text key aviata_pos_3_missing_0_5_7)
-	AVIATA_POS_4_MISSING_0_5_7,    // AVIATA drone position 4 with these drones missing: 0, 5, 7 (text key aviata_pos_4_missing_0_5_7)
-	AVIATA_POS_6_MISSING_0_5_7,    // AVIATA drone position 6 with these drones missing: 0, 5, 7 (text key aviata_pos_6_missing_0_5_7)
-	AVIATA_POS_1_MISSING_0_6_7,    // AVIATA drone position 1 with these drones missing: 0, 6, 7 (text key aviata_pos_1_missing_0_6_7)
-	AVIATA_POS_2_MISSING_0_6_7,    // AVIATA drone position 2 with these drones missing: 0, 6, 7 (text key aviata_pos_2_missing_0_6_7)
-	AVIATA_POS_3_MISSING_0_6_7,    // AVIATA drone position 3 with these drones missing: 0, 6, 7 (text key aviata_pos_3_missing_0_6_7)
-	AVIATA_POS_4_MISSING_0_6_7,    // AVIATA drone position 4 with these drones missing: 0, 6, 7 (text key aviata_pos_4_missing_0_6_7)
-	AVIATA_POS_5_MISSING_0_6_7,    // AVIATA drone position 5 with these drones missing: 0, 6, 7 (text key aviata_pos_5_missing_0_6_7)
-	AVIATA_POS_0_MISSING_1_2_3,    // AVIATA drone position 0 with these drones missing: 1, 2, 3 (text key aviata_pos_0_missing_1_2_3)
-	AVIATA_POS_4_MISSING_1_2_3,    // AVIATA drone position 4 with these drones missing: 1, 2, 3 (text key aviata_pos_4_missing_1_2_3)
-	AVIATA_POS_5_MISSING_1_2_3,    // AVIATA drone position 5 with these drones missing: 1, 2, 3 (text key aviata_pos_5_missing_1_2_3)
-	AVIATA_POS_6_MISSING_1_2_3,    // AVIATA drone position 6 with these drones missing: 1, 2, 3 (text key aviata_pos_6_missing_1_2_3)
-	AVIATA_POS_7_MISSING_1_2_3,    // AVIATA drone position 7 with these drones missing: 1, 2, 3 (text key aviata_pos_7_missing_1_2_3)
-	AVIATA_POS_0_MISSING_1_2_4,    // AVIATA drone position 0 with these drones missing: 1, 2, 4 (text key aviata_pos_0_missing_1_2_4)
-	AVIATA_POS_3_MISSING_1_2_4,    // AVIATA drone position 3 with these drones missing: 1, 2, 4 (text key aviata_pos_3_missing_1_2_4)
-	AVIATA_POS_5_MISSING_1_2_4,    // AVIATA drone position 5 with these drones missing: 1, 2, 4 (text key aviata_pos_5_missing_1_2_4)
-	AVIATA_POS_6_MISSING_1_2_4,    // AVIATA drone position 6 with these drones missing: 1, 2, 4 (text key aviata_pos_6_missing_1_2_4)
-	AVIATA_POS_7_MISSING_1_2_4,    // AVIATA drone position 7 with these drones missing: 1, 2, 4 (text key aviata_pos_7_missing_1_2_4)
-	AVIATA_POS_0_MISSING_1_2_5,    // AVIATA drone position 0 with these drones missing: 1, 2, 5 (text key aviata_pos_0_missing_1_2_5)
-	AVIATA_POS_3_MISSING_1_2_5,    // AVIATA drone position 3 with these drones missing: 1, 2, 5 (text key aviata_pos_3_missing_1_2_5)
-	AVIATA_POS_4_MISSING_1_2_5,    // AVIATA drone position 4 with these drones missing: 1, 2, 5 (text key aviata_pos_4_missing_1_2_5)
-	AVIATA_POS_6_MISSING_1_2_5,    // AVIATA drone position 6 with these drones missing: 1, 2, 5 (text key aviata_pos_6_missing_1_2_5)
-	AVIATA_POS_7_MISSING_1_2_5,    // AVIATA drone position 7 with these drones missing: 1, 2, 5 (text key aviata_pos_7_missing_1_2_5)
-	AVIATA_POS_0_MISSING_1_2_6,    // AVIATA drone position 0 with these drones missing: 1, 2, 6 (text key aviata_pos_0_missing_1_2_6)
-	AVIATA_POS_3_MISSING_1_2_6,    // AVIATA drone position 3 with these drones missing: 1, 2, 6 (text key aviata_pos_3_missing_1_2_6)
-	AVIATA_POS_4_MISSING_1_2_6,    // AVIATA drone position 4 with these drones missing: 1, 2, 6 (text key aviata_pos_4_missing_1_2_6)
-	AVIATA_POS_5_MISSING_1_2_6,    // AVIATA drone position 5 with these drones missing: 1, 2, 6 (text key aviata_pos_5_missing_1_2_6)
-	AVIATA_POS_7_MISSING_1_2_6,    // AVIATA drone position 7 with these drones missing: 1, 2, 6 (text key aviata_pos_7_missing_1_2_6)
-	AVIATA_POS_0_MISSING_1_2_7,    // AVIATA drone position 0 with these drones missing: 1, 2, 7 (text key aviata_pos_0_missing_1_2_7)
-	AVIATA_POS_3_MISSING_1_2_7,    // AVIATA drone position 3 with these drones missing: 1, 2, 7 (text key aviata_pos_3_missing_1_2_7)
-	AVIATA_POS_4_MISSING_1_2_7,    // AVIATA drone position 4 with these drones missing: 1, 2, 7 (text key aviata_pos_4_missing_1_2_7)
-	AVIATA_POS_5_MISSING_1_2_7,    // AVIATA drone position 5 with these drones missing: 1, 2, 7 (text key aviata_pos_5_missing_1_2_7)
-	AVIATA_POS_6_MISSING_1_2_7,    // AVIATA drone position 6 with these drones missing: 1, 2, 7 (text key aviata_pos_6_missing_1_2_7)
-	AVIATA_POS_0_MISSING_1_3_4,    // AVIATA drone position 0 with these drones missing: 1, 3, 4 (text key aviata_pos_0_missing_1_3_4)
-	AVIATA_POS_2_MISSING_1_3_4,    // AVIATA drone position 2 with these drones missing: 1, 3, 4 (text key aviata_pos_2_missing_1_3_4)
-	AVIATA_POS_5_MISSING_1_3_4,    // AVIATA drone position 5 with these drones missing: 1, 3, 4 (text key aviata_pos_5_missing_1_3_4)
-	AVIATA_POS_6_MISSING_1_3_4,    // AVIATA drone position 6 with these drones missing: 1, 3, 4 (text key aviata_pos_6_missing_1_3_4)
-	AVIATA_POS_7_MISSING_1_3_4,    // AVIATA drone position 7 with these drones missing: 1, 3, 4 (text key aviata_pos_7_missing_1_3_4)
-	AVIATA_POS_0_MISSING_1_3_5,    // AVIATA drone position 0 with these drones missing: 1, 3, 5 (text key aviata_pos_0_missing_1_3_5)
-	AVIATA_POS_2_MISSING_1_3_5,    // AVIATA drone position 2 with these drones missing: 1, 3, 5 (text key aviata_pos_2_missing_1_3_5)
-	AVIATA_POS_4_MISSING_1_3_5,    // AVIATA drone position 4 with these drones missing: 1, 3, 5 (text key aviata_pos_4_missing_1_3_5)
-	AVIATA_POS_6_MISSING_1_3_5,    // AVIATA drone position 6 with these drones missing: 1, 3, 5 (text key aviata_pos_6_missing_1_3_5)
-	AVIATA_POS_7_MISSING_1_3_5,    // AVIATA drone position 7 with these drones missing: 1, 3, 5 (text key aviata_pos_7_missing_1_3_5)
-	AVIATA_POS_0_MISSING_1_3_6,    // AVIATA drone position 0 with these drones missing: 1, 3, 6 (text key aviata_pos_0_missing_1_3_6)
-	AVIATA_POS_2_MISSING_1_3_6,    // AVIATA drone position 2 with these drones missing: 1, 3, 6 (text key aviata_pos_2_missing_1_3_6)
-	AVIATA_POS_4_MISSING_1_3_6,    // AVIATA drone position 4 with these drones missing: 1, 3, 6 (text key aviata_pos_4_missing_1_3_6)
-	AVIATA_POS_5_MISSING_1_3_6,    // AVIATA drone position 5 with these drones missing: 1, 3, 6 (text key aviata_pos_5_missing_1_3_6)
-	AVIATA_POS_7_MISSING_1_3_6,    // AVIATA drone position 7 with these drones missing: 1, 3, 6 (text key aviata_pos_7_missing_1_3_6)
-	AVIATA_POS_0_MISSING_1_3_7,    // AVIATA drone position 0 with these drones missing: 1, 3, 7 (text key aviata_pos_0_missing_1_3_7)
-	AVIATA_POS_2_MISSING_1_3_7,    // AVIATA drone position 2 with these drones missing: 1, 3, 7 (text key aviata_pos_2_missing_1_3_7)
-	AVIATA_POS_4_MISSING_1_3_7,    // AVIATA drone position 4 with these drones missing: 1, 3, 7 (text key aviata_pos_4_missing_1_3_7)
-	AVIATA_POS_5_MISSING_1_3_7,    // AVIATA drone position 5 with these drones missing: 1, 3, 7 (text key aviata_pos_5_missing_1_3_7)
-	AVIATA_POS_6_MISSING_1_3_7,    // AVIATA drone position 6 with these drones missing: 1, 3, 7 (text key aviata_pos_6_missing_1_3_7)
-	AVIATA_POS_0_MISSING_1_4_5,    // AVIATA drone position 0 with these drones missing: 1, 4, 5 (text key aviata_pos_0_missing_1_4_5)
-	AVIATA_POS_2_MISSING_1_4_5,    // AVIATA drone position 2 with these drones missing: 1, 4, 5 (text key aviata_pos_2_missing_1_4_5)
-	AVIATA_POS_3_MISSING_1_4_5,    // AVIATA drone position 3 with these drones missing: 1, 4, 5 (text key aviata_pos_3_missing_1_4_5)
-	AVIATA_POS_6_MISSING_1_4_5,    // AVIATA drone position 6 with these drones missing: 1, 4, 5 (text key aviata_pos_6_missing_1_4_5)
-	AVIATA_POS_7_MISSING_1_4_5,    // AVIATA drone position 7 with these drones missing: 1, 4, 5 (text key aviata_pos_7_missing_1_4_5)
-	AVIATA_POS_0_MISSING_1_4_6,    // AVIATA drone position 0 with these drones missing: 1, 4, 6 (text key aviata_pos_0_missing_1_4_6)
-	AVIATA_POS_2_MISSING_1_4_6,    // AVIATA drone position 2 with these drones missing: 1, 4, 6 (text key aviata_pos_2_missing_1_4_6)
-	AVIATA_POS_3_MISSING_1_4_6,    // AVIATA drone position 3 with these drones missing: 1, 4, 6 (text key aviata_pos_3_missing_1_4_6)
-	AVIATA_POS_5_MISSING_1_4_6,    // AVIATA drone position 5 with these drones missing: 1, 4, 6 (text key aviata_pos_5_missing_1_4_6)
-	AVIATA_POS_7_MISSING_1_4_6,    // AVIATA drone position 7 with these drones missing: 1, 4, 6 (text key aviata_pos_7_missing_1_4_6)
-	AVIATA_POS_0_MISSING_1_4_7,    // AVIATA drone position 0 with these drones missing: 1, 4, 7 (text key aviata_pos_0_missing_1_4_7)
-	AVIATA_POS_2_MISSING_1_4_7,    // AVIATA drone position 2 with these drones missing: 1, 4, 7 (text key aviata_pos_2_missing_1_4_7)
-	AVIATA_POS_3_MISSING_1_4_7,    // AVIATA drone position 3 with these drones missing: 1, 4, 7 (text key aviata_pos_3_missing_1_4_7)
-	AVIATA_POS_5_MISSING_1_4_7,    // AVIATA drone position 5 with these drones missing: 1, 4, 7 (text key aviata_pos_5_missing_1_4_7)
-	AVIATA_POS_6_MISSING_1_4_7,    // AVIATA drone position 6 with these drones missing: 1, 4, 7 (text key aviata_pos_6_missing_1_4_7)
-	AVIATA_POS_0_MISSING_1_5_6,    // AVIATA drone position 0 with these drones missing: 1, 5, 6 (text key aviata_pos_0_missing_1_5_6)
-	AVIATA_POS_2_MISSING_1_5_6,    // AVIATA drone position 2 with these drones missing: 1, 5, 6 (text key aviata_pos_2_missing_1_5_6)
-	AVIATA_POS_3_MISSING_1_5_6,    // AVIATA drone position 3 with these drones missing: 1, 5, 6 (text key aviata_pos_3_missing_1_5_6)
-	AVIATA_POS_4_MISSING_1_5_6,    // AVIATA drone position 4 with these drones missing: 1, 5, 6 (text key aviata_pos_4_missing_1_5_6)
-	AVIATA_POS_7_MISSING_1_5_6,    // AVIATA drone position 7 with these drones missing: 1, 5, 6 (text key aviata_pos_7_missing_1_5_6)
-	AVIATA_POS_0_MISSING_1_5_7,    // AVIATA drone position 0 with these drones missing: 1, 5, 7 (text key aviata_pos_0_missing_1_5_7)
-	AVIATA_POS_2_MISSING_1_5_7,    // AVIATA drone position 2 with these drones missing: 1, 5, 7 (text key aviata_pos_2_missing_1_5_7)
-	AVIATA_POS_3_MISSING_1_5_7,    // AVIATA drone position 3 with these drones missing: 1, 5, 7 (text key aviata_pos_3_missing_1_5_7)
-	AVIATA_POS_4_MISSING_1_5_7,    // AVIATA drone position 4 with these drones missing: 1, 5, 7 (text key aviata_pos_4_missing_1_5_7)
-	AVIATA_POS_6_MISSING_1_5_7,    // AVIATA drone position 6 with these drones missing: 1, 5, 7 (text key aviata_pos_6_missing_1_5_7)
-	AVIATA_POS_0_MISSING_1_6_7,    // AVIATA drone position 0 with these drones missing: 1, 6, 7 (text key aviata_pos_0_missing_1_6_7)
-	AVIATA_POS_2_MISSING_1_6_7,    // AVIATA drone position 2 with these drones missing: 1, 6, 7 (text key aviata_pos_2_missing_1_6_7)
-	AVIATA_POS_3_MISSING_1_6_7,    // AVIATA drone position 3 with these drones missing: 1, 6, 7 (text key aviata_pos_3_missing_1_6_7)
-	AVIATA_POS_4_MISSING_1_6_7,    // AVIATA drone position 4 with these drones missing: 1, 6, 7 (text key aviata_pos_4_missing_1_6_7)
-	AVIATA_POS_5_MISSING_1_6_7,    // AVIATA drone position 5 with these drones missing: 1, 6, 7 (text key aviata_pos_5_missing_1_6_7)
-	AVIATA_POS_0_MISSING_2_3_4,    // AVIATA drone position 0 with these drones missing: 2, 3, 4 (text key aviata_pos_0_missing_2_3_4)
-	AVIATA_POS_1_MISSING_2_3_4,    // AVIATA drone position 1 with these drones missing: 2, 3, 4 (text key aviata_pos_1_missing_2_3_4)
-	AVIATA_POS_5_MISSING_2_3_4,    // AVIATA drone position 5 with these drones missing: 2, 3, 4 (text key aviata_pos_5_missing_2_3_4)
-	AVIATA_POS_6_MISSING_2_3_4,    // AVIATA drone position 6 with these drones missing: 2, 3, 4 (text key aviata_pos_6_missing_2_3_4)
-	AVIATA_POS_7_MISSING_2_3_4,    // AVIATA drone position 7 with these drones missing: 2, 3, 4 (text key aviata_pos_7_missing_2_3_4)
-	AVIATA_POS_0_MISSING_2_3_5,    // AVIATA drone position 0 with these drones missing: 2, 3, 5 (text key aviata_pos_0_missing_2_3_5)
-	AVIATA_POS_1_MISSING_2_3_5,    // AVIATA drone position 1 with these drones missing: 2, 3, 5 (text key aviata_pos_1_missing_2_3_5)
-	AVIATA_POS_4_MISSING_2_3_5,    // AVIATA drone position 4 with these drones missing: 2, 3, 5 (text key aviata_pos_4_missing_2_3_5)
-	AVIATA_POS_6_MISSING_2_3_5,    // AVIATA drone position 6 with these drones missing: 2, 3, 5 (text key aviata_pos_6_missing_2_3_5)
-	AVIATA_POS_7_MISSING_2_3_5,    // AVIATA drone position 7 with these drones missing: 2, 3, 5 (text key aviata_pos_7_missing_2_3_5)
-	AVIATA_POS_0_MISSING_2_3_6,    // AVIATA drone position 0 with these drones missing: 2, 3, 6 (text key aviata_pos_0_missing_2_3_6)
-	AVIATA_POS_1_MISSING_2_3_6,    // AVIATA drone position 1 with these drones missing: 2, 3, 6 (text key aviata_pos_1_missing_2_3_6)
-	AVIATA_POS_4_MISSING_2_3_6,    // AVIATA drone position 4 with these drones missing: 2, 3, 6 (text key aviata_pos_4_missing_2_3_6)
-	AVIATA_POS_5_MISSING_2_3_6,    // AVIATA drone position 5 with these drones missing: 2, 3, 6 (text key aviata_pos_5_missing_2_3_6)
-	AVIATA_POS_7_MISSING_2_3_6,    // AVIATA drone position 7 with these drones missing: 2, 3, 6 (text key aviata_pos_7_missing_2_3_6)
-	AVIATA_POS_0_MISSING_2_3_7,    // AVIATA drone position 0 with these drones missing: 2, 3, 7 (text key aviata_pos_0_missing_2_3_7)
-	AVIATA_POS_1_MISSING_2_3_7,    // AVIATA drone position 1 with these drones missing: 2, 3, 7 (text key aviata_pos_1_missing_2_3_7)
-	AVIATA_POS_4_MISSING_2_3_7,    // AVIATA drone position 4 with these drones missing: 2, 3, 7 (text key aviata_pos_4_missing_2_3_7)
-	AVIATA_POS_5_MISSING_2_3_7,    // AVIATA drone position 5 with these drones missing: 2, 3, 7 (text key aviata_pos_5_missing_2_3_7)
-	AVIATA_POS_6_MISSING_2_3_7,    // AVIATA drone position 6 with these drones missing: 2, 3, 7 (text key aviata_pos_6_missing_2_3_7)
-	AVIATA_POS_0_MISSING_2_4_5,    // AVIATA drone position 0 with these drones missing: 2, 4, 5 (text key aviata_pos_0_missing_2_4_5)
-	AVIATA_POS_1_MISSING_2_4_5,    // AVIATA drone position 1 with these drones missing: 2, 4, 5 (text key aviata_pos_1_missing_2_4_5)
-	AVIATA_POS_3_MISSING_2_4_5,    // AVIATA drone position 3 with these drones missing: 2, 4, 5 (text key aviata_pos_3_missing_2_4_5)
-	AVIATA_POS_6_MISSING_2_4_5,    // AVIATA drone position 6 with these drones missing: 2, 4, 5 (text key aviata_pos_6_missing_2_4_5)
-	AVIATA_POS_7_MISSING_2_4_5,    // AVIATA drone position 7 with these drones missing: 2, 4, 5 (text key aviata_pos_7_missing_2_4_5)
-	AVIATA_POS_0_MISSING_2_4_6,    // AVIATA drone position 0 with these drones missing: 2, 4, 6 (text key aviata_pos_0_missing_2_4_6)
-	AVIATA_POS_1_MISSING_2_4_6,    // AVIATA drone position 1 with these drones missing: 2, 4, 6 (text key aviata_pos_1_missing_2_4_6)
-	AVIATA_POS_3_MISSING_2_4_6,    // AVIATA drone position 3 with these drones missing: 2, 4, 6 (text key aviata_pos_3_missing_2_4_6)
-	AVIATA_POS_5_MISSING_2_4_6,    // AVIATA drone position 5 with these drones missing: 2, 4, 6 (text key aviata_pos_5_missing_2_4_6)
-	AVIATA_POS_7_MISSING_2_4_6,    // AVIATA drone position 7 with these drones missing: 2, 4, 6 (text key aviata_pos_7_missing_2_4_6)
-	AVIATA_POS_0_MISSING_2_4_7,    // AVIATA drone position 0 with these drones missing: 2, 4, 7 (text key aviata_pos_0_missing_2_4_7)
-	AVIATA_POS_1_MISSING_2_4_7,    // AVIATA drone position 1 with these drones missing: 2, 4, 7 (text key aviata_pos_1_missing_2_4_7)
-	AVIATA_POS_3_MISSING_2_4_7,    // AVIATA drone position 3 with these drones missing: 2, 4, 7 (text key aviata_pos_3_missing_2_4_7)
-	AVIATA_POS_5_MISSING_2_4_7,    // AVIATA drone position 5 with these drones missing: 2, 4, 7 (text key aviata_pos_5_missing_2_4_7)
-	AVIATA_POS_6_MISSING_2_4_7,    // AVIATA drone position 6 with these drones missing: 2, 4, 7 (text key aviata_pos_6_missing_2_4_7)
-	AVIATA_POS_0_MISSING_2_5_6,    // AVIATA drone position 0 with these drones missing: 2, 5, 6 (text key aviata_pos_0_missing_2_5_6)
-	AVIATA_POS_1_MISSING_2_5_6,    // AVIATA drone position 1 with these drones missing: 2, 5, 6 (text key aviata_pos_1_missing_2_5_6)
-	AVIATA_POS_3_MISSING_2_5_6,    // AVIATA drone position 3 with these drones missing: 2, 5, 6 (text key aviata_pos_3_missing_2_5_6)
-	AVIATA_POS_4_MISSING_2_5_6,    // AVIATA drone position 4 with these drones missing: 2, 5, 6 (text key aviata_pos_4_missing_2_5_6)
-	AVIATA_POS_7_MISSING_2_5_6,    // AVIATA drone position 7 with these drones missing: 2, 5, 6 (text key aviata_pos_7_missing_2_5_6)
-	AVIATA_POS_0_MISSING_2_5_7,    // AVIATA drone position 0 with these drones missing: 2, 5, 7 (text key aviata_pos_0_missing_2_5_7)
-	AVIATA_POS_1_MISSING_2_5_7,    // AVIATA drone position 1 with these drones missing: 2, 5, 7 (text key aviata_pos_1_missing_2_5_7)
-	AVIATA_POS_3_MISSING_2_5_7,    // AVIATA drone position 3 with these drones missing: 2, 5, 7 (text key aviata_pos_3_missing_2_5_7)
-	AVIATA_POS_4_MISSING_2_5_7,    // AVIATA drone position 4 with these drones missing: 2, 5, 7 (text key aviata_pos_4_missing_2_5_7)
-	AVIATA_POS_6_MISSING_2_5_7,    // AVIATA drone position 6 with these drones missing: 2, 5, 7 (text key aviata_pos_6_missing_2_5_7)
-	AVIATA_POS_0_MISSING_2_6_7,    // AVIATA drone position 0 with these drones missing: 2, 6, 7 (text key aviata_pos_0_missing_2_6_7)
-	AVIATA_POS_1_MISSING_2_6_7,    // AVIATA drone position 1 with these drones missing: 2, 6, 7 (text key aviata_pos_1_missing_2_6_7)
-	AVIATA_POS_3_MISSING_2_6_7,    // AVIATA drone position 3 with these drones missing: 2, 6, 7 (text key aviata_pos_3_missing_2_6_7)
-	AVIATA_POS_4_MISSING_2_6_7,    // AVIATA drone position 4 with these drones missing: 2, 6, 7 (text key aviata_pos_4_missing_2_6_7)
-	AVIATA_POS_5_MISSING_2_6_7,    // AVIATA drone position 5 with these drones missing: 2, 6, 7 (text key aviata_pos_5_missing_2_6_7)
-	AVIATA_POS_0_MISSING_3_4_5,    // AVIATA drone position 0 with these drones missing: 3, 4, 5 (text key aviata_pos_0_missing_3_4_5)
-	AVIATA_POS_1_MISSING_3_4_5,    // AVIATA drone position 1 with these drones missing: 3, 4, 5 (text key aviata_pos_1_missing_3_4_5)
-	AVIATA_POS_2_MISSING_3_4_5,    // AVIATA drone position 2 with these drones missing: 3, 4, 5 (text key aviata_pos_2_missing_3_4_5)
-	AVIATA_POS_6_MISSING_3_4_5,    // AVIATA drone position 6 with these drones missing: 3, 4, 5 (text key aviata_pos_6_missing_3_4_5)
-	AVIATA_POS_7_MISSING_3_4_5,    // AVIATA drone position 7 with these drones missing: 3, 4, 5 (text key aviata_pos_7_missing_3_4_5)
-	AVIATA_POS_0_MISSING_3_4_6,    // AVIATA drone position 0 with these drones missing: 3, 4, 6 (text key aviata_pos_0_missing_3_4_6)
-	AVIATA_POS_1_MISSING_3_4_6,    // AVIATA drone position 1 with these drones missing: 3, 4, 6 (text key aviata_pos_1_missing_3_4_6)
-	AVIATA_POS_2_MISSING_3_4_6,    // AVIATA drone position 2 with these drones missing: 3, 4, 6 (text key aviata_pos_2_missing_3_4_6)
-	AVIATA_POS_5_MISSING_3_4_6,    // AVIATA drone position 5 with these drones missing: 3, 4, 6 (text key aviata_pos_5_missing_3_4_6)
-	AVIATA_POS_7_MISSING_3_4_6,    // AVIATA drone position 7 with these drones missing: 3, 4, 6 (text key aviata_pos_7_missing_3_4_6)
-	AVIATA_POS_0_MISSING_3_4_7,    // AVIATA drone position 0 with these drones missing: 3, 4, 7 (text key aviata_pos_0_missing_3_4_7)
-	AVIATA_POS_1_MISSING_3_4_7,    // AVIATA drone position 1 with these drones missing: 3, 4, 7 (text key aviata_pos_1_missing_3_4_7)
-	AVIATA_POS_2_MISSING_3_4_7,    // AVIATA drone position 2 with these drones missing: 3, 4, 7 (text key aviata_pos_2_missing_3_4_7)
-	AVIATA_POS_5_MISSING_3_4_7,    // AVIATA drone position 5 with these drones missing: 3, 4, 7 (text key aviata_pos_5_missing_3_4_7)
-	AVIATA_POS_6_MISSING_3_4_7,    // AVIATA drone position 6 with these drones missing: 3, 4, 7 (text key aviata_pos_6_missing_3_4_7)
-	AVIATA_POS_0_MISSING_3_5_6,    // AVIATA drone position 0 with these drones missing: 3, 5, 6 (text key aviata_pos_0_missing_3_5_6)
-	AVIATA_POS_1_MISSING_3_5_6,    // AVIATA drone position 1 with these drones missing: 3, 5, 6 (text key aviata_pos_1_missing_3_5_6)
-	AVIATA_POS_2_MISSING_3_5_6,    // AVIATA drone position 2 with these drones missing: 3, 5, 6 (text key aviata_pos_2_missing_3_5_6)
-	AVIATA_POS_4_MISSING_3_5_6,    // AVIATA drone position 4 with these drones missing: 3, 5, 6 (text key aviata_pos_4_missing_3_5_6)
-	AVIATA_POS_7_MISSING_3_5_6,    // AVIATA drone position 7 with these drones missing: 3, 5, 6 (text key aviata_pos_7_missing_3_5_6)
-	AVIATA_POS_0_MISSING_3_5_7,    // AVIATA drone position 0 with these drones missing: 3, 5, 7 (text key aviata_pos_0_missing_3_5_7)
-	AVIATA_POS_1_MISSING_3_5_7,    // AVIATA drone position 1 with these drones missing: 3, 5, 7 (text key aviata_pos_1_missing_3_5_7)
-	AVIATA_POS_2_MISSING_3_5_7,    // AVIATA drone position 2 with these drones missing: 3, 5, 7 (text key aviata_pos_2_missing_3_5_7)
-	AVIATA_POS_4_MISSING_3_5_7,    // AVIATA drone position 4 with these drones missing: 3, 5, 7 (text key aviata_pos_4_missing_3_5_7)
-	AVIATA_POS_6_MISSING_3_5_7,    // AVIATA drone position 6 with these drones missing: 3, 5, 7 (text key aviata_pos_6_missing_3_5_7)
-	AVIATA_POS_0_MISSING_3_6_7,    // AVIATA drone position 0 with these drones missing: 3, 6, 7 (text key aviata_pos_0_missing_3_6_7)
-	AVIATA_POS_1_MISSING_3_6_7,    // AVIATA drone position 1 with these drones missing: 3, 6, 7 (text key aviata_pos_1_missing_3_6_7)
-	AVIATA_POS_2_MISSING_3_6_7,    // AVIATA drone position 2 with these drones missing: 3, 6, 7 (text key aviata_pos_2_missing_3_6_7)
-	AVIATA_POS_4_MISSING_3_6_7,    // AVIATA drone position 4 with these drones missing: 3, 6, 7 (text key aviata_pos_4_missing_3_6_7)
-	AVIATA_POS_5_MISSING_3_6_7,    // AVIATA drone position 5 with these drones missing: 3, 6, 7 (text key aviata_pos_5_missing_3_6_7)
-	AVIATA_POS_0_MISSING_4_5_6,    // AVIATA drone position 0 with these drones missing: 4, 5, 6 (text key aviata_pos_0_missing_4_5_6)
-	AVIATA_POS_1_MISSING_4_5_6,    // AVIATA drone position 1 with these drones missing: 4, 5, 6 (text key aviata_pos_1_missing_4_5_6)
-	AVIATA_POS_2_MISSING_4_5_6,    // AVIATA drone position 2 with these drones missing: 4, 5, 6 (text key aviata_pos_2_missing_4_5_6)
-	AVIATA_POS_3_MISSING_4_5_6,    // AVIATA drone position 3 with these drones missing: 4, 5, 6 (text key aviata_pos_3_missing_4_5_6)
-	AVIATA_POS_7_MISSING_4_5_6,    // AVIATA drone position 7 with these drones missing: 4, 5, 6 (text key aviata_pos_7_missing_4_5_6)
-	AVIATA_POS_0_MISSING_4_5_7,    // AVIATA drone position 0 with these drones missing: 4, 5, 7 (text key aviata_pos_0_missing_4_5_7)
-	AVIATA_POS_1_MISSING_4_5_7,    // AVIATA drone position 1 with these drones missing: 4, 5, 7 (text key aviata_pos_1_missing_4_5_7)
-	AVIATA_POS_2_MISSING_4_5_7,    // AVIATA drone position 2 with these drones missing: 4, 5, 7 (text key aviata_pos_2_missing_4_5_7)
-	AVIATA_POS_3_MISSING_4_5_7,    // AVIATA drone position 3 with these drones missing: 4, 5, 7 (text key aviata_pos_3_missing_4_5_7)
-	AVIATA_POS_6_MISSING_4_5_7,    // AVIATA drone position 6 with these drones missing: 4, 5, 7 (text key aviata_pos_6_missing_4_5_7)
-	AVIATA_POS_0_MISSING_4_6_7,    // AVIATA drone position 0 with these drones missing: 4, 6, 7 (text key aviata_pos_0_missing_4_6_7)
-	AVIATA_POS_1_MISSING_4_6_7,    // AVIATA drone position 1 with these drones missing: 4, 6, 7 (text key aviata_pos_1_missing_4_6_7)
-	AVIATA_POS_2_MISSING_4_6_7,    // AVIATA drone position 2 with these drones missing: 4, 6, 7 (text key aviata_pos_2_missing_4_6_7)
-	AVIATA_POS_3_MISSING_4_6_7,    // AVIATA drone position 3 with these drones missing: 4, 6, 7 (text key aviata_pos_3_missing_4_6_7)
-	AVIATA_POS_5_MISSING_4_6_7,    // AVIATA drone position 5 with these drones missing: 4, 6, 7 (text key aviata_pos_5_missing_4_6_7)
-	AVIATA_POS_0_MISSING_5_6_7,    // AVIATA drone position 0 with these drones missing: 5, 6, 7 (text key aviata_pos_0_missing_5_6_7)
-	AVIATA_POS_1_MISSING_5_6_7,    // AVIATA drone position 1 with these drones missing: 5, 6, 7 (text key aviata_pos_1_missing_5_6_7)
-	AVIATA_POS_2_MISSING_5_6_7,    // AVIATA drone position 2 with these drones missing: 5, 6, 7 (text key aviata_pos_2_missing_5_6_7)
-	AVIATA_POS_3_MISSING_5_6_7,    // AVIATA drone position 3 with these drones missing: 5, 6, 7 (text key aviata_pos_3_missing_5_6_7)
-	AVIATA_POS_4_MISSING_5_6_7,    // AVIATA drone position 4 with these drones missing: 5, 6, 7 (text key aviata_pos_4_missing_5_6_7)
+	AVIATA_MISSING_,               // AVIATA with these drones missing:  (text key aviata_missing_)
+	AVIATA_MISSING_0,              // AVIATA with these drones missing: 0 (text key aviata_missing_0)
+	AVIATA_MISSING_1,              // AVIATA with these drones missing: 1 (text key aviata_missing_1)
+	AVIATA_MISSING_2,              // AVIATA with these drones missing: 2 (text key aviata_missing_2)
+	AVIATA_MISSING_3,              // AVIATA with these drones missing: 3 (text key aviata_missing_3)
+	AVIATA_MISSING_4,              // AVIATA with these drones missing: 4 (text key aviata_missing_4)
+	AVIATA_MISSING_5,              // AVIATA with these drones missing: 5 (text key aviata_missing_5)
+	AVIATA_MISSING_6,              // AVIATA with these drones missing: 6 (text key aviata_missing_6)
+	AVIATA_MISSING_7,              // AVIATA with these drones missing: 7 (text key aviata_missing_7)
+	AVIATA_MISSING_0_1,            // AVIATA with these drones missing: 0, 1 (text key aviata_missing_0_1)
+	AVIATA_MISSING_0_2,            // AVIATA with these drones missing: 0, 2 (text key aviata_missing_0_2)
+	AVIATA_MISSING_0_3,            // AVIATA with these drones missing: 0, 3 (text key aviata_missing_0_3)
+	AVIATA_MISSING_0_4,            // AVIATA with these drones missing: 0, 4 (text key aviata_missing_0_4)
+	AVIATA_MISSING_0_5,            // AVIATA with these drones missing: 0, 5 (text key aviata_missing_0_5)
+	AVIATA_MISSING_0_6,            // AVIATA with these drones missing: 0, 6 (text key aviata_missing_0_6)
+	AVIATA_MISSING_0_7,            // AVIATA with these drones missing: 0, 7 (text key aviata_missing_0_7)
+	AVIATA_MISSING_1_2,            // AVIATA with these drones missing: 1, 2 (text key aviata_missing_1_2)
+	AVIATA_MISSING_1_3,            // AVIATA with these drones missing: 1, 3 (text key aviata_missing_1_3)
+	AVIATA_MISSING_1_4,            // AVIATA with these drones missing: 1, 4 (text key aviata_missing_1_4)
+	AVIATA_MISSING_1_5,            // AVIATA with these drones missing: 1, 5 (text key aviata_missing_1_5)
+	AVIATA_MISSING_1_6,            // AVIATA with these drones missing: 1, 6 (text key aviata_missing_1_6)
+	AVIATA_MISSING_1_7,            // AVIATA with these drones missing: 1, 7 (text key aviata_missing_1_7)
+	AVIATA_MISSING_2_3,            // AVIATA with these drones missing: 2, 3 (text key aviata_missing_2_3)
+	AVIATA_MISSING_2_4,            // AVIATA with these drones missing: 2, 4 (text key aviata_missing_2_4)
+	AVIATA_MISSING_2_5,            // AVIATA with these drones missing: 2, 5 (text key aviata_missing_2_5)
+	AVIATA_MISSING_2_6,            // AVIATA with these drones missing: 2, 6 (text key aviata_missing_2_6)
+	AVIATA_MISSING_2_7,            // AVIATA with these drones missing: 2, 7 (text key aviata_missing_2_7)
+	AVIATA_MISSING_3_4,            // AVIATA with these drones missing: 3, 4 (text key aviata_missing_3_4)
+	AVIATA_MISSING_3_5,            // AVIATA with these drones missing: 3, 5 (text key aviata_missing_3_5)
+	AVIATA_MISSING_3_6,            // AVIATA with these drones missing: 3, 6 (text key aviata_missing_3_6)
+	AVIATA_MISSING_3_7,            // AVIATA with these drones missing: 3, 7 (text key aviata_missing_3_7)
+	AVIATA_MISSING_4_5,            // AVIATA with these drones missing: 4, 5 (text key aviata_missing_4_5)
+	AVIATA_MISSING_4_6,            // AVIATA with these drones missing: 4, 6 (text key aviata_missing_4_6)
+	AVIATA_MISSING_4_7,            // AVIATA with these drones missing: 4, 7 (text key aviata_missing_4_7)
+	AVIATA_MISSING_5_6,            // AVIATA with these drones missing: 5, 6 (text key aviata_missing_5_6)
+	AVIATA_MISSING_5_7,            // AVIATA with these drones missing: 5, 7 (text key aviata_missing_5_7)
+	AVIATA_MISSING_6_7,            // AVIATA with these drones missing: 6, 7 (text key aviata_missing_6_7)
+	AVIATA_MISSING_0_1_2,          // AVIATA with these drones missing: 0, 1, 2 (text key aviata_missing_0_1_2)
+	AVIATA_MISSING_0_1_3,          // AVIATA with these drones missing: 0, 1, 3 (text key aviata_missing_0_1_3)
+	AVIATA_MISSING_0_1_4,          // AVIATA with these drones missing: 0, 1, 4 (text key aviata_missing_0_1_4)
+	AVIATA_MISSING_0_1_5,          // AVIATA with these drones missing: 0, 1, 5 (text key aviata_missing_0_1_5)
+	AVIATA_MISSING_0_1_6,          // AVIATA with these drones missing: 0, 1, 6 (text key aviata_missing_0_1_6)
+	AVIATA_MISSING_0_1_7,          // AVIATA with these drones missing: 0, 1, 7 (text key aviata_missing_0_1_7)
+	AVIATA_MISSING_0_2_3,          // AVIATA with these drones missing: 0, 2, 3 (text key aviata_missing_0_2_3)
+	AVIATA_MISSING_0_2_4,          // AVIATA with these drones missing: 0, 2, 4 (text key aviata_missing_0_2_4)
+	AVIATA_MISSING_0_2_5,          // AVIATA with these drones missing: 0, 2, 5 (text key aviata_missing_0_2_5)
+	AVIATA_MISSING_0_2_6,          // AVIATA with these drones missing: 0, 2, 6 (text key aviata_missing_0_2_6)
+	AVIATA_MISSING_0_2_7,          // AVIATA with these drones missing: 0, 2, 7 (text key aviata_missing_0_2_7)
+	AVIATA_MISSING_0_3_4,          // AVIATA with these drones missing: 0, 3, 4 (text key aviata_missing_0_3_4)
+	AVIATA_MISSING_0_3_5,          // AVIATA with these drones missing: 0, 3, 5 (text key aviata_missing_0_3_5)
+	AVIATA_MISSING_0_3_6,          // AVIATA with these drones missing: 0, 3, 6 (text key aviata_missing_0_3_6)
+	AVIATA_MISSING_0_3_7,          // AVIATA with these drones missing: 0, 3, 7 (text key aviata_missing_0_3_7)
+	AVIATA_MISSING_0_4_5,          // AVIATA with these drones missing: 0, 4, 5 (text key aviata_missing_0_4_5)
+	AVIATA_MISSING_0_4_6,          // AVIATA with these drones missing: 0, 4, 6 (text key aviata_missing_0_4_6)
+	AVIATA_MISSING_0_4_7,          // AVIATA with these drones missing: 0, 4, 7 (text key aviata_missing_0_4_7)
+	AVIATA_MISSING_0_5_6,          // AVIATA with these drones missing: 0, 5, 6 (text key aviata_missing_0_5_6)
+	AVIATA_MISSING_0_5_7,          // AVIATA with these drones missing: 0, 5, 7 (text key aviata_missing_0_5_7)
+	AVIATA_MISSING_0_6_7,          // AVIATA with these drones missing: 0, 6, 7 (text key aviata_missing_0_6_7)
+	AVIATA_MISSING_1_2_3,          // AVIATA with these drones missing: 1, 2, 3 (text key aviata_missing_1_2_3)
+	AVIATA_MISSING_1_2_4,          // AVIATA with these drones missing: 1, 2, 4 (text key aviata_missing_1_2_4)
+	AVIATA_MISSING_1_2_5,          // AVIATA with these drones missing: 1, 2, 5 (text key aviata_missing_1_2_5)
+	AVIATA_MISSING_1_2_6,          // AVIATA with these drones missing: 1, 2, 6 (text key aviata_missing_1_2_6)
+	AVIATA_MISSING_1_2_7,          // AVIATA with these drones missing: 1, 2, 7 (text key aviata_missing_1_2_7)
+	AVIATA_MISSING_1_3_4,          // AVIATA with these drones missing: 1, 3, 4 (text key aviata_missing_1_3_4)
+	AVIATA_MISSING_1_3_5,          // AVIATA with these drones missing: 1, 3, 5 (text key aviata_missing_1_3_5)
+	AVIATA_MISSING_1_3_6,          // AVIATA with these drones missing: 1, 3, 6 (text key aviata_missing_1_3_6)
+	AVIATA_MISSING_1_3_7,          // AVIATA with these drones missing: 1, 3, 7 (text key aviata_missing_1_3_7)
+	AVIATA_MISSING_1_4_5,          // AVIATA with these drones missing: 1, 4, 5 (text key aviata_missing_1_4_5)
+	AVIATA_MISSING_1_4_6,          // AVIATA with these drones missing: 1, 4, 6 (text key aviata_missing_1_4_6)
+	AVIATA_MISSING_1_4_7,          // AVIATA with these drones missing: 1, 4, 7 (text key aviata_missing_1_4_7)
+	AVIATA_MISSING_1_5_6,          // AVIATA with these drones missing: 1, 5, 6 (text key aviata_missing_1_5_6)
+	AVIATA_MISSING_1_5_7,          // AVIATA with these drones missing: 1, 5, 7 (text key aviata_missing_1_5_7)
+	AVIATA_MISSING_1_6_7,          // AVIATA with these drones missing: 1, 6, 7 (text key aviata_missing_1_6_7)
+	AVIATA_MISSING_2_3_4,          // AVIATA with these drones missing: 2, 3, 4 (text key aviata_missing_2_3_4)
+	AVIATA_MISSING_2_3_5,          // AVIATA with these drones missing: 2, 3, 5 (text key aviata_missing_2_3_5)
+	AVIATA_MISSING_2_3_6,          // AVIATA with these drones missing: 2, 3, 6 (text key aviata_missing_2_3_6)
+	AVIATA_MISSING_2_3_7,          // AVIATA with these drones missing: 2, 3, 7 (text key aviata_missing_2_3_7)
+	AVIATA_MISSING_2_4_5,          // AVIATA with these drones missing: 2, 4, 5 (text key aviata_missing_2_4_5)
+	AVIATA_MISSING_2_4_6,          // AVIATA with these drones missing: 2, 4, 6 (text key aviata_missing_2_4_6)
+	AVIATA_MISSING_2_4_7,          // AVIATA with these drones missing: 2, 4, 7 (text key aviata_missing_2_4_7)
+	AVIATA_MISSING_2_5_6,          // AVIATA with these drones missing: 2, 5, 6 (text key aviata_missing_2_5_6)
+	AVIATA_MISSING_2_5_7,          // AVIATA with these drones missing: 2, 5, 7 (text key aviata_missing_2_5_7)
+	AVIATA_MISSING_2_6_7,          // AVIATA with these drones missing: 2, 6, 7 (text key aviata_missing_2_6_7)
+	AVIATA_MISSING_3_4_5,          // AVIATA with these drones missing: 3, 4, 5 (text key aviata_missing_3_4_5)
+	AVIATA_MISSING_3_4_6,          // AVIATA with these drones missing: 3, 4, 6 (text key aviata_missing_3_4_6)
+	AVIATA_MISSING_3_4_7,          // AVIATA with these drones missing: 3, 4, 7 (text key aviata_missing_3_4_7)
+	AVIATA_MISSING_3_5_6,          // AVIATA with these drones missing: 3, 5, 6 (text key aviata_missing_3_5_6)
+	AVIATA_MISSING_3_5_7,          // AVIATA with these drones missing: 3, 5, 7 (text key aviata_missing_3_5_7)
+	AVIATA_MISSING_3_6_7,          // AVIATA with these drones missing: 3, 6, 7 (text key aviata_missing_3_6_7)
+	AVIATA_MISSING_4_5_6,          // AVIATA with these drones missing: 4, 5, 6 (text key aviata_missing_4_5_6)
+	AVIATA_MISSING_4_5_7,          // AVIATA with these drones missing: 4, 5, 7 (text key aviata_missing_4_5_7)
+	AVIATA_MISSING_4_6_7,          // AVIATA with these drones missing: 4, 6, 7 (text key aviata_missing_4_6_7)
+	AVIATA_MISSING_5_6_7,          // AVIATA with these drones missing: 5, 6, 7 (text key aviata_missing_5_6_7)
+	AVIATA_MISSING_0_1_2_3,        // AVIATA with these drones missing: 0, 1, 2, 3 (text key aviata_missing_0_1_2_3)
+	AVIATA_MISSING_0_1_2_4,        // AVIATA with these drones missing: 0, 1, 2, 4 (text key aviata_missing_0_1_2_4)
+	AVIATA_MISSING_0_1_2_5,        // AVIATA with these drones missing: 0, 1, 2, 5 (text key aviata_missing_0_1_2_5)
+	AVIATA_MISSING_0_1_2_6,        // AVIATA with these drones missing: 0, 1, 2, 6 (text key aviata_missing_0_1_2_6)
+	AVIATA_MISSING_0_1_2_7,        // AVIATA with these drones missing: 0, 1, 2, 7 (text key aviata_missing_0_1_2_7)
+	AVIATA_MISSING_0_1_3_4,        // AVIATA with these drones missing: 0, 1, 3, 4 (text key aviata_missing_0_1_3_4)
+	AVIATA_MISSING_0_1_3_5,        // AVIATA with these drones missing: 0, 1, 3, 5 (text key aviata_missing_0_1_3_5)
+	AVIATA_MISSING_0_1_3_6,        // AVIATA with these drones missing: 0, 1, 3, 6 (text key aviata_missing_0_1_3_6)
+	AVIATA_MISSING_0_1_3_7,        // AVIATA with these drones missing: 0, 1, 3, 7 (text key aviata_missing_0_1_3_7)
+	AVIATA_MISSING_0_1_4_5,        // AVIATA with these drones missing: 0, 1, 4, 5 (text key aviata_missing_0_1_4_5)
+	AVIATA_MISSING_0_1_4_6,        // AVIATA with these drones missing: 0, 1, 4, 6 (text key aviata_missing_0_1_4_6)
+	AVIATA_MISSING_0_1_4_7,        // AVIATA with these drones missing: 0, 1, 4, 7 (text key aviata_missing_0_1_4_7)
+	AVIATA_MISSING_0_1_5_6,        // AVIATA with these drones missing: 0, 1, 5, 6 (text key aviata_missing_0_1_5_6)
+	AVIATA_MISSING_0_1_5_7,        // AVIATA with these drones missing: 0, 1, 5, 7 (text key aviata_missing_0_1_5_7)
+	AVIATA_MISSING_0_1_6_7,        // AVIATA with these drones missing: 0, 1, 6, 7 (text key aviata_missing_0_1_6_7)
+	AVIATA_MISSING_0_2_3_4,        // AVIATA with these drones missing: 0, 2, 3, 4 (text key aviata_missing_0_2_3_4)
+	AVIATA_MISSING_0_2_3_5,        // AVIATA with these drones missing: 0, 2, 3, 5 (text key aviata_missing_0_2_3_5)
+	AVIATA_MISSING_0_2_3_6,        // AVIATA with these drones missing: 0, 2, 3, 6 (text key aviata_missing_0_2_3_6)
+	AVIATA_MISSING_0_2_3_7,        // AVIATA with these drones missing: 0, 2, 3, 7 (text key aviata_missing_0_2_3_7)
+	AVIATA_MISSING_0_2_4_5,        // AVIATA with these drones missing: 0, 2, 4, 5 (text key aviata_missing_0_2_4_5)
+	AVIATA_MISSING_0_2_4_6,        // AVIATA with these drones missing: 0, 2, 4, 6 (text key aviata_missing_0_2_4_6)
+	AVIATA_MISSING_0_2_4_7,        // AVIATA with these drones missing: 0, 2, 4, 7 (text key aviata_missing_0_2_4_7)
+	AVIATA_MISSING_0_2_5_6,        // AVIATA with these drones missing: 0, 2, 5, 6 (text key aviata_missing_0_2_5_6)
+	AVIATA_MISSING_0_2_5_7,        // AVIATA with these drones missing: 0, 2, 5, 7 (text key aviata_missing_0_2_5_7)
+	AVIATA_MISSING_0_2_6_7,        // AVIATA with these drones missing: 0, 2, 6, 7 (text key aviata_missing_0_2_6_7)
+	AVIATA_MISSING_0_3_4_5,        // AVIATA with these drones missing: 0, 3, 4, 5 (text key aviata_missing_0_3_4_5)
+	AVIATA_MISSING_0_3_4_6,        // AVIATA with these drones missing: 0, 3, 4, 6 (text key aviata_missing_0_3_4_6)
+	AVIATA_MISSING_0_3_4_7,        // AVIATA with these drones missing: 0, 3, 4, 7 (text key aviata_missing_0_3_4_7)
+	AVIATA_MISSING_0_3_5_6,        // AVIATA with these drones missing: 0, 3, 5, 6 (text key aviata_missing_0_3_5_6)
+	AVIATA_MISSING_0_3_5_7,        // AVIATA with these drones missing: 0, 3, 5, 7 (text key aviata_missing_0_3_5_7)
+	AVIATA_MISSING_0_3_6_7,        // AVIATA with these drones missing: 0, 3, 6, 7 (text key aviata_missing_0_3_6_7)
+	AVIATA_MISSING_0_4_5_6,        // AVIATA with these drones missing: 0, 4, 5, 6 (text key aviata_missing_0_4_5_6)
+	AVIATA_MISSING_0_4_5_7,        // AVIATA with these drones missing: 0, 4, 5, 7 (text key aviata_missing_0_4_5_7)
+	AVIATA_MISSING_0_4_6_7,        // AVIATA with these drones missing: 0, 4, 6, 7 (text key aviata_missing_0_4_6_7)
+	AVIATA_MISSING_0_5_6_7,        // AVIATA with these drones missing: 0, 5, 6, 7 (text key aviata_missing_0_5_6_7)
+	AVIATA_MISSING_1_2_3_4,        // AVIATA with these drones missing: 1, 2, 3, 4 (text key aviata_missing_1_2_3_4)
+	AVIATA_MISSING_1_2_3_5,        // AVIATA with these drones missing: 1, 2, 3, 5 (text key aviata_missing_1_2_3_5)
+	AVIATA_MISSING_1_2_3_6,        // AVIATA with these drones missing: 1, 2, 3, 6 (text key aviata_missing_1_2_3_6)
+	AVIATA_MISSING_1_2_3_7,        // AVIATA with these drones missing: 1, 2, 3, 7 (text key aviata_missing_1_2_3_7)
+	AVIATA_MISSING_1_2_4_5,        // AVIATA with these drones missing: 1, 2, 4, 5 (text key aviata_missing_1_2_4_5)
+	AVIATA_MISSING_1_2_4_6,        // AVIATA with these drones missing: 1, 2, 4, 6 (text key aviata_missing_1_2_4_6)
+	AVIATA_MISSING_1_2_4_7,        // AVIATA with these drones missing: 1, 2, 4, 7 (text key aviata_missing_1_2_4_7)
+	AVIATA_MISSING_1_2_5_6,        // AVIATA with these drones missing: 1, 2, 5, 6 (text key aviata_missing_1_2_5_6)
+	AVIATA_MISSING_1_2_5_7,        // AVIATA with these drones missing: 1, 2, 5, 7 (text key aviata_missing_1_2_5_7)
+	AVIATA_MISSING_1_2_6_7,        // AVIATA with these drones missing: 1, 2, 6, 7 (text key aviata_missing_1_2_6_7)
+	AVIATA_MISSING_1_3_4_5,        // AVIATA with these drones missing: 1, 3, 4, 5 (text key aviata_missing_1_3_4_5)
+	AVIATA_MISSING_1_3_4_6,        // AVIATA with these drones missing: 1, 3, 4, 6 (text key aviata_missing_1_3_4_6)
+	AVIATA_MISSING_1_3_4_7,        // AVIATA with these drones missing: 1, 3, 4, 7 (text key aviata_missing_1_3_4_7)
+	AVIATA_MISSING_1_3_5_6,        // AVIATA with these drones missing: 1, 3, 5, 6 (text key aviata_missing_1_3_5_6)
+	AVIATA_MISSING_1_3_5_7,        // AVIATA with these drones missing: 1, 3, 5, 7 (text key aviata_missing_1_3_5_7)
+	AVIATA_MISSING_1_3_6_7,        // AVIATA with these drones missing: 1, 3, 6, 7 (text key aviata_missing_1_3_6_7)
+	AVIATA_MISSING_1_4_5_6,        // AVIATA with these drones missing: 1, 4, 5, 6 (text key aviata_missing_1_4_5_6)
+	AVIATA_MISSING_1_4_5_7,        // AVIATA with these drones missing: 1, 4, 5, 7 (text key aviata_missing_1_4_5_7)
+	AVIATA_MISSING_1_4_6_7,        // AVIATA with these drones missing: 1, 4, 6, 7 (text key aviata_missing_1_4_6_7)
+	AVIATA_MISSING_1_5_6_7,        // AVIATA with these drones missing: 1, 5, 6, 7 (text key aviata_missing_1_5_6_7)
+	AVIATA_MISSING_2_3_4_5,        // AVIATA with these drones missing: 2, 3, 4, 5 (text key aviata_missing_2_3_4_5)
+	AVIATA_MISSING_2_3_4_6,        // AVIATA with these drones missing: 2, 3, 4, 6 (text key aviata_missing_2_3_4_6)
+	AVIATA_MISSING_2_3_4_7,        // AVIATA with these drones missing: 2, 3, 4, 7 (text key aviata_missing_2_3_4_7)
+	AVIATA_MISSING_2_3_5_6,        // AVIATA with these drones missing: 2, 3, 5, 6 (text key aviata_missing_2_3_5_6)
+	AVIATA_MISSING_2_3_5_7,        // AVIATA with these drones missing: 2, 3, 5, 7 (text key aviata_missing_2_3_5_7)
+	AVIATA_MISSING_2_3_6_7,        // AVIATA with these drones missing: 2, 3, 6, 7 (text key aviata_missing_2_3_6_7)
+	AVIATA_MISSING_2_4_5_6,        // AVIATA with these drones missing: 2, 4, 5, 6 (text key aviata_missing_2_4_5_6)
+	AVIATA_MISSING_2_4_5_7,        // AVIATA with these drones missing: 2, 4, 5, 7 (text key aviata_missing_2_4_5_7)
+	AVIATA_MISSING_2_4_6_7,        // AVIATA with these drones missing: 2, 4, 6, 7 (text key aviata_missing_2_4_6_7)
+	AVIATA_MISSING_2_5_6_7,        // AVIATA with these drones missing: 2, 5, 6, 7 (text key aviata_missing_2_5_6_7)
+	AVIATA_MISSING_3_4_5_6,        // AVIATA with these drones missing: 3, 4, 5, 6 (text key aviata_missing_3_4_5_6)
+	AVIATA_MISSING_3_4_5_7,        // AVIATA with these drones missing: 3, 4, 5, 7 (text key aviata_missing_3_4_5_7)
+	AVIATA_MISSING_3_4_6_7,        // AVIATA with these drones missing: 3, 4, 6, 7 (text key aviata_missing_3_4_6_7)
+	AVIATA_MISSING_3_5_6_7,        // AVIATA with these drones missing: 3, 5, 6, 7 (text key aviata_missing_3_5_6_7)
+	AVIATA_MISSING_4_5_6_7,        // AVIATA with these drones missing: 4, 5, 6, 7 (text key aviata_missing_4_5_6_7)
 
 	MAX_GEOMETRY
 }; // enum class MultirotorGeometry
 
 namespace {
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_[] {
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_[] {
 	{ -0.544207,  1.033101,  1.000000,  1.000000 },
 	{ -0.572252,  0.820078, -1.000000,  1.000000 },
 	{ -0.401791,  0.689278,  1.000000,  1.000000 },
 	{ -0.203284,  0.771502, -1.000000,  1.000000 },
 	{ -0.175239,  0.984526,  1.000000,  1.000000 },
 	{ -0.345701,  1.115325, -1.000000,  1.000000 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_[] {
 	{ -1.115325,  0.345701,  1.000000,  1.000000 },
 	{ -0.984526,  0.175239, -1.000000,  1.000000 },
 	{ -0.771502,  0.203284,  1.000000,  1.000000 },
 	{ -0.689278,  0.401791, -1.000000,  1.000000 },
 	{ -0.820078,  0.572252,  1.000000,  1.000000 },
 	{ -1.033101,  0.544207, -1.000000,  1.000000 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_[] {
 	{ -1.033101, -0.544207,  1.000000,  1.000000 },
 	{ -0.820078, -0.572252, -1.000000,  1.000000 },
 	{ -0.689278, -0.401791,  1.000000,  1.000000 },
 	{ -0.771502, -0.203284, -1.000000,  1.000000 },
 	{ -0.984526, -0.175239,  1.000000,  1.000000 },
 	{ -1.115325, -0.345701, -1.000000,  1.000000 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_[] {
 	{ -0.345701, -1.115325,  1.000000,  1.000000 },
 	{ -0.175239, -0.984526, -1.000000,  1.000000 },
 	{ -0.203284, -0.771502,  1.000000,  1.000000 },
 	{ -0.401791, -0.689278, -1.000000,  1.000000 },
 	{ -0.572252, -0.820078,  1.000000,  1.000000 },
 	{ -0.544207, -1.033101, -1.000000,  1.000000 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_[] {
 	{  0.544207, -1.033101,  1.000000,  1.000000 },
 	{  0.572252, -0.820078, -1.000000,  1.000000 },
 	{  0.401791, -0.689278,  1.000000,  1.000000 },
 	{  0.203284, -0.771502, -1.000000,  1.000000 },
 	{  0.175239, -0.984526,  1.000000,  1.000000 },
 	{  0.345701, -1.115325, -1.000000,  1.000000 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_[] {
 	{  1.115325, -0.345701,  1.000000,  1.000000 },
 	{  0.984526, -0.175239, -1.000000,  1.000000 },
 	{  0.771502, -0.203284,  1.000000,  1.000000 },
 	{  0.689278, -0.401791, -1.000000,  1.000000 },
 	{  0.820078, -0.572252,  1.000000,  1.000000 },
 	{  1.033101, -0.544207, -1.000000,  1.000000 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_[] {
 	{  1.033101,  0.544207,  1.000000,  1.000000 },
 	{  0.820078,  0.572252, -1.000000,  1.000000 },
 	{  0.689278,  0.401791,  1.000000,  1.000000 },
 	{  0.771502,  0.203284, -1.000000,  1.000000 },
 	{  0.984526,  0.175239,  1.000000,  1.000000 },
 	{  1.115325,  0.345701, -1.000000,  1.000000 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_[] {
 	{  0.345701,  1.115325,  1.000000,  1.000000 },
 	{  0.175239,  0.984526, -1.000000,  1.000000 },
 	{  0.203284,  0.771502,  1.000000,  1.000000 },
@@ -595,6085 +225,8764 @@ static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_[] {
 	{  0.544207,  1.033101, -1.000000,  1.000000 },
 };
 
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0[] {
-	{ -1.262042,  0.639537,  1.016623,  1.117836 },
-	{ -1.105551,  0.441322, -1.016623,  1.098353 },
-	{ -0.890401,  0.448377,  1.016623,  1.093132 },
-	{ -0.831743,  0.653648, -1.016623,  1.107395 },
-	{ -0.988235,  0.851863,  1.016623,  1.126878 },
-	{ -1.203384,  0.844808, -1.016623,  1.132099 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0[] {
-	{ -1.061959, -0.329817,  1.016623,  1.037699 },
-	{ -0.839522, -0.383294, -1.016623,  1.027613 },
-	{ -0.727328, -0.213583,  1.016623,  1.037699 },
-	{ -0.837573,  0.009606, -1.016623,  1.057870 },
-	{ -1.060011,  0.063083,  1.016623,  1.067955 },
-	{ -1.172204, -0.106628, -1.016623,  1.057870 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0[] {
-	{ -0.281730, -1.021072,  1.016623,  0.963469 },
-	{ -0.123647, -0.898486, -1.016623,  0.968690 },
-	{ -0.180132, -0.665533,  1.016623,  0.988173 },
-	{ -0.394699, -0.555167, -1.016623,  1.002436 },
-	{ -0.552782, -0.677753,  1.016623,  0.997216 },
-	{ -0.496297, -0.910706, -1.016623,  0.977732 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0[] {
-	{  0.621598, -1.029300,  1.016623,  0.938630 },
-	{  0.622723, -0.802459, -1.016623,  0.956099 },
-	{  0.430649, -0.642726,  1.016623,  0.973567 },
-	{  0.237450, -0.709833, -1.016623,  0.973567 },
-	{  0.236324, -0.936674,  1.016623,  0.956099 },
-	{  0.428399, -1.096408, -1.016623,  0.938630 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0[] {
-	{  1.118868, -0.349682,  1.016623,  0.977732 },
-	{  0.962376, -0.151467, -1.016623,  0.997216 },
-	{  0.747226, -0.158522,  1.016623,  1.002436 },
-	{  0.688568, -0.363792, -1.016623,  0.988173 },
-	{  0.845060, -0.562007,  1.016623,  0.968690 },
-	{  1.060210, -0.554952, -1.016623,  0.963469 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0[] {
-	{  0.918785,  0.619672,  1.016623,  1.057870 },
-	{  0.696347,  0.673150, -1.016623,  1.067955 },
-	{  0.584154,  0.503439,  1.016623,  1.057870 },
-	{  0.694398,  0.280250, -1.016623,  1.037699 },
-	{  0.916836,  0.226772,  1.016623,  1.027613 },
-	{  1.029029,  0.396483, -1.016623,  1.037699 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0[] {
-	{  0.138556,  1.310927,  1.016623,  1.132099 },
-	{ -0.019527,  1.188341, -1.016623,  1.126878 },
-	{  0.036957,  0.955389,  1.016623,  1.107395 },
-	{  0.251524,  0.845022, -1.016623,  1.093132 },
-	{  0.409607,  0.967609,  1.016623,  1.098353 },
-	{  0.353123,  1.200561, -1.016623,  1.117836 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1[] {
-	{ -0.844808,  1.203384,  1.016623,  1.132099 },
-	{ -0.851863,  0.988235, -1.016623,  1.126878 },
-	{ -0.653648,  0.831743,  1.016623,  1.107395 },
-	{ -0.448377,  0.890401, -1.016623,  1.093132 },
-	{ -0.441322,  1.105551,  1.016623,  1.098353 },
-	{ -0.639537,  1.262042, -1.016623,  1.117836 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1[] {
-	{ -1.200561, -0.353123,  1.016623,  1.117836 },
-	{ -0.967609, -0.409607, -1.016623,  1.098353 },
-	{ -0.845022, -0.251524,  1.016623,  1.093132 },
-	{ -0.955389, -0.036957, -1.016623,  1.107395 },
-	{ -1.188341,  0.019527,  1.016623,  1.126878 },
-	{ -1.310927, -0.138556, -1.016623,  1.132099 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1[] {
-	{ -0.396483, -1.029029,  1.016623,  1.037699 },
-	{ -0.226772, -0.916836, -1.016623,  1.027613 },
-	{ -0.280250, -0.694398,  1.016623,  1.037699 },
-	{ -0.503439, -0.584154, -1.016623,  1.057870 },
-	{ -0.673150, -0.696347,  1.016623,  1.067955 },
-	{ -0.619672, -0.918785, -1.016623,  1.057870 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1[] {
-	{  0.554952, -1.060210,  1.016623,  0.963469 },
-	{  0.562007, -0.845060, -1.016623,  0.968690 },
-	{  0.363792, -0.688568,  1.016623,  0.988173 },
-	{  0.158522, -0.747226, -1.016623,  1.002436 },
-	{  0.151467, -0.962376,  1.016623,  0.997216 },
-	{  0.349682, -1.118868, -1.016623,  0.977732 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1[] {
-	{  1.096408, -0.428399,  1.016623,  0.938630 },
-	{  0.936674, -0.236324, -1.016623,  0.956099 },
-	{  0.709833, -0.237450,  1.016623,  0.973567 },
-	{  0.642726, -0.430649, -1.016623,  0.973567 },
-	{  0.802459, -0.622723,  1.016623,  0.956099 },
-	{  1.029300, -0.621598, -1.016623,  0.938630 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1[] {
-	{  0.910706,  0.496297,  1.016623,  0.977732 },
-	{  0.677753,  0.552782, -1.016623,  0.997216 },
-	{  0.555167,  0.394699,  1.016623,  1.002436 },
-	{  0.665533,  0.180132, -1.016623,  0.988173 },
-	{  0.898486,  0.123647,  1.016623,  0.968690 },
-	{  1.021072,  0.281730, -1.016623,  0.963469 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1[] {
-	{  0.106628,  1.172204,  1.016623,  1.057870 },
-	{ -0.063083,  1.060011, -1.016623,  1.067955 },
-	{ -0.009606,  0.837573,  1.016623,  1.057870 },
-	{  0.213583,  0.727328, -1.016623,  1.037699 },
-	{  0.383294,  0.839522,  1.016623,  1.027613 },
-	{  0.329817,  1.061959, -1.016623,  1.037699 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2[] {
-	{ -0.619672,  0.918785,  1.016623,  1.057870 },
-	{ -0.673150,  0.696347, -1.016623,  1.067955 },
-	{ -0.503439,  0.584154,  1.016623,  1.057870 },
-	{ -0.280250,  0.694398, -1.016623,  1.037699 },
-	{ -0.226772,  0.916836,  1.016623,  1.027613 },
-	{ -0.396483,  1.029029, -1.016623,  1.037699 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2[] {
-	{ -1.310927,  0.138556,  1.016623,  1.132099 },
-	{ -1.188341, -0.019527, -1.016623,  1.126878 },
-	{ -0.955389,  0.036957,  1.016623,  1.107395 },
-	{ -0.845022,  0.251524, -1.016623,  1.093132 },
-	{ -0.967609,  0.409607,  1.016623,  1.098353 },
-	{ -1.200561,  0.353123, -1.016623,  1.117836 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_2[] {
-	{ -0.639537, -1.262042,  1.016623,  1.117836 },
-	{ -0.441322, -1.105551, -1.016623,  1.098353 },
-	{ -0.448377, -0.890401,  1.016623,  1.093132 },
-	{ -0.653648, -0.831743, -1.016623,  1.107395 },
-	{ -0.851863, -0.988235,  1.016623,  1.126878 },
-	{ -0.844808, -1.203384, -1.016623,  1.132099 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_2[] {
-	{  0.329817, -1.061959,  1.016623,  1.037699 },
-	{  0.383294, -0.839522, -1.016623,  1.027613 },
-	{  0.213583, -0.727328,  1.016623,  1.037699 },
-	{ -0.009606, -0.837573, -1.016623,  1.057870 },
-	{ -0.063083, -1.060011,  1.016623,  1.067955 },
-	{  0.106628, -1.172204, -1.016623,  1.057870 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_2[] {
-	{  1.021072, -0.281730,  1.016623,  0.963469 },
-	{  0.898486, -0.123647, -1.016623,  0.968690 },
-	{  0.665533, -0.180132,  1.016623,  0.988173 },
-	{  0.555167, -0.394699, -1.016623,  1.002436 },
-	{  0.677753, -0.552782,  1.016623,  0.997216 },
-	{  0.910706, -0.496297, -1.016623,  0.977732 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_2[] {
-	{  1.029300,  0.621598,  1.016623,  0.938630 },
-	{  0.802459,  0.622723, -1.016623,  0.956099 },
-	{  0.642726,  0.430649,  1.016623,  0.973567 },
-	{  0.709833,  0.237450, -1.016623,  0.973567 },
-	{  0.936674,  0.236324,  1.016623,  0.956099 },
-	{  1.096408,  0.428399, -1.016623,  0.938630 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_2[] {
-	{  0.349682,  1.118868,  1.016623,  0.977732 },
-	{  0.151467,  0.962376, -1.016623,  0.997216 },
-	{  0.158522,  0.747226,  1.016623,  1.002436 },
-	{  0.363792,  0.688568, -1.016623,  0.988173 },
-	{  0.562007,  0.845060,  1.016623,  0.968690 },
-	{  0.554952,  1.060210, -1.016623,  0.963469 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_3[] {
-	{ -0.496297,  0.910706,  1.016623,  0.977732 },
-	{ -0.552782,  0.677753, -1.016623,  0.997216 },
-	{ -0.394699,  0.555167,  1.016623,  1.002436 },
-	{ -0.180132,  0.665533, -1.016623,  0.988173 },
-	{ -0.123647,  0.898486,  1.016623,  0.968690 },
-	{ -0.281730,  1.021072, -1.016623,  0.963469 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_3[] {
-	{ -1.172204,  0.106628,  1.016623,  1.057870 },
-	{ -1.060011, -0.063083, -1.016623,  1.067955 },
-	{ -0.837573, -0.009606,  1.016623,  1.057870 },
-	{ -0.727328,  0.213583, -1.016623,  1.037699 },
-	{ -0.839522,  0.383294,  1.016623,  1.027613 },
-	{ -1.061959,  0.329817, -1.016623,  1.037699 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_3[] {
-	{ -1.203384, -0.844808,  1.016623,  1.132099 },
-	{ -0.988235, -0.851863, -1.016623,  1.126878 },
-	{ -0.831743, -0.653648,  1.016623,  1.107395 },
-	{ -0.890401, -0.448377, -1.016623,  1.093132 },
-	{ -1.105551, -0.441322,  1.016623,  1.098353 },
-	{ -1.262042, -0.639537, -1.016623,  1.117836 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_3[] {
-	{  0.353123, -1.200561,  1.016623,  1.117836 },
-	{  0.409607, -0.967609, -1.016623,  1.098353 },
-	{  0.251524, -0.845022,  1.016623,  1.093132 },
-	{  0.036957, -0.955389, -1.016623,  1.107395 },
-	{ -0.019527, -1.188341,  1.016623,  1.126878 },
-	{  0.138556, -1.310927, -1.016623,  1.132099 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_3[] {
-	{  1.029029, -0.396483,  1.016623,  1.037699 },
-	{  0.916836, -0.226772, -1.016623,  1.027613 },
-	{  0.694398, -0.280250,  1.016623,  1.037699 },
-	{  0.584154, -0.503439, -1.016623,  1.057870 },
-	{  0.696347, -0.673150,  1.016623,  1.067955 },
-	{  0.918785, -0.619672, -1.016623,  1.057870 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_3[] {
-	{  1.060210,  0.554952,  1.016623,  0.963469 },
-	{  0.845060,  0.562007, -1.016623,  0.968690 },
-	{  0.688568,  0.363792,  1.016623,  0.988173 },
-	{  0.747226,  0.158522, -1.016623,  1.002436 },
-	{  0.962376,  0.151467,  1.016623,  0.997216 },
-	{  1.118868,  0.349682, -1.016623,  0.977732 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_3[] {
-	{  0.428399,  1.096408,  1.016623,  0.938630 },
-	{  0.236324,  0.936674, -1.016623,  0.956099 },
-	{  0.237450,  0.709833,  1.016623,  0.973567 },
-	{  0.430649,  0.642726, -1.016623,  0.973567 },
-	{  0.622723,  0.802459,  1.016623,  0.956099 },
-	{  0.621598,  1.029300, -1.016623,  0.938630 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_4[] {
-	{ -0.621598,  1.029300,  1.016623,  0.938630 },
-	{ -0.622723,  0.802459, -1.016623,  0.956099 },
-	{ -0.430649,  0.642726,  1.016623,  0.973567 },
-	{ -0.237450,  0.709833, -1.016623,  0.973567 },
-	{ -0.236324,  0.936674,  1.016623,  0.956099 },
-	{ -0.428399,  1.096408, -1.016623,  0.938630 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_4[] {
-	{ -1.118868,  0.349682,  1.016623,  0.977732 },
-	{ -0.962376,  0.151467, -1.016623,  0.997216 },
-	{ -0.747226,  0.158522,  1.016623,  1.002436 },
-	{ -0.688568,  0.363792, -1.016623,  0.988173 },
-	{ -0.845060,  0.562007,  1.016623,  0.968690 },
-	{ -1.060210,  0.554952, -1.016623,  0.963469 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_4[] {
-	{ -0.918785, -0.619672,  1.016623,  1.057870 },
-	{ -0.696347, -0.673150, -1.016623,  1.067955 },
-	{ -0.584154, -0.503439,  1.016623,  1.057870 },
-	{ -0.694398, -0.280250, -1.016623,  1.037699 },
-	{ -0.916836, -0.226772,  1.016623,  1.027613 },
-	{ -1.029029, -0.396483, -1.016623,  1.037699 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_4[] {
-	{ -0.138556, -1.310927,  1.016623,  1.132099 },
-	{  0.019527, -1.188341, -1.016623,  1.126878 },
-	{ -0.036957, -0.955389,  1.016623,  1.107395 },
-	{ -0.251524, -0.845022, -1.016623,  1.093132 },
-	{ -0.409607, -0.967609,  1.016623,  1.098353 },
-	{ -0.353123, -1.200561, -1.016623,  1.117836 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_4[] {
-	{  1.262042, -0.639537,  1.016623,  1.117836 },
-	{  1.105551, -0.441322, -1.016623,  1.098353 },
-	{  0.890401, -0.448377,  1.016623,  1.093132 },
-	{  0.831743, -0.653648, -1.016623,  1.107395 },
-	{  0.988235, -0.851863,  1.016623,  1.126878 },
-	{  1.203384, -0.844808, -1.016623,  1.132099 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_4[] {
-	{  1.061959,  0.329817,  1.016623,  1.037699 },
-	{  0.839522,  0.383294, -1.016623,  1.027613 },
-	{  0.727328,  0.213583,  1.016623,  1.037699 },
-	{  0.837573, -0.009606, -1.016623,  1.057870 },
-	{  1.060011, -0.063083,  1.016623,  1.067955 },
-	{  1.172204,  0.106628, -1.016623,  1.057870 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_4[] {
-	{  0.281730,  1.021072,  1.016623,  0.963469 },
-	{  0.123647,  0.898486, -1.016623,  0.968690 },
-	{  0.180132,  0.665533,  1.016623,  0.988173 },
-	{  0.394699,  0.555167, -1.016623,  1.002436 },
-	{  0.552782,  0.677753,  1.016623,  0.997216 },
-	{  0.496297,  0.910706, -1.016623,  0.977732 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_5[] {
-	{ -0.554952,  1.060210,  1.016623,  0.963469 },
-	{ -0.562007,  0.845060, -1.016623,  0.968690 },
-	{ -0.363792,  0.688568,  1.016623,  0.988173 },
-	{ -0.158522,  0.747226, -1.016623,  1.002436 },
-	{ -0.151467,  0.962376,  1.016623,  0.997216 },
-	{ -0.349682,  1.118868, -1.016623,  0.977732 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_5[] {
-	{ -1.096408,  0.428399,  1.016623,  0.938630 },
-	{ -0.936674,  0.236324, -1.016623,  0.956099 },
-	{ -0.709833,  0.237450,  1.016623,  0.973567 },
-	{ -0.642726,  0.430649, -1.016623,  0.973567 },
-	{ -0.802459,  0.622723,  1.016623,  0.956099 },
-	{ -1.029300,  0.621598, -1.016623,  0.938630 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_5[] {
-	{ -0.910706, -0.496297,  1.016623,  0.977732 },
-	{ -0.677753, -0.552782, -1.016623,  0.997216 },
-	{ -0.555167, -0.394699,  1.016623,  1.002436 },
-	{ -0.665533, -0.180132, -1.016623,  0.988173 },
-	{ -0.898486, -0.123647,  1.016623,  0.968690 },
-	{ -1.021072, -0.281730, -1.016623,  0.963469 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_5[] {
-	{ -0.106628, -1.172204,  1.016623,  1.057870 },
-	{  0.063083, -1.060011, -1.016623,  1.067955 },
-	{  0.009606, -0.837573,  1.016623,  1.057870 },
-	{ -0.213583, -0.727328, -1.016623,  1.037699 },
-	{ -0.383294, -0.839522,  1.016623,  1.027613 },
-	{ -0.329817, -1.061959, -1.016623,  1.037699 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_5[] {
-	{  0.844808, -1.203384,  1.016623,  1.132099 },
-	{  0.851863, -0.988235, -1.016623,  1.126878 },
-	{  0.653648, -0.831743,  1.016623,  1.107395 },
-	{  0.448377, -0.890401, -1.016623,  1.093132 },
-	{  0.441322, -1.105551,  1.016623,  1.098353 },
-	{  0.639537, -1.262042, -1.016623,  1.117836 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_5[] {
-	{  1.200561,  0.353123,  1.016623,  1.117836 },
-	{  0.967609,  0.409607, -1.016623,  1.098353 },
-	{  0.845022,  0.251524,  1.016623,  1.093132 },
-	{  0.955389,  0.036957, -1.016623,  1.107395 },
-	{  1.188341, -0.019527,  1.016623,  1.126878 },
-	{  1.310927,  0.138556, -1.016623,  1.132099 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_5[] {
-	{  0.396483,  1.029029,  1.016623,  1.037699 },
-	{  0.226772,  0.916836, -1.016623,  1.027613 },
-	{  0.280250,  0.694398,  1.016623,  1.037699 },
-	{  0.503439,  0.584154, -1.016623,  1.057870 },
-	{  0.673150,  0.696347,  1.016623,  1.067955 },
-	{  0.619672,  0.918785, -1.016623,  1.057870 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_6[] {
-	{ -0.329817,  1.061959,  1.016623,  1.037699 },
-	{ -0.383294,  0.839522, -1.016623,  1.027613 },
-	{ -0.213583,  0.727328,  1.016623,  1.037699 },
-	{  0.009606,  0.837573, -1.016623,  1.057870 },
-	{  0.063083,  1.060011,  1.016623,  1.067955 },
-	{ -0.106628,  1.172204, -1.016623,  1.057870 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_6[] {
-	{ -1.021072,  0.281730,  1.016623,  0.963469 },
-	{ -0.898486,  0.123647, -1.016623,  0.968690 },
-	{ -0.665533,  0.180132,  1.016623,  0.988173 },
-	{ -0.555167,  0.394699, -1.016623,  1.002436 },
-	{ -0.677753,  0.552782,  1.016623,  0.997216 },
-	{ -0.910706,  0.496297, -1.016623,  0.977732 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_6[] {
-	{ -1.029300, -0.621598,  1.016623,  0.938630 },
-	{ -0.802459, -0.622723, -1.016623,  0.956099 },
-	{ -0.642726, -0.430649,  1.016623,  0.973567 },
-	{ -0.709833, -0.237450, -1.016623,  0.973567 },
-	{ -0.936674, -0.236324,  1.016623,  0.956099 },
-	{ -1.096408, -0.428399, -1.016623,  0.938630 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_6[] {
-	{ -0.349682, -1.118868,  1.016623,  0.977732 },
-	{ -0.151467, -0.962376, -1.016623,  0.997216 },
-	{ -0.158522, -0.747226,  1.016623,  1.002436 },
-	{ -0.363792, -0.688568, -1.016623,  0.988173 },
-	{ -0.562007, -0.845060,  1.016623,  0.968690 },
-	{ -0.554952, -1.060210, -1.016623,  0.963469 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_6[] {
-	{  0.619672, -0.918785,  1.016623,  1.057870 },
-	{  0.673150, -0.696347, -1.016623,  1.067955 },
-	{  0.503439, -0.584154,  1.016623,  1.057870 },
-	{  0.280250, -0.694398, -1.016623,  1.037699 },
-	{  0.226772, -0.916836,  1.016623,  1.027613 },
-	{  0.396483, -1.029029, -1.016623,  1.037699 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_6[] {
-	{  1.310927, -0.138556,  1.016623,  1.132099 },
-	{  1.188341,  0.019527, -1.016623,  1.126878 },
-	{  0.955389, -0.036957,  1.016623,  1.107395 },
-	{  0.845022, -0.251524, -1.016623,  1.093132 },
-	{  0.967609, -0.409607,  1.016623,  1.098353 },
-	{  1.200561, -0.353123, -1.016623,  1.117836 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_6[] {
-	{  0.639537,  1.262042,  1.016623,  1.117836 },
-	{  0.441322,  1.105551, -1.016623,  1.098353 },
-	{  0.448377,  0.890401,  1.016623,  1.093132 },
-	{  0.653648,  0.831743, -1.016623,  1.107395 },
-	{  0.851863,  0.988235,  1.016623,  1.126878 },
-	{  0.844808,  1.203384, -1.016623,  1.132099 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_7[] {
-	{ -0.353123,  1.200561,  1.016623,  1.117836 },
-	{ -0.409607,  0.967609, -1.016623,  1.098353 },
-	{ -0.251524,  0.845022,  1.016623,  1.093132 },
-	{ -0.036957,  0.955389, -1.016623,  1.107395 },
-	{  0.019527,  1.188341,  1.016623,  1.126878 },
-	{ -0.138556,  1.310927, -1.016623,  1.132099 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_7[] {
-	{ -1.029029,  0.396483,  1.016623,  1.037699 },
-	{ -0.916836,  0.226772, -1.016623,  1.027613 },
-	{ -0.694398,  0.280250,  1.016623,  1.037699 },
-	{ -0.584154,  0.503439, -1.016623,  1.057870 },
-	{ -0.696347,  0.673150,  1.016623,  1.067955 },
-	{ -0.918785,  0.619672, -1.016623,  1.057870 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_7[] {
-	{ -1.060210, -0.554952,  1.016623,  0.963469 },
-	{ -0.845060, -0.562007, -1.016623,  0.968690 },
-	{ -0.688568, -0.363792,  1.016623,  0.988173 },
-	{ -0.747226, -0.158522, -1.016623,  1.002436 },
-	{ -0.962376, -0.151467,  1.016623,  0.997216 },
-	{ -1.118868, -0.349682, -1.016623,  0.977732 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_7[] {
-	{ -0.428399, -1.096408,  1.016623,  0.938630 },
-	{ -0.236324, -0.936674, -1.016623,  0.956099 },
-	{ -0.237450, -0.709833,  1.016623,  0.973567 },
-	{ -0.430649, -0.642726, -1.016623,  0.973567 },
-	{ -0.622723, -0.802459,  1.016623,  0.956099 },
-	{ -0.621598, -1.029300, -1.016623,  0.938630 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_7[] {
-	{  0.496297, -0.910706,  1.016623,  0.977732 },
-	{  0.552782, -0.677753, -1.016623,  0.997216 },
-	{  0.394699, -0.555167,  1.016623,  1.002436 },
-	{  0.180132, -0.665533, -1.016623,  0.988173 },
-	{  0.123647, -0.898486,  1.016623,  0.968690 },
-	{  0.281730, -1.021072, -1.016623,  0.963469 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_7[] {
-	{  1.172204, -0.106628,  1.016623,  1.057870 },
-	{  1.060011,  0.063083, -1.016623,  1.067955 },
-	{  0.837573,  0.009606,  1.016623,  1.057870 },
-	{  0.727328, -0.213583, -1.016623,  1.037699 },
-	{  0.839522, -0.383294,  1.016623,  1.027613 },
-	{  1.061959, -0.329817, -1.016623,  1.037699 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_7[] {
-	{  1.203384,  0.844808,  1.016623,  1.132099 },
-	{  0.988235,  0.851863, -1.016623,  1.126878 },
-	{  0.831743,  0.653648,  1.016623,  1.107395 },
-	{  0.890401,  0.448377, -1.016623,  1.093132 },
-	{  1.105551,  0.441322,  1.016623,  1.098353 },
-	{  1.262042,  0.639537, -1.016623,  1.117836 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_1[] {
-	{ -1.432229,  0.127033,  1.013519,  1.292784 },
-	{ -1.150122, -0.002007, -1.013519,  1.236923 },
-	{ -1.059300,  0.156459,  1.013519,  1.246114 },
-	{ -1.250585,  0.443966, -1.013519,  1.311165 },
-	{ -1.532692,  0.573006,  1.013519,  1.367025 },
-	{ -1.623514,  0.414540, -1.013519,  1.357835 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_1[] {
-	{ -0.310902, -0.898072,  1.013519,  1.001159 },
-	{ -0.152436, -0.807250, -1.013519,  0.991968 },
-	{ -0.281477, -0.525143,  1.013519,  1.047829 },
-	{ -0.568984, -0.333858, -1.013519,  1.112880 },
-	{ -0.727450, -0.424680,  1.013519,  1.122070 },
-	{ -0.598409, -0.706787, -1.013519,  1.066210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_1[] {
-	{  0.780070, -1.184622,  1.013519,  0.814002 },
-	{  0.722068, -0.927139, -1.013519,  0.856865 },
-	{  0.448754, -0.686645,  1.013519,  0.926673 },
-	{  0.233443, -0.703634, -1.013519,  0.953618 },
-	{  0.291446, -0.961117,  1.013519,  0.910755 },
-	{  0.564759, -1.201611, -1.013519,  0.840947 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_1[] {
-	{  1.201611, -0.564759,  1.013519,  0.840947 },
-	{  0.961117, -0.291446, -1.013519,  0.910755 },
-	{  0.703634, -0.233443,  1.013519,  0.953618 },
-	{  0.686645, -0.448754, -1.013519,  0.926673 },
-	{  0.927139, -0.722068,  1.013519,  0.856865 },
-	{  1.184622, -0.780070, -1.013519,  0.814002 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_1[] {
-	{  0.706787,  0.598409,  1.013519,  1.066210 },
-	{  0.424680,  0.727450, -1.013519,  1.122070 },
-	{  0.333858,  0.568984,  1.013519,  1.112880 },
-	{  0.525143,  0.281477, -1.013519,  1.047829 },
-	{  0.807250,  0.152436,  1.013519,  0.991968 },
-	{  0.898072,  0.310902, -1.013519,  1.001159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_1[] {
-	{ -0.414540,  1.623514,  1.013519,  1.357835 },
-	{ -0.573006,  1.532692, -1.013519,  1.367025 },
-	{ -0.443966,  1.250585,  1.013519,  1.311165 },
-	{ -0.156459,  1.059300, -1.013519,  1.246114 },
-	{  0.002007,  1.150122,  1.013519,  1.236923 },
-	{ -0.127033,  1.432229, -1.013519,  1.292784 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_2[] {
-	{ -1.500569,  0.525584,  1.035533,  1.313156 },
-	{ -1.347347,  0.336386, -1.035533,  1.282135 },
-	{ -1.110789,  0.357117,  1.035533,  1.251113 },
-	{ -1.027453,  0.567047, -1.035533,  1.251113 },
-	{ -1.180676,  0.756246,  1.035533,  1.282135 },
-	{ -1.417234,  0.735514, -1.035533,  1.313156 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_2[] {
-	{ -0.579551, -1.080458,  1.035533,  1.101402 },
-	{ -0.394860, -0.947285, -1.035533,  1.083491 },
-	{ -0.435209, -0.716849,  1.035533,  1.101402 },
-	{ -0.660249, -0.619584, -1.035533,  1.137223 },
-	{ -0.844940, -0.752757,  1.035533,  1.155133 },
-	{ -0.804591, -0.983194, -1.035533,  1.137223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_2[] {
-	{  0.410156, -1.031437,  1.035533,  0.969579 },
-	{  0.432408, -0.803486, -1.035533,  0.978850 },
-	{  0.236605, -0.655202,  1.035533,  1.013450 },
-	{  0.018550, -0.734869, -1.035533,  1.038780 },
-	{ -0.003701, -0.962820,  1.035533,  1.029509 },
-	{  0.192102, -1.111104, -1.035533,  0.994908 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_2[] {
-	{  1.018365, -0.317171,  1.035533,  0.925468 },
-	{  0.865143, -0.127973, -1.035533,  0.956490 },
-	{  0.628585, -0.148705,  1.035533,  0.987512 },
-	{  0.545249, -0.358635, -1.035533,  0.987512 },
-	{  0.698472, -0.547833,  1.035533,  0.956490 },
-	{  0.935030, -0.527101, -1.035533,  0.925468 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_2[] {
-	{  0.888795,  0.643931,  1.035533,  0.994908 },
-	{  0.649855,  0.683547, -1.035533,  1.029509 },
-	{  0.511114,  0.505944,  1.035533,  1.038780 },
-	{  0.611314,  0.288725, -1.035533,  1.013450 },
-	{  0.850255,  0.249109,  1.035533,  0.978850 },
-	{  0.988996,  0.426712, -1.035533,  0.969579 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_2[] {
-	{  0.097347,  1.288870,  1.035533,  1.137223 },
-	{ -0.087344,  1.155698, -1.035533,  1.155133 },
-	{ -0.046995,  0.925261,  1.035533,  1.137223 },
-	{  0.178045,  0.827997, -1.035533,  1.101402 },
-	{  0.362736,  0.961170,  1.035533,  1.083491 },
-	{  0.322387,  1.191606, -1.035533,  1.101402 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_3[] {
-	{ -1.284788,  0.391602,  1.057548,  1.164715 },
-	{ -1.149254,  0.198507, -1.057548,  1.155877 },
-	{ -0.928520,  0.230276,  1.057548,  1.141483 },
-	{ -0.843319,  0.455139, -1.057548,  1.135927 },
-	{ -0.978854,  0.648234,  1.057548,  1.144765 },
-	{ -1.199588,  0.616465, -1.057548,  1.159159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_3[] {
-	{ -1.199588, -0.616465,  1.057548,  1.159159 },
-	{ -0.978854, -0.648234, -1.057548,  1.144765 },
-	{ -0.843319, -0.455139,  1.057548,  1.135927 },
-	{ -0.928520, -0.230276, -1.057548,  1.141483 },
-	{ -1.149254, -0.198507,  1.057548,  1.155877 },
-	{ -1.284788, -0.391602, -1.057548,  1.164715 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_3[] {
-	{  0.434814, -1.170273,  1.057548,  1.052580 },
-	{  0.463875, -0.928965, -1.057548,  1.050685 },
-	{  0.287243, -0.780798,  1.057548,  1.062204 },
-	{  0.081551, -0.873940, -1.057548,  1.075617 },
-	{  0.052491, -1.115248,  1.057548,  1.077512 },
-	{  0.229123, -1.263415, -1.057548,  1.065994 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_3[] {
-	{  1.026606, -0.391602,  1.057548,  1.013990 },
-	{  0.891071, -0.198507, -1.057548,  1.022828 },
-	{  0.670337, -0.230276,  1.057548,  1.037222 },
-	{  0.585137, -0.455139, -1.057548,  1.042778 },
-	{  0.720671, -0.648234,  1.057548,  1.033940 },
-	{  0.941405, -0.616465, -1.057548,  1.019546 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_3[] {
-	{  0.941405,  0.616465,  1.057548,  1.019546 },
-	{  0.720671,  0.648234, -1.057548,  1.033940 },
-	{  0.585137,  0.455139,  1.057548,  1.042778 },
-	{  0.670337,  0.230276, -1.057548,  1.037222 },
-	{  0.891071,  0.198507,  1.057548,  1.022828 },
-	{  1.026606,  0.391602, -1.057548,  1.013990 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_3[] {
-	{  0.229123,  1.263415,  1.057548,  1.065994 },
-	{  0.052491,  1.115248, -1.057548,  1.077512 },
-	{  0.081551,  0.873940,  1.057548,  1.075617 },
-	{  0.287243,  0.780798, -1.057548,  1.062204 },
-	{  0.463875,  0.928965,  1.057548,  1.050685 },
-	{  0.434814,  1.170273, -1.057548,  1.052580 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_4[] {
-	{ -1.315813,  0.658565,  1.066667,  1.080935 },
-	{ -1.120715,  0.425888, -1.066667,  1.080935 },
-	{ -0.898932,  0.412659,  1.066667,  1.080935 },
-	{ -0.872247,  0.632108, -1.066667,  1.080935 },
-	{ -1.067345,  0.864786,  1.066667,  1.080935 },
-	{ -1.289128,  0.878015, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_4[] {
-	{ -0.947434, -0.424241,  1.066667,  1.080935 },
-	{ -0.708042, -0.504580, -1.066667,  1.080935 },
-	{ -0.619973, -0.329354,  1.066667,  1.080935 },
-	{ -0.771295, -0.073789, -1.066667,  1.080935 },
-	{ -1.010686,  0.006550,  1.066667,  1.080935 },
-	{ -1.098756, -0.168676, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_4[] {
-	{ -0.024062, -1.258533,  1.066667,  1.080935 },
-	{  0.119391, -1.139471, -1.066667,  1.080935 },
-	{  0.022158, -0.878435,  1.066667,  1.080935 },
-	{ -0.218529, -0.736461, -1.066667,  1.080935 },
-	{ -0.361982, -0.855523,  1.066667,  1.080935 },
-	{ -0.264748, -1.116559, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_4[] {
-	{  1.315813, -0.658565,  1.066667,  1.080935 },
-	{  1.120715, -0.425888, -1.066667,  1.080935 },
-	{  0.898932, -0.412659,  1.066667,  1.080935 },
-	{  0.872247, -0.632108, -1.066667,  1.080935 },
-	{  1.067345, -0.864786,  1.066667,  1.080935 },
-	{  1.289128, -0.878015, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_4[] {
-	{  0.947434,  0.424241,  1.066667,  1.080935 },
-	{  0.708042,  0.504580, -1.066667,  1.080935 },
-	{  0.619973,  0.329354,  1.066667,  1.080935 },
-	{  0.771295,  0.073789, -1.066667,  1.080935 },
-	{  1.010686, -0.006550,  1.066667,  1.080935 },
-	{  1.098756,  0.168676, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_4[] {
-	{  0.024062,  1.258533,  1.066667,  1.080935 },
-	{ -0.119391,  1.139471, -1.066667,  1.080935 },
-	{ -0.022158,  0.878435,  1.066667,  1.080935 },
-	{  0.218529,  0.736461, -1.066667,  1.080935 },
-	{  0.361982,  0.855523,  1.066667,  1.080935 },
-	{  0.264748,  1.116559, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_5[] {
-	{ -1.259470,  0.733753,  1.057548,  1.052580 },
-	{ -1.071539,  0.510686, -1.057548,  1.050685 },
-	{ -0.838580,  0.491285,  1.057548,  1.062204 },
-	{ -0.793553,  0.694952, -1.057548,  1.075617 },
-	{ -0.981484,  0.918019,  1.057548,  1.077512 },
-	{ -1.214443,  0.937420, -1.057548,  1.065994 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_5[] {
-	{ -0.954105, -0.287125,  1.057548,  1.013990 },
-	{ -0.707730, -0.369631, -1.057548,  1.022828 },
-	{ -0.601344, -0.209135,  1.057548,  1.037222 },
-	{ -0.741332,  0.033866, -1.057548,  1.042778 },
-	{ -0.987708,  0.116372,  1.057548,  1.033940 },
-	{ -1.094094, -0.044123, -1.057548,  1.019546 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_5[] {
-	{ -0.044123, -1.094094,  1.057548,  1.019546 },
-	{  0.116372, -0.987708, -1.057548,  1.033940 },
-	{  0.033866, -0.741332,  1.057548,  1.042778 },
-	{ -0.209135, -0.601344, -1.057548,  1.037222 },
-	{ -0.369631, -0.707730,  1.057548,  1.022828 },
-	{ -0.287125, -0.954105, -1.057548,  1.013990 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_5[] {
-	{  0.937420, -1.214443,  1.057548,  1.065994 },
-	{  0.918019, -0.981484, -1.057548,  1.077512 },
-	{  0.694952, -0.793553,  1.057548,  1.075617 },
-	{  0.491285, -0.838580, -1.057548,  1.062204 },
-	{  0.510686, -1.071539,  1.057548,  1.050685 },
-	{  0.733753, -1.259470, -1.057548,  1.052580 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_5[] {
-	{  1.110185,  0.443204,  1.057548,  1.164715 },
-	{  0.863809,  0.525710, -1.057548,  1.155877 },
-	{  0.757423,  0.365215,  1.057548,  1.141483 },
-	{  0.897412,  0.122213, -1.057548,  1.135927 },
-	{  1.143787,  0.039707,  1.057548,  1.144765 },
-	{  1.250173,  0.200203, -1.057548,  1.159159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_5[] {
-	{  0.200203,  1.250173,  1.057548,  1.159159 },
-	{  0.039707,  1.143787, -1.057548,  1.144765 },
-	{  0.122213,  0.897412,  1.057548,  1.135927 },
-	{  0.365215,  0.757423, -1.057548,  1.141483 },
-	{  0.525710,  0.863809,  1.057548,  1.155877 },
-	{  0.443204,  1.110185, -1.057548,  1.164715 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_6[] {
-	{ -1.080458,  0.579551,  1.035533,  1.101402 },
-	{ -0.947285,  0.394860, -1.035533,  1.083491 },
-	{ -0.716849,  0.435209,  1.035533,  1.101402 },
-	{ -0.619584,  0.660249, -1.035533,  1.137223 },
-	{ -0.752757,  0.844940,  1.035533,  1.155133 },
-	{ -0.983194,  0.804591, -1.035533,  1.137223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_6[] {
-	{ -1.031437, -0.410156,  1.035533,  0.969579 },
-	{ -0.803486, -0.432408, -1.035533,  0.978850 },
-	{ -0.655202, -0.236605,  1.035533,  1.013450 },
-	{ -0.734869, -0.018550, -1.035533,  1.038780 },
-	{ -0.962820,  0.003701,  1.035533,  1.029509 },
-	{ -1.111104, -0.192102, -1.035533,  0.994908 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_6[] {
-	{ -0.317171, -1.018365,  1.035533,  0.925468 },
-	{ -0.127973, -0.865143, -1.035533,  0.956490 },
-	{ -0.148705, -0.628585,  1.035533,  0.987512 },
-	{ -0.358635, -0.545249, -1.035533,  0.987512 },
-	{ -0.547833, -0.698472,  1.035533,  0.956490 },
-	{ -0.527101, -0.935030, -1.035533,  0.925468 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_6[] {
-	{  0.643931, -0.888795,  1.035533,  0.994908 },
-	{  0.683547, -0.649855, -1.035533,  1.029509 },
-	{  0.505944, -0.511114,  1.035533,  1.038780 },
-	{  0.288725, -0.611314, -1.035533,  1.013450 },
-	{  0.249109, -0.850255,  1.035533,  0.978850 },
-	{  0.426712, -0.988996, -1.035533,  0.969579 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_6[] {
-	{  1.288870, -0.097347,  1.035533,  1.137223 },
-	{  1.155698,  0.087344, -1.035533,  1.155133 },
-	{  0.925261,  0.046995,  1.035533,  1.137223 },
-	{  0.827997, -0.178045, -1.035533,  1.101402 },
-	{  0.961170, -0.362736,  1.035533,  1.083491 },
-	{  1.191606, -0.322387, -1.035533,  1.101402 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_6[] {
-	{  0.525584,  1.500569,  1.035533,  1.313156 },
-	{  0.336386,  1.347347, -1.035533,  1.282135 },
-	{  0.357117,  1.110789,  1.035533,  1.251113 },
-	{  0.567047,  1.027453, -1.035533,  1.251113 },
-	{  0.756246,  1.180676,  1.035533,  1.282135 },
-	{  0.735514,  1.417234, -1.035533,  1.313156 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_7[] {
-	{ -1.143015,  0.839619,  1.013519,  1.292784 },
-	{ -1.008968,  0.618227, -1.013519,  1.236923 },
-	{ -0.790656,  0.654652,  1.013519,  1.246114 },
-	{ -0.706390,  0.912468, -1.013519,  1.311165 },
-	{ -0.840437,  1.133859,  1.013519,  1.367025 },
-	{ -1.058749,  1.097435, -1.013519,  1.357835 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_7[] {
-	{ -1.058749, -0.316174,  1.013519,  1.001159 },
-	{ -0.840437, -0.352599, -1.013519,  0.991968 },
-	{ -0.706390, -0.131207,  1.013519,  1.047829 },
-	{ -0.790656,  0.126609, -1.013519,  1.112880 },
-	{ -1.008968,  0.163033,  1.013519,  1.122070 },
-	{ -1.143015, -0.058358, -1.013519,  1.066210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_7[] {
-	{ -0.354283, -1.057931,  1.013519,  0.814002 },
-	{ -0.179590, -0.888051, -1.013519,  0.856865 },
-	{ -0.208331, -0.611381,  1.013519,  0.926673 },
-	{ -0.411766, -0.504590, -1.013519,  0.953618 },
-	{ -0.586459, -0.674470,  1.013519,  0.910755 },
-	{ -0.557718, -0.951140, -1.013519,  0.840947 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_7[] {
-	{  0.557718, -0.951140,  1.013519,  0.840947 },
-	{  0.586459, -0.674470, -1.013519,  0.910755 },
-	{  0.411766, -0.504590,  1.013519,  0.953618 },
-	{  0.208331, -0.611381, -1.013519,  0.926673 },
-	{  0.179590, -0.888051,  1.013519,  0.856865 },
-	{  0.354283, -1.057931, -1.013519,  0.814002 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_7[] {
-	{  1.143015, -0.058358,  1.013519,  1.066210 },
-	{  1.008968,  0.163033, -1.013519,  1.122070 },
-	{  0.790656,  0.126609,  1.013519,  1.112880 },
-	{  0.706390, -0.131207, -1.013519,  1.047829 },
-	{  0.840437, -0.352599,  1.013519,  0.991968 },
-	{  1.058749, -0.316174, -1.013519,  1.001159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_7[] {
-	{  1.058749,  1.097435,  1.013519,  1.357835 },
-	{  0.840437,  1.133859, -1.013519,  1.367025 },
-	{  0.706390,  0.912468,  1.013519,  1.311165 },
-	{  0.790656,  0.654652, -1.013519,  1.246114 },
-	{  1.008968,  0.618227,  1.013519,  1.236923 },
-	{  1.143015,  0.839619, -1.013519,  1.292784 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_2[] {
-	{ -1.097435,  1.058749,  1.013519,  1.357835 },
-	{ -1.133859,  0.840437, -1.013519,  1.367025 },
-	{ -0.912468,  0.706390,  1.013519,  1.311165 },
-	{ -0.654652,  0.790656, -1.013519,  1.246114 },
-	{ -0.618227,  1.008968,  1.013519,  1.236923 },
-	{ -0.839619,  1.143015, -1.013519,  1.292784 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_2[] {
-	{ -0.839619, -1.143015,  1.013519,  1.292784 },
-	{ -0.618227, -1.008968, -1.013519,  1.236923 },
-	{ -0.654652, -0.790656,  1.013519,  1.246114 },
-	{ -0.912468, -0.706390, -1.013519,  1.311165 },
-	{ -1.133859, -0.840437,  1.013519,  1.367025 },
-	{ -1.097435, -1.058749, -1.013519,  1.357835 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_2[] {
-	{  0.316174, -1.058749,  1.013519,  1.001159 },
-	{  0.352599, -0.840437, -1.013519,  0.991968 },
-	{  0.131207, -0.706390,  1.013519,  1.047829 },
-	{ -0.126609, -0.790656, -1.013519,  1.112880 },
-	{ -0.163033, -1.008968,  1.013519,  1.122070 },
-	{  0.058358, -1.143015, -1.013519,  1.066210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_2[] {
-	{  1.057931, -0.354283,  1.013519,  0.814002 },
-	{  0.888051, -0.179590, -1.013519,  0.856865 },
-	{  0.611381, -0.208331,  1.013519,  0.926673 },
-	{  0.504590, -0.411766, -1.013519,  0.953618 },
-	{  0.674470, -0.586459,  1.013519,  0.910755 },
-	{  0.951140, -0.557718, -1.013519,  0.840947 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_2[] {
-	{  0.951140,  0.557718,  1.013519,  0.840947 },
-	{  0.674470,  0.586459, -1.013519,  0.910755 },
-	{  0.504590,  0.411766,  1.013519,  0.953618 },
-	{  0.611381,  0.208331, -1.013519,  0.926673 },
-	{  0.888051,  0.179590,  1.013519,  0.856865 },
-	{  1.057931,  0.354283, -1.013519,  0.814002 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_2[] {
-	{  0.058358,  1.143015,  1.013519,  1.066210 },
-	{ -0.163033,  1.008968, -1.013519,  1.122070 },
-	{ -0.126609,  0.790656,  1.013519,  1.112880 },
-	{  0.131207,  0.706390, -1.013519,  1.047829 },
-	{  0.352599,  0.840437,  1.013519,  0.991968 },
-	{  0.316174,  1.058749, -1.013519,  1.001159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_3[] {
-	{ -0.804591,  0.983194,  1.035533,  1.137223 },
-	{ -0.844940,  0.752757, -1.035533,  1.155133 },
-	{ -0.660249,  0.619584,  1.035533,  1.137223 },
-	{ -0.435209,  0.716849, -1.035533,  1.101402 },
-	{ -0.394860,  0.947285,  1.035533,  1.083491 },
-	{ -0.579551,  1.080458, -1.035533,  1.101402 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_3[] {
-	{ -1.417234, -0.735514,  1.035533,  1.313156 },
-	{ -1.180676, -0.756246, -1.035533,  1.282135 },
-	{ -1.027453, -0.567047,  1.035533,  1.251113 },
-	{ -1.110789, -0.357117, -1.035533,  1.251113 },
-	{ -1.347347, -0.336386,  1.035533,  1.282135 },
-	{ -1.500569, -0.525584, -1.035533,  1.313156 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_3[] {
-	{  0.322387, -1.191606,  1.035533,  1.101402 },
-	{  0.362736, -0.961170, -1.035533,  1.083491 },
-	{  0.178045, -0.827997,  1.035533,  1.101402 },
-	{ -0.046995, -0.925261, -1.035533,  1.137223 },
-	{ -0.087344, -1.155698,  1.035533,  1.155133 },
-	{  0.097347, -1.288870, -1.035533,  1.137223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_3[] {
-	{  0.988996, -0.426712,  1.035533,  0.969579 },
-	{  0.850255, -0.249109, -1.035533,  0.978850 },
-	{  0.611314, -0.288725,  1.035533,  1.013450 },
-	{  0.511114, -0.505944, -1.035533,  1.038780 },
-	{  0.649855, -0.683547,  1.035533,  1.029509 },
-	{  0.888795, -0.643931, -1.035533,  0.994908 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_3[] {
-	{  0.935030,  0.527101,  1.035533,  0.925468 },
-	{  0.698472,  0.547833, -1.035533,  0.956490 },
-	{  0.545249,  0.358635,  1.035533,  0.987512 },
-	{  0.628585,  0.148705, -1.035533,  0.987512 },
-	{  0.865143,  0.127973,  1.035533,  0.956490 },
-	{  1.018365,  0.317171, -1.035533,  0.925468 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_3[] {
-	{  0.192102,  1.111104,  1.035533,  0.994908 },
-	{ -0.003701,  0.962820, -1.035533,  1.029509 },
-	{  0.018550,  0.734869,  1.035533,  1.038780 },
-	{  0.236605,  0.655202, -1.035533,  1.013450 },
-	{  0.432408,  0.803486,  1.035533,  0.978850 },
-	{  0.410156,  1.031437, -1.035533,  0.969579 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_4[] {
-	{ -0.937420,  1.214443,  1.057548,  1.065994 },
-	{ -0.918019,  0.981484, -1.057548,  1.077512 },
-	{ -0.694952,  0.793553,  1.057548,  1.075617 },
-	{ -0.491285,  0.838580, -1.057548,  1.062204 },
-	{ -0.510686,  1.071539,  1.057548,  1.050685 },
-	{ -0.733753,  1.259470, -1.057548,  1.052580 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_4[] {
-	{ -1.110185, -0.443204,  1.057548,  1.164715 },
-	{ -0.863809, -0.525710, -1.057548,  1.155877 },
-	{ -0.757423, -0.365215,  1.057548,  1.141483 },
-	{ -0.897412, -0.122213, -1.057548,  1.135927 },
-	{ -1.143787, -0.039707,  1.057548,  1.144765 },
-	{ -1.250173, -0.200203, -1.057548,  1.159159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_4[] {
-	{ -0.200203, -1.250173,  1.057548,  1.159159 },
-	{ -0.039707, -1.143787, -1.057548,  1.144765 },
-	{ -0.122213, -0.897412,  1.057548,  1.135927 },
-	{ -0.365215, -0.757423, -1.057548,  1.141483 },
-	{ -0.525710, -0.863809,  1.057548,  1.155877 },
-	{ -0.443204, -1.110185, -1.057548,  1.164715 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_4[] {
-	{  1.259470, -0.733753,  1.057548,  1.052580 },
-	{  1.071539, -0.510686, -1.057548,  1.050685 },
-	{  0.838580, -0.491285,  1.057548,  1.062204 },
-	{  0.793553, -0.694952, -1.057548,  1.075617 },
-	{  0.981484, -0.918019,  1.057548,  1.077512 },
-	{  1.214443, -0.937420, -1.057548,  1.065994 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_4[] {
-	{  0.954105,  0.287125,  1.057548,  1.013990 },
-	{  0.707730,  0.369631, -1.057548,  1.022828 },
-	{  0.601344,  0.209135,  1.057548,  1.037222 },
-	{  0.741332, -0.033866, -1.057548,  1.042778 },
-	{  0.987708, -0.116372,  1.057548,  1.033940 },
-	{  1.094094,  0.044123, -1.057548,  1.019546 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_4[] {
-	{  0.044123,  1.094094,  1.057548,  1.019546 },
-	{ -0.116372,  0.987708, -1.057548,  1.033940 },
-	{ -0.033866,  0.741332,  1.057548,  1.042778 },
-	{  0.209135,  0.601344, -1.057548,  1.037222 },
-	{  0.369631,  0.707730,  1.057548,  1.022828 },
-	{  0.287125,  0.954105, -1.057548,  1.013990 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_5[] {
-	{ -0.878015,  1.289128,  1.066667,  1.080935 },
-	{ -0.864786,  1.067345, -1.066667,  1.080935 },
-	{ -0.632108,  0.872247,  1.066667,  1.080935 },
-	{ -0.412659,  0.898932, -1.066667,  1.080935 },
-	{ -0.425888,  1.120715,  1.066667,  1.080935 },
-	{ -0.658565,  1.315813, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_5[] {
-	{ -1.116559, -0.264748,  1.066667,  1.080935 },
-	{ -0.855523, -0.361982, -1.066667,  1.080935 },
-	{ -0.736461, -0.218529,  1.066667,  1.080935 },
-	{ -0.878435,  0.022158, -1.066667,  1.080935 },
-	{ -1.139471,  0.119391,  1.066667,  1.080935 },
-	{ -1.258533, -0.024062, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_5[] {
-	{ -0.168676, -1.098756,  1.066667,  1.080935 },
-	{  0.006550, -1.010686, -1.066667,  1.080935 },
-	{ -0.073789, -0.771295,  1.066667,  1.080935 },
-	{ -0.329354, -0.619973, -1.066667,  1.080935 },
-	{ -0.504580, -0.708042,  1.066667,  1.080935 },
-	{ -0.424241, -0.947434, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_5[] {
-	{  0.878015, -1.289128,  1.066667,  1.080935 },
-	{  0.864786, -1.067345, -1.066667,  1.080935 },
-	{  0.632108, -0.872247,  1.066667,  1.080935 },
-	{  0.412659, -0.898932, -1.066667,  1.080935 },
-	{  0.425888, -1.120715,  1.066667,  1.080935 },
-	{  0.658565, -1.315813, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_5[] {
-	{  1.116559,  0.264748,  1.066667,  1.080935 },
-	{  0.855523,  0.361982, -1.066667,  1.080935 },
-	{  0.736461,  0.218529,  1.066667,  1.080935 },
-	{  0.878435, -0.022158, -1.066667,  1.080935 },
-	{  1.139471, -0.119391,  1.066667,  1.080935 },
-	{  1.258533,  0.024062, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_5[] {
-	{  0.168676,  1.098756,  1.066667,  1.080935 },
-	{ -0.006550,  1.010686, -1.066667,  1.080935 },
-	{  0.073789,  0.771295,  1.066667,  1.080935 },
-	{  0.329354,  0.619973, -1.066667,  1.080935 },
-	{  0.504580,  0.708042,  1.066667,  1.080935 },
-	{  0.424241,  0.947434, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_6[] {
-	{ -0.616465,  1.199588,  1.057548,  1.159159 },
-	{ -0.648234,  0.978854, -1.057548,  1.144765 },
-	{ -0.455139,  0.843319,  1.057548,  1.135927 },
-	{ -0.230276,  0.928520, -1.057548,  1.141483 },
-	{ -0.198507,  1.149254,  1.057548,  1.155877 },
-	{ -0.391602,  1.284788, -1.057548,  1.164715 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_6[] {
-	{ -1.170273, -0.434814,  1.057548,  1.052580 },
-	{ -0.928965, -0.463875, -1.057548,  1.050685 },
-	{ -0.780798, -0.287243,  1.057548,  1.062204 },
-	{ -0.873940, -0.081551, -1.057548,  1.075617 },
-	{ -1.115248, -0.052491,  1.057548,  1.077512 },
-	{ -1.263415, -0.229123, -1.057548,  1.065994 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_6[] {
-	{ -0.391602, -1.026606,  1.057548,  1.013990 },
-	{ -0.198507, -0.891071, -1.057548,  1.022828 },
-	{ -0.230276, -0.670337,  1.057548,  1.037222 },
-	{ -0.455139, -0.585137, -1.057548,  1.042778 },
-	{ -0.648234, -0.720671,  1.057548,  1.033940 },
-	{ -0.616465, -0.941405, -1.057548,  1.019546 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_6[] {
-	{  0.616465, -0.941405,  1.057548,  1.019546 },
-	{  0.648234, -0.720671, -1.057548,  1.033940 },
-	{  0.455139, -0.585137,  1.057548,  1.042778 },
-	{  0.230276, -0.670337, -1.057548,  1.037222 },
-	{  0.198507, -0.891071,  1.057548,  1.022828 },
-	{  0.391602, -1.026606, -1.057548,  1.013990 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_6[] {
-	{  1.263415, -0.229123,  1.057548,  1.065994 },
-	{  1.115248, -0.052491, -1.057548,  1.077512 },
-	{  0.873940, -0.081551,  1.057548,  1.075617 },
-	{  0.780798, -0.287243, -1.057548,  1.062204 },
-	{  0.928965, -0.463875,  1.057548,  1.050685 },
-	{  1.170273, -0.434814, -1.057548,  1.052580 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_6[] {
-	{  0.391602,  1.284788,  1.057548,  1.164715 },
-	{  0.198507,  1.149254, -1.057548,  1.155877 },
-	{  0.230276,  0.928520,  1.057548,  1.141483 },
-	{  0.455139,  0.843319, -1.057548,  1.135927 },
-	{  0.648234,  0.978854,  1.057548,  1.144765 },
-	{  0.616465,  1.199588, -1.057548,  1.159159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_7[] {
-	{ -0.735514,  1.417234,  1.035533,  1.313156 },
-	{ -0.756246,  1.180676, -1.035533,  1.282135 },
-	{ -0.567047,  1.027453,  1.035533,  1.251113 },
-	{ -0.357117,  1.110789, -1.035533,  1.251113 },
-	{ -0.336386,  1.347347,  1.035533,  1.282135 },
-	{ -0.525584,  1.500569, -1.035533,  1.313156 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_7[] {
-	{ -1.191606, -0.322387,  1.035533,  1.101402 },
-	{ -0.961170, -0.362736, -1.035533,  1.083491 },
-	{ -0.827997, -0.178045,  1.035533,  1.101402 },
-	{ -0.925261,  0.046995, -1.035533,  1.137223 },
-	{ -1.155698,  0.087344,  1.035533,  1.155133 },
-	{ -1.288870, -0.097347, -1.035533,  1.137223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_7[] {
-	{ -0.426712, -0.988996,  1.035533,  0.969579 },
-	{ -0.249109, -0.850255, -1.035533,  0.978850 },
-	{ -0.288725, -0.611314,  1.035533,  1.013450 },
-	{ -0.505944, -0.511114, -1.035533,  1.038780 },
-	{ -0.683547, -0.649855,  1.035533,  1.029509 },
-	{ -0.643931, -0.888795, -1.035533,  0.994908 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_7[] {
-	{  0.527101, -0.935030,  1.035533,  0.925468 },
-	{  0.547833, -0.698472, -1.035533,  0.956490 },
-	{  0.358635, -0.545249,  1.035533,  0.987512 },
-	{  0.148705, -0.628585, -1.035533,  0.987512 },
-	{  0.127973, -0.865143,  1.035533,  0.956490 },
-	{  0.317171, -1.018365, -1.035533,  0.925468 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_7[] {
-	{  1.111104, -0.192102,  1.035533,  0.994908 },
-	{  0.962820,  0.003701, -1.035533,  1.029509 },
-	{  0.734869, -0.018550,  1.035533,  1.038780 },
-	{  0.655202, -0.236605, -1.035533,  1.013450 },
-	{  0.803486, -0.432408,  1.035533,  0.978850 },
-	{  1.031437, -0.410156, -1.035533,  0.969579 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_7[] {
-	{  0.983194,  0.804591,  1.035533,  1.137223 },
-	{  0.752757,  0.844940, -1.035533,  1.155133 },
-	{  0.619584,  0.660249,  1.035533,  1.137223 },
-	{  0.716849,  0.435209, -1.035533,  1.101402 },
-	{  0.947285,  0.394860,  1.035533,  1.083491 },
-	{  1.080458,  0.579551, -1.035533,  1.101402 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_3[] {
-	{ -0.598409,  0.706787,  1.013519,  1.066210 },
-	{ -0.727450,  0.424680, -1.013519,  1.122070 },
-	{ -0.568984,  0.333858,  1.013519,  1.112880 },
-	{ -0.281477,  0.525143, -1.013519,  1.047829 },
-	{ -0.152436,  0.807250,  1.013519,  0.991968 },
-	{ -0.310902,  0.898072, -1.013519,  1.001159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_3[] {
-	{ -1.623514, -0.414540,  1.013519,  1.357835 },
-	{ -1.532692, -0.573006, -1.013519,  1.367025 },
-	{ -1.250585, -0.443966,  1.013519,  1.311165 },
-	{ -1.059300, -0.156459, -1.013519,  1.246114 },
-	{ -1.150122,  0.002007,  1.013519,  1.236923 },
-	{ -1.432229, -0.127033, -1.013519,  1.292784 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_2_3[] {
-	{ -0.127033, -1.432229,  1.013519,  1.292784 },
-	{  0.002007, -1.150122, -1.013519,  1.236923 },
-	{ -0.156459, -1.059300,  1.013519,  1.246114 },
-	{ -0.443966, -1.250585, -1.013519,  1.311165 },
-	{ -0.573006, -1.532692,  1.013519,  1.367025 },
-	{ -0.414540, -1.623514, -1.013519,  1.357835 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_2_3[] {
-	{  0.898072, -0.310902,  1.013519,  1.001159 },
-	{  0.807250, -0.152436, -1.013519,  0.991968 },
-	{  0.525143, -0.281477,  1.013519,  1.047829 },
-	{  0.333858, -0.568984, -1.013519,  1.112880 },
-	{  0.424680, -0.727450,  1.013519,  1.122070 },
-	{  0.706787, -0.598409, -1.013519,  1.066210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_2_3[] {
-	{  1.184622,  0.780070,  1.013519,  0.814002 },
-	{  0.927139,  0.722068, -1.013519,  0.856865 },
-	{  0.686645,  0.448754,  1.013519,  0.926673 },
-	{  0.703634,  0.233443, -1.013519,  0.953618 },
-	{  0.961117,  0.291446,  1.013519,  0.910755 },
-	{  1.201611,  0.564759, -1.013519,  0.840947 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_2_3[] {
-	{  0.564759,  1.201611,  1.013519,  0.840947 },
-	{  0.291446,  0.961117, -1.013519,  0.910755 },
-	{  0.233443,  0.703634,  1.013519,  0.953618 },
-	{  0.448754,  0.686645, -1.013519,  0.926673 },
-	{  0.722068,  0.927139,  1.013519,  0.856865 },
-	{  0.780070,  1.184622, -1.013519,  0.814002 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_4[] {
-	{ -0.643931,  0.888795,  1.035533,  0.994908 },
-	{ -0.683547,  0.649855, -1.035533,  1.029509 },
-	{ -0.505944,  0.511114,  1.035533,  1.038780 },
-	{ -0.288725,  0.611314, -1.035533,  1.013450 },
-	{ -0.249109,  0.850255,  1.035533,  0.978850 },
-	{ -0.426712,  0.988996, -1.035533,  0.969579 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_4[] {
-	{ -1.288870,  0.097347,  1.035533,  1.137223 },
-	{ -1.155698, -0.087344, -1.035533,  1.155133 },
-	{ -0.925261, -0.046995,  1.035533,  1.137223 },
-	{ -0.827997,  0.178045, -1.035533,  1.101402 },
-	{ -0.961170,  0.362736,  1.035533,  1.083491 },
-	{ -1.191606,  0.322387, -1.035533,  1.101402 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_2_4[] {
-	{ -0.525584, -1.500569,  1.035533,  1.313156 },
-	{ -0.336386, -1.347347, -1.035533,  1.282135 },
-	{ -0.357117, -1.110789,  1.035533,  1.251113 },
-	{ -0.567047, -1.027453, -1.035533,  1.251113 },
-	{ -0.756246, -1.180676,  1.035533,  1.282135 },
-	{ -0.735514, -1.417234, -1.035533,  1.313156 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_2_4[] {
-	{  1.080458, -0.579551,  1.035533,  1.101402 },
-	{  0.947285, -0.394860, -1.035533,  1.083491 },
-	{  0.716849, -0.435209,  1.035533,  1.101402 },
-	{  0.619584, -0.660249, -1.035533,  1.137223 },
-	{  0.752757, -0.844940,  1.035533,  1.155133 },
-	{  0.983194, -0.804591, -1.035533,  1.137223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_2_4[] {
-	{  1.031437,  0.410156,  1.035533,  0.969579 },
-	{  0.803486,  0.432408, -1.035533,  0.978850 },
-	{  0.655202,  0.236605,  1.035533,  1.013450 },
-	{  0.734869,  0.018550, -1.035533,  1.038780 },
-	{  0.962820, -0.003701,  1.035533,  1.029509 },
-	{  1.111104,  0.192102, -1.035533,  0.994908 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_2_4[] {
-	{  0.317171,  1.018365,  1.035533,  0.925468 },
-	{  0.127973,  0.865143, -1.035533,  0.956490 },
-	{  0.148705,  0.628585,  1.035533,  0.987512 },
-	{  0.358635,  0.545249, -1.035533,  0.987512 },
-	{  0.547833,  0.698472,  1.035533,  0.956490 },
-	{  0.527101,  0.935030, -1.035533,  0.925468 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_5[] {
-	{ -0.616465,  0.941405,  1.057548,  1.019546 },
-	{ -0.648234,  0.720671, -1.057548,  1.033940 },
-	{ -0.455139,  0.585137,  1.057548,  1.042778 },
-	{ -0.230276,  0.670337, -1.057548,  1.037222 },
-	{ -0.198507,  0.891071,  1.057548,  1.022828 },
-	{ -0.391602,  1.026606, -1.057548,  1.013990 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_5[] {
-	{ -1.263415,  0.229123,  1.057548,  1.065994 },
-	{ -1.115248,  0.052491, -1.057548,  1.077512 },
-	{ -0.873940,  0.081551,  1.057548,  1.075617 },
-	{ -0.780798,  0.287243, -1.057548,  1.062204 },
-	{ -0.928965,  0.463875,  1.057548,  1.050685 },
-	{ -1.170273,  0.434814, -1.057548,  1.052580 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_2_5[] {
-	{ -0.391602, -1.284788,  1.057548,  1.164715 },
-	{ -0.198507, -1.149254, -1.057548,  1.155877 },
-	{ -0.230276, -0.928520,  1.057548,  1.141483 },
-	{ -0.455139, -0.843319, -1.057548,  1.135927 },
-	{ -0.648234, -0.978854,  1.057548,  1.144765 },
-	{ -0.616465, -1.199588, -1.057548,  1.159159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_2_5[] {
-	{  0.616465, -1.199588,  1.057548,  1.159159 },
-	{  0.648234, -0.978854, -1.057548,  1.144765 },
-	{  0.455139, -0.843319,  1.057548,  1.135927 },
-	{  0.230276, -0.928520, -1.057548,  1.141483 },
-	{  0.198507, -1.149254,  1.057548,  1.155877 },
-	{  0.391602, -1.284788, -1.057548,  1.164715 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_2_5[] {
-	{  1.170273,  0.434814,  1.057548,  1.052580 },
-	{  0.928965,  0.463875, -1.057548,  1.050685 },
-	{  0.780798,  0.287243,  1.057548,  1.062204 },
-	{  0.873940,  0.081551, -1.057548,  1.075617 },
-	{  1.115248,  0.052491,  1.057548,  1.077512 },
-	{  1.263415,  0.229123, -1.057548,  1.065994 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_2_5[] {
-	{  0.391602,  1.026606,  1.057548,  1.013990 },
-	{  0.198507,  0.891071, -1.057548,  1.022828 },
-	{  0.230276,  0.670337,  1.057548,  1.037222 },
-	{  0.455139,  0.585137, -1.057548,  1.042778 },
-	{  0.648234,  0.720671,  1.057548,  1.033940 },
-	{  0.616465,  0.941405, -1.057548,  1.019546 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_6[] {
-	{ -0.424241,  0.947434,  1.066667,  1.080935 },
-	{ -0.504580,  0.708042, -1.066667,  1.080935 },
-	{ -0.329354,  0.619973,  1.066667,  1.080935 },
-	{ -0.073789,  0.771295, -1.066667,  1.080935 },
-	{  0.006550,  1.010686,  1.066667,  1.080935 },
-	{ -0.168676,  1.098756, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_6[] {
-	{ -1.258533,  0.024062,  1.066667,  1.080935 },
-	{ -1.139471, -0.119391, -1.066667,  1.080935 },
-	{ -0.878435, -0.022158,  1.066667,  1.080935 },
-	{ -0.736461,  0.218529, -1.066667,  1.080935 },
-	{ -0.855523,  0.361982,  1.066667,  1.080935 },
-	{ -1.116559,  0.264748, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_2_6[] {
-	{ -0.658565, -1.315813,  1.066667,  1.080935 },
-	{ -0.425888, -1.120715, -1.066667,  1.080935 },
-	{ -0.412659, -0.898932,  1.066667,  1.080935 },
-	{ -0.632108, -0.872247, -1.066667,  1.080935 },
-	{ -0.864786, -1.067345,  1.066667,  1.080935 },
-	{ -0.878015, -1.289128, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_2_6[] {
-	{  0.424241, -0.947434,  1.066667,  1.080935 },
-	{  0.504580, -0.708042, -1.066667,  1.080935 },
-	{  0.329354, -0.619973,  1.066667,  1.080935 },
-	{  0.073789, -0.771295, -1.066667,  1.080935 },
-	{ -0.006550, -1.010686,  1.066667,  1.080935 },
-	{  0.168676, -1.098756, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_2_6[] {
-	{  1.258533, -0.024062,  1.066667,  1.080935 },
-	{  1.139471,  0.119391, -1.066667,  1.080935 },
-	{  0.878435,  0.022158,  1.066667,  1.080935 },
-	{  0.736461, -0.218529, -1.066667,  1.080935 },
-	{  0.855523, -0.361982,  1.066667,  1.080935 },
-	{  1.116559, -0.264748, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_2_6[] {
-	{  0.658565,  1.315813,  1.066667,  1.080935 },
-	{  0.425888,  1.120715, -1.066667,  1.080935 },
-	{  0.412659,  0.898932,  1.066667,  1.080935 },
-	{  0.632108,  0.872247, -1.066667,  1.080935 },
-	{  0.864786,  1.067345,  1.066667,  1.080935 },
-	{  0.878015,  1.289128, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_7[] {
-	{ -0.443204,  1.110185,  1.057548,  1.164715 },
-	{ -0.525710,  0.863809, -1.057548,  1.155877 },
-	{ -0.365215,  0.757423,  1.057548,  1.141483 },
-	{ -0.122213,  0.897412, -1.057548,  1.135927 },
-	{ -0.039707,  1.143787,  1.057548,  1.144765 },
-	{ -0.200203,  1.250173, -1.057548,  1.159159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_7[] {
-	{ -1.250173,  0.200203,  1.057548,  1.159159 },
-	{ -1.143787,  0.039707, -1.057548,  1.144765 },
-	{ -0.897412,  0.122213,  1.057548,  1.135927 },
-	{ -0.757423,  0.365215, -1.057548,  1.141483 },
-	{ -0.863809,  0.525710,  1.057548,  1.155877 },
-	{ -1.110185,  0.443204, -1.057548,  1.164715 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_2_7[] {
-	{ -0.733753, -1.259470,  1.057548,  1.052580 },
-	{ -0.510686, -1.071539, -1.057548,  1.050685 },
-	{ -0.491285, -0.838580,  1.057548,  1.062204 },
-	{ -0.694952, -0.793553, -1.057548,  1.075617 },
-	{ -0.918019, -0.981484,  1.057548,  1.077512 },
-	{ -0.937420, -1.214443, -1.057548,  1.065994 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_2_7[] {
-	{  0.287125, -0.954105,  1.057548,  1.013990 },
-	{  0.369631, -0.707730, -1.057548,  1.022828 },
-	{  0.209135, -0.601344,  1.057548,  1.037222 },
-	{ -0.033866, -0.741332, -1.057548,  1.042778 },
-	{ -0.116372, -0.987708,  1.057548,  1.033940 },
-	{  0.044123, -1.094094, -1.057548,  1.019546 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_2_7[] {
-	{  1.094094, -0.044123,  1.057548,  1.019546 },
-	{  0.987708,  0.116372, -1.057548,  1.033940 },
-	{  0.741332,  0.033866,  1.057548,  1.042778 },
-	{  0.601344, -0.209135, -1.057548,  1.037222 },
-	{  0.707730, -0.369631,  1.057548,  1.022828 },
-	{  0.954105, -0.287125, -1.057548,  1.013990 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_2_7[] {
-	{  1.214443,  0.937420,  1.057548,  1.065994 },
-	{  0.981484,  0.918019, -1.057548,  1.077512 },
-	{  0.793553,  0.694952,  1.057548,  1.075617 },
-	{  0.838580,  0.491285, -1.057548,  1.062204 },
-	{  1.071539,  0.510686,  1.057548,  1.050685 },
-	{  1.259470,  0.733753, -1.057548,  1.052580 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_3_4[] {
-	{ -0.557718,  0.951140,  1.013519,  0.840947 },
-	{ -0.586459,  0.674470, -1.013519,  0.910755 },
-	{ -0.411766,  0.504590,  1.013519,  0.953618 },
-	{ -0.208331,  0.611381, -1.013519,  0.926673 },
-	{ -0.179590,  0.888051,  1.013519,  0.856865 },
-	{ -0.354283,  1.057931, -1.013519,  0.814002 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_3_4[] {
-	{ -1.143015,  0.058358,  1.013519,  1.066210 },
-	{ -1.008968, -0.163033, -1.013519,  1.122070 },
-	{ -0.790656, -0.126609,  1.013519,  1.112880 },
-	{ -0.706390,  0.131207, -1.013519,  1.047829 },
-	{ -0.840437,  0.352599,  1.013519,  0.991968 },
-	{ -1.058749,  0.316174, -1.013519,  1.001159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_3_4[] {
-	{ -1.058749, -1.097435,  1.013519,  1.357835 },
-	{ -0.840437, -1.133859, -1.013519,  1.367025 },
-	{ -0.706390, -0.912468,  1.013519,  1.311165 },
-	{ -0.790656, -0.654652, -1.013519,  1.246114 },
-	{ -1.008968, -0.618227,  1.013519,  1.236923 },
-	{ -1.143015, -0.839619, -1.013519,  1.292784 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_3_4[] {
-	{  1.143015, -0.839619,  1.013519,  1.292784 },
-	{  1.008968, -0.618227, -1.013519,  1.236923 },
-	{  0.790656, -0.654652,  1.013519,  1.246114 },
-	{  0.706390, -0.912468, -1.013519,  1.311165 },
-	{  0.840437, -1.133859,  1.013519,  1.367025 },
-	{  1.058749, -1.097435, -1.013519,  1.357835 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_3_4[] {
-	{  1.058749,  0.316174,  1.013519,  1.001159 },
-	{  0.840437,  0.352599, -1.013519,  0.991968 },
-	{  0.706390,  0.131207,  1.013519,  1.047829 },
-	{  0.790656, -0.126609, -1.013519,  1.112880 },
-	{  1.008968, -0.163033,  1.013519,  1.122070 },
-	{  1.143015,  0.058358, -1.013519,  1.066210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_3_4[] {
-	{  0.354283,  1.057931,  1.013519,  0.814002 },
-	{  0.179590,  0.888051, -1.013519,  0.856865 },
-	{  0.208331,  0.611381,  1.013519,  0.926673 },
-	{  0.411766,  0.504590, -1.013519,  0.953618 },
-	{  0.586459,  0.674470,  1.013519,  0.910755 },
-	{  0.557718,  0.951140, -1.013519,  0.840947 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_3_5[] {
-	{ -0.527101,  0.935030,  1.035533,  0.925468 },
-	{ -0.547833,  0.698472, -1.035533,  0.956490 },
-	{ -0.358635,  0.545249,  1.035533,  0.987512 },
-	{ -0.148705,  0.628585, -1.035533,  0.987512 },
-	{ -0.127973,  0.865143,  1.035533,  0.956490 },
-	{ -0.317171,  1.018365, -1.035533,  0.925468 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_3_5[] {
-	{ -1.111104,  0.192102,  1.035533,  0.994908 },
-	{ -0.962820, -0.003701, -1.035533,  1.029509 },
-	{ -0.734869,  0.018550,  1.035533,  1.038780 },
-	{ -0.655202,  0.236605, -1.035533,  1.013450 },
-	{ -0.803486,  0.432408,  1.035533,  0.978850 },
-	{ -1.031437,  0.410156, -1.035533,  0.969579 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_3_5[] {
-	{ -0.983194, -0.804591,  1.035533,  1.137223 },
-	{ -0.752757, -0.844940, -1.035533,  1.155133 },
-	{ -0.619584, -0.660249,  1.035533,  1.137223 },
-	{ -0.716849, -0.435209, -1.035533,  1.101402 },
-	{ -0.947285, -0.394860,  1.035533,  1.083491 },
-	{ -1.080458, -0.579551, -1.035533,  1.101402 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_3_5[] {
-	{  0.735514, -1.417234,  1.035533,  1.313156 },
-	{  0.756246, -1.180676, -1.035533,  1.282135 },
-	{  0.567047, -1.027453,  1.035533,  1.251113 },
-	{  0.357117, -1.110789, -1.035533,  1.251113 },
-	{  0.336386, -1.347347,  1.035533,  1.282135 },
-	{  0.525584, -1.500569, -1.035533,  1.313156 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_3_5[] {
-	{  1.191606,  0.322387,  1.035533,  1.101402 },
-	{  0.961170,  0.362736, -1.035533,  1.083491 },
-	{  0.827997,  0.178045,  1.035533,  1.101402 },
-	{  0.925261, -0.046995, -1.035533,  1.137223 },
-	{  1.155698, -0.087344,  1.035533,  1.155133 },
-	{  1.288870,  0.097347, -1.035533,  1.137223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_3_5[] {
-	{  0.426712,  0.988996,  1.035533,  0.969579 },
-	{  0.249109,  0.850255, -1.035533,  0.978850 },
-	{  0.288725,  0.611314,  1.035533,  1.013450 },
-	{  0.505944,  0.511114, -1.035533,  1.038780 },
-	{  0.683547,  0.649855,  1.035533,  1.029509 },
-	{  0.643931,  0.888795, -1.035533,  0.994908 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_3_6[] {
-	{ -0.287125,  0.954105,  1.057548,  1.013990 },
-	{ -0.369631,  0.707730, -1.057548,  1.022828 },
-	{ -0.209135,  0.601344,  1.057548,  1.037222 },
-	{  0.033866,  0.741332, -1.057548,  1.042778 },
-	{  0.116372,  0.987708,  1.057548,  1.033940 },
-	{ -0.044123,  1.094094, -1.057548,  1.019546 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_3_6[] {
-	{ -1.094094,  0.044123,  1.057548,  1.019546 },
-	{ -0.987708, -0.116372, -1.057548,  1.033940 },
-	{ -0.741332, -0.033866,  1.057548,  1.042778 },
-	{ -0.601344,  0.209135, -1.057548,  1.037222 },
-	{ -0.707730,  0.369631,  1.057548,  1.022828 },
-	{ -0.954105,  0.287125, -1.057548,  1.013990 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_3_6[] {
-	{ -1.214443, -0.937420,  1.057548,  1.065994 },
-	{ -0.981484, -0.918019, -1.057548,  1.077512 },
-	{ -0.793553, -0.694952,  1.057548,  1.075617 },
-	{ -0.838580, -0.491285, -1.057548,  1.062204 },
-	{ -1.071539, -0.510686,  1.057548,  1.050685 },
-	{ -1.259470, -0.733753, -1.057548,  1.052580 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_3_6[] {
-	{  0.443204, -1.110185,  1.057548,  1.164715 },
-	{  0.525710, -0.863809, -1.057548,  1.155877 },
-	{  0.365215, -0.757423,  1.057548,  1.141483 },
-	{  0.122213, -0.897412, -1.057548,  1.135927 },
-	{  0.039707, -1.143787,  1.057548,  1.144765 },
-	{  0.200203, -1.250173, -1.057548,  1.159159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_3_6[] {
-	{  1.250173, -0.200203,  1.057548,  1.159159 },
-	{  1.143787, -0.039707, -1.057548,  1.144765 },
-	{  0.897412, -0.122213,  1.057548,  1.135927 },
-	{  0.757423, -0.365215, -1.057548,  1.141483 },
-	{  0.863809, -0.525710,  1.057548,  1.155877 },
-	{  1.110185, -0.443204, -1.057548,  1.164715 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_3_6[] {
-	{  0.733753,  1.259470,  1.057548,  1.052580 },
-	{  0.510686,  1.071539, -1.057548,  1.050685 },
-	{  0.491285,  0.838580,  1.057548,  1.062204 },
-	{  0.694952,  0.793553, -1.057548,  1.075617 },
-	{  0.918019,  0.981484,  1.057548,  1.077512 },
-	{  0.937420,  1.214443, -1.057548,  1.065994 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_3_7[] {
-	{ -0.264748,  1.116559,  1.066667,  1.080935 },
-	{ -0.361982,  0.855523, -1.066667,  1.080935 },
-	{ -0.218529,  0.736461,  1.066667,  1.080935 },
-	{  0.022158,  0.878435, -1.066667,  1.080935 },
-	{  0.119391,  1.139471,  1.066667,  1.080935 },
-	{ -0.024062,  1.258533, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_3_7[] {
-	{ -1.098756,  0.168676,  1.066667,  1.080935 },
-	{ -1.010686, -0.006550, -1.066667,  1.080935 },
-	{ -0.771295,  0.073789,  1.066667,  1.080935 },
-	{ -0.619973,  0.329354, -1.066667,  1.080935 },
-	{ -0.708042,  0.504580,  1.066667,  1.080935 },
-	{ -0.947434,  0.424241, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_3_7[] {
-	{ -1.289128, -0.878015,  1.066667,  1.080935 },
-	{ -1.067345, -0.864786, -1.066667,  1.080935 },
-	{ -0.872247, -0.632108,  1.066667,  1.080935 },
-	{ -0.898932, -0.412659, -1.066667,  1.080935 },
-	{ -1.120715, -0.425888,  1.066667,  1.080935 },
-	{ -1.315813, -0.658565, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_3_7[] {
-	{  0.264748, -1.116559,  1.066667,  1.080935 },
-	{  0.361982, -0.855523, -1.066667,  1.080935 },
-	{  0.218529, -0.736461,  1.066667,  1.080935 },
-	{ -0.022158, -0.878435, -1.066667,  1.080935 },
-	{ -0.119391, -1.139471,  1.066667,  1.080935 },
-	{  0.024062, -1.258533, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_3_7[] {
-	{  1.098756, -0.168676,  1.066667,  1.080935 },
-	{  1.010686,  0.006550, -1.066667,  1.080935 },
-	{  0.771295, -0.073789,  1.066667,  1.080935 },
-	{  0.619973, -0.329354, -1.066667,  1.080935 },
-	{  0.708042, -0.504580,  1.066667,  1.080935 },
-	{  0.947434, -0.424241, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_3_7[] {
-	{  1.289128,  0.878015,  1.066667,  1.080935 },
-	{  1.067345,  0.864786, -1.066667,  1.080935 },
-	{  0.872247,  0.632108,  1.066667,  1.080935 },
-	{  0.898932,  0.412659, -1.066667,  1.080935 },
-	{  1.120715,  0.425888,  1.066667,  1.080935 },
-	{  1.315813,  0.658565, -1.066667,  1.080935 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_4_5[] {
-	{ -0.780070,  1.184622,  1.013519,  0.814002 },
-	{ -0.722068,  0.927139, -1.013519,  0.856865 },
-	{ -0.448754,  0.686645,  1.013519,  0.926673 },
-	{ -0.233443,  0.703634, -1.013519,  0.953618 },
-	{ -0.291446,  0.961117,  1.013519,  0.910755 },
-	{ -0.564759,  1.201611, -1.013519,  0.840947 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_4_5[] {
-	{ -1.201611,  0.564759,  1.013519,  0.840947 },
-	{ -0.961117,  0.291446, -1.013519,  0.910755 },
-	{ -0.703634,  0.233443,  1.013519,  0.953618 },
-	{ -0.686645,  0.448754, -1.013519,  0.926673 },
-	{ -0.927139,  0.722068,  1.013519,  0.856865 },
-	{ -1.184622,  0.780070, -1.013519,  0.814002 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_4_5[] {
-	{ -0.706787, -0.598409,  1.013519,  1.066210 },
-	{ -0.424680, -0.727450, -1.013519,  1.122070 },
-	{ -0.333858, -0.568984,  1.013519,  1.112880 },
-	{ -0.525143, -0.281477, -1.013519,  1.047829 },
-	{ -0.807250, -0.152436,  1.013519,  0.991968 },
-	{ -0.898072, -0.310902, -1.013519,  1.001159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_4_5[] {
-	{  0.414540, -1.623514,  1.013519,  1.357835 },
-	{  0.573006, -1.532692, -1.013519,  1.367025 },
-	{  0.443966, -1.250585,  1.013519,  1.311165 },
-	{  0.156459, -1.059300, -1.013519,  1.246114 },
-	{ -0.002007, -1.150122,  1.013519,  1.236923 },
-	{  0.127033, -1.432229, -1.013519,  1.292784 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_4_5[] {
-	{  1.432229, -0.127033,  1.013519,  1.292784 },
-	{  1.150122,  0.002007, -1.013519,  1.236923 },
-	{  1.059300, -0.156459,  1.013519,  1.246114 },
-	{  1.250585, -0.443966, -1.013519,  1.311165 },
-	{  1.532692, -0.573006,  1.013519,  1.367025 },
-	{  1.623514, -0.414540, -1.013519,  1.357835 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_4_5[] {
-	{  0.310902,  0.898072,  1.013519,  1.001159 },
-	{  0.152436,  0.807250, -1.013519,  0.991968 },
-	{  0.281477,  0.525143,  1.013519,  1.047829 },
-	{  0.568984,  0.333858, -1.013519,  1.112880 },
-	{  0.727450,  0.424680,  1.013519,  1.122070 },
-	{  0.598409,  0.706787, -1.013519,  1.066210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_4_6[] {
-	{ -0.410156,  1.031437,  1.035533,  0.969579 },
-	{ -0.432408,  0.803486, -1.035533,  0.978850 },
-	{ -0.236605,  0.655202,  1.035533,  1.013450 },
-	{ -0.018550,  0.734869, -1.035533,  1.038780 },
-	{  0.003701,  0.962820,  1.035533,  1.029509 },
-	{ -0.192102,  1.111104, -1.035533,  0.994908 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_4_6[] {
-	{ -1.018365,  0.317171,  1.035533,  0.925468 },
-	{ -0.865143,  0.127973, -1.035533,  0.956490 },
-	{ -0.628585,  0.148705,  1.035533,  0.987512 },
-	{ -0.545249,  0.358635, -1.035533,  0.987512 },
-	{ -0.698472,  0.547833,  1.035533,  0.956490 },
-	{ -0.935030,  0.527101, -1.035533,  0.925468 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_4_6[] {
-	{ -0.888795, -0.643931,  1.035533,  0.994908 },
-	{ -0.649855, -0.683547, -1.035533,  1.029509 },
-	{ -0.511114, -0.505944,  1.035533,  1.038780 },
-	{ -0.611314, -0.288725, -1.035533,  1.013450 },
-	{ -0.850255, -0.249109,  1.035533,  0.978850 },
-	{ -0.988996, -0.426712, -1.035533,  0.969579 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_4_6[] {
-	{ -0.097347, -1.288870,  1.035533,  1.137223 },
-	{  0.087344, -1.155698, -1.035533,  1.155133 },
-	{  0.046995, -0.925261,  1.035533,  1.137223 },
-	{ -0.178045, -0.827997, -1.035533,  1.101402 },
-	{ -0.362736, -0.961170,  1.035533,  1.083491 },
-	{ -0.322387, -1.191606, -1.035533,  1.101402 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_4_6[] {
-	{  1.500569, -0.525584,  1.035533,  1.313156 },
-	{  1.347347, -0.336386, -1.035533,  1.282135 },
-	{  1.110789, -0.357117,  1.035533,  1.251113 },
-	{  1.027453, -0.567047, -1.035533,  1.251113 },
-	{  1.180676, -0.756246,  1.035533,  1.282135 },
-	{  1.417234, -0.735514, -1.035533,  1.313156 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_4_6[] {
-	{  0.579551,  1.080458,  1.035533,  1.101402 },
-	{  0.394860,  0.947285, -1.035533,  1.083491 },
-	{  0.435209,  0.716849,  1.035533,  1.101402 },
-	{  0.660249,  0.619584, -1.035533,  1.137223 },
-	{  0.844940,  0.752757,  1.035533,  1.155133 },
-	{  0.804591,  0.983194, -1.035533,  1.137223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_4_7[] {
-	{ -0.434814,  1.170273,  1.057548,  1.052580 },
-	{ -0.463875,  0.928965, -1.057548,  1.050685 },
-	{ -0.287243,  0.780798,  1.057548,  1.062204 },
-	{ -0.081551,  0.873940, -1.057548,  1.075617 },
-	{ -0.052491,  1.115248,  1.057548,  1.077512 },
-	{ -0.229123,  1.263415, -1.057548,  1.065994 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_4_7[] {
-	{ -1.026606,  0.391602,  1.057548,  1.013990 },
-	{ -0.891071,  0.198507, -1.057548,  1.022828 },
-	{ -0.670337,  0.230276,  1.057548,  1.037222 },
-	{ -0.585137,  0.455139, -1.057548,  1.042778 },
-	{ -0.720671,  0.648234,  1.057548,  1.033940 },
-	{ -0.941405,  0.616465, -1.057548,  1.019546 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_4_7[] {
-	{ -0.941405, -0.616465,  1.057548,  1.019546 },
-	{ -0.720671, -0.648234, -1.057548,  1.033940 },
-	{ -0.585137, -0.455139,  1.057548,  1.042778 },
-	{ -0.670337, -0.230276, -1.057548,  1.037222 },
-	{ -0.891071, -0.198507,  1.057548,  1.022828 },
-	{ -1.026606, -0.391602, -1.057548,  1.013990 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_4_7[] {
-	{ -0.229123, -1.263415,  1.057548,  1.065994 },
-	{ -0.052491, -1.115248, -1.057548,  1.077512 },
-	{ -0.081551, -0.873940,  1.057548,  1.075617 },
-	{ -0.287243, -0.780798, -1.057548,  1.062204 },
-	{ -0.463875, -0.928965,  1.057548,  1.050685 },
-	{ -0.434814, -1.170273, -1.057548,  1.052580 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_4_7[] {
-	{  1.284788, -0.391602,  1.057548,  1.164715 },
-	{  1.149254, -0.198507, -1.057548,  1.155877 },
-	{  0.928520, -0.230276,  1.057548,  1.141483 },
-	{  0.843319, -0.455139, -1.057548,  1.135927 },
-	{  0.978854, -0.648234,  1.057548,  1.144765 },
-	{  1.199588, -0.616465, -1.057548,  1.159159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_4_7[] {
-	{  1.199588,  0.616465,  1.057548,  1.159159 },
-	{  0.978854,  0.648234, -1.057548,  1.144765 },
-	{  0.843319,  0.455139,  1.057548,  1.135927 },
-	{  0.928520,  0.230276, -1.057548,  1.141483 },
-	{  1.149254,  0.198507,  1.057548,  1.155877 },
-	{  1.284788,  0.391602, -1.057548,  1.164715 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_5_6[] {
-	{ -0.316174,  1.058749,  1.013519,  1.001159 },
-	{ -0.352599,  0.840437, -1.013519,  0.991968 },
-	{ -0.131207,  0.706390,  1.013519,  1.047829 },
-	{  0.126609,  0.790656, -1.013519,  1.112880 },
-	{  0.163033,  1.008968,  1.013519,  1.122070 },
-	{ -0.058358,  1.143015, -1.013519,  1.066210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_5_6[] {
-	{ -1.057931,  0.354283,  1.013519,  0.814002 },
-	{ -0.888051,  0.179590, -1.013519,  0.856865 },
-	{ -0.611381,  0.208331,  1.013519,  0.926673 },
-	{ -0.504590,  0.411766, -1.013519,  0.953618 },
-	{ -0.674470,  0.586459,  1.013519,  0.910755 },
-	{ -0.951140,  0.557718, -1.013519,  0.840947 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_5_6[] {
-	{ -0.951140, -0.557718,  1.013519,  0.840947 },
-	{ -0.674470, -0.586459, -1.013519,  0.910755 },
-	{ -0.504590, -0.411766,  1.013519,  0.953618 },
-	{ -0.611381, -0.208331, -1.013519,  0.926673 },
-	{ -0.888051, -0.179590,  1.013519,  0.856865 },
-	{ -1.057931, -0.354283, -1.013519,  0.814002 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_5_6[] {
-	{ -0.058358, -1.143015,  1.013519,  1.066210 },
-	{  0.163033, -1.008968, -1.013519,  1.122070 },
-	{  0.126609, -0.790656,  1.013519,  1.112880 },
-	{ -0.131207, -0.706390, -1.013519,  1.047829 },
-	{ -0.352599, -0.840437,  1.013519,  0.991968 },
-	{ -0.316174, -1.058749, -1.013519,  1.001159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_5_6[] {
-	{  1.097435, -1.058749,  1.013519,  1.357835 },
-	{  1.133859, -0.840437, -1.013519,  1.367025 },
-	{  0.912468, -0.706390,  1.013519,  1.311165 },
-	{  0.654652, -0.790656, -1.013519,  1.246114 },
-	{  0.618227, -1.008968,  1.013519,  1.236923 },
-	{  0.839619, -1.143015, -1.013519,  1.292784 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_5_6[] {
-	{  0.839619,  1.143015,  1.013519,  1.292784 },
-	{  0.618227,  1.008968, -1.013519,  1.236923 },
-	{  0.654652,  0.790656,  1.013519,  1.246114 },
-	{  0.912468,  0.706390, -1.013519,  1.311165 },
-	{  1.133859,  0.840437,  1.013519,  1.367025 },
-	{  1.097435,  1.058749, -1.013519,  1.357835 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_5_7[] {
-	{ -0.322387,  1.191606,  1.035533,  1.101402 },
-	{ -0.362736,  0.961170, -1.035533,  1.083491 },
-	{ -0.178045,  0.827997,  1.035533,  1.101402 },
-	{  0.046995,  0.925261, -1.035533,  1.137223 },
-	{  0.087344,  1.155698,  1.035533,  1.155133 },
-	{ -0.097347,  1.288870, -1.035533,  1.137223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_5_7[] {
-	{ -0.988996,  0.426712,  1.035533,  0.969579 },
-	{ -0.850255,  0.249109, -1.035533,  0.978850 },
-	{ -0.611314,  0.288725,  1.035533,  1.013450 },
-	{ -0.511114,  0.505944, -1.035533,  1.038780 },
-	{ -0.649855,  0.683547,  1.035533,  1.029509 },
-	{ -0.888795,  0.643931, -1.035533,  0.994908 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_5_7[] {
-	{ -0.935030, -0.527101,  1.035533,  0.925468 },
-	{ -0.698472, -0.547833, -1.035533,  0.956490 },
-	{ -0.545249, -0.358635,  1.035533,  0.987512 },
-	{ -0.628585, -0.148705, -1.035533,  0.987512 },
-	{ -0.865143, -0.127973,  1.035533,  0.956490 },
-	{ -1.018365, -0.317171, -1.035533,  0.925468 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_5_7[] {
-	{ -0.192102, -1.111104,  1.035533,  0.994908 },
-	{  0.003701, -0.962820, -1.035533,  1.029509 },
-	{ -0.018550, -0.734869,  1.035533,  1.038780 },
-	{ -0.236605, -0.655202, -1.035533,  1.013450 },
-	{ -0.432408, -0.803486,  1.035533,  0.978850 },
-	{ -0.410156, -1.031437, -1.035533,  0.969579 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_5_7[] {
-	{  0.804591, -0.983194,  1.035533,  1.137223 },
-	{  0.844940, -0.752757, -1.035533,  1.155133 },
-	{  0.660249, -0.619584,  1.035533,  1.137223 },
-	{  0.435209, -0.716849, -1.035533,  1.101402 },
-	{  0.394860, -0.947285,  1.035533,  1.083491 },
-	{  0.579551, -1.080458, -1.035533,  1.101402 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_5_7[] {
-	{  1.417234,  0.735514,  1.035533,  1.313156 },
-	{  1.180676,  0.756246, -1.035533,  1.282135 },
-	{  1.027453,  0.567047,  1.035533,  1.251113 },
-	{  1.110789,  0.357117, -1.035533,  1.251113 },
-	{  1.347347,  0.336386,  1.035533,  1.282135 },
-	{  1.500569,  0.525584, -1.035533,  1.313156 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_6_7[] {
-	{  0.127033,  1.432229,  1.013519,  1.292784 },
-	{ -0.002007,  1.150122, -1.013519,  1.236923 },
-	{  0.156459,  1.059300,  1.013519,  1.246114 },
-	{  0.443966,  1.250585, -1.013519,  1.311165 },
-	{  0.573006,  1.532692,  1.013519,  1.367025 },
-	{  0.414540,  1.623514, -1.013519,  1.357835 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_6_7[] {
-	{ -0.898072,  0.310902,  1.013519,  1.001159 },
-	{ -0.807250,  0.152436, -1.013519,  0.991968 },
-	{ -0.525143,  0.281477,  1.013519,  1.047829 },
-	{ -0.333858,  0.568984, -1.013519,  1.112880 },
-	{ -0.424680,  0.727450,  1.013519,  1.122070 },
-	{ -0.706787,  0.598409, -1.013519,  1.066210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_6_7[] {
-	{ -1.184622, -0.780070,  1.013519,  0.814002 },
-	{ -0.927139, -0.722068, -1.013519,  0.856865 },
-	{ -0.686645, -0.448754,  1.013519,  0.926673 },
-	{ -0.703634, -0.233443, -1.013519,  0.953618 },
-	{ -0.961117, -0.291446,  1.013519,  0.910755 },
-	{ -1.201611, -0.564759, -1.013519,  0.840947 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_6_7[] {
-	{ -0.564759, -1.201611,  1.013519,  0.840947 },
-	{ -0.291446, -0.961117, -1.013519,  0.910755 },
-	{ -0.233443, -0.703634,  1.013519,  0.953618 },
-	{ -0.448754, -0.686645, -1.013519,  0.926673 },
-	{ -0.722068, -0.927139,  1.013519,  0.856865 },
-	{ -0.780070, -1.184622, -1.013519,  0.814002 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_6_7[] {
-	{  0.598409, -0.706787,  1.013519,  1.066210 },
-	{  0.727450, -0.424680, -1.013519,  1.122070 },
-	{  0.568984, -0.333858,  1.013519,  1.112880 },
-	{  0.281477, -0.525143, -1.013519,  1.047829 },
-	{  0.152436, -0.807250,  1.013519,  0.991968 },
-	{  0.310902, -0.898072, -1.013519,  1.001159 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_6_7[] {
-	{  1.623514,  0.414540,  1.013519,  1.357835 },
-	{  1.532692,  0.573006, -1.013519,  1.367025 },
-	{  1.250585,  0.443966,  1.013519,  1.311165 },
-	{  1.059300,  0.156459, -1.013519,  1.246114 },
-	{  1.150122, -0.002007,  1.013519,  1.236923 },
-	{  1.432229,  0.127033, -1.013519,  1.292784 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_1_2[] {
-	{ -1.032705, -0.622221,  0.996733,  1.511724 },
-	{ -0.768201, -0.584424, -0.996733,  1.403730 },
-	{ -0.937452, -0.276589,  0.996733,  1.511724 },
-	{ -1.371207, -0.006550, -0.996733,  1.727710 },
-	{ -1.635711, -0.044348,  0.996733,  1.835704 },
-	{ -1.466461, -0.352183, -0.996733,  1.727710 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_1_2[] {
-	{  0.670144, -1.229138,  0.996733,  0.716882 },
-	{  0.611001, -0.966496, -0.996733,  0.772783 },
-	{  0.206259, -0.654011,  0.996733,  0.981411 },
-	{ -0.139339, -0.604169, -0.996733,  1.134136 },
-	{ -0.080196, -0.866811,  0.996733,  1.078235 },
-	{  0.324546, -1.179296, -0.996733,  0.869608 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_1_2[] {
-	{  1.422775, -0.768868,  0.996733,  0.450909 },
-	{  1.074630, -0.435232, -0.996733,  0.637959 },
-	{  0.671489, -0.301148,  0.996733,  0.825009 },
-	{  0.616494, -0.500699, -0.996733,  0.825009 },
-	{  0.964640, -0.834334,  0.996733,  0.637959 },
-	{  1.367780, -0.968419, -0.996733,  0.450909 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_1_2[] {
-	{  0.784307,  0.488969,  0.996733,  0.869608 },
-	{  0.351098,  0.698159, -0.996733,  1.078235 },
-	{  0.185713,  0.575298,  0.996733,  1.134136 },
-	{  0.453537,  0.243248, -0.996733,  0.981411 },
-	{  0.886746,  0.034059,  0.996733,  0.772783 },
-	{  1.052131,  0.156919, -0.996733,  0.716882 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_1_2[] {
-	{ -0.871254,  1.807550,  0.996733,  1.727710 },
-	{ -1.135758,  1.769753, -0.996733,  1.835704 },
-	{ -0.966508,  1.461917,  0.996733,  1.727710 },
-	{ -0.532753,  1.191879, -0.996733,  1.511724 },
-	{ -0.268248,  1.229676,  0.996733,  1.403730 },
-	{ -0.437499,  1.537511, -0.996733,  1.511724 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_1_3[] {
-	{ -1.599778, -0.239679,  1.056552,  1.500451 },
-	{ -1.322021, -0.326444, -1.056552,  1.431404 },
-	{ -1.202808, -0.149825,  1.056552,  1.414182 },
-	{ -1.361353,  0.113559, -1.056552,  1.466006 },
-	{ -1.639111,  0.200324,  1.056552,  1.535053 },
-	{ -1.758323,  0.023705, -1.056552,  1.552276 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_1_3[] {
-	{  0.533768, -1.226613,  1.056552,  0.951480 },
-	{  0.511060, -0.972577, -1.056552,  0.971457 },
-	{  0.259160, -0.770419,  1.056552,  1.041242 },
-	{  0.029970, -0.822296, -1.056552,  1.091050 },
-	{  0.052679, -1.076331,  1.056552,  1.071073 },
-	{  0.304578, -1.278490, -1.056552,  1.001288 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_1_3[] {
-	{  1.069855, -0.525124,  1.056552,  0.868649 },
-	{  0.857393, -0.284141, -1.056552,  0.931599 },
-	{  0.594977, -0.266082,  1.056552,  0.993122 },
-	{  0.545024, -0.489005, -1.056552,  0.991696 },
-	{  0.757485, -0.729987,  1.056552,  0.928747 },
-	{  1.019901, -0.748047, -1.056552,  0.867223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_1_3[] {
-	{  0.722197,  0.585167,  1.056552,  1.013210 },
-	{  0.444440,  0.671932, -1.056552,  1.082256 },
-	{  0.325227,  0.495314,  1.056552,  1.099479 },
-	{  0.483773,  0.231930, -1.056552,  1.047655 },
-	{  0.761530,  0.145165,  1.056552,  0.978608 },
-	{  0.880742,  0.321783, -1.056552,  0.961385 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_1_3[] {
-	{ -0.305551,  1.453866,  1.056552,  1.300480 },
-	{ -0.485898,  1.335588, -1.056552,  1.335177 },
-	{ -0.392074,  1.067752,  1.056552,  1.298010 },
-	{ -0.117903,  0.918194, -1.056552,  1.226145 },
-	{  0.062443,  1.036472,  1.056552,  1.191448 },
-	{ -0.031381,  1.304308, -1.056552,  1.228615 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_1_4[] {
-	{ -1.372312,  0.029770,  1.098851,  1.308154 },
-	{ -1.052939, -0.138051, -1.098851,  1.261004 },
-	{ -0.990199,  0.035189,  1.098851,  1.263710 },
-	{ -1.246833,  0.376252, -1.098851,  1.313565 },
-	{ -1.566206,  0.544073,  1.098851,  1.360715 },
-	{ -1.628946,  0.370833, -1.098851,  1.358009 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_1_4[] {
-	{ -0.000222, -1.219290,  1.098851,  1.074942 },
-	{  0.146452, -1.127995, -1.098851,  1.063060 },
-	{ -0.044338, -0.797744,  1.098851,  1.104575 },
-	{ -0.381802, -0.558789, -1.098851,  1.157972 },
-	{ -0.528476, -0.650084,  1.098851,  1.169854 },
-	{ -0.337686, -0.980335, -1.098851,  1.128339 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_1_4[] {
-	{  1.506661, -0.954180,  1.098851,  0.913822 },
-	{  1.201673, -0.625548, -1.098851,  0.968620 },
-	{  0.922155, -0.540297,  1.098851,  1.006309 },
-	{  0.947625, -0.783677, -1.098851,  0.989200 },
-	{  1.252613, -1.112308,  1.098851,  0.934402 },
-	{  1.532131, -1.197559, -1.098851,  0.896713 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_1_4[] {
-	{  0.758741,  0.404694,  1.098851,  1.080296 },
-	{  0.439368,  0.572515, -1.098851,  1.127446 },
-	{  0.376628,  0.399275,  1.098851,  1.124740 },
-	{  0.633261,  0.058212, -1.098851,  1.074885 },
-	{  0.952635, -0.109609,  1.098851,  1.027735 },
-	{  1.015374,  0.063631, -1.098851,  1.030441 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_1_4[] {
-	{ -0.613350,  1.653755,  1.098851,  1.313508 },
-	{ -0.760024,  1.562459, -1.098851,  1.325390 },
-	{ -0.569234,  1.232208,  1.098851,  1.283875 },
-	{ -0.231770,  0.993253, -1.098851,  1.230478 },
-	{ -0.085095,  1.084549,  1.098851,  1.218596 },
-	{ -0.275885,  1.414799, -1.098851,  1.260111 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_1_5[] {
-	{ -1.414799,  0.275885,  1.098851,  1.260111 },
-	{ -1.084549,  0.085095, -1.098851,  1.218596 },
-	{ -0.993253,  0.231770,  1.098851,  1.230478 },
-	{ -1.232208,  0.569234, -1.098851,  1.283875 },
-	{ -1.562459,  0.760024,  1.098851,  1.325390 },
-	{ -1.653755,  0.613350, -1.098851,  1.313508 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_1_5[] {
-	{ -0.063631, -1.015374,  1.098851,  1.030441 },
-	{  0.109609, -0.952635, -1.098851,  1.027735 },
-	{ -0.058212, -0.633261,  1.098851,  1.074885 },
-	{ -0.399275, -0.376628, -1.098851,  1.124740 },
-	{ -0.572515, -0.439368,  1.098851,  1.127446 },
-	{ -0.404694, -0.758741, -1.098851,  1.080296 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_1_5[] {
-	{  1.197559, -1.532131,  1.098851,  0.896713 },
-	{  1.112308, -1.252613, -1.098851,  0.934402 },
-	{  0.783677, -0.947625,  1.098851,  0.989200 },
-	{  0.540297, -0.922155, -1.098851,  1.006309 },
-	{  0.625548, -1.201673,  1.098851,  0.968620 },
-	{  0.954180, -1.506661, -1.098851,  0.913822 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_1_5[] {
-	{  0.980335,  0.337686,  1.098851,  1.128339 },
-	{  0.650084,  0.528476, -1.098851,  1.169854 },
-	{  0.558789,  0.381802,  1.098851,  1.157972 },
-	{  0.797744,  0.044338, -1.098851,  1.104575 },
-	{  1.127995, -0.146452,  1.098851,  1.063060 },
-	{  1.219290,  0.000222, -1.098851,  1.074942 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_1_5[] {
-	{ -0.370833,  1.628946,  1.098851,  1.358009 },
-	{ -0.544073,  1.566206, -1.098851,  1.360715 },
-	{ -0.376252,  1.246833,  1.098851,  1.313565 },
-	{ -0.035189,  0.990199, -1.098851,  1.263710 },
-	{  0.138051,  1.052939,  1.098851,  1.261004 },
-	{ -0.029770,  1.372312, -1.098851,  1.308154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_1_6[] {
-	{ -1.304308,  0.031381,  1.056552,  1.228615 },
-	{ -1.036472, -0.062443, -1.056552,  1.191448 },
-	{ -0.918194,  0.117903,  1.056552,  1.226145 },
-	{ -1.067752,  0.392074, -1.056552,  1.298010 },
-	{ -1.335588,  0.485898,  1.056552,  1.335177 },
-	{ -1.453866,  0.305551, -1.056552,  1.300480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_1_6[] {
-	{ -0.321783, -0.880742,  1.056552,  0.961385 },
-	{ -0.145165, -0.761530, -1.056552,  0.978608 },
-	{ -0.231930, -0.483773,  1.056552,  1.047655 },
-	{ -0.495314, -0.325227, -1.056552,  1.099479 },
-	{ -0.671932, -0.444440,  1.056552,  1.082256 },
-	{ -0.585167, -0.722197, -1.056552,  1.013210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_1_6[] {
-	{  0.748047, -1.019901,  1.056552,  0.867223 },
-	{  0.729987, -0.757485, -1.056552,  0.928747 },
-	{  0.489005, -0.545024,  1.056552,  0.991696 },
-	{  0.266082, -0.594977, -1.056552,  0.993122 },
-	{  0.284141, -0.857393,  1.056552,  0.931599 },
-	{  0.525124, -1.069855, -1.056552,  0.868649 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_1_6[] {
-	{  1.278490, -0.304578,  1.056552,  1.001288 },
-	{  1.076331, -0.052679, -1.056552,  1.071073 },
-	{  0.822296, -0.029970,  1.056552,  1.091050 },
-	{  0.770419, -0.259160, -1.056552,  1.041242 },
-	{  0.972577, -0.511060,  1.056552,  0.971457 },
-	{  1.226613, -0.533768, -1.056552,  0.951480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_1_6[] {
-	{ -0.023705,  1.758323,  1.056552,  1.552276 },
-	{ -0.200324,  1.639111, -1.056552,  1.535053 },
-	{ -0.113559,  1.361353,  1.056552,  1.466006 },
-	{  0.149825,  1.202808, -1.056552,  1.414182 },
-	{  0.326444,  1.322021,  1.056552,  1.431404 },
-	{  0.239679,  1.599778, -1.056552,  1.500451 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_1_7[] {
-	{ -1.537511,  0.437499,  0.996733,  1.511724 },
-	{ -1.229676,  0.268248, -0.996733,  1.403730 },
-	{ -1.191879,  0.532753,  0.996733,  1.511724 },
-	{ -1.461917,  0.966508, -0.996733,  1.727710 },
-	{ -1.769753,  1.135758,  0.996733,  1.835704 },
-	{ -1.807550,  0.871254, -0.996733,  1.727710 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_1_7[] {
-	{ -0.156919, -1.052131,  0.996733,  0.716882 },
-	{ -0.034059, -0.886746, -0.996733,  0.772783 },
-	{ -0.243248, -0.453537,  0.996733,  0.981411 },
-	{ -0.575298, -0.185713, -0.996733,  1.134136 },
-	{ -0.698159, -0.351098,  0.996733,  1.078235 },
-	{ -0.488969, -0.784307, -0.996733,  0.869608 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_1_7[] {
-	{  0.968419, -1.367780,  0.996733,  0.450909 },
-	{  0.834334, -0.964640, -0.996733,  0.637959 },
-	{  0.500699, -0.616494,  0.996733,  0.825009 },
-	{  0.301148, -0.671489, -0.996733,  0.825009 },
-	{  0.435232, -1.074630,  0.996733,  0.637959 },
-	{  0.768868, -1.422775, -0.996733,  0.450909 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_1_7[] {
-	{  1.179296, -0.324546,  0.996733,  0.869608 },
-	{  0.866811,  0.080196, -0.996733,  1.078235 },
-	{  0.604169,  0.139339,  0.996733,  1.134136 },
-	{  0.654011, -0.206259, -0.996733,  0.981411 },
-	{  0.966496, -0.611001,  0.996733,  0.772783 },
-	{  1.229138, -0.670144, -0.996733,  0.716882 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_1_7[] {
-	{  0.352183,  1.466461,  0.996733,  1.727710 },
-	{  0.044348,  1.635711, -0.996733,  1.835704 },
-	{  0.006550,  1.371207,  0.996733,  1.727710 },
-	{  0.276589,  0.937452, -0.996733,  1.511724 },
-	{  0.584424,  0.768201,  0.996733,  1.403730 },
-	{  0.622221,  1.032705, -0.996733,  1.511724 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_2_3[] {
-	{ -1.758323, -0.023705,  1.056552,  1.552276 },
-	{ -1.639111, -0.200324, -1.056552,  1.535053 },
-	{ -1.361353, -0.113559,  1.056552,  1.466006 },
-	{ -1.202808,  0.149825, -1.056552,  1.414182 },
-	{ -1.322021,  0.326444,  1.056552,  1.431404 },
-	{ -1.599778,  0.239679, -1.056552,  1.500451 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_2_3[] {
-	{ -0.031381, -1.304308,  1.056552,  1.228615 },
-	{  0.062443, -1.036472, -1.056552,  1.191448 },
-	{ -0.117903, -0.918194,  1.056552,  1.226145 },
-	{ -0.392074, -1.067752, -1.056552,  1.298010 },
-	{ -0.485898, -1.335588,  1.056552,  1.335177 },
-	{ -0.305551, -1.453866, -1.056552,  1.300480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_2_3[] {
-	{  0.880742, -0.321783,  1.056552,  0.961385 },
-	{  0.761530, -0.145165, -1.056552,  0.978608 },
-	{  0.483773, -0.231930,  1.056552,  1.047655 },
-	{  0.325227, -0.495314, -1.056552,  1.099479 },
-	{  0.444440, -0.671932,  1.056552,  1.082256 },
-	{  0.722197, -0.585167, -1.056552,  1.013210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_2_3[] {
-	{  1.019901,  0.748047,  1.056552,  0.867223 },
-	{  0.757485,  0.729987, -1.056552,  0.928747 },
-	{  0.545024,  0.489005,  1.056552,  0.991696 },
-	{  0.594977,  0.266082, -1.056552,  0.993122 },
-	{  0.857393,  0.284141,  1.056552,  0.931599 },
-	{  1.069855,  0.525124, -1.056552,  0.868649 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_2_3[] {
-	{  0.304578,  1.278490,  1.056552,  1.001288 },
-	{  0.052679,  1.076331, -1.056552,  1.071073 },
-	{  0.029970,  0.822296,  1.056552,  1.091050 },
-	{  0.259160,  0.770419, -1.056552,  1.041242 },
-	{  0.511060,  0.972577,  1.056552,  0.971457 },
-	{  0.533768,  1.226613, -1.056552,  0.951480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_2_4[] {
-	{ -1.507481,  0.476765,  1.098851,  1.294588 },
-	{ -1.334814,  0.258771, -1.098851,  1.287015 },
-	{ -1.097386,  0.266553,  1.098851,  1.258752 },
-	{ -1.032624,  0.492328, -1.098851,  1.238063 },
-	{ -1.205291,  0.710321,  1.098851,  1.245636 },
-	{ -1.442720,  0.702540, -1.098851,  1.273898 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_2_4[] {
-	{ -0.425903, -1.349578,  1.098851,  1.273898 },
-	{ -0.251434, -1.214734, -1.098851,  1.245636 },
-	{ -0.313733, -0.958524,  1.098851,  1.238063 },
-	{ -0.550501, -0.837158, -1.098851,  1.258752 },
-	{ -0.724971, -0.972002,  1.098851,  1.287015 },
-	{ -0.662672, -1.228212, -1.098851,  1.294588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_2_4[] {
-	{  1.119819, -0.610998,  1.098851,  1.049976 },
-	{  0.947152, -0.393005, -1.098851,  1.057549 },
-	{  0.709724, -0.400786,  1.098851,  1.085811 },
-	{  0.644962, -0.626562, -1.098851,  1.106501 },
-	{  0.817629, -0.844555,  1.098851,  1.098928 },
-	{  1.055057, -0.836774, -1.098851,  1.070665 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_2_4[] {
-	{  0.899160,  0.455138,  1.098851,  1.013945 },
-	{  0.653697,  0.513933, -1.098851,  1.039284 },
-	{  0.529862,  0.327263,  1.098851,  1.064624 },
-	{  0.651489,  0.081797, -1.098851,  1.064624 },
-	{  0.896952,  0.023002,  1.098851,  1.039284 },
-	{  1.020787,  0.209672, -1.098851,  1.013945 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_2_4[] {
-	{  0.038241,  1.215344,  1.098851,  1.070665 },
-	{ -0.136229,  1.080500, -1.098851,  1.098928 },
-	{ -0.073930,  0.824290,  1.098851,  1.106501 },
-	{  0.162839,  0.702924, -1.098851,  1.085811 },
-	{  0.337309,  0.837768,  1.098851,  1.057549 },
-	{  0.275010,  1.093978, -1.098851,  1.049976 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_2_5[] {
-	{ -1.478678,  0.633811,  1.116371,  1.243879 },
-	{ -1.297151,  0.420916, -1.116371,  1.229186 },
-	{ -1.046527,  0.413414,  1.116371,  1.214494 },
-	{ -0.977430,  0.618806, -1.116371,  1.214494 },
-	{ -1.158957,  0.831701,  1.116371,  1.229186 },
-	{ -1.409581,  0.839204, -1.116371,  1.243879 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_2_5[] {
-	{ -0.343121, -1.127185,  1.116371,  1.143588 },
-	{ -0.158529, -1.012933, -1.116371,  1.135105 },
-	{ -0.223440, -0.771435,  1.116371,  1.143588 },
-	{ -0.472943, -0.644188, -1.116371,  1.160553 },
-	{ -0.657534, -0.758440,  1.116371,  1.169036 },
-	{ -0.592623, -0.999939, -1.116371,  1.160553 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_2_5[] {
-	{  0.709008, -1.197297,  1.116371,  1.081154 },
-	{  0.711175, -0.965969, -1.116371,  1.085545 },
-	{  0.488058, -0.789899,  1.116371,  1.101933 },
-	{  0.262774, -0.845156, -1.116371,  1.113929 },
-	{  0.260607, -1.076484,  1.116371,  1.109538 },
-	{  0.483724, -1.252554, -1.116371,  1.093151 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_2_5[] {
-	{  1.061386,  0.464547,  1.116371,  1.093151 },
-	{  0.802501,  0.534298, -1.116371,  1.109538 },
-	{  0.671182,  0.368838,  1.116371,  1.113929 },
-	{  0.798748,  0.133626, -1.116371,  1.101933 },
-	{  1.057632,  0.063875,  1.116371,  1.085545 },
-	{  1.188951,  0.229335, -1.116371,  1.081154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_2_5[] {
-	{  0.155216,  1.223017,  1.116371,  1.160553 },
-	{ -0.029375,  1.108765, -1.116371,  1.169036 },
-	{  0.035536,  0.867266,  1.116371,  1.160553 },
-	{  0.285038,  0.740020, -1.116371,  1.143588 },
-	{  0.469630,  0.854272,  1.116371,  1.135105 },
-	{  0.404719,  1.095770, -1.116371,  1.143588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_2_6[] {
-	{ -1.349578,  0.425903,  1.098851,  1.273898 },
-	{ -1.214734,  0.251434, -1.098851,  1.245636 },
-	{ -0.958524,  0.313733,  1.098851,  1.238063 },
-	{ -0.837158,  0.550501, -1.098851,  1.258752 },
-	{ -0.972002,  0.724971,  1.098851,  1.287015 },
-	{ -1.228212,  0.662672, -1.098851,  1.294588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_2_6[] {
-	{ -0.610998, -1.119819,  1.098851,  1.049976 },
-	{ -0.393005, -0.947152, -1.098851,  1.057549 },
-	{ -0.400786, -0.709724,  1.098851,  1.085811 },
-	{ -0.626562, -0.644962, -1.098851,  1.106501 },
-	{ -0.844555, -0.817629,  1.098851,  1.098928 },
-	{ -0.836774, -1.055057, -1.098851,  1.070665 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_2_6[] {
-	{  0.455138, -0.899160,  1.098851,  1.013945 },
-	{  0.513933, -0.653697, -1.098851,  1.039284 },
-	{  0.327263, -0.529862,  1.098851,  1.064624 },
-	{  0.081797, -0.651489, -1.098851,  1.064624 },
-	{  0.023002, -0.896952,  1.098851,  1.039284 },
-	{  0.209672, -1.020787, -1.098851,  1.013945 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_2_6[] {
-	{  1.215344, -0.038241,  1.098851,  1.070665 },
-	{  1.080500,  0.136229, -1.098851,  1.098928 },
-	{  0.824290,  0.073930,  1.098851,  1.106501 },
-	{  0.702924, -0.162839, -1.098851,  1.085811 },
-	{  0.837768, -0.337309,  1.098851,  1.057549 },
-	{  1.093978, -0.275010, -1.098851,  1.049976 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_2_6[] {
-	{  0.476765,  1.507481,  1.098851,  1.294588 },
-	{  0.258771,  1.334814, -1.098851,  1.287015 },
-	{  0.266553,  1.097386,  1.098851,  1.258752 },
-	{  0.492328,  1.032624, -1.098851,  1.238063 },
-	{  0.710321,  1.205291,  1.098851,  1.245636 },
-	{  0.702540,  1.442720, -1.098851,  1.273898 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_2_7[] {
-	{ -1.419974,  0.776384,  1.056552,  1.500451 },
-	{ -1.282026,  0.558483, -1.056552,  1.431404 },
-	{ -1.041924,  0.603397,  1.056552,  1.414182 },
-	{ -0.939771,  0.866212, -1.056552,  1.466006 },
-	{ -1.077720,  1.084113,  1.056552,  1.535053 },
-	{ -1.317821,  1.039199, -1.056552,  1.552276 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_2_7[] {
-	{ -0.631415, -1.104829,  1.056552,  0.951480 },
-	{ -0.433814, -0.927161, -1.056552,  0.971457 },
-	{ -0.454480, -0.649620,  1.056552,  1.041242 },
-	{ -0.672748, -0.549746, -1.056552,  1.091050 },
-	{ -0.870349, -0.727413,  1.056552,  1.071073 },
-	{ -0.849682, -1.004955, -1.056552,  1.001288 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_2_7[] {
-	{  0.369847, -0.962893,  1.056552,  0.868649 },
-	{  0.412028, -0.683184, -1.056552,  0.931599 },
-	{  0.227637, -0.518692,  1.056552,  0.993122 },
-	{  0.001065, -0.633908, -1.056552,  0.991696 },
-	{ -0.041115, -0.913617,  1.056552,  0.928747 },
-	{  0.143276, -1.078109, -1.056552,  0.867223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_2_7[] {
-	{  1.044477, -0.041733,  1.056552,  1.013210 },
-	{  0.906529,  0.176167, -1.056552,  1.082256 },
-	{  0.666427,  0.131254,  1.056552,  1.099479 },
-	{  0.564274, -0.131561, -1.056552,  1.047655 },
-	{  0.702222, -0.349462,  1.056552,  0.978608 },
-	{  0.942324, -0.304548, -1.056552,  0.961385 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_2_7[] {
-	{  0.997286,  1.119047,  1.056552,  1.300480 },
-	{  0.760017,  1.147497, -1.056552,  1.335177 },
-	{  0.604853,  0.919486,  1.056552,  1.298010 },
-	{  0.686958,  0.663027, -1.056552,  1.226145 },
-	{  0.924227,  0.634577,  1.056552,  1.191448 },
-	{  1.079391,  0.862588, -1.056552,  1.228615 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_3_4[] {
-	{ -1.296582,  0.367226,  1.098851,  1.128339 },
-	{ -1.121232,  0.109583, -1.098851,  1.169854 },
-	{ -0.901570,  0.126058,  1.098851,  1.157972 },
-	{ -0.857259,  0.400177, -1.098851,  1.104575 },
-	{ -1.032610,  0.657821,  1.098851,  1.063060 },
-	{ -1.252271,  0.641345, -1.098851,  1.074942 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_3_4[] {
-	{ -1.017544, -0.911464,  1.098851,  1.358009 },
-	{ -0.785787, -0.975010, -1.098851,  1.360715 },
-	{ -0.683959, -0.746269,  1.098851,  1.313565 },
-	{ -0.813890, -0.453981, -1.098851,  1.263710 },
-	{ -1.045648, -0.390435,  1.098851,  1.261004 },
-	{ -1.147475, -0.619176, -1.098851,  1.308154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_3_4[] {
-	{  1.216017, -0.865624,  1.098851,  1.260111 },
-	{  1.040666, -0.607981, -1.098851,  1.218596 },
-	{  0.821005, -0.624457,  1.098851,  1.230478 },
-	{  0.776694, -0.898576, -1.098851,  1.283875 },
-	{  0.952044, -1.156219,  1.098851,  1.325390 },
-	{  1.171706, -1.139743, -1.098851,  1.313508 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_3_4[] {
-	{  0.936979,  0.413065,  1.098851,  1.030441 },
-	{  0.705221,  0.476612, -1.098851,  1.027735 },
-	{  0.603394,  0.247871,  1.098851,  1.074885 },
-	{  0.733324, -0.044417, -1.098851,  1.124740 },
-	{  0.965082, -0.107963,  1.098851,  1.127446 },
-	{  1.066910,  0.120778, -1.098851,  1.080296 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_3_4[] {
-	{  0.085475,  1.303810,  1.098851,  0.896713 },
-	{ -0.066930,  1.136035, -1.098851,  0.934402 },
-	{  0.008726,  0.829022,  1.098851,  0.989200 },
-	{  0.236786,  0.689783, -1.098851,  1.006309 },
-	{  0.389191,  0.857558,  1.098851,  0.968620 },
-	{  0.313535,  1.164571, -1.098851,  0.913822 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_3_5[] {
-	{ -1.252554,  0.483724,  1.116371,  1.093151 },
-	{ -1.076484,  0.260607, -1.116371,  1.109538 },
-	{ -0.845156,  0.262774,  1.116371,  1.113929 },
-	{ -0.789899,  0.488058, -1.116371,  1.101933 },
-	{ -0.965969,  0.711175,  1.116371,  1.085545 },
-	{ -1.197297,  0.709008, -1.116371,  1.081154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_3_5[] {
-	{ -0.999939, -0.592623,  1.116371,  1.160553 },
-	{ -0.758440, -0.657534, -1.116371,  1.169036 },
-	{ -0.644188, -0.472943,  1.116371,  1.160553 },
-	{ -0.771435, -0.223440, -1.116371,  1.143588 },
-	{ -1.012933, -0.158529,  1.116371,  1.135105 },
-	{ -1.127185, -0.343121, -1.116371,  1.143588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_3_5[] {
-	{  0.839204, -1.409581,  1.116371,  1.243879 },
-	{  0.831701, -1.158957, -1.116371,  1.229186 },
-	{  0.618806, -0.977430,  1.116371,  1.214494 },
-	{  0.413414, -1.046527, -1.116371,  1.214494 },
-	{  0.420916, -1.297151,  1.116371,  1.229186 },
-	{  0.633811, -1.478678, -1.116371,  1.243879 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_3_5[] {
-	{  1.095770,  0.404719,  1.116371,  1.143588 },
-	{  0.854272,  0.469630, -1.116371,  1.135105 },
-	{  0.740020,  0.285038,  1.116371,  1.143588 },
-	{  0.867266,  0.035536, -1.116371,  1.160553 },
-	{  1.108765, -0.029375,  1.116371,  1.169036 },
-	{  1.223017,  0.155216, -1.116371,  1.160553 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_3_5[] {
-	{  0.229335,  1.188951,  1.116371,  1.081154 },
-	{  0.063875,  1.057632, -1.116371,  1.085545 },
-	{  0.133626,  0.798748,  1.116371,  1.101933 },
-	{  0.368838,  0.671182, -1.116371,  1.113929 },
-	{  0.534298,  0.802501,  1.116371,  1.109538 },
-	{  0.464547,  1.061386, -1.116371,  1.093151 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_3_6[] {
-	{ -1.127185,  0.343121,  1.116371,  1.143588 },
-	{ -1.012933,  0.158529, -1.116371,  1.135105 },
-	{ -0.771435,  0.223440,  1.116371,  1.143588 },
-	{ -0.644188,  0.472943, -1.116371,  1.160553 },
-	{ -0.758440,  0.657534,  1.116371,  1.169036 },
-	{ -0.999939,  0.592623, -1.116371,  1.160553 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_3_6[] {
-	{ -1.197297, -0.709008,  1.116371,  1.081154 },
-	{ -0.965969, -0.711175, -1.116371,  1.085545 },
-	{ -0.789899, -0.488058,  1.116371,  1.101933 },
-	{ -0.845156, -0.262774, -1.116371,  1.113929 },
-	{ -1.076484, -0.260607,  1.116371,  1.109538 },
-	{ -1.252554, -0.483724, -1.116371,  1.093151 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_3_6[] {
-	{  0.464547, -1.061386,  1.116371,  1.093151 },
-	{  0.534298, -0.802501, -1.116371,  1.109538 },
-	{  0.368838, -0.671182,  1.116371,  1.113929 },
-	{  0.133626, -0.798748, -1.116371,  1.101933 },
-	{  0.063875, -1.057632,  1.116371,  1.085545 },
-	{  0.229335, -1.188951, -1.116371,  1.081154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_3_6[] {
-	{  1.223017, -0.155216,  1.116371,  1.160553 },
-	{  1.108765,  0.029375, -1.116371,  1.169036 },
-	{  0.867266, -0.035536,  1.116371,  1.160553 },
-	{  0.740020, -0.285038, -1.116371,  1.143588 },
-	{  0.854272, -0.469630,  1.116371,  1.135105 },
-	{  1.095770, -0.404719, -1.116371,  1.143588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_3_6[] {
-	{  0.633811,  1.478678,  1.116371,  1.243879 },
-	{  0.420916,  1.297151, -1.116371,  1.229186 },
-	{  0.413414,  1.046527,  1.116371,  1.214494 },
-	{  0.618806,  0.977430, -1.116371,  1.214494 },
-	{  0.831701,  1.158957,  1.116371,  1.229186 },
-	{  0.839204,  1.409581, -1.116371,  1.243879 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_3_7[] {
-	{ -1.147475,  0.619176,  1.098851,  1.308154 },
-	{ -1.045648,  0.390435, -1.098851,  1.261004 },
-	{ -0.813890,  0.453981,  1.098851,  1.263710 },
-	{ -0.683959,  0.746269, -1.098851,  1.313565 },
-	{ -0.785787,  0.975010,  1.098851,  1.360715 },
-	{ -1.017544,  0.911464, -1.098851,  1.358009 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_3_7[] {
-	{ -1.252271, -0.641345,  1.098851,  1.074942 },
-	{ -1.032610, -0.657821, -1.098851,  1.063060 },
-	{ -0.857259, -0.400177,  1.098851,  1.104575 },
-	{ -0.901570, -0.126058, -1.098851,  1.157972 },
-	{ -1.121232, -0.109583,  1.098851,  1.169854 },
-	{ -1.296582, -0.367226, -1.098851,  1.128339 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_3_7[] {
-	{  0.313535, -1.164571,  1.098851,  0.913822 },
-	{  0.389191, -0.857558, -1.098851,  0.968620 },
-	{  0.236786, -0.689783,  1.098851,  1.006309 },
-	{  0.008726, -0.829022, -1.098851,  0.989200 },
-	{ -0.066930, -1.136035,  1.098851,  0.934402 },
-	{  0.085475, -1.303810, -1.098851,  0.896713 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_3_7[] {
-	{  1.066910, -0.120778,  1.098851,  1.080296 },
-	{  0.965082,  0.107963, -1.098851,  1.127446 },
-	{  0.733324,  0.044417,  1.098851,  1.124740 },
-	{  0.603394, -0.247871, -1.098851,  1.074885 },
-	{  0.705221, -0.476612,  1.098851,  1.027735 },
-	{  0.936979, -0.413065, -1.098851,  1.030441 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_3_7[] {
-	{  1.171706,  1.139743,  1.098851,  1.313508 },
-	{  0.952044,  1.156219, -1.098851,  1.325390 },
-	{  0.776694,  0.898576,  1.098851,  1.283875 },
-	{  0.821005,  0.624457, -1.098851,  1.230478 },
-	{  1.040666,  0.607981,  1.098851,  1.218596 },
-	{  1.216017,  0.865624, -1.098851,  1.260111 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_4_5[] {
-	{ -1.506661,  0.954180,  1.098851,  0.913822 },
-	{ -1.201673,  0.625548, -1.098851,  0.968620 },
-	{ -0.922155,  0.540297,  1.098851,  1.006309 },
-	{ -0.947625,  0.783677, -1.098851,  0.989200 },
-	{ -1.252613,  1.112308,  1.098851,  0.934402 },
-	{ -1.532131,  1.197559, -1.098851,  0.896713 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_4_5[] {
-	{ -0.758741, -0.404694,  1.098851,  1.080296 },
-	{ -0.439368, -0.572515, -1.098851,  1.127446 },
-	{ -0.376628, -0.399275,  1.098851,  1.124740 },
-	{ -0.633261, -0.058212, -1.098851,  1.074885 },
-	{ -0.952635,  0.109609,  1.098851,  1.027735 },
-	{ -1.015374, -0.063631, -1.098851,  1.030441 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_4_5[] {
-	{  0.613350, -1.653755,  1.098851,  1.313508 },
-	{  0.760024, -1.562459, -1.098851,  1.325390 },
-	{  0.569234, -1.232208,  1.098851,  1.283875 },
-	{  0.231770, -0.993253, -1.098851,  1.230478 },
-	{  0.085095, -1.084549,  1.098851,  1.218596 },
-	{  0.275885, -1.414799, -1.098851,  1.260111 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_4_5[] {
-	{  1.372312, -0.029770,  1.098851,  1.308154 },
-	{  1.052939,  0.138051, -1.098851,  1.261004 },
-	{  0.990199, -0.035189,  1.098851,  1.263710 },
-	{  1.246833, -0.376252, -1.098851,  1.313565 },
-	{  1.566206, -0.544073,  1.098851,  1.360715 },
-	{  1.628946, -0.370833, -1.098851,  1.358009 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_4_5[] {
-	{  0.000222,  1.219290,  1.098851,  1.074942 },
-	{ -0.146452,  1.127995, -1.098851,  1.063060 },
-	{  0.044338,  0.797744,  1.098851,  1.104575 },
-	{  0.381802,  0.558789, -1.098851,  1.157972 },
-	{  0.528476,  0.650084,  1.098851,  1.169854 },
-	{  0.337686,  0.980335, -1.098851,  1.128339 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_4_6[] {
-	{ -1.119819,  0.610998,  1.098851,  1.049976 },
-	{ -0.947152,  0.393005, -1.098851,  1.057549 },
-	{ -0.709724,  0.400786,  1.098851,  1.085811 },
-	{ -0.644962,  0.626562, -1.098851,  1.106501 },
-	{ -0.817629,  0.844555,  1.098851,  1.098928 },
-	{ -1.055057,  0.836774, -1.098851,  1.070665 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_4_6[] {
-	{ -0.899160, -0.455138,  1.098851,  1.013945 },
-	{ -0.653697, -0.513933, -1.098851,  1.039284 },
-	{ -0.529862, -0.327263,  1.098851,  1.064624 },
-	{ -0.651489, -0.081797, -1.098851,  1.064624 },
-	{ -0.896952, -0.023002,  1.098851,  1.039284 },
-	{ -1.020787, -0.209672, -1.098851,  1.013945 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_4_6[] {
-	{ -0.038241, -1.215344,  1.098851,  1.070665 },
-	{  0.136229, -1.080500, -1.098851,  1.098928 },
-	{  0.073930, -0.824290,  1.098851,  1.106501 },
-	{ -0.162839, -0.702924, -1.098851,  1.085811 },
-	{ -0.337309, -0.837768,  1.098851,  1.057549 },
-	{ -0.275010, -1.093978, -1.098851,  1.049976 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_4_6[] {
-	{  1.507481, -0.476765,  1.098851,  1.294588 },
-	{  1.334814, -0.258771, -1.098851,  1.287015 },
-	{  1.097386, -0.266553,  1.098851,  1.258752 },
-	{  1.032624, -0.492328, -1.098851,  1.238063 },
-	{  1.205291, -0.710321,  1.098851,  1.245636 },
-	{  1.442720, -0.702540, -1.098851,  1.273898 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_4_6[] {
-	{  0.425903,  1.349578,  1.098851,  1.273898 },
-	{  0.251434,  1.214734, -1.098851,  1.245636 },
-	{  0.313733,  0.958524,  1.098851,  1.238063 },
-	{  0.550501,  0.837158, -1.098851,  1.258752 },
-	{  0.724971,  0.972002,  1.098851,  1.287015 },
-	{  0.662672,  1.228212, -1.098851,  1.294588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_4_7[] {
-	{ -1.216017,  0.865624,  1.098851,  1.260111 },
-	{ -1.040666,  0.607981, -1.098851,  1.218596 },
-	{ -0.821005,  0.624457,  1.098851,  1.230478 },
-	{ -0.776694,  0.898576, -1.098851,  1.283875 },
-	{ -0.952044,  1.156219,  1.098851,  1.325390 },
-	{ -1.171706,  1.139743, -1.098851,  1.313508 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_4_7[] {
-	{ -0.936979, -0.413065,  1.098851,  1.030441 },
-	{ -0.705221, -0.476612, -1.098851,  1.027735 },
-	{ -0.603394, -0.247871,  1.098851,  1.074885 },
-	{ -0.733324,  0.044417, -1.098851,  1.124740 },
-	{ -0.965082,  0.107963,  1.098851,  1.127446 },
-	{ -1.066910, -0.120778, -1.098851,  1.080296 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_4_7[] {
-	{ -0.085475, -1.303810,  1.098851,  0.896713 },
-	{  0.066930, -1.136035, -1.098851,  0.934402 },
-	{ -0.008726, -0.829022,  1.098851,  0.989200 },
-	{ -0.236786, -0.689783, -1.098851,  1.006309 },
-	{ -0.389191, -0.857558,  1.098851,  0.968620 },
-	{ -0.313535, -1.164571, -1.098851,  0.913822 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_4_7[] {
-	{  1.296582, -0.367226,  1.098851,  1.128339 },
-	{  1.121232, -0.109583, -1.098851,  1.169854 },
-	{  0.901570, -0.126058,  1.098851,  1.157972 },
-	{  0.857259, -0.400177, -1.098851,  1.104575 },
-	{  1.032610, -0.657821,  1.098851,  1.063060 },
-	{  1.252271, -0.641345, -1.098851,  1.074942 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_4_7[] {
-	{  1.017544,  0.911464,  1.098851,  1.358009 },
-	{  0.785787,  0.975010, -1.098851,  1.360715 },
-	{  0.683959,  0.746269,  1.098851,  1.313565 },
-	{  0.813890,  0.453981, -1.098851,  1.263710 },
-	{  1.045648,  0.390435,  1.098851,  1.261004 },
-	{  1.147475,  0.619176, -1.098851,  1.308154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_5_6[] {
-	{ -1.104829,  0.631415,  1.056552,  0.951480 },
-	{ -0.927161,  0.433814, -1.056552,  0.971457 },
-	{ -0.649620,  0.454480,  1.056552,  1.041242 },
-	{ -0.549746,  0.672748, -1.056552,  1.091050 },
-	{ -0.727413,  0.870349,  1.056552,  1.071073 },
-	{ -1.004955,  0.849682, -1.056552,  1.001288 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_5_6[] {
-	{ -0.962893, -0.369847,  1.056552,  0.868649 },
-	{ -0.683184, -0.412028, -1.056552,  0.931599 },
-	{ -0.518692, -0.227637,  1.056552,  0.993122 },
-	{ -0.633908, -0.001065, -1.056552,  0.991696 },
-	{ -0.913617,  0.041115,  1.056552,  0.928747 },
-	{ -1.078109, -0.143276, -1.056552,  0.867223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_5_6[] {
-	{ -0.041733, -1.044477,  1.056552,  1.013210 },
-	{  0.176167, -0.906529, -1.056552,  1.082256 },
-	{  0.131254, -0.666427,  1.056552,  1.099479 },
-	{ -0.131561, -0.564274, -1.056552,  1.047655 },
-	{ -0.349462, -0.702222,  1.056552,  0.978608 },
-	{ -0.304548, -0.942324, -1.056552,  0.961385 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_5_6[] {
-	{  1.119047, -0.997286,  1.056552,  1.300480 },
-	{  1.147497, -0.760017, -1.056552,  1.335177 },
-	{  0.919486, -0.604853,  1.056552,  1.298010 },
-	{  0.663027, -0.686958, -1.056552,  1.226145 },
-	{  0.634577, -0.924227,  1.056552,  1.191448 },
-	{  0.862588, -1.079391, -1.056552,  1.228615 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_0_5_6[] {
-	{  0.776384,  1.419974,  1.056552,  1.500451 },
-	{  0.558483,  1.282026, -1.056552,  1.431404 },
-	{  0.603397,  1.041924,  1.056552,  1.414182 },
-	{  0.866212,  0.939771, -1.056552,  1.466006 },
-	{  1.084113,  1.077720,  1.056552,  1.535053 },
-	{  1.039199,  1.317821, -1.056552,  1.552276 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_5_7[] {
-	{ -1.079391,  0.862588,  1.056552,  1.228615 },
-	{ -0.924227,  0.634577, -1.056552,  1.191448 },
-	{ -0.686958,  0.663027,  1.056552,  1.226145 },
-	{ -0.604853,  0.919486, -1.056552,  1.298010 },
-	{ -0.760017,  1.147497,  1.056552,  1.335177 },
-	{ -0.997286,  1.119047, -1.056552,  1.300480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_5_7[] {
-	{ -0.942324, -0.304548,  1.056552,  0.961385 },
-	{ -0.702222, -0.349462, -1.056552,  0.978608 },
-	{ -0.564274, -0.131561,  1.056552,  1.047655 },
-	{ -0.666427,  0.131254, -1.056552,  1.099479 },
-	{ -0.906529,  0.176167,  1.056552,  1.082256 },
-	{ -1.044477, -0.041733, -1.056552,  1.013210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_5_7[] {
-	{ -0.143276, -1.078109,  1.056552,  0.867223 },
-	{  0.041115, -0.913617, -1.056552,  0.928747 },
-	{ -0.001065, -0.633908,  1.056552,  0.991696 },
-	{ -0.227637, -0.518692, -1.056552,  0.993122 },
-	{ -0.412028, -0.683184,  1.056552,  0.931599 },
-	{ -0.369847, -0.962893, -1.056552,  0.868649 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_5_7[] {
-	{  0.849682, -1.004955,  1.056552,  1.001288 },
-	{  0.870349, -0.727413, -1.056552,  1.071073 },
-	{  0.672748, -0.549746,  1.056552,  1.091050 },
-	{  0.454480, -0.649620, -1.056552,  1.041242 },
-	{  0.433814, -0.927161,  1.056552,  0.971457 },
-	{  0.631415, -1.104829, -1.056552,  0.951480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_0_5_7[] {
-	{  1.317821,  1.039199,  1.056552,  1.552276 },
-	{  1.077720,  1.084113, -1.056552,  1.535053 },
-	{  0.939771,  0.866212,  1.056552,  1.466006 },
-	{  1.041924,  0.603397, -1.056552,  1.414182 },
-	{  1.282026,  0.558483,  1.056552,  1.431404 },
-	{  1.419974,  0.776384, -1.056552,  1.500451 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_0_6_7[] {
-	{ -0.622221,  1.032705,  0.996733,  1.511724 },
-	{ -0.584424,  0.768201, -0.996733,  1.403730 },
-	{ -0.276589,  0.937452,  0.996733,  1.511724 },
-	{ -0.006550,  1.371207, -0.996733,  1.727710 },
-	{ -0.044348,  1.635711,  0.996733,  1.835704 },
-	{ -0.352183,  1.466461, -0.996733,  1.727710 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_0_6_7[] {
-	{ -1.229138, -0.670144,  0.996733,  0.716882 },
-	{ -0.966496, -0.611001, -0.996733,  0.772783 },
-	{ -0.654011, -0.206259,  0.996733,  0.981411 },
-	{ -0.604169,  0.139339, -0.996733,  1.134136 },
-	{ -0.866811,  0.080196,  0.996733,  1.078235 },
-	{ -1.179296, -0.324546, -0.996733,  0.869608 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_0_6_7[] {
-	{ -0.768868, -1.422775,  0.996733,  0.450909 },
-	{ -0.435232, -1.074630, -0.996733,  0.637959 },
-	{ -0.301148, -0.671489,  0.996733,  0.825009 },
-	{ -0.500699, -0.616494, -0.996733,  0.825009 },
-	{ -0.834334, -0.964640,  0.996733,  0.637959 },
-	{ -0.968419, -1.367780, -0.996733,  0.450909 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_0_6_7[] {
-	{  0.488969, -0.784307,  0.996733,  0.869608 },
-	{  0.698159, -0.351098, -0.996733,  1.078235 },
-	{  0.575298, -0.185713,  0.996733,  1.134136 },
-	{  0.243248, -0.453537, -0.996733,  0.981411 },
-	{  0.034059, -0.886746,  0.996733,  0.772783 },
-	{  0.156919, -1.052131, -0.996733,  0.716882 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_0_6_7[] {
-	{  1.807550,  0.871254,  0.996733,  1.727710 },
-	{  1.769753,  1.135758, -0.996733,  1.835704 },
-	{  1.461917,  0.966508,  0.996733,  1.727710 },
-	{  1.191879,  0.532753, -0.996733,  1.511724 },
-	{  1.229676,  0.268248,  0.996733,  1.403730 },
-	{  1.537511,  0.437499, -0.996733,  1.511724 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_2_3[] {
-	{ -1.466461,  0.352183,  0.996733,  1.727710 },
-	{ -1.635711,  0.044348, -0.996733,  1.835704 },
-	{ -1.371207,  0.006550,  0.996733,  1.727710 },
-	{ -0.937452,  0.276589, -0.996733,  1.511724 },
-	{ -0.768201,  0.584424,  0.996733,  1.403730 },
-	{ -1.032705,  0.622221, -0.996733,  1.511724 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_2_3[] {
-	{ -0.437499, -1.537511,  0.996733,  1.511724 },
-	{ -0.268248, -1.229676, -0.996733,  1.403730 },
-	{ -0.532753, -1.191879,  0.996733,  1.511724 },
-	{ -0.966508, -1.461917, -0.996733,  1.727710 },
-	{ -1.135758, -1.769753,  0.996733,  1.835704 },
-	{ -0.871254, -1.807550, -0.996733,  1.727710 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_2_3[] {
-	{  1.052131, -0.156919,  0.996733,  0.716882 },
-	{  0.886746, -0.034059, -0.996733,  0.772783 },
-	{  0.453537, -0.243248,  0.996733,  0.981411 },
-	{  0.185713, -0.575298, -0.996733,  1.134136 },
-	{  0.351098, -0.698159,  0.996733,  1.078235 },
-	{  0.784307, -0.488969, -0.996733,  0.869608 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_2_3[] {
-	{  1.367780,  0.968419,  0.996733,  0.450909 },
-	{  0.964640,  0.834334, -0.996733,  0.637959 },
-	{  0.616494,  0.500699,  0.996733,  0.825009 },
-	{  0.671489,  0.301148, -0.996733,  0.825009 },
-	{  1.074630,  0.435232,  0.996733,  0.637959 },
-	{  1.422775,  0.768868, -0.996733,  0.450909 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_2_3[] {
-	{  0.324546,  1.179296,  0.996733,  0.869608 },
-	{ -0.080196,  0.866811, -0.996733,  1.078235 },
-	{ -0.139339,  0.604169,  0.996733,  1.134136 },
-	{  0.206259,  0.654011, -0.996733,  0.981411 },
-	{  0.611001,  0.966496,  0.996733,  0.772783 },
-	{  0.670144,  1.229138, -0.996733,  0.716882 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_2_4[] {
-	{ -1.119047,  0.997286,  1.056552,  1.300480 },
-	{ -1.147497,  0.760017, -1.056552,  1.335177 },
-	{ -0.919486,  0.604853,  1.056552,  1.298010 },
-	{ -0.663027,  0.686958, -1.056552,  1.226145 },
-	{ -0.634577,  0.924227,  1.056552,  1.191448 },
-	{ -0.862588,  1.079391, -1.056552,  1.228615 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_2_4[] {
-	{ -0.776384, -1.419974,  1.056552,  1.500451 },
-	{ -0.558483, -1.282026, -1.056552,  1.431404 },
-	{ -0.603397, -1.041924,  1.056552,  1.414182 },
-	{ -0.866212, -0.939771, -1.056552,  1.466006 },
-	{ -1.084113, -1.077720,  1.056552,  1.535053 },
-	{ -1.039199, -1.317821, -1.056552,  1.552276 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_2_4[] {
-	{  1.104829, -0.631415,  1.056552,  0.951480 },
-	{  0.927161, -0.433814, -1.056552,  0.971457 },
-	{  0.649620, -0.454480,  1.056552,  1.041242 },
-	{  0.549746, -0.672748, -1.056552,  1.091050 },
-	{  0.727413, -0.870349,  1.056552,  1.071073 },
-	{  1.004955, -0.849682, -1.056552,  1.001288 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_2_4[] {
-	{  0.962893,  0.369847,  1.056552,  0.868649 },
-	{  0.683184,  0.412028, -1.056552,  0.931599 },
-	{  0.518692,  0.227637,  1.056552,  0.993122 },
-	{  0.633908,  0.001065, -1.056552,  0.991696 },
-	{  0.913617, -0.041115,  1.056552,  0.928747 },
-	{  1.078109,  0.143276, -1.056552,  0.867223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_2_4[] {
-	{  0.041733,  1.044477,  1.056552,  1.013210 },
-	{ -0.176167,  0.906529, -1.056552,  1.082256 },
-	{ -0.131254,  0.666427,  1.056552,  1.099479 },
-	{  0.131561,  0.564274, -1.056552,  1.047655 },
-	{  0.349462,  0.702222,  1.056552,  0.978608 },
-	{  0.304548,  0.942324, -1.056552,  0.961385 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_2_5[] {
-	{ -1.139743,  1.171706,  1.098851,  1.313508 },
-	{ -1.156219,  0.952044, -1.098851,  1.325390 },
-	{ -0.898576,  0.776694,  1.098851,  1.283875 },
-	{ -0.624457,  0.821005, -1.098851,  1.230478 },
-	{ -0.607981,  1.040666,  1.098851,  1.218596 },
-	{ -0.865624,  1.216017, -1.098851,  1.260111 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_2_5[] {
-	{ -0.619176, -1.147475,  1.098851,  1.308154 },
-	{ -0.390435, -1.045648, -1.098851,  1.261004 },
-	{ -0.453981, -0.813890,  1.098851,  1.263710 },
-	{ -0.746269, -0.683959, -1.098851,  1.313565 },
-	{ -0.975010, -0.785787,  1.098851,  1.360715 },
-	{ -0.911464, -1.017544, -1.098851,  1.358009 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_2_5[] {
-	{  0.641345, -1.252271,  1.098851,  1.074942 },
-	{  0.657821, -1.032610, -1.098851,  1.063060 },
-	{  0.400177, -0.857259,  1.098851,  1.104575 },
-	{  0.126058, -0.901570, -1.098851,  1.157972 },
-	{  0.109583, -1.121232,  1.098851,  1.169854 },
-	{  0.367226, -1.296582, -1.098851,  1.128339 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_2_5[] {
-	{  1.164571,  0.313535,  1.098851,  0.913822 },
-	{  0.857558,  0.389191, -1.098851,  0.968620 },
-	{  0.689783,  0.236786,  1.098851,  1.006309 },
-	{  0.829022,  0.008726, -1.098851,  0.989200 },
-	{  1.136035, -0.066930,  1.098851,  0.934402 },
-	{  1.303810,  0.085475, -1.098851,  0.896713 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_2_5[] {
-	{  0.120778,  1.066910,  1.098851,  1.080296 },
-	{ -0.107963,  0.965082, -1.098851,  1.127446 },
-	{ -0.044417,  0.733324,  1.098851,  1.124740 },
-	{  0.247871,  0.603394, -1.098851,  1.074885 },
-	{  0.476612,  0.705221,  1.098851,  1.027735 },
-	{  0.413065,  0.936979, -1.098851,  1.030441 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_2_6[] {
-	{ -0.911464,  1.017544,  1.098851,  1.358009 },
-	{ -0.975010,  0.785787, -1.098851,  1.360715 },
-	{ -0.746269,  0.683959,  1.098851,  1.313565 },
-	{ -0.453981,  0.813890, -1.098851,  1.263710 },
-	{ -0.390435,  1.045648,  1.098851,  1.261004 },
-	{ -0.619176,  1.147475, -1.098851,  1.308154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_2_6[] {
-	{ -0.865624, -1.216017,  1.098851,  1.260111 },
-	{ -0.607981, -1.040666, -1.098851,  1.218596 },
-	{ -0.624457, -0.821005,  1.098851,  1.230478 },
-	{ -0.898576, -0.776694, -1.098851,  1.283875 },
-	{ -1.156219, -0.952044,  1.098851,  1.325390 },
-	{ -1.139743, -1.171706, -1.098851,  1.313508 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_2_6[] {
-	{  0.413065, -0.936979,  1.098851,  1.030441 },
-	{  0.476612, -0.705221, -1.098851,  1.027735 },
-	{  0.247871, -0.603394,  1.098851,  1.074885 },
-	{ -0.044417, -0.733324, -1.098851,  1.124740 },
-	{ -0.107963, -0.965082,  1.098851,  1.127446 },
-	{  0.120778, -1.066910, -1.098851,  1.080296 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_2_6[] {
-	{  1.303810, -0.085475,  1.098851,  0.896713 },
-	{  1.136035,  0.066930, -1.098851,  0.934402 },
-	{  0.829022, -0.008726,  1.098851,  0.989200 },
-	{  0.689783, -0.236786, -1.098851,  1.006309 },
-	{  0.857558, -0.389191,  1.098851,  0.968620 },
-	{  1.164571, -0.313535, -1.098851,  0.913822 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_2_6[] {
-	{  0.367226,  1.296582,  1.098851,  1.128339 },
-	{  0.109583,  1.121232, -1.098851,  1.169854 },
-	{  0.126058,  0.901570,  1.098851,  1.157972 },
-	{  0.400177,  0.857259, -1.098851,  1.104575 },
-	{  0.657821,  1.032610,  1.098851,  1.063060 },
-	{  0.641345,  1.252271, -1.098851,  1.074942 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_2_7[] {
-	{ -1.039199,  1.317821,  1.056552,  1.552276 },
-	{ -1.084113,  1.077720, -1.056552,  1.535053 },
-	{ -0.866212,  0.939771,  1.056552,  1.466006 },
-	{ -0.603397,  1.041924, -1.056552,  1.414182 },
-	{ -0.558483,  1.282026,  1.056552,  1.431404 },
-	{ -0.776384,  1.419974, -1.056552,  1.500451 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_2_7[] {
-	{ -0.862588, -1.079391,  1.056552,  1.228615 },
-	{ -0.634577, -0.924227, -1.056552,  1.191448 },
-	{ -0.663027, -0.686958,  1.056552,  1.226145 },
-	{ -0.919486, -0.604853, -1.056552,  1.298010 },
-	{ -1.147497, -0.760017,  1.056552,  1.335177 },
-	{ -1.119047, -0.997286, -1.056552,  1.300480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_2_7[] {
-	{  0.304548, -0.942324,  1.056552,  0.961385 },
-	{  0.349462, -0.702222, -1.056552,  0.978608 },
-	{  0.131561, -0.564274,  1.056552,  1.047655 },
-	{ -0.131254, -0.666427, -1.056552,  1.099479 },
-	{ -0.176167, -0.906529,  1.056552,  1.082256 },
-	{  0.041733, -1.044477, -1.056552,  1.013210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_2_7[] {
-	{  1.078109, -0.143276,  1.056552,  0.867223 },
-	{  0.913617,  0.041115, -1.056552,  0.928747 },
-	{  0.633908, -0.001065,  1.056552,  0.991696 },
-	{  0.518692, -0.227637, -1.056552,  0.993122 },
-	{  0.683184, -0.412028,  1.056552,  0.931599 },
-	{  0.962893, -0.369847, -1.056552,  0.868649 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_2_7[] {
-	{  1.004955,  0.849682,  1.056552,  1.001288 },
-	{  0.727413,  0.870349, -1.056552,  1.071073 },
-	{  0.549746,  0.672748,  1.056552,  1.091050 },
-	{  0.649620,  0.454480, -1.056552,  1.041242 },
-	{  0.927161,  0.433814,  1.056552,  0.971457 },
-	{  1.104829,  0.631415, -1.056552,  0.951480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_3_4[] {
-	{ -0.849682,  1.004955,  1.056552,  1.001288 },
-	{ -0.870349,  0.727413, -1.056552,  1.071073 },
-	{ -0.672748,  0.549746,  1.056552,  1.091050 },
-	{ -0.454480,  0.649620, -1.056552,  1.041242 },
-	{ -0.433814,  0.927161,  1.056552,  0.971457 },
-	{ -0.631415,  1.104829, -1.056552,  0.951480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_3_4[] {
-	{ -1.317821, -1.039199,  1.056552,  1.552276 },
-	{ -1.077720, -1.084113, -1.056552,  1.535053 },
-	{ -0.939771, -0.866212,  1.056552,  1.466006 },
-	{ -1.041924, -0.603397, -1.056552,  1.414182 },
-	{ -1.282026, -0.558483,  1.056552,  1.431404 },
-	{ -1.419974, -0.776384, -1.056552,  1.500451 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_3_4[] {
-	{  1.079391, -0.862588,  1.056552,  1.228615 },
-	{  0.924227, -0.634577, -1.056552,  1.191448 },
-	{  0.686958, -0.663027,  1.056552,  1.226145 },
-	{  0.604853, -0.919486, -1.056552,  1.298010 },
-	{  0.760017, -1.147497,  1.056552,  1.335177 },
-	{  0.997286, -1.119047, -1.056552,  1.300480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_3_4[] {
-	{  0.942324,  0.304548,  1.056552,  0.961385 },
-	{  0.702222,  0.349462, -1.056552,  0.978608 },
-	{  0.564274,  0.131561,  1.056552,  1.047655 },
-	{  0.666427, -0.131254, -1.056552,  1.099479 },
-	{  0.906529, -0.176167,  1.056552,  1.082256 },
-	{  1.044477,  0.041733, -1.056552,  1.013210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_3_4[] {
-	{  0.143276,  1.078109,  1.056552,  0.867223 },
-	{ -0.041115,  0.913617, -1.056552,  0.928747 },
-	{  0.001065,  0.633908,  1.056552,  0.991696 },
-	{  0.227637,  0.518692, -1.056552,  0.993122 },
-	{  0.412028,  0.683184,  1.056552,  0.931599 },
-	{  0.369847,  0.962893, -1.056552,  0.868649 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_3_5[] {
-	{ -0.836774,  1.055057,  1.098851,  1.070665 },
-	{ -0.844555,  0.817629, -1.098851,  1.098928 },
-	{ -0.626562,  0.644962,  1.098851,  1.106501 },
-	{ -0.400786,  0.709724, -1.098851,  1.085811 },
-	{ -0.393005,  0.947152,  1.098851,  1.057549 },
-	{ -0.610998,  1.119819, -1.098851,  1.049976 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_3_5[] {
-	{ -1.228212, -0.662672,  1.098851,  1.294588 },
-	{ -0.972002, -0.724971, -1.098851,  1.287015 },
-	{ -0.837158, -0.550501,  1.098851,  1.258752 },
-	{ -0.958524, -0.313733, -1.098851,  1.238063 },
-	{ -1.214734, -0.251434,  1.098851,  1.245636 },
-	{ -1.349578, -0.425903, -1.098851,  1.273898 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_3_5[] {
-	{  0.702540, -1.442720,  1.098851,  1.273898 },
-	{  0.710321, -1.205291, -1.098851,  1.245636 },
-	{  0.492328, -1.032624,  1.098851,  1.238063 },
-	{  0.266553, -1.097386, -1.098851,  1.258752 },
-	{  0.258771, -1.334814,  1.098851,  1.287015 },
-	{  0.476765, -1.507481, -1.098851,  1.294588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_3_5[] {
-	{  1.093978,  0.275010,  1.098851,  1.049976 },
-	{  0.837768,  0.337309, -1.098851,  1.057549 },
-	{  0.702924,  0.162839,  1.098851,  1.085811 },
-	{  0.824290, -0.073930, -1.098851,  1.106501 },
-	{  1.080500, -0.136229,  1.098851,  1.098928 },
-	{  1.215344,  0.038241, -1.098851,  1.070665 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_3_5[] {
-	{  0.209672,  1.020787,  1.098851,  1.013945 },
-	{  0.023002,  0.896952, -1.098851,  1.039284 },
-	{  0.081797,  0.651489,  1.098851,  1.064624 },
-	{  0.327263,  0.529862, -1.098851,  1.064624 },
-	{  0.513933,  0.653697,  1.098851,  1.039284 },
-	{  0.455138,  0.899160, -1.098851,  1.013945 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_3_6[] {
-	{ -0.592623,  0.999939,  1.116371,  1.160553 },
-	{ -0.657534,  0.758440, -1.116371,  1.169036 },
-	{ -0.472943,  0.644188,  1.116371,  1.160553 },
-	{ -0.223440,  0.771435, -1.116371,  1.143588 },
-	{ -0.158529,  1.012933,  1.116371,  1.135105 },
-	{ -0.343121,  1.127185, -1.116371,  1.143588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_3_6[] {
-	{ -1.409581, -0.839204,  1.116371,  1.243879 },
-	{ -1.158957, -0.831701, -1.116371,  1.229186 },
-	{ -0.977430, -0.618806,  1.116371,  1.214494 },
-	{ -1.046527, -0.413414, -1.116371,  1.214494 },
-	{ -1.297151, -0.420916,  1.116371,  1.229186 },
-	{ -1.478678, -0.633811, -1.116371,  1.243879 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_3_6[] {
-	{  0.404719, -1.095770,  1.116371,  1.143588 },
-	{  0.469630, -0.854272, -1.116371,  1.135105 },
-	{  0.285038, -0.740020,  1.116371,  1.143588 },
-	{  0.035536, -0.867266, -1.116371,  1.160553 },
-	{ -0.029375, -1.108765,  1.116371,  1.169036 },
-	{  0.155216, -1.223017, -1.116371,  1.160553 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_3_6[] {
-	{  1.188951, -0.229335,  1.116371,  1.081154 },
-	{  1.057632, -0.063875, -1.116371,  1.085545 },
-	{  0.798748, -0.133626,  1.116371,  1.101933 },
-	{  0.671182, -0.368838, -1.116371,  1.113929 },
-	{  0.802501, -0.534298,  1.116371,  1.109538 },
-	{  1.061386, -0.464547, -1.116371,  1.093151 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_3_6[] {
-	{  0.483724,  1.252554,  1.116371,  1.093151 },
-	{  0.260607,  1.076484, -1.116371,  1.109538 },
-	{  0.262774,  0.845156,  1.116371,  1.113929 },
-	{  0.488058,  0.789899, -1.116371,  1.101933 },
-	{  0.711175,  0.965969,  1.116371,  1.085545 },
-	{  0.709008,  1.197297, -1.116371,  1.081154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_3_7[] {
-	{ -0.662672,  1.228212,  1.098851,  1.294588 },
-	{ -0.724971,  0.972002, -1.098851,  1.287015 },
-	{ -0.550501,  0.837158,  1.098851,  1.258752 },
-	{ -0.313733,  0.958524, -1.098851,  1.238063 },
-	{ -0.251434,  1.214734,  1.098851,  1.245636 },
-	{ -0.425903,  1.349578, -1.098851,  1.273898 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_3_7[] {
-	{ -1.442720, -0.702540,  1.098851,  1.273898 },
-	{ -1.205291, -0.710321, -1.098851,  1.245636 },
-	{ -1.032624, -0.492328,  1.098851,  1.238063 },
-	{ -1.097386, -0.266553, -1.098851,  1.258752 },
-	{ -1.334814, -0.258771,  1.098851,  1.287015 },
-	{ -1.507481, -0.476765, -1.098851,  1.294588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_3_7[] {
-	{  0.275010, -1.093978,  1.098851,  1.049976 },
-	{  0.337309, -0.837768, -1.098851,  1.057549 },
-	{  0.162839, -0.702924,  1.098851,  1.085811 },
-	{ -0.073930, -0.824290, -1.098851,  1.106501 },
-	{ -0.136229, -1.080500,  1.098851,  1.098928 },
-	{  0.038241, -1.215344, -1.098851,  1.070665 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_3_7[] {
-	{  1.020787, -0.209672,  1.098851,  1.013945 },
-	{  0.896952, -0.023002, -1.098851,  1.039284 },
-	{  0.651489, -0.081797,  1.098851,  1.064624 },
-	{  0.529862, -0.327263, -1.098851,  1.064624 },
-	{  0.653697, -0.513933,  1.098851,  1.039284 },
-	{  0.899160, -0.455138, -1.098851,  1.013945 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_3_7[] {
-	{  1.055057,  0.836774,  1.098851,  1.070665 },
-	{  0.817629,  0.844555, -1.098851,  1.098928 },
-	{  0.644962,  0.626562,  1.098851,  1.106501 },
-	{  0.709724,  0.400786, -1.098851,  1.085811 },
-	{  0.947152,  0.393005,  1.098851,  1.057549 },
-	{  1.119819,  0.610998, -1.098851,  1.049976 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_4_5[] {
-	{ -1.197559,  1.532131,  1.098851,  0.896713 },
-	{ -1.112308,  1.252613, -1.098851,  0.934402 },
-	{ -0.783677,  0.947625,  1.098851,  0.989200 },
-	{ -0.540297,  0.922155, -1.098851,  1.006309 },
-	{ -0.625548,  1.201673,  1.098851,  0.968620 },
-	{ -0.954180,  1.506661, -1.098851,  0.913822 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_4_5[] {
-	{ -0.980335, -0.337686,  1.098851,  1.128339 },
-	{ -0.650084, -0.528476, -1.098851,  1.169854 },
-	{ -0.558789, -0.381802,  1.098851,  1.157972 },
-	{ -0.797744, -0.044338, -1.098851,  1.104575 },
-	{ -1.127995,  0.146452,  1.098851,  1.063060 },
-	{ -1.219290, -0.000222, -1.098851,  1.074942 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_4_5[] {
-	{  0.370833, -1.628946,  1.098851,  1.358009 },
-	{  0.544073, -1.566206, -1.098851,  1.360715 },
-	{  0.376252, -1.246833,  1.098851,  1.313565 },
-	{  0.035189, -0.990199, -1.098851,  1.263710 },
-	{ -0.138051, -1.052939,  1.098851,  1.261004 },
-	{  0.029770, -1.372312, -1.098851,  1.308154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_4_5[] {
-	{  1.414799, -0.275885,  1.098851,  1.260111 },
-	{  1.084549, -0.085095, -1.098851,  1.218596 },
-	{  0.993253, -0.231770,  1.098851,  1.230478 },
-	{  1.232208, -0.569234, -1.098851,  1.283875 },
-	{  1.562459, -0.760024,  1.098851,  1.325390 },
-	{  1.653755, -0.613350, -1.098851,  1.313508 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_4_5[] {
-	{  0.063631,  1.015374,  1.098851,  1.030441 },
-	{ -0.109609,  0.952635, -1.098851,  1.027735 },
-	{  0.058212,  0.633261,  1.098851,  1.074885 },
-	{  0.399275,  0.376628, -1.098851,  1.124740 },
-	{  0.572515,  0.439368,  1.098851,  1.127446 },
-	{  0.404694,  0.758741, -1.098851,  1.080296 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_4_6[] {
-	{ -0.709008,  1.197297,  1.116371,  1.081154 },
-	{ -0.711175,  0.965969, -1.116371,  1.085545 },
-	{ -0.488058,  0.789899,  1.116371,  1.101933 },
-	{ -0.262774,  0.845156, -1.116371,  1.113929 },
-	{ -0.260607,  1.076484,  1.116371,  1.109538 },
-	{ -0.483724,  1.252554, -1.116371,  1.093151 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_4_6[] {
-	{ -1.061386, -0.464547,  1.116371,  1.093151 },
-	{ -0.802501, -0.534298, -1.116371,  1.109538 },
-	{ -0.671182, -0.368838,  1.116371,  1.113929 },
-	{ -0.798748, -0.133626, -1.116371,  1.101933 },
-	{ -1.057632, -0.063875,  1.116371,  1.085545 },
-	{ -1.188951, -0.229335, -1.116371,  1.081154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_4_6[] {
-	{ -0.155216, -1.223017,  1.116371,  1.160553 },
-	{  0.029375, -1.108765, -1.116371,  1.169036 },
-	{ -0.035536, -0.867266,  1.116371,  1.160553 },
-	{ -0.285038, -0.740020, -1.116371,  1.143588 },
-	{ -0.469630, -0.854272,  1.116371,  1.135105 },
-	{ -0.404719, -1.095770, -1.116371,  1.143588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_4_6[] {
-	{  1.478678, -0.633811,  1.116371,  1.243879 },
-	{  1.297151, -0.420916, -1.116371,  1.229186 },
-	{  1.046527, -0.413414,  1.116371,  1.214494 },
-	{  0.977430, -0.618806, -1.116371,  1.214494 },
-	{  1.158957, -0.831701,  1.116371,  1.229186 },
-	{  1.409581, -0.839204, -1.116371,  1.243879 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_4_6[] {
-	{  0.343121,  1.127185,  1.116371,  1.143588 },
-	{  0.158529,  1.012933, -1.116371,  1.135105 },
-	{  0.223440,  0.771435,  1.116371,  1.143588 },
-	{  0.472943,  0.644188, -1.116371,  1.160553 },
-	{  0.657534,  0.758440,  1.116371,  1.169036 },
-	{  0.592623,  0.999939, -1.116371,  1.160553 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_4_7[] {
-	{ -0.839204,  1.409581,  1.116371,  1.243879 },
-	{ -0.831701,  1.158957, -1.116371,  1.229186 },
-	{ -0.618806,  0.977430,  1.116371,  1.214494 },
-	{ -0.413414,  1.046527, -1.116371,  1.214494 },
-	{ -0.420916,  1.297151,  1.116371,  1.229186 },
-	{ -0.633811,  1.478678, -1.116371,  1.243879 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_4_7[] {
-	{ -1.095770, -0.404719,  1.116371,  1.143588 },
-	{ -0.854272, -0.469630, -1.116371,  1.135105 },
-	{ -0.740020, -0.285038,  1.116371,  1.143588 },
-	{ -0.867266, -0.035536, -1.116371,  1.160553 },
-	{ -1.108765,  0.029375,  1.116371,  1.169036 },
-	{ -1.223017, -0.155216, -1.116371,  1.160553 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_4_7[] {
-	{ -0.229335, -1.188951,  1.116371,  1.081154 },
-	{ -0.063875, -1.057632, -1.116371,  1.085545 },
-	{ -0.133626, -0.798748,  1.116371,  1.101933 },
-	{ -0.368838, -0.671182, -1.116371,  1.113929 },
-	{ -0.534298, -0.802501,  1.116371,  1.109538 },
-	{ -0.464547, -1.061386, -1.116371,  1.093151 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_4_7[] {
-	{  1.252554, -0.483724,  1.116371,  1.093151 },
-	{  1.076484, -0.260607, -1.116371,  1.109538 },
-	{  0.845156, -0.262774,  1.116371,  1.113929 },
-	{  0.789899, -0.488058, -1.116371,  1.101933 },
-	{  0.965969, -0.711175,  1.116371,  1.085545 },
-	{  1.197297, -0.709008, -1.116371,  1.081154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_4_7[] {
-	{  0.999939,  0.592623,  1.116371,  1.160553 },
-	{  0.758440,  0.657534, -1.116371,  1.169036 },
-	{  0.644188,  0.472943,  1.116371,  1.160553 },
-	{  0.771435,  0.223440, -1.116371,  1.143588 },
-	{  1.012933,  0.158529,  1.116371,  1.135105 },
-	{  1.127185,  0.343121, -1.116371,  1.143588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_5_6[] {
-	{ -0.641345,  1.252271,  1.098851,  1.074942 },
-	{ -0.657821,  1.032610, -1.098851,  1.063060 },
-	{ -0.400177,  0.857259,  1.098851,  1.104575 },
-	{ -0.126058,  0.901570, -1.098851,  1.157972 },
-	{ -0.109583,  1.121232,  1.098851,  1.169854 },
-	{ -0.367226,  1.296582, -1.098851,  1.128339 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_5_6[] {
-	{ -1.164571, -0.313535,  1.098851,  0.913822 },
-	{ -0.857558, -0.389191, -1.098851,  0.968620 },
-	{ -0.689783, -0.236786,  1.098851,  1.006309 },
-	{ -0.829022, -0.008726, -1.098851,  0.989200 },
-	{ -1.136035,  0.066930,  1.098851,  0.934402 },
-	{ -1.303810, -0.085475, -1.098851,  0.896713 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_5_6[] {
-	{ -0.120778, -1.066910,  1.098851,  1.080296 },
-	{  0.107963, -0.965082, -1.098851,  1.127446 },
-	{  0.044417, -0.733324,  1.098851,  1.124740 },
-	{ -0.247871, -0.603394, -1.098851,  1.074885 },
-	{ -0.476612, -0.705221,  1.098851,  1.027735 },
-	{ -0.413065, -0.936979, -1.098851,  1.030441 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_5_6[] {
-	{  1.139743, -1.171706,  1.098851,  1.313508 },
-	{  1.156219, -0.952044, -1.098851,  1.325390 },
-	{  0.898576, -0.776694,  1.098851,  1.283875 },
-	{  0.624457, -0.821005, -1.098851,  1.230478 },
-	{  0.607981, -1.040666,  1.098851,  1.218596 },
-	{  0.865624, -1.216017, -1.098851,  1.260111 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_1_5_6[] {
-	{  0.619176,  1.147475,  1.098851,  1.308154 },
-	{  0.390435,  1.045648, -1.098851,  1.261004 },
-	{  0.453981,  0.813890,  1.098851,  1.263710 },
-	{  0.746269,  0.683959, -1.098851,  1.313565 },
-	{  0.975010,  0.785787,  1.098851,  1.360715 },
-	{  0.911464,  1.017544, -1.098851,  1.358009 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_5_7[] {
-	{ -0.702540,  1.442720,  1.098851,  1.273898 },
-	{ -0.710321,  1.205291, -1.098851,  1.245636 },
-	{ -0.492328,  1.032624,  1.098851,  1.238063 },
-	{ -0.266553,  1.097386, -1.098851,  1.258752 },
-	{ -0.258771,  1.334814,  1.098851,  1.287015 },
-	{ -0.476765,  1.507481, -1.098851,  1.294588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_5_7[] {
-	{ -1.093978, -0.275010,  1.098851,  1.049976 },
-	{ -0.837768, -0.337309, -1.098851,  1.057549 },
-	{ -0.702924, -0.162839,  1.098851,  1.085811 },
-	{ -0.824290,  0.073930, -1.098851,  1.106501 },
-	{ -1.080500,  0.136229,  1.098851,  1.098928 },
-	{ -1.215344, -0.038241, -1.098851,  1.070665 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_5_7[] {
-	{ -0.209672, -1.020787,  1.098851,  1.013945 },
-	{ -0.023002, -0.896952, -1.098851,  1.039284 },
-	{ -0.081797, -0.651489,  1.098851,  1.064624 },
-	{ -0.327263, -0.529862, -1.098851,  1.064624 },
-	{ -0.513933, -0.653697,  1.098851,  1.039284 },
-	{ -0.455138, -0.899160, -1.098851,  1.013945 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_5_7[] {
-	{  0.836774, -1.055057,  1.098851,  1.070665 },
-	{  0.844555, -0.817629, -1.098851,  1.098928 },
-	{  0.626562, -0.644962,  1.098851,  1.106501 },
-	{  0.400786, -0.709724, -1.098851,  1.085811 },
-	{  0.393005, -0.947152,  1.098851,  1.057549 },
-	{  0.610998, -1.119819, -1.098851,  1.049976 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_1_5_7[] {
-	{  1.228212,  0.662672,  1.098851,  1.294588 },
-	{  0.972002,  0.724971, -1.098851,  1.287015 },
-	{  0.837158,  0.550501,  1.098851,  1.258752 },
-	{  0.958524,  0.313733, -1.098851,  1.238063 },
-	{  1.214734,  0.251434,  1.098851,  1.245636 },
-	{  1.349578,  0.425903, -1.098851,  1.273898 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_1_6_7[] {
-	{ -0.239679,  1.599778,  1.056552,  1.500451 },
-	{ -0.326444,  1.322021, -1.056552,  1.431404 },
-	{ -0.149825,  1.202808,  1.056552,  1.414182 },
-	{  0.113559,  1.361353, -1.056552,  1.466006 },
-	{  0.200324,  1.639111,  1.056552,  1.535053 },
-	{  0.023705,  1.758323, -1.056552,  1.552276 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_1_6_7[] {
-	{ -1.226613, -0.533768,  1.056552,  0.951480 },
-	{ -0.972577, -0.511060, -1.056552,  0.971457 },
-	{ -0.770419, -0.259160,  1.056552,  1.041242 },
-	{ -0.822296, -0.029970, -1.056552,  1.091050 },
-	{ -1.076331, -0.052679,  1.056552,  1.071073 },
-	{ -1.278490, -0.304578, -1.056552,  1.001288 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_1_6_7[] {
-	{ -0.525124, -1.069855,  1.056552,  0.868649 },
-	{ -0.284141, -0.857393, -1.056552,  0.931599 },
-	{ -0.266082, -0.594977,  1.056552,  0.993122 },
-	{ -0.489005, -0.545024, -1.056552,  0.991696 },
-	{ -0.729987, -0.757485,  1.056552,  0.928747 },
-	{ -0.748047, -1.019901, -1.056552,  0.867223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_1_6_7[] {
-	{  0.585167, -0.722197,  1.056552,  1.013210 },
-	{  0.671932, -0.444440, -1.056552,  1.082256 },
-	{  0.495314, -0.325227,  1.056552,  1.099479 },
-	{  0.231930, -0.483773, -1.056552,  1.047655 },
-	{  0.145165, -0.761530,  1.056552,  0.978608 },
-	{  0.321783, -0.880742, -1.056552,  0.961385 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_1_6_7[] {
-	{  1.453866,  0.305551,  1.056552,  1.300480 },
-	{  1.335588,  0.485898, -1.056552,  1.335177 },
-	{  1.067752,  0.392074,  1.056552,  1.298010 },
-	{  0.918194,  0.117903, -1.056552,  1.226145 },
-	{  1.036472, -0.062443,  1.056552,  1.191448 },
-	{  1.304308,  0.031381, -1.056552,  1.228615 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_3_4[] {
-	{ -0.488969,  0.784307,  0.996733,  0.869608 },
-	{ -0.698159,  0.351098, -0.996733,  1.078235 },
-	{ -0.575298,  0.185713,  0.996733,  1.134136 },
-	{ -0.243248,  0.453537, -0.996733,  0.981411 },
-	{ -0.034059,  0.886746,  0.996733,  0.772783 },
-	{ -0.156919,  1.052131, -0.996733,  0.716882 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_3_4[] {
-	{ -1.807550, -0.871254,  0.996733,  1.727710 },
-	{ -1.769753, -1.135758, -0.996733,  1.835704 },
-	{ -1.461917, -0.966508,  0.996733,  1.727710 },
-	{ -1.191879, -0.532753, -0.996733,  1.511724 },
-	{ -1.229676, -0.268248,  0.996733,  1.403730 },
-	{ -1.537511, -0.437499, -0.996733,  1.511724 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_2_3_4[] {
-	{  0.622221, -1.032705,  0.996733,  1.511724 },
-	{  0.584424, -0.768201, -0.996733,  1.403730 },
-	{  0.276589, -0.937452,  0.996733,  1.511724 },
-	{  0.006550, -1.371207, -0.996733,  1.727710 },
-	{  0.044348, -1.635711,  0.996733,  1.835704 },
-	{  0.352183, -1.466461, -0.996733,  1.727710 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_2_3_4[] {
-	{  1.229138,  0.670144,  0.996733,  0.716882 },
-	{  0.966496,  0.611001, -0.996733,  0.772783 },
-	{  0.654011,  0.206259,  0.996733,  0.981411 },
-	{  0.604169, -0.139339, -0.996733,  1.134136 },
-	{  0.866811, -0.080196,  0.996733,  1.078235 },
-	{  1.179296,  0.324546, -0.996733,  0.869608 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_2_3_4[] {
-	{  0.768868,  1.422775,  0.996733,  0.450909 },
-	{  0.435232,  1.074630, -0.996733,  0.637959 },
-	{  0.301148,  0.671489,  0.996733,  0.825009 },
-	{  0.500699,  0.616494, -0.996733,  0.825009 },
-	{  0.834334,  0.964640,  0.996733,  0.637959 },
-	{  0.968419,  1.367780, -0.996733,  0.450909 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_3_5[] {
-	{ -0.585167,  0.722197,  1.056552,  1.013210 },
-	{ -0.671932,  0.444440, -1.056552,  1.082256 },
-	{ -0.495314,  0.325227,  1.056552,  1.099479 },
-	{ -0.231930,  0.483773, -1.056552,  1.047655 },
-	{ -0.145165,  0.761530,  1.056552,  0.978608 },
-	{ -0.321783,  0.880742, -1.056552,  0.961385 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_3_5[] {
-	{ -1.453866, -0.305551,  1.056552,  1.300480 },
-	{ -1.335588, -0.485898, -1.056552,  1.335177 },
-	{ -1.067752, -0.392074,  1.056552,  1.298010 },
-	{ -0.918194, -0.117903, -1.056552,  1.226145 },
-	{ -1.036472,  0.062443,  1.056552,  1.191448 },
-	{ -1.304308, -0.031381, -1.056552,  1.228615 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_2_3_5[] {
-	{  0.239679, -1.599778,  1.056552,  1.500451 },
-	{  0.326444, -1.322021, -1.056552,  1.431404 },
-	{  0.149825, -1.202808,  1.056552,  1.414182 },
-	{ -0.113559, -1.361353, -1.056552,  1.466006 },
-	{ -0.200324, -1.639111,  1.056552,  1.535053 },
-	{ -0.023705, -1.758323, -1.056552,  1.552276 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_2_3_5[] {
-	{  1.226613,  0.533768,  1.056552,  0.951480 },
-	{  0.972577,  0.511060, -1.056552,  0.971457 },
-	{  0.770419,  0.259160,  1.056552,  1.041242 },
-	{  0.822296,  0.029970, -1.056552,  1.091050 },
-	{  1.076331,  0.052679,  1.056552,  1.071073 },
-	{  1.278490,  0.304578, -1.056552,  1.001288 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_2_3_5[] {
-	{  0.525124,  1.069855,  1.056552,  0.868649 },
-	{  0.284141,  0.857393, -1.056552,  0.931599 },
-	{  0.266082,  0.594977,  1.056552,  0.993122 },
-	{  0.489005,  0.545024, -1.056552,  0.991696 },
-	{  0.729987,  0.757485,  1.056552,  0.928747 },
-	{  0.748047,  1.019901, -1.056552,  0.867223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_3_6[] {
-	{ -0.404694,  0.758741,  1.098851,  1.080296 },
-	{ -0.572515,  0.439368, -1.098851,  1.127446 },
-	{ -0.399275,  0.376628,  1.098851,  1.124740 },
-	{ -0.058212,  0.633261, -1.098851,  1.074885 },
-	{  0.109609,  0.952635,  1.098851,  1.027735 },
-	{ -0.063631,  1.015374, -1.098851,  1.030441 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_3_6[] {
-	{ -1.653755, -0.613350,  1.098851,  1.313508 },
-	{ -1.562459, -0.760024, -1.098851,  1.325390 },
-	{ -1.232208, -0.569234,  1.098851,  1.283875 },
-	{ -0.993253, -0.231770, -1.098851,  1.230478 },
-	{ -1.084549, -0.085095,  1.098851,  1.218596 },
-	{ -1.414799, -0.275885, -1.098851,  1.260111 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_2_3_6[] {
-	{ -0.029770, -1.372312,  1.098851,  1.308154 },
-	{  0.138051, -1.052939, -1.098851,  1.261004 },
-	{ -0.035189, -0.990199,  1.098851,  1.263710 },
-	{ -0.376252, -1.246833, -1.098851,  1.313565 },
-	{ -0.544073, -1.566206,  1.098851,  1.360715 },
-	{ -0.370833, -1.628946, -1.098851,  1.358009 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_2_3_6[] {
-	{  1.219290, -0.000222,  1.098851,  1.074942 },
-	{  1.127995,  0.146452, -1.098851,  1.063060 },
-	{  0.797744, -0.044338,  1.098851,  1.104575 },
-	{  0.558789, -0.381802, -1.098851,  1.157972 },
-	{  0.650084, -0.528476,  1.098851,  1.169854 },
-	{  0.980335, -0.337686, -1.098851,  1.128339 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_2_3_6[] {
-	{  0.954180,  1.506661,  1.098851,  0.913822 },
-	{  0.625548,  1.201673, -1.098851,  0.968620 },
-	{  0.540297,  0.922155,  1.098851,  1.006309 },
-	{  0.783677,  0.947625, -1.098851,  0.989200 },
-	{  1.112308,  1.252613,  1.098851,  0.934402 },
-	{  1.197559,  1.532131, -1.098851,  0.896713 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_3_7[] {
-	{ -0.337686,  0.980335,  1.098851,  1.128339 },
-	{ -0.528476,  0.650084, -1.098851,  1.169854 },
-	{ -0.381802,  0.558789,  1.098851,  1.157972 },
-	{ -0.044338,  0.797744, -1.098851,  1.104575 },
-	{  0.146452,  1.127995,  1.098851,  1.063060 },
-	{ -0.000222,  1.219290, -1.098851,  1.074942 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_3_7[] {
-	{ -1.628946, -0.370833,  1.098851,  1.358009 },
-	{ -1.566206, -0.544073, -1.098851,  1.360715 },
-	{ -1.246833, -0.376252,  1.098851,  1.313565 },
-	{ -0.990199, -0.035189, -1.098851,  1.263710 },
-	{ -1.052939,  0.138051,  1.098851,  1.261004 },
-	{ -1.372312, -0.029770, -1.098851,  1.308154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_2_3_7[] {
-	{ -0.275885, -1.414799,  1.098851,  1.260111 },
-	{ -0.085095, -1.084549, -1.098851,  1.218596 },
-	{ -0.231770, -0.993253,  1.098851,  1.230478 },
-	{ -0.569234, -1.232208, -1.098851,  1.283875 },
-	{ -0.760024, -1.562459,  1.098851,  1.325390 },
-	{ -0.613350, -1.653755, -1.098851,  1.313508 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_2_3_7[] {
-	{  1.015374, -0.063631,  1.098851,  1.030441 },
-	{  0.952635,  0.109609, -1.098851,  1.027735 },
-	{  0.633261, -0.058212,  1.098851,  1.074885 },
-	{  0.376628, -0.399275, -1.098851,  1.124740 },
-	{  0.439368, -0.572515,  1.098851,  1.127446 },
-	{  0.758741, -0.404694, -1.098851,  1.080296 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_2_3_7[] {
-	{  1.532131,  1.197559,  1.098851,  0.896713 },
-	{  1.252613,  1.112308, -1.098851,  0.934402 },
-	{  0.947625,  0.783677,  1.098851,  0.989200 },
-	{  0.922155,  0.540297, -1.098851,  1.006309 },
-	{  1.201673,  0.625548,  1.098851,  0.968620 },
-	{  1.506661,  0.954180, -1.098851,  0.913822 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_4_5[] {
-	{ -0.748047,  1.019901,  1.056552,  0.867223 },
-	{ -0.729987,  0.757485, -1.056552,  0.928747 },
-	{ -0.489005,  0.545024,  1.056552,  0.991696 },
-	{ -0.266082,  0.594977, -1.056552,  0.993122 },
-	{ -0.284141,  0.857393,  1.056552,  0.931599 },
-	{ -0.525124,  1.069855, -1.056552,  0.868649 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_4_5[] {
-	{ -1.278490,  0.304578,  1.056552,  1.001288 },
-	{ -1.076331,  0.052679, -1.056552,  1.071073 },
-	{ -0.822296,  0.029970,  1.056552,  1.091050 },
-	{ -0.770419,  0.259160, -1.056552,  1.041242 },
-	{ -0.972577,  0.511060,  1.056552,  0.971457 },
-	{ -1.226613,  0.533768, -1.056552,  0.951480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_2_4_5[] {
-	{  0.023705, -1.758323,  1.056552,  1.552276 },
-	{  0.200324, -1.639111, -1.056552,  1.535053 },
-	{  0.113559, -1.361353,  1.056552,  1.466006 },
-	{ -0.149825, -1.202808, -1.056552,  1.414182 },
-	{ -0.326444, -1.322021,  1.056552,  1.431404 },
-	{ -0.239679, -1.599778, -1.056552,  1.500451 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_2_4_5[] {
-	{  1.304308, -0.031381,  1.056552,  1.228615 },
-	{  1.036472,  0.062443, -1.056552,  1.191448 },
-	{  0.918194, -0.117903,  1.056552,  1.226145 },
-	{  1.067752, -0.392074, -1.056552,  1.298010 },
-	{  1.335588, -0.485898,  1.056552,  1.335177 },
-	{  1.453866, -0.305551, -1.056552,  1.300480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_2_4_5[] {
-	{  0.321783,  0.880742,  1.056552,  0.961385 },
-	{  0.145165,  0.761530, -1.056552,  0.978608 },
-	{  0.231930,  0.483773,  1.056552,  1.047655 },
-	{  0.495314,  0.325227, -1.056552,  1.099479 },
-	{  0.671932,  0.444440,  1.056552,  1.082256 },
-	{  0.585167,  0.722197, -1.056552,  1.013210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_4_6[] {
-	{ -0.455138,  0.899160,  1.098851,  1.013945 },
-	{ -0.513933,  0.653697, -1.098851,  1.039284 },
-	{ -0.327263,  0.529862,  1.098851,  1.064624 },
-	{ -0.081797,  0.651489, -1.098851,  1.064624 },
-	{ -0.023002,  0.896952,  1.098851,  1.039284 },
-	{ -0.209672,  1.020787, -1.098851,  1.013945 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_4_6[] {
-	{ -1.215344,  0.038241,  1.098851,  1.070665 },
-	{ -1.080500, -0.136229, -1.098851,  1.098928 },
-	{ -0.824290, -0.073930,  1.098851,  1.106501 },
-	{ -0.702924,  0.162839, -1.098851,  1.085811 },
-	{ -0.837768,  0.337309,  1.098851,  1.057549 },
-	{ -1.093978,  0.275010, -1.098851,  1.049976 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_2_4_6[] {
-	{ -0.476765, -1.507481,  1.098851,  1.294588 },
-	{ -0.258771, -1.334814, -1.098851,  1.287015 },
-	{ -0.266553, -1.097386,  1.098851,  1.258752 },
-	{ -0.492328, -1.032624, -1.098851,  1.238063 },
-	{ -0.710321, -1.205291,  1.098851,  1.245636 },
-	{ -0.702540, -1.442720, -1.098851,  1.273898 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_2_4_6[] {
-	{  1.349578, -0.425903,  1.098851,  1.273898 },
-	{  1.214734, -0.251434, -1.098851,  1.245636 },
-	{  0.958524, -0.313733,  1.098851,  1.238063 },
-	{  0.837158, -0.550501, -1.098851,  1.258752 },
-	{  0.972002, -0.724971,  1.098851,  1.287015 },
-	{  1.228212, -0.662672, -1.098851,  1.294588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_2_4_6[] {
-	{  0.610998,  1.119819,  1.098851,  1.049976 },
-	{  0.393005,  0.947152, -1.098851,  1.057549 },
-	{  0.400786,  0.709724,  1.098851,  1.085811 },
-	{  0.626562,  0.644962, -1.098851,  1.106501 },
-	{  0.844555,  0.817629,  1.098851,  1.098928 },
-	{  0.836774,  1.055057, -1.098851,  1.070665 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_4_7[] {
-	{ -0.464547,  1.061386,  1.116371,  1.093151 },
-	{ -0.534298,  0.802501, -1.116371,  1.109538 },
-	{ -0.368838,  0.671182,  1.116371,  1.113929 },
-	{ -0.133626,  0.798748, -1.116371,  1.101933 },
-	{ -0.063875,  1.057632,  1.116371,  1.085545 },
-	{ -0.229335,  1.188951, -1.116371,  1.081154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_4_7[] {
-	{ -1.223017,  0.155216,  1.116371,  1.160553 },
-	{ -1.108765, -0.029375, -1.116371,  1.169036 },
-	{ -0.867266,  0.035536,  1.116371,  1.160553 },
-	{ -0.740020,  0.285038, -1.116371,  1.143588 },
-	{ -0.854272,  0.469630,  1.116371,  1.135105 },
-	{ -1.095770,  0.404719, -1.116371,  1.143588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_2_4_7[] {
-	{ -0.633811, -1.478678,  1.116371,  1.243879 },
-	{ -0.420916, -1.297151, -1.116371,  1.229186 },
-	{ -0.413414, -1.046527,  1.116371,  1.214494 },
-	{ -0.618806, -0.977430, -1.116371,  1.214494 },
-	{ -0.831701, -1.158957,  1.116371,  1.229186 },
-	{ -0.839204, -1.409581, -1.116371,  1.243879 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_2_4_7[] {
-	{  1.127185, -0.343121,  1.116371,  1.143588 },
-	{  1.012933, -0.158529, -1.116371,  1.135105 },
-	{  0.771435, -0.223440,  1.116371,  1.143588 },
-	{  0.644188, -0.472943, -1.116371,  1.160553 },
-	{  0.758440, -0.657534,  1.116371,  1.169036 },
-	{  0.999939, -0.592623, -1.116371,  1.160553 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_2_4_7[] {
-	{  1.197297,  0.709008,  1.116371,  1.081154 },
-	{  0.965969,  0.711175, -1.116371,  1.085545 },
-	{  0.789899,  0.488058,  1.116371,  1.101933 },
-	{  0.845156,  0.262774, -1.116371,  1.113929 },
-	{  1.076484,  0.260607,  1.116371,  1.109538 },
-	{  1.252554,  0.483724, -1.116371,  1.093151 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_5_6[] {
-	{ -0.413065,  0.936979,  1.098851,  1.030441 },
-	{ -0.476612,  0.705221, -1.098851,  1.027735 },
-	{ -0.247871,  0.603394,  1.098851,  1.074885 },
-	{  0.044417,  0.733324, -1.098851,  1.124740 },
-	{  0.107963,  0.965082,  1.098851,  1.127446 },
-	{ -0.120778,  1.066910, -1.098851,  1.080296 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_5_6[] {
-	{ -1.303810,  0.085475,  1.098851,  0.896713 },
-	{ -1.136035, -0.066930, -1.098851,  0.934402 },
-	{ -0.829022,  0.008726,  1.098851,  0.989200 },
-	{ -0.689783,  0.236786, -1.098851,  1.006309 },
-	{ -0.857558,  0.389191,  1.098851,  0.968620 },
-	{ -1.164571,  0.313535, -1.098851,  0.913822 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_2_5_6[] {
-	{ -0.367226, -1.296582,  1.098851,  1.128339 },
-	{ -0.109583, -1.121232, -1.098851,  1.169854 },
-	{ -0.126058, -0.901570,  1.098851,  1.157972 },
-	{ -0.400177, -0.857259, -1.098851,  1.104575 },
-	{ -0.657821, -1.032610,  1.098851,  1.063060 },
-	{ -0.641345, -1.252271, -1.098851,  1.074942 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_2_5_6[] {
-	{  0.911464, -1.017544,  1.098851,  1.358009 },
-	{  0.975010, -0.785787, -1.098851,  1.360715 },
-	{  0.746269, -0.683959,  1.098851,  1.313565 },
-	{  0.453981, -0.813890, -1.098851,  1.263710 },
-	{  0.390435, -1.045648,  1.098851,  1.261004 },
-	{  0.619176, -1.147475, -1.098851,  1.308154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_2_5_6[] {
-	{  0.865624,  1.216017,  1.098851,  1.260111 },
-	{  0.607981,  1.040666, -1.098851,  1.218596 },
-	{  0.624457,  0.821005,  1.098851,  1.230478 },
-	{  0.898576,  0.776694, -1.098851,  1.283875 },
-	{  1.156219,  0.952044,  1.098851,  1.325390 },
-	{  1.139743,  1.171706, -1.098851,  1.313508 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_5_7[] {
-	{ -0.404719,  1.095770,  1.116371,  1.143588 },
-	{ -0.469630,  0.854272, -1.116371,  1.135105 },
-	{ -0.285038,  0.740020,  1.116371,  1.143588 },
-	{ -0.035536,  0.867266, -1.116371,  1.160553 },
-	{  0.029375,  1.108765,  1.116371,  1.169036 },
-	{ -0.155216,  1.223017, -1.116371,  1.160553 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_5_7[] {
-	{ -1.188951,  0.229335,  1.116371,  1.081154 },
-	{ -1.057632,  0.063875, -1.116371,  1.085545 },
-	{ -0.798748,  0.133626,  1.116371,  1.101933 },
-	{ -0.671182,  0.368838, -1.116371,  1.113929 },
-	{ -0.802501,  0.534298,  1.116371,  1.109538 },
-	{ -1.061386,  0.464547, -1.116371,  1.093151 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_2_5_7[] {
-	{ -0.483724, -1.252554,  1.116371,  1.093151 },
-	{ -0.260607, -1.076484, -1.116371,  1.109538 },
-	{ -0.262774, -0.845156,  1.116371,  1.113929 },
-	{ -0.488058, -0.789899, -1.116371,  1.101933 },
-	{ -0.711175, -0.965969,  1.116371,  1.085545 },
-	{ -0.709008, -1.197297, -1.116371,  1.081154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_2_5_7[] {
-	{  0.592623, -0.999939,  1.116371,  1.160553 },
-	{  0.657534, -0.758440, -1.116371,  1.169036 },
-	{  0.472943, -0.644188,  1.116371,  1.160553 },
-	{  0.223440, -0.771435, -1.116371,  1.143588 },
-	{  0.158529, -1.012933,  1.116371,  1.135105 },
-	{  0.343121, -1.127185, -1.116371,  1.143588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_2_5_7[] {
-	{  1.409581,  0.839204,  1.116371,  1.243879 },
-	{  1.158957,  0.831701, -1.116371,  1.229186 },
-	{  0.977430,  0.618806,  1.116371,  1.214494 },
-	{  1.046527,  0.413414, -1.116371,  1.214494 },
-	{  1.297151,  0.420916,  1.116371,  1.229186 },
-	{  1.478678,  0.633811, -1.116371,  1.243879 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_2_6_7[] {
-	{  0.029770,  1.372312,  1.098851,  1.308154 },
-	{ -0.138051,  1.052939, -1.098851,  1.261004 },
-	{  0.035189,  0.990199,  1.098851,  1.263710 },
-	{  0.376252,  1.246833, -1.098851,  1.313565 },
-	{  0.544073,  1.566206,  1.098851,  1.360715 },
-	{  0.370833,  1.628946, -1.098851,  1.358009 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_2_6_7[] {
-	{ -1.219290,  0.000222,  1.098851,  1.074942 },
-	{ -1.127995, -0.146452, -1.098851,  1.063060 },
-	{ -0.797744,  0.044338,  1.098851,  1.104575 },
-	{ -0.558789,  0.381802, -1.098851,  1.157972 },
-	{ -0.650084,  0.528476,  1.098851,  1.169854 },
-	{ -0.980335,  0.337686, -1.098851,  1.128339 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_2_6_7[] {
-	{ -0.954180, -1.506661,  1.098851,  0.913822 },
-	{ -0.625548, -1.201673, -1.098851,  0.968620 },
-	{ -0.540297, -0.922155,  1.098851,  1.006309 },
-	{ -0.783677, -0.947625, -1.098851,  0.989200 },
-	{ -1.112308, -1.252613,  1.098851,  0.934402 },
-	{ -1.197559, -1.532131, -1.098851,  0.896713 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_2_6_7[] {
-	{  0.404694, -0.758741,  1.098851,  1.080296 },
-	{  0.572515, -0.439368, -1.098851,  1.127446 },
-	{  0.399275, -0.376628,  1.098851,  1.124740 },
-	{  0.058212, -0.633261, -1.098851,  1.074885 },
-	{ -0.109609, -0.952635,  1.098851,  1.027735 },
-	{  0.063631, -1.015374, -1.098851,  1.030441 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_2_6_7[] {
-	{  1.653755,  0.613350,  1.098851,  1.313508 },
-	{  1.562459,  0.760024, -1.098851,  1.325390 },
-	{  1.232208,  0.569234,  1.098851,  1.283875 },
-	{  0.993253,  0.231770, -1.098851,  1.230478 },
-	{  1.084549,  0.085095,  1.098851,  1.218596 },
-	{  1.414799,  0.275885, -1.098851,  1.260111 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_3_4_5[] {
-	{ -0.968419,  1.367780,  0.996733,  0.450909 },
-	{ -0.834334,  0.964640, -0.996733,  0.637959 },
-	{ -0.500699,  0.616494,  0.996733,  0.825009 },
-	{ -0.301148,  0.671489, -0.996733,  0.825009 },
-	{ -0.435232,  1.074630,  0.996733,  0.637959 },
-	{ -0.768868,  1.422775, -0.996733,  0.450909 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_3_4_5[] {
-	{ -1.179296,  0.324546,  0.996733,  0.869608 },
-	{ -0.866811, -0.080196, -0.996733,  1.078235 },
-	{ -0.604169, -0.139339,  0.996733,  1.134136 },
-	{ -0.654011,  0.206259, -0.996733,  0.981411 },
-	{ -0.966496,  0.611001,  0.996733,  0.772783 },
-	{ -1.229138,  0.670144, -0.996733,  0.716882 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_3_4_5[] {
-	{ -0.352183, -1.466461,  0.996733,  1.727710 },
-	{ -0.044348, -1.635711, -0.996733,  1.835704 },
-	{ -0.006550, -1.371207,  0.996733,  1.727710 },
-	{ -0.276589, -0.937452, -0.996733,  1.511724 },
-	{ -0.584424, -0.768201,  0.996733,  1.403730 },
-	{ -0.622221, -1.032705, -0.996733,  1.511724 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_3_4_5[] {
-	{  1.537511, -0.437499,  0.996733,  1.511724 },
-	{  1.229676, -0.268248, -0.996733,  1.403730 },
-	{  1.191879, -0.532753,  0.996733,  1.511724 },
-	{  1.461917, -0.966508, -0.996733,  1.727710 },
-	{  1.769753, -1.135758,  0.996733,  1.835704 },
-	{  1.807550, -0.871254, -0.996733,  1.727710 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_3_4_5[] {
-	{  0.156919,  1.052131,  0.996733,  0.716882 },
-	{  0.034059,  0.886746, -0.996733,  0.772783 },
-	{  0.243248,  0.453537,  0.996733,  0.981411 },
-	{  0.575298,  0.185713, -0.996733,  1.134136 },
-	{  0.698159,  0.351098,  0.996733,  1.078235 },
-	{  0.488969,  0.784307, -0.996733,  0.869608 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_3_4_6[] {
-	{ -0.369847,  0.962893,  1.056552,  0.868649 },
-	{ -0.412028,  0.683184, -1.056552,  0.931599 },
-	{ -0.227637,  0.518692,  1.056552,  0.993122 },
-	{ -0.001065,  0.633908, -1.056552,  0.991696 },
-	{  0.041115,  0.913617,  1.056552,  0.928747 },
-	{ -0.143276,  1.078109, -1.056552,  0.867223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_3_4_6[] {
-	{ -1.044477,  0.041733,  1.056552,  1.013210 },
-	{ -0.906529, -0.176167, -1.056552,  1.082256 },
-	{ -0.666427, -0.131254,  1.056552,  1.099479 },
-	{ -0.564274,  0.131561, -1.056552,  1.047655 },
-	{ -0.702222,  0.349462,  1.056552,  0.978608 },
-	{ -0.942324,  0.304548, -1.056552,  0.961385 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_3_4_6[] {
-	{ -0.997286, -1.119047,  1.056552,  1.300480 },
-	{ -0.760017, -1.147497, -1.056552,  1.335177 },
-	{ -0.604853, -0.919486,  1.056552,  1.298010 },
-	{ -0.686958, -0.663027, -1.056552,  1.226145 },
-	{ -0.924227, -0.634577,  1.056552,  1.191448 },
-	{ -1.079391, -0.862588, -1.056552,  1.228615 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_3_4_6[] {
-	{  1.419974, -0.776384,  1.056552,  1.500451 },
-	{  1.282026, -0.558483, -1.056552,  1.431404 },
-	{  1.041924, -0.603397,  1.056552,  1.414182 },
-	{  0.939771, -0.866212, -1.056552,  1.466006 },
-	{  1.077720, -1.084113,  1.056552,  1.535053 },
-	{  1.317821, -1.039199, -1.056552,  1.552276 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_3_4_6[] {
-	{  0.631415,  1.104829,  1.056552,  0.951480 },
-	{  0.433814,  0.927161, -1.056552,  0.971457 },
-	{  0.454480,  0.649620,  1.056552,  1.041242 },
-	{  0.672748,  0.549746, -1.056552,  1.091050 },
-	{  0.870349,  0.727413,  1.056552,  1.071073 },
-	{  0.849682,  1.004955, -1.056552,  1.001288 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_3_4_7[] {
-	{ -0.313535,  1.164571,  1.098851,  0.913822 },
-	{ -0.389191,  0.857558, -1.098851,  0.968620 },
-	{ -0.236786,  0.689783,  1.098851,  1.006309 },
-	{ -0.008726,  0.829022, -1.098851,  0.989200 },
-	{  0.066930,  1.136035,  1.098851,  0.934402 },
-	{ -0.085475,  1.303810, -1.098851,  0.896713 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_3_4_7[] {
-	{ -1.066910,  0.120778,  1.098851,  1.080296 },
-	{ -0.965082, -0.107963, -1.098851,  1.127446 },
-	{ -0.733324, -0.044417,  1.098851,  1.124740 },
-	{ -0.603394,  0.247871, -1.098851,  1.074885 },
-	{ -0.705221,  0.476612,  1.098851,  1.027735 },
-	{ -0.936979,  0.413065, -1.098851,  1.030441 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_3_4_7[] {
-	{ -1.171706, -1.139743,  1.098851,  1.313508 },
-	{ -0.952044, -1.156219, -1.098851,  1.325390 },
-	{ -0.776694, -0.898576,  1.098851,  1.283875 },
-	{ -0.821005, -0.624457, -1.098851,  1.230478 },
-	{ -1.040666, -0.607981,  1.098851,  1.218596 },
-	{ -1.216017, -0.865624, -1.098851,  1.260111 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_3_4_7[] {
-	{  1.147475, -0.619176,  1.098851,  1.308154 },
-	{  1.045648, -0.390435, -1.098851,  1.261004 },
-	{  0.813890, -0.453981,  1.098851,  1.263710 },
-	{  0.683959, -0.746269, -1.098851,  1.313565 },
-	{  0.785787, -0.975010,  1.098851,  1.360715 },
-	{  1.017544, -0.911464, -1.098851,  1.358009 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_3_4_7[] {
-	{  1.252271,  0.641345,  1.098851,  1.074942 },
-	{  1.032610,  0.657821, -1.098851,  1.063060 },
-	{  0.857259,  0.400177,  1.098851,  1.104575 },
-	{  0.901570,  0.126058, -1.098851,  1.157972 },
-	{  1.121232,  0.109583,  1.098851,  1.169854 },
-	{  1.296582,  0.367226, -1.098851,  1.128339 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_3_5_6[] {
-	{ -0.304548,  0.942324,  1.056552,  0.961385 },
-	{ -0.349462,  0.702222, -1.056552,  0.978608 },
-	{ -0.131561,  0.564274,  1.056552,  1.047655 },
-	{  0.131254,  0.666427, -1.056552,  1.099479 },
-	{  0.176167,  0.906529,  1.056552,  1.082256 },
-	{ -0.041733,  1.044477, -1.056552,  1.013210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_3_5_6[] {
-	{ -1.078109,  0.143276,  1.056552,  0.867223 },
-	{ -0.913617, -0.041115, -1.056552,  0.928747 },
-	{ -0.633908,  0.001065,  1.056552,  0.991696 },
-	{ -0.518692,  0.227637, -1.056552,  0.993122 },
-	{ -0.683184,  0.412028,  1.056552,  0.931599 },
-	{ -0.962893,  0.369847, -1.056552,  0.868649 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_3_5_6[] {
-	{ -1.004955, -0.849682,  1.056552,  1.001288 },
-	{ -0.727413, -0.870349, -1.056552,  1.071073 },
-	{ -0.549746, -0.672748,  1.056552,  1.091050 },
-	{ -0.649620, -0.454480, -1.056552,  1.041242 },
-	{ -0.927161, -0.433814,  1.056552,  0.971457 },
-	{ -1.104829, -0.631415, -1.056552,  0.951480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_3_5_6[] {
-	{  1.039199, -1.317821,  1.056552,  1.552276 },
-	{  1.084113, -1.077720, -1.056552,  1.535053 },
-	{  0.866212, -0.939771,  1.056552,  1.466006 },
-	{  0.603397, -1.041924, -1.056552,  1.414182 },
-	{  0.558483, -1.282026,  1.056552,  1.431404 },
-	{  0.776384, -1.419974, -1.056552,  1.500451 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_3_5_6[] {
-	{  0.862588,  1.079391,  1.056552,  1.228615 },
-	{  0.634577,  0.924227, -1.056552,  1.191448 },
-	{  0.663027,  0.686958,  1.056552,  1.226145 },
-	{  0.919486,  0.604853, -1.056552,  1.298010 },
-	{  1.147497,  0.760017,  1.056552,  1.335177 },
-	{  1.119047,  0.997286, -1.056552,  1.300480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_3_5_7[] {
-	{ -0.275010,  1.093978,  1.098851,  1.049976 },
-	{ -0.337309,  0.837768, -1.098851,  1.057549 },
-	{ -0.162839,  0.702924,  1.098851,  1.085811 },
-	{  0.073930,  0.824290, -1.098851,  1.106501 },
-	{  0.136229,  1.080500,  1.098851,  1.098928 },
-	{ -0.038241,  1.215344, -1.098851,  1.070665 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_3_5_7[] {
-	{ -1.020787,  0.209672,  1.098851,  1.013945 },
-	{ -0.896952,  0.023002, -1.098851,  1.039284 },
-	{ -0.651489,  0.081797,  1.098851,  1.064624 },
-	{ -0.529862,  0.327263, -1.098851,  1.064624 },
-	{ -0.653697,  0.513933,  1.098851,  1.039284 },
-	{ -0.899160,  0.455138, -1.098851,  1.013945 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_3_5_7[] {
-	{ -1.055057, -0.836774,  1.098851,  1.070665 },
-	{ -0.817629, -0.844555, -1.098851,  1.098928 },
-	{ -0.644962, -0.626562,  1.098851,  1.106501 },
-	{ -0.709724, -0.400786, -1.098851,  1.085811 },
-	{ -0.947152, -0.393005,  1.098851,  1.057549 },
-	{ -1.119819, -0.610998, -1.098851,  1.049976 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_3_5_7[] {
-	{  0.662672, -1.228212,  1.098851,  1.294588 },
-	{  0.724971, -0.972002, -1.098851,  1.287015 },
-	{  0.550501, -0.837158,  1.098851,  1.258752 },
-	{  0.313733, -0.958524, -1.098851,  1.238063 },
-	{  0.251434, -1.214734,  1.098851,  1.245636 },
-	{  0.425903, -1.349578, -1.098851,  1.273898 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_3_5_7[] {
-	{  1.442720,  0.702540,  1.098851,  1.273898 },
-	{  1.205291,  0.710321, -1.098851,  1.245636 },
-	{  1.032624,  0.492328,  1.098851,  1.238063 },
-	{  1.097386,  0.266553, -1.098851,  1.258752 },
-	{  1.334814,  0.258771,  1.098851,  1.287015 },
-	{  1.507481,  0.476765, -1.098851,  1.294588 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_3_6_7[] {
-	{  0.275885,  1.414799,  1.098851,  1.260111 },
-	{  0.085095,  1.084549, -1.098851,  1.218596 },
-	{  0.231770,  0.993253,  1.098851,  1.230478 },
-	{  0.569234,  1.232208, -1.098851,  1.283875 },
-	{  0.760024,  1.562459,  1.098851,  1.325390 },
-	{  0.613350,  1.653755, -1.098851,  1.313508 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_3_6_7[] {
-	{ -1.015374,  0.063631,  1.098851,  1.030441 },
-	{ -0.952635, -0.109609, -1.098851,  1.027735 },
-	{ -0.633261,  0.058212,  1.098851,  1.074885 },
-	{ -0.376628,  0.399275, -1.098851,  1.124740 },
-	{ -0.439368,  0.572515,  1.098851,  1.127446 },
-	{ -0.758741,  0.404694, -1.098851,  1.080296 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_3_6_7[] {
-	{ -1.532131, -1.197559,  1.098851,  0.896713 },
-	{ -1.252613, -1.112308, -1.098851,  0.934402 },
-	{ -0.947625, -0.783677,  1.098851,  0.989200 },
-	{ -0.922155, -0.540297, -1.098851,  1.006309 },
-	{ -1.201673, -0.625548,  1.098851,  0.968620 },
-	{ -1.506661, -0.954180, -1.098851,  0.913822 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_3_6_7[] {
-	{  0.337686, -0.980335,  1.098851,  1.128339 },
-	{  0.528476, -0.650084, -1.098851,  1.169854 },
-	{  0.381802, -0.558789,  1.098851,  1.157972 },
-	{  0.044338, -0.797744, -1.098851,  1.104575 },
-	{ -0.146452, -1.127995,  1.098851,  1.063060 },
-	{  0.000222, -1.219290, -1.098851,  1.074942 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_3_6_7[] {
-	{  1.628946,  0.370833,  1.098851,  1.358009 },
-	{  1.566206,  0.544073, -1.098851,  1.360715 },
-	{  1.246833,  0.376252,  1.098851,  1.313565 },
-	{  0.990199,  0.035189, -1.098851,  1.263710 },
-	{  1.052939, -0.138051,  1.098851,  1.261004 },
-	{  1.372312,  0.029770, -1.098851,  1.308154 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_4_5_6[] {
-	{ -0.670144,  1.229138,  0.996733,  0.716882 },
-	{ -0.611001,  0.966496, -0.996733,  0.772783 },
-	{ -0.206259,  0.654011,  0.996733,  0.981411 },
-	{  0.139339,  0.604169, -0.996733,  1.134136 },
-	{  0.080196,  0.866811,  0.996733,  1.078235 },
-	{ -0.324546,  1.179296, -0.996733,  0.869608 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_4_5_6[] {
-	{ -1.422775,  0.768868,  0.996733,  0.450909 },
-	{ -1.074630,  0.435232, -0.996733,  0.637959 },
-	{ -0.671489,  0.301148,  0.996733,  0.825009 },
-	{ -0.616494,  0.500699, -0.996733,  0.825009 },
-	{ -0.964640,  0.834334,  0.996733,  0.637959 },
-	{ -1.367780,  0.968419, -0.996733,  0.450909 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_4_5_6[] {
-	{ -0.784307, -0.488969,  0.996733,  0.869608 },
-	{ -0.351098, -0.698159, -0.996733,  1.078235 },
-	{ -0.185713, -0.575298,  0.996733,  1.134136 },
-	{ -0.453537, -0.243248, -0.996733,  0.981411 },
-	{ -0.886746, -0.034059,  0.996733,  0.772783 },
-	{ -1.052131, -0.156919, -0.996733,  0.716882 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_4_5_6[] {
-	{  0.871254, -1.807550,  0.996733,  1.727710 },
-	{  1.135758, -1.769753, -0.996733,  1.835704 },
-	{  0.966508, -1.461917,  0.996733,  1.727710 },
-	{  0.532753, -1.191879, -0.996733,  1.511724 },
-	{  0.268248, -1.229676,  0.996733,  1.403730 },
-	{  0.437499, -1.537511, -0.996733,  1.511724 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_7_missing_4_5_6[] {
-	{  1.032705,  0.622221,  0.996733,  1.511724 },
-	{  0.768201,  0.584424, -0.996733,  1.403730 },
-	{  0.937452,  0.276589,  0.996733,  1.511724 },
-	{  1.371207,  0.006550, -0.996733,  1.727710 },
-	{  1.635711,  0.044348,  0.996733,  1.835704 },
-	{  1.466461,  0.352183, -0.996733,  1.727710 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_4_5_7[] {
-	{ -0.533768,  1.226613,  1.056552,  0.951480 },
-	{ -0.511060,  0.972577, -1.056552,  0.971457 },
-	{ -0.259160,  0.770419,  1.056552,  1.041242 },
-	{ -0.029970,  0.822296, -1.056552,  1.091050 },
-	{ -0.052679,  1.076331,  1.056552,  1.071073 },
-	{ -0.304578,  1.278490, -1.056552,  1.001288 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_4_5_7[] {
-	{ -1.069855,  0.525124,  1.056552,  0.868649 },
-	{ -0.857393,  0.284141, -1.056552,  0.931599 },
-	{ -0.594977,  0.266082,  1.056552,  0.993122 },
-	{ -0.545024,  0.489005, -1.056552,  0.991696 },
-	{ -0.757485,  0.729987,  1.056552,  0.928747 },
-	{ -1.019901,  0.748047, -1.056552,  0.867223 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_4_5_7[] {
-	{ -0.722197, -0.585167,  1.056552,  1.013210 },
-	{ -0.444440, -0.671932, -1.056552,  1.082256 },
-	{ -0.325227, -0.495314,  1.056552,  1.099479 },
-	{ -0.483773, -0.231930, -1.056552,  1.047655 },
-	{ -0.761530, -0.145165,  1.056552,  0.978608 },
-	{ -0.880742, -0.321783, -1.056552,  0.961385 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_4_5_7[] {
-	{  0.305551, -1.453866,  1.056552,  1.300480 },
-	{  0.485898, -1.335588, -1.056552,  1.335177 },
-	{  0.392074, -1.067752,  1.056552,  1.298010 },
-	{  0.117903, -0.918194, -1.056552,  1.226145 },
-	{ -0.062443, -1.036472,  1.056552,  1.191448 },
-	{  0.031381, -1.304308, -1.056552,  1.228615 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_6_missing_4_5_7[] {
-	{  1.599778,  0.239679,  1.056552,  1.500451 },
-	{  1.322021,  0.326444, -1.056552,  1.431404 },
-	{  1.202808,  0.149825,  1.056552,  1.414182 },
-	{  1.361353, -0.113559, -1.056552,  1.466006 },
-	{  1.639111, -0.200324,  1.056552,  1.535053 },
-	{  1.758323, -0.023705, -1.056552,  1.552276 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_4_6_7[] {
-	{  0.031381,  1.304308,  1.056552,  1.228615 },
-	{ -0.062443,  1.036472, -1.056552,  1.191448 },
-	{  0.117903,  0.918194,  1.056552,  1.226145 },
-	{  0.392074,  1.067752, -1.056552,  1.298010 },
-	{  0.485898,  1.335588,  1.056552,  1.335177 },
-	{  0.305551,  1.453866, -1.056552,  1.300480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_4_6_7[] {
-	{ -0.880742,  0.321783,  1.056552,  0.961385 },
-	{ -0.761530,  0.145165, -1.056552,  0.978608 },
-	{ -0.483773,  0.231930,  1.056552,  1.047655 },
-	{ -0.325227,  0.495314, -1.056552,  1.099479 },
-	{ -0.444440,  0.671932,  1.056552,  1.082256 },
-	{ -0.722197,  0.585167, -1.056552,  1.013210 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_4_6_7[] {
-	{ -1.019901, -0.748047,  1.056552,  0.867223 },
-	{ -0.757485, -0.729987, -1.056552,  0.928747 },
-	{ -0.545024, -0.489005,  1.056552,  0.991696 },
-	{ -0.594977, -0.266082, -1.056552,  0.993122 },
-	{ -0.857393, -0.284141,  1.056552,  0.931599 },
-	{ -1.069855, -0.525124, -1.056552,  0.868649 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_4_6_7[] {
-	{ -0.304578, -1.278490,  1.056552,  1.001288 },
-	{ -0.052679, -1.076331, -1.056552,  1.071073 },
-	{ -0.029970, -0.822296,  1.056552,  1.091050 },
-	{ -0.259160, -0.770419, -1.056552,  1.041242 },
-	{ -0.511060, -0.972577,  1.056552,  0.971457 },
-	{ -0.533768, -1.226613, -1.056552,  0.951480 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_5_missing_4_6_7[] {
-	{  1.758323,  0.023705,  1.056552,  1.552276 },
-	{  1.639111,  0.200324, -1.056552,  1.535053 },
-	{  1.361353,  0.113559,  1.056552,  1.466006 },
-	{  1.202808, -0.149825, -1.056552,  1.414182 },
-	{  1.322021, -0.326444,  1.056552,  1.431404 },
-	{  1.599778, -0.239679, -1.056552,  1.500451 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_0_missing_5_6_7[] {
-	{  0.437499,  1.537511,  0.996733,  1.511724 },
-	{  0.268248,  1.229676, -0.996733,  1.403730 },
-	{  0.532753,  1.191879,  0.996733,  1.511724 },
-	{  0.966508,  1.461917, -0.996733,  1.727710 },
-	{  1.135758,  1.769753,  0.996733,  1.835704 },
-	{  0.871254,  1.807550, -0.996733,  1.727710 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_1_missing_5_6_7[] {
-	{ -1.052131,  0.156919,  0.996733,  0.716882 },
-	{ -0.886746,  0.034059, -0.996733,  0.772783 },
-	{ -0.453537,  0.243248,  0.996733,  0.981411 },
-	{ -0.185713,  0.575298, -0.996733,  1.134136 },
-	{ -0.351098,  0.698159,  0.996733,  1.078235 },
-	{ -0.784307,  0.488969, -0.996733,  0.869608 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_2_missing_5_6_7[] {
-	{ -1.367780, -0.968419,  0.996733,  0.450909 },
-	{ -0.964640, -0.834334, -0.996733,  0.637959 },
-	{ -0.616494, -0.500699,  0.996733,  0.825009 },
-	{ -0.671489, -0.301148, -0.996733,  0.825009 },
-	{ -1.074630, -0.435232,  0.996733,  0.637959 },
-	{ -1.422775, -0.768868, -0.996733,  0.450909 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_3_missing_5_6_7[] {
-	{ -0.324546, -1.179296,  0.996733,  0.869608 },
-	{  0.080196, -0.866811, -0.996733,  1.078235 },
-	{  0.139339, -0.604169,  0.996733,  1.134136 },
-	{ -0.206259, -0.654011, -0.996733,  0.981411 },
-	{ -0.611001, -0.966496,  0.996733,  0.772783 },
-	{ -0.670144, -1.229138, -0.996733,  0.716882 },
-};
-
-static constexpr MultirotorMixer::Rotor _config_aviata_pos_4_missing_5_6_7[] {
-	{  1.466461, -0.352183,  0.996733,  1.727710 },
-	{  1.635711, -0.044348, -0.996733,  1.835704 },
-	{  1.371207, -0.006550,  0.996733,  1.727710 },
-	{  0.937452, -0.276589, -0.996733,  1.511724 },
-	{  0.768201, -0.584424,  0.996733,  1.403730 },
-	{  1.032705, -0.622221, -0.996733,  1.511724 },
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0[] {
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.257814,  0.625346,  1.004088,  1.151861 },
+	{ -1.101847,  0.431529, -1.004088,  1.126751 },
+	{ -0.887418,  0.438428,  1.004088,  1.120023 },
+	{ -0.828957,  0.639144, -1.004088,  1.138405 },
+	{ -0.984924,  0.832960,  1.004088,  1.163514 },
+	{ -1.199353,  0.826062, -1.004088,  1.170242 },
+	{ -1.058402, -0.322498,  1.004088,  1.048584 },
+	{ -0.836709, -0.374789, -1.004088,  1.035587 },
+	{ -0.724892, -0.208844,  1.004088,  1.048584 },
+	{ -0.834767,  0.009392, -1.004088,  1.074579 },
+	{ -1.056459,  0.061683,  1.004088,  1.087577 },
+	{ -1.168277, -0.104262, -1.004088,  1.074579 },
+	{ -0.280786, -0.998415,  1.004088,  0.952921 },
+	{ -0.123233, -0.878548, -1.004088,  0.959649 },
+	{ -0.179528, -0.650765,  1.004088,  0.984758 },
+	{ -0.393376, -0.542848, -1.004088,  1.003140 },
+	{ -0.550930, -0.662714,  1.004088,  0.996412 },
+	{ -0.494635, -0.890497, -1.004088,  0.971302 },
+	{  0.619516, -1.006460,  1.004088,  0.920910 },
+	{  0.620637, -0.784653, -1.004088,  0.943423 },
+	{  0.429206, -0.628464,  1.004088,  0.965935 },
+	{  0.236654, -0.694082, -1.004088,  0.965935 },
+	{  0.235533, -0.915890,  1.004088,  0.943423 },
+	{  0.426963, -1.072079, -1.004088,  0.920910 },
+	{  1.115119, -0.341923,  1.004088,  0.971302 },
+	{  0.959152, -0.148106, -1.004088,  0.996412 },
+	{  0.744723, -0.155004,  1.004088,  1.003140 },
+	{  0.686262, -0.355720, -1.004088,  0.984758 },
+	{  0.842229, -0.549537,  1.004088,  0.959649 },
+	{  1.056658, -0.542638, -1.004088,  0.952921 },
+	{  0.915707,  0.605922,  1.004088,  1.074579 },
+	{  0.694014,  0.658213, -1.004088,  1.087577 },
+	{  0.582197,  0.492268,  1.004088,  1.074579 },
+	{  0.692072,  0.274031, -1.004088,  1.048584 },
+	{  0.913765,  0.221740,  1.004088,  1.035587 },
+	{  1.025582,  0.387686, -1.004088,  1.048584 },
+	{  0.138091,  1.281838,  1.004088,  1.170242 },
+	{ -0.019462,  1.161972, -1.004088,  1.163514 },
+	{  0.036833,  0.934189,  1.004088,  1.138405 },
+	{  0.250682,  0.826272, -1.004088,  1.120023 },
+	{  0.408235,  0.946138,  1.004088,  1.126751 },
+	{  0.351940,  1.173921, -1.004088,  1.151861 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1[] {
+	{ -0.826062,  1.199353,  1.004088,  1.170242 },
+	{ -0.832960,  0.984924, -1.004088,  1.163514 },
+	{ -0.639144,  0.828957,  1.004088,  1.138405 },
+	{ -0.438428,  0.887418, -1.004088,  1.120023 },
+	{ -0.431529,  1.101847,  1.004088,  1.126751 },
+	{ -0.625346,  1.257814, -1.004088,  1.151861 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.173921, -0.351940,  1.004088,  1.151861 },
+	{ -0.946138, -0.408235, -1.004088,  1.126751 },
+	{ -0.826272, -0.250682,  1.004088,  1.120023 },
+	{ -0.934189, -0.036833, -1.004088,  1.138405 },
+	{ -1.161972,  0.019462,  1.004088,  1.163514 },
+	{ -1.281838, -0.138091, -1.004088,  1.170242 },
+	{ -0.387686, -1.025582,  1.004088,  1.048584 },
+	{ -0.221740, -0.913765, -1.004088,  1.035587 },
+	{ -0.274031, -0.692072,  1.004088,  1.048584 },
+	{ -0.492268, -0.582197, -1.004088,  1.074579 },
+	{ -0.658213, -0.694014,  1.004088,  1.087577 },
+	{ -0.605922, -0.915707, -1.004088,  1.074579 },
+	{  0.542638, -1.056658,  1.004088,  0.952921 },
+	{  0.549537, -0.842229, -1.004088,  0.959649 },
+	{  0.355720, -0.686262,  1.004088,  0.984758 },
+	{  0.155004, -0.744723, -1.004088,  1.003140 },
+	{  0.148106, -0.959152,  1.004088,  0.996412 },
+	{  0.341923, -1.115119, -1.004088,  0.971302 },
+	{  1.072079, -0.426963,  1.004088,  0.920910 },
+	{  0.915890, -0.235533, -1.004088,  0.943423 },
+	{  0.694082, -0.236654,  1.004088,  0.965935 },
+	{  0.628464, -0.429206, -1.004088,  0.965935 },
+	{  0.784653, -0.620637,  1.004088,  0.943423 },
+	{  1.006460, -0.619516, -1.004088,  0.920910 },
+	{  0.890497,  0.494635,  1.004088,  0.971302 },
+	{  0.662714,  0.550930, -1.004088,  0.996412 },
+	{  0.542848,  0.393376,  1.004088,  1.003140 },
+	{  0.650765,  0.179528, -1.004088,  0.984758 },
+	{  0.878548,  0.123233,  1.004088,  0.959649 },
+	{  0.998415,  0.280786, -1.004088,  0.952921 },
+	{  0.104262,  1.168277,  1.004088,  1.074579 },
+	{ -0.061683,  1.056459, -1.004088,  1.087577 },
+	{ -0.009392,  0.834767,  1.004088,  1.074579 },
+	{  0.208844,  0.724892, -1.004088,  1.048584 },
+	{  0.374789,  0.836709,  1.004088,  1.035587 },
+	{  0.322498,  1.058402, -1.004088,  1.048584 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2[] {
+	{ -0.605922,  0.915707,  1.004088,  1.074579 },
+	{ -0.658213,  0.694014, -1.004088,  1.087577 },
+	{ -0.492268,  0.582197,  1.004088,  1.074579 },
+	{ -0.274031,  0.692072, -1.004088,  1.048584 },
+	{ -0.221740,  0.913765,  1.004088,  1.035587 },
+	{ -0.387686,  1.025582, -1.004088,  1.048584 },
+	{ -1.281838,  0.138091,  1.004088,  1.170242 },
+	{ -1.161972, -0.019462, -1.004088,  1.163514 },
+	{ -0.934189,  0.036833,  1.004088,  1.138405 },
+	{ -0.826272,  0.250682, -1.004088,  1.120023 },
+	{ -0.946138,  0.408235,  1.004088,  1.126751 },
+	{ -1.173921,  0.351940, -1.004088,  1.151861 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.625346, -1.257814,  1.004088,  1.151861 },
+	{ -0.431529, -1.101847, -1.004088,  1.126751 },
+	{ -0.438428, -0.887418,  1.004088,  1.120023 },
+	{ -0.639144, -0.828957, -1.004088,  1.138405 },
+	{ -0.832960, -0.984924,  1.004088,  1.163514 },
+	{ -0.826062, -1.199353, -1.004088,  1.170242 },
+	{  0.322498, -1.058402,  1.004088,  1.048584 },
+	{  0.374789, -0.836709, -1.004088,  1.035587 },
+	{  0.208844, -0.724892,  1.004088,  1.048584 },
+	{ -0.009392, -0.834767, -1.004088,  1.074579 },
+	{ -0.061683, -1.056459,  1.004088,  1.087577 },
+	{  0.104262, -1.168277, -1.004088,  1.074579 },
+	{  0.998415, -0.280786,  1.004088,  0.952921 },
+	{  0.878548, -0.123233, -1.004088,  0.959649 },
+	{  0.650765, -0.179528,  1.004088,  0.984758 },
+	{  0.542848, -0.393376, -1.004088,  1.003140 },
+	{  0.662714, -0.550930,  1.004088,  0.996412 },
+	{  0.890497, -0.494635, -1.004088,  0.971302 },
+	{  1.006460,  0.619516,  1.004088,  0.920910 },
+	{  0.784653,  0.620637, -1.004088,  0.943423 },
+	{  0.628464,  0.429206,  1.004088,  0.965935 },
+	{  0.694082,  0.236654, -1.004088,  0.965935 },
+	{  0.915890,  0.235533,  1.004088,  0.943423 },
+	{  1.072079,  0.426963, -1.004088,  0.920910 },
+	{  0.341923,  1.115119,  1.004088,  0.971302 },
+	{  0.148106,  0.959152, -1.004088,  0.996412 },
+	{  0.155004,  0.744723,  1.004088,  1.003140 },
+	{  0.355720,  0.686262, -1.004088,  0.984758 },
+	{  0.549537,  0.842229,  1.004088,  0.959649 },
+	{  0.542638,  1.056658, -1.004088,  0.952921 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3[] {
+	{ -0.494635,  0.890497,  1.004088,  0.971302 },
+	{ -0.550930,  0.662714, -1.004088,  0.996412 },
+	{ -0.393376,  0.542848,  1.004088,  1.003140 },
+	{ -0.179528,  0.650765, -1.004088,  0.984758 },
+	{ -0.123233,  0.878548,  1.004088,  0.959649 },
+	{ -0.280786,  0.998415, -1.004088,  0.952921 },
+	{ -1.168277,  0.104262,  1.004088,  1.074579 },
+	{ -1.056459, -0.061683, -1.004088,  1.087577 },
+	{ -0.834767, -0.009392,  1.004088,  1.074579 },
+	{ -0.724892,  0.208844, -1.004088,  1.048584 },
+	{ -0.836709,  0.374789,  1.004088,  1.035587 },
+	{ -1.058402,  0.322498, -1.004088,  1.048584 },
+	{ -1.199353, -0.826062,  1.004088,  1.170242 },
+	{ -0.984924, -0.832960, -1.004088,  1.163514 },
+	{ -0.828957, -0.639144,  1.004088,  1.138405 },
+	{ -0.887418, -0.438428, -1.004088,  1.120023 },
+	{ -1.101847, -0.431529,  1.004088,  1.126751 },
+	{ -1.257814, -0.625346, -1.004088,  1.151861 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.351940, -1.173921,  1.004088,  1.151861 },
+	{  0.408235, -0.946138, -1.004088,  1.126751 },
+	{  0.250682, -0.826272,  1.004088,  1.120023 },
+	{  0.036833, -0.934189, -1.004088,  1.138405 },
+	{ -0.019462, -1.161972,  1.004088,  1.163514 },
+	{  0.138091, -1.281838, -1.004088,  1.170242 },
+	{  1.025582, -0.387686,  1.004088,  1.048584 },
+	{  0.913765, -0.221740, -1.004088,  1.035587 },
+	{  0.692072, -0.274031,  1.004088,  1.048584 },
+	{  0.582197, -0.492268, -1.004088,  1.074579 },
+	{  0.694014, -0.658213,  1.004088,  1.087577 },
+	{  0.915707, -0.605922, -1.004088,  1.074579 },
+	{  1.056658,  0.542638,  1.004088,  0.952921 },
+	{  0.842229,  0.549537, -1.004088,  0.959649 },
+	{  0.686262,  0.355720,  1.004088,  0.984758 },
+	{  0.744723,  0.155004, -1.004088,  1.003140 },
+	{  0.959152,  0.148106,  1.004088,  0.996412 },
+	{  1.115119,  0.341923, -1.004088,  0.971302 },
+	{  0.426963,  1.072079,  1.004088,  0.920910 },
+	{  0.235533,  0.915890, -1.004088,  0.943423 },
+	{  0.236654,  0.694082,  1.004088,  0.965935 },
+	{  0.429206,  0.628464, -1.004088,  0.965935 },
+	{  0.620637,  0.784653,  1.004088,  0.943423 },
+	{  0.619516,  1.006460, -1.004088,  0.920910 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_4[] {
+	{ -0.619516,  1.006460,  1.004088,  0.920910 },
+	{ -0.620637,  0.784653, -1.004088,  0.943423 },
+	{ -0.429206,  0.628464,  1.004088,  0.965935 },
+	{ -0.236654,  0.694082, -1.004088,  0.965935 },
+	{ -0.235533,  0.915890,  1.004088,  0.943423 },
+	{ -0.426963,  1.072079, -1.004088,  0.920910 },
+	{ -1.115119,  0.341923,  1.004088,  0.971302 },
+	{ -0.959152,  0.148106, -1.004088,  0.996412 },
+	{ -0.744723,  0.155004,  1.004088,  1.003140 },
+	{ -0.686262,  0.355720, -1.004088,  0.984758 },
+	{ -0.842229,  0.549537,  1.004088,  0.959649 },
+	{ -1.056658,  0.542638, -1.004088,  0.952921 },
+	{ -0.915707, -0.605922,  1.004088,  1.074579 },
+	{ -0.694014, -0.658213, -1.004088,  1.087577 },
+	{ -0.582197, -0.492268,  1.004088,  1.074579 },
+	{ -0.692072, -0.274031, -1.004088,  1.048584 },
+	{ -0.913765, -0.221740,  1.004088,  1.035587 },
+	{ -1.025582, -0.387686, -1.004088,  1.048584 },
+	{ -0.138091, -1.281838,  1.004088,  1.170242 },
+	{  0.019462, -1.161972, -1.004088,  1.163514 },
+	{ -0.036833, -0.934189,  1.004088,  1.138405 },
+	{ -0.250682, -0.826272, -1.004088,  1.120023 },
+	{ -0.408235, -0.946138,  1.004088,  1.126751 },
+	{ -0.351940, -1.173921, -1.004088,  1.151861 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.257814, -0.625346,  1.004088,  1.151861 },
+	{  1.101847, -0.431529, -1.004088,  1.126751 },
+	{  0.887418, -0.438428,  1.004088,  1.120023 },
+	{  0.828957, -0.639144, -1.004088,  1.138405 },
+	{  0.984924, -0.832960,  1.004088,  1.163514 },
+	{  1.199353, -0.826062, -1.004088,  1.170242 },
+	{  1.058402,  0.322498,  1.004088,  1.048584 },
+	{  0.836709,  0.374789, -1.004088,  1.035587 },
+	{  0.724892,  0.208844,  1.004088,  1.048584 },
+	{  0.834767, -0.009392, -1.004088,  1.074579 },
+	{  1.056459, -0.061683,  1.004088,  1.087577 },
+	{  1.168277,  0.104262, -1.004088,  1.074579 },
+	{  0.280786,  0.998415,  1.004088,  0.952921 },
+	{  0.123233,  0.878548, -1.004088,  0.959649 },
+	{  0.179528,  0.650765,  1.004088,  0.984758 },
+	{  0.393376,  0.542848, -1.004088,  1.003140 },
+	{  0.550930,  0.662714,  1.004088,  0.996412 },
+	{  0.494635,  0.890497, -1.004088,  0.971302 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_5[] {
+	{ -0.542638,  1.056658,  1.004088,  0.952921 },
+	{ -0.549537,  0.842229, -1.004088,  0.959649 },
+	{ -0.355720,  0.686262,  1.004088,  0.984758 },
+	{ -0.155004,  0.744723, -1.004088,  1.003140 },
+	{ -0.148106,  0.959152,  1.004088,  0.996412 },
+	{ -0.341923,  1.115119, -1.004088,  0.971302 },
+	{ -1.072079,  0.426963,  1.004088,  0.920910 },
+	{ -0.915890,  0.235533, -1.004088,  0.943423 },
+	{ -0.694082,  0.236654,  1.004088,  0.965935 },
+	{ -0.628464,  0.429206, -1.004088,  0.965935 },
+	{ -0.784653,  0.620637,  1.004088,  0.943423 },
+	{ -1.006460,  0.619516, -1.004088,  0.920910 },
+	{ -0.890497, -0.494635,  1.004088,  0.971302 },
+	{ -0.662714, -0.550930, -1.004088,  0.996412 },
+	{ -0.542848, -0.393376,  1.004088,  1.003140 },
+	{ -0.650765, -0.179528, -1.004088,  0.984758 },
+	{ -0.878548, -0.123233,  1.004088,  0.959649 },
+	{ -0.998415, -0.280786, -1.004088,  0.952921 },
+	{ -0.104262, -1.168277,  1.004088,  1.074579 },
+	{  0.061683, -1.056459, -1.004088,  1.087577 },
+	{  0.009392, -0.834767,  1.004088,  1.074579 },
+	{ -0.208844, -0.724892, -1.004088,  1.048584 },
+	{ -0.374789, -0.836709,  1.004088,  1.035587 },
+	{ -0.322498, -1.058402, -1.004088,  1.048584 },
+	{  0.826062, -1.199353,  1.004088,  1.170242 },
+	{  0.832960, -0.984924, -1.004088,  1.163514 },
+	{  0.639144, -0.828957,  1.004088,  1.138405 },
+	{  0.438428, -0.887418, -1.004088,  1.120023 },
+	{  0.431529, -1.101847,  1.004088,  1.126751 },
+	{  0.625346, -1.257814, -1.004088,  1.151861 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.173921,  0.351940,  1.004088,  1.151861 },
+	{  0.946138,  0.408235, -1.004088,  1.126751 },
+	{  0.826272,  0.250682,  1.004088,  1.120023 },
+	{  0.934189,  0.036833, -1.004088,  1.138405 },
+	{  1.161972, -0.019462,  1.004088,  1.163514 },
+	{  1.281838,  0.138091, -1.004088,  1.170242 },
+	{  0.387686,  1.025582,  1.004088,  1.048584 },
+	{  0.221740,  0.913765, -1.004088,  1.035587 },
+	{  0.274031,  0.692072,  1.004088,  1.048584 },
+	{  0.492268,  0.582197, -1.004088,  1.074579 },
+	{  0.658213,  0.694014,  1.004088,  1.087577 },
+	{  0.605922,  0.915707, -1.004088,  1.074579 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_6[] {
+	{ -0.322498,  1.058402,  1.004088,  1.048584 },
+	{ -0.374789,  0.836709, -1.004088,  1.035587 },
+	{ -0.208844,  0.724892,  1.004088,  1.048584 },
+	{  0.009392,  0.834767, -1.004088,  1.074579 },
+	{  0.061683,  1.056459,  1.004088,  1.087577 },
+	{ -0.104262,  1.168277, -1.004088,  1.074579 },
+	{ -0.998415,  0.280786,  1.004088,  0.952921 },
+	{ -0.878548,  0.123233, -1.004088,  0.959649 },
+	{ -0.650765,  0.179528,  1.004088,  0.984758 },
+	{ -0.542848,  0.393376, -1.004088,  1.003140 },
+	{ -0.662714,  0.550930,  1.004088,  0.996412 },
+	{ -0.890497,  0.494635, -1.004088,  0.971302 },
+	{ -1.006460, -0.619516,  1.004088,  0.920910 },
+	{ -0.784653, -0.620637, -1.004088,  0.943423 },
+	{ -0.628464, -0.429206,  1.004088,  0.965935 },
+	{ -0.694082, -0.236654, -1.004088,  0.965935 },
+	{ -0.915890, -0.235533,  1.004088,  0.943423 },
+	{ -1.072079, -0.426963, -1.004088,  0.920910 },
+	{ -0.341923, -1.115119,  1.004088,  0.971302 },
+	{ -0.148106, -0.959152, -1.004088,  0.996412 },
+	{ -0.155004, -0.744723,  1.004088,  1.003140 },
+	{ -0.355720, -0.686262, -1.004088,  0.984758 },
+	{ -0.549537, -0.842229,  1.004088,  0.959649 },
+	{ -0.542638, -1.056658, -1.004088,  0.952921 },
+	{  0.605922, -0.915707,  1.004088,  1.074579 },
+	{  0.658213, -0.694014, -1.004088,  1.087577 },
+	{  0.492268, -0.582197,  1.004088,  1.074579 },
+	{  0.274031, -0.692072, -1.004088,  1.048584 },
+	{  0.221740, -0.913765,  1.004088,  1.035587 },
+	{  0.387686, -1.025582, -1.004088,  1.048584 },
+	{  1.281838, -0.138091,  1.004088,  1.170242 },
+	{  1.161972,  0.019462, -1.004088,  1.163514 },
+	{  0.934189, -0.036833,  1.004088,  1.138405 },
+	{  0.826272, -0.250682, -1.004088,  1.120023 },
+	{  0.946138, -0.408235,  1.004088,  1.126751 },
+	{  1.173921, -0.351940, -1.004088,  1.151861 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.625346,  1.257814,  1.004088,  1.151861 },
+	{  0.431529,  1.101847, -1.004088,  1.126751 },
+	{  0.438428,  0.887418,  1.004088,  1.120023 },
+	{  0.639144,  0.828957, -1.004088,  1.138405 },
+	{  0.832960,  0.984924,  1.004088,  1.163514 },
+	{  0.826062,  1.199353, -1.004088,  1.170242 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_7[] {
+	{ -0.351940,  1.173921,  1.004088,  1.151861 },
+	{ -0.408235,  0.946138, -1.004088,  1.126751 },
+	{ -0.250682,  0.826272,  1.004088,  1.120023 },
+	{ -0.036833,  0.934189, -1.004088,  1.138405 },
+	{  0.019462,  1.161972,  1.004088,  1.163514 },
+	{ -0.138091,  1.281838, -1.004088,  1.170242 },
+	{ -1.025582,  0.387686,  1.004088,  1.048584 },
+	{ -0.913765,  0.221740, -1.004088,  1.035587 },
+	{ -0.692072,  0.274031,  1.004088,  1.048584 },
+	{ -0.582197,  0.492268, -1.004088,  1.074579 },
+	{ -0.694014,  0.658213,  1.004088,  1.087577 },
+	{ -0.915707,  0.605922, -1.004088,  1.074579 },
+	{ -1.056658, -0.542638,  1.004088,  0.952921 },
+	{ -0.842229, -0.549537, -1.004088,  0.959649 },
+	{ -0.686262, -0.355720,  1.004088,  0.984758 },
+	{ -0.744723, -0.155004, -1.004088,  1.003140 },
+	{ -0.959152, -0.148106,  1.004088,  0.996412 },
+	{ -1.115119, -0.341923, -1.004088,  0.971302 },
+	{ -0.426963, -1.072079,  1.004088,  0.920910 },
+	{ -0.235533, -0.915890, -1.004088,  0.943423 },
+	{ -0.236654, -0.694082,  1.004088,  0.965935 },
+	{ -0.429206, -0.628464, -1.004088,  0.965935 },
+	{ -0.620637, -0.784653,  1.004088,  0.943423 },
+	{ -0.619516, -1.006460, -1.004088,  0.920910 },
+	{  0.494635, -0.890497,  1.004088,  0.971302 },
+	{  0.550930, -0.662714, -1.004088,  0.996412 },
+	{  0.393376, -0.542848,  1.004088,  1.003140 },
+	{  0.179528, -0.650765, -1.004088,  0.984758 },
+	{  0.123233, -0.878548,  1.004088,  0.959649 },
+	{  0.280786, -0.998415, -1.004088,  0.952921 },
+	{  1.168277, -0.104262,  1.004088,  1.074579 },
+	{  1.056459,  0.061683, -1.004088,  1.087577 },
+	{  0.834767,  0.009392,  1.004088,  1.074579 },
+	{  0.724892, -0.208844, -1.004088,  1.048584 },
+	{  0.836709, -0.374789,  1.004088,  1.035587 },
+	{  1.058402, -0.322498, -1.004088,  1.048584 },
+	{  1.199353,  0.826062,  1.004088,  1.170242 },
+	{  0.984924,  0.832960, -1.004088,  1.163514 },
+	{  0.828957,  0.639144,  1.004088,  1.138405 },
+	{  0.887418,  0.438428, -1.004088,  1.120023 },
+	{  1.101847,  0.431529,  1.004088,  1.126751 },
+	{  1.257814,  0.625346, -1.004088,  1.151861 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1[] {
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.393239,  0.123575,  0.984951,  1.377323 },
+	{ -1.118812, -0.001953, -0.984951,  1.305333 },
+	{ -1.030462,  0.152199,  0.984951,  1.317177 },
+	{ -1.216540,  0.431879, -0.984951,  1.401012 },
+	{ -1.490967,  0.557407,  0.984951,  1.473002 },
+	{ -1.579317,  0.403255, -0.984951,  1.461157 },
+	{ -0.302438, -0.873624,  0.984951,  1.001493 },
+	{ -0.148286, -0.785274, -0.984951,  0.989649 },
+	{ -0.273814, -0.510846,  0.984951,  1.061639 },
+	{ -0.553494, -0.324769, -0.984951,  1.145473 },
+	{ -0.707646, -0.413118,  0.984951,  1.157317 },
+	{ -0.582118, -0.687546, -0.984951,  1.085327 },
+	{  0.758834, -1.152372,  0.984951,  0.760296 },
+	{  0.702410, -0.901899, -0.984951,  0.815536 },
+	{  0.436538, -0.667953,  0.984951,  0.905501 },
+	{  0.227088, -0.684479, -0.984951,  0.940226 },
+	{  0.283512, -0.934952,  0.984951,  0.884986 },
+	{  0.549384, -1.168899, -0.984951,  0.795021 },
+	{  1.168899, -0.549384,  0.984951,  0.795021 },
+	{  0.934952, -0.283512, -0.984951,  0.884986 },
+	{  0.684479, -0.227088,  0.984951,  0.940226 },
+	{  0.667953, -0.436538, -0.984951,  0.905501 },
+	{  0.901899, -0.702410,  0.984951,  0.815536 },
+	{  1.152372, -0.758834, -0.984951,  0.760296 },
+	{  0.687546,  0.582118,  0.984951,  1.085327 },
+	{  0.413118,  0.707646, -0.984951,  1.157317 },
+	{  0.324769,  0.553494,  0.984951,  1.145473 },
+	{  0.510846,  0.273814, -0.984951,  1.061639 },
+	{  0.785274,  0.148286,  0.984951,  0.989649 },
+	{  0.873624,  0.302438, -0.984951,  1.001493 },
+	{ -0.403255,  1.579317,  0.984951,  1.461157 },
+	{ -0.557407,  1.490967, -0.984951,  1.473002 },
+	{ -0.431879,  1.216540,  0.984951,  1.401012 },
+	{ -0.152199,  1.030462, -0.984951,  1.317177 },
+	{  0.001953,  1.118812,  0.984951,  1.305333 },
+	{ -0.123575,  1.393239, -0.984951,  1.377323 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2[] {
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.459719,  0.511468,  1.006655,  1.403578 },
+	{ -1.310668,  0.327351, -1.006655,  1.363599 },
+	{ -1.080549,  0.347526,  1.006655,  1.323620 },
+	{ -0.999482,  0.551818, -1.006655,  1.323620 },
+	{ -1.148534,  0.735935,  1.006655,  1.363599 },
+	{ -1.378652,  0.715760, -1.006655,  1.403578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.563774, -1.051440,  1.006655,  1.130681 },
+	{ -0.384111, -0.921844, -1.006655,  1.107599 },
+	{ -0.423362, -0.697596,  1.006655,  1.130681 },
+	{ -0.642275, -0.602944, -1.006655,  1.176845 },
+	{ -0.821938, -0.732540,  1.006655,  1.199927 },
+	{ -0.782687, -0.956788, -1.006655,  1.176845 },
+	{  0.398991, -1.003735,  1.006655,  0.960795 },
+	{  0.420636, -0.781907, -1.006655,  0.972743 },
+	{  0.230163, -0.637605,  1.006655,  1.017334 },
+	{  0.018045, -0.715133, -1.006655,  1.049977 },
+	{ -0.003600, -0.936961,  1.006655,  1.038029 },
+	{  0.186872, -1.081262, -1.006655,  0.993438 },
+	{  0.990642, -0.308653,  1.006655,  0.903947 },
+	{  0.841591, -0.124536, -1.006655,  0.943926 },
+	{  0.611472, -0.144711,  1.006655,  0.983906 },
+	{  0.530406, -0.349003, -1.006655,  0.983906 },
+	{  0.679457, -0.533120,  1.006655,  0.943926 },
+	{  0.909575, -0.512945, -1.006655,  0.903947 },
+	{  0.864599,  0.626637,  1.006655,  0.993438 },
+	{  0.632163,  0.665189, -1.006655,  1.038029 },
+	{  0.497200,  0.492356,  1.006655,  1.049977 },
+	{  0.594672,  0.280971, -1.006655,  1.017334 },
+	{  0.827108,  0.242419,  1.006655,  0.972743 },
+	{  0.962072,  0.415252, -1.006655,  0.960795 },
+	{  0.094697,  1.254255,  1.006655,  1.176845 },
+	{ -0.084966,  1.124659, -1.006655,  1.199927 },
+	{ -0.045715,  0.900411,  1.006655,  1.176845 },
+	{  0.173198,  0.805759, -1.006655,  1.130681 },
+	{  0.352861,  0.935355,  1.006655,  1.107599 },
+	{  0.313610,  1.159603, -1.006655,  1.130681 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_3[] {
+	{ -0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.276048,  0.370021,  1.028358,  1.212276 },
+	{ -1.141436,  0.187568, -1.028358,  1.200886 },
+	{ -0.922203,  0.217586,  1.028358,  1.182335 },
+	{ -0.837583,  0.430057, -1.028358,  1.175175 },
+	{ -0.972195,  0.612511,  1.028358,  1.186565 },
+	{ -1.191428,  0.582493, -1.028358,  1.205116 },
+	{ -1.191428, -0.582493,  1.028358,  1.205116 },
+	{ -0.972195, -0.612511, -1.028358,  1.186565 },
+	{ -0.837583, -0.430057,  1.028358,  1.175175 },
+	{ -0.922203, -0.217586, -1.028358,  1.182335 },
+	{ -1.141436, -0.187568,  1.028358,  1.200886 },
+	{ -1.276048, -0.370021, -1.028358,  1.212276 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.431856, -1.105782,  1.028358,  1.067763 },
+	{  0.460719, -0.877771, -1.028358,  1.065321 },
+	{  0.285289, -0.737770,  1.028358,  1.080164 },
+	{  0.080996, -0.825779, -1.028358,  1.097450 },
+	{  0.052134, -1.053789,  1.028358,  1.099893 },
+	{  0.227564, -1.193790, -1.028358,  1.085049 },
+	{  1.019622, -0.370021,  1.028358,  1.018029 },
+	{  0.885010, -0.187568, -1.028358,  1.029419 },
+	{  0.665777, -0.217586,  1.028358,  1.047970 },
+	{  0.581156, -0.430057, -1.028358,  1.055130 },
+	{  0.715768, -0.612511,  1.028358,  1.043740 },
+	{  0.935001, -0.582493, -1.028358,  1.025189 },
+	{  0.935001,  0.582493,  1.028358,  1.025189 },
+	{  0.715768,  0.612511, -1.028358,  1.043740 },
+	{  0.581156,  0.430057,  1.028358,  1.055130 },
+	{  0.665777,  0.217586, -1.028358,  1.047970 },
+	{  0.885010,  0.187568,  1.028358,  1.029419 },
+	{  1.019622,  0.370021, -1.028358,  1.018029 },
+	{  0.227564,  1.193790,  1.028358,  1.085049 },
+	{  0.052134,  1.053789, -1.028358,  1.099893 },
+	{  0.080996,  0.825779,  1.028358,  1.097450 },
+	{  0.285289,  0.737770, -1.028358,  1.080164 },
+	{  0.460719,  0.877771,  1.028358,  1.065321 },
+	{  0.431856,  1.105782, -1.028358,  1.067763 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_4[] {
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.306639,  0.622273,  1.037348,  1.104304 },
+	{ -1.112901,  0.402418, -1.037348,  1.104304 },
+	{ -0.892664,  0.389918,  1.037348,  1.104304 },
+	{ -0.866166,  0.597274, -1.037348,  1.104304 },
+	{ -1.059904,  0.817129,  1.037348,  1.104304 },
+	{ -1.280141,  0.829629, -1.037348,  1.104304 },
+	{ -0.940829, -0.400862,  1.037348,  1.104304 },
+	{ -0.703106, -0.476773, -1.037348,  1.104304 },
+	{ -0.615650, -0.311204,  1.037348,  1.104304 },
+	{ -0.765917, -0.069722, -1.037348,  1.104304 },
+	{ -1.003640,  0.006189,  1.037348,  1.104304 },
+	{ -1.091096, -0.159381, -1.037348,  1.104304 },
+	{ -0.023894, -1.189177,  1.037348,  1.104304 },
+	{  0.118559, -1.076677, -1.037348,  1.104304 },
+	{  0.022004, -0.830026,  1.037348,  1.104304 },
+	{ -0.217005, -0.695876, -1.037348,  1.104304 },
+	{ -0.359458, -0.808377,  1.037348,  1.104304 },
+	{ -0.262902, -1.055027, -1.037348,  1.104304 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.306639, -0.622273,  1.037348,  1.104304 },
+	{  1.112901, -0.402418, -1.037348,  1.104304 },
+	{  0.892664, -0.389918,  1.037348,  1.104304 },
+	{  0.866166, -0.597274, -1.037348,  1.104304 },
+	{  1.059904, -0.817129,  1.037348,  1.104304 },
+	{  1.280141, -0.829629, -1.037348,  1.104304 },
+	{  0.940829,  0.400862,  1.037348,  1.104304 },
+	{  0.703106,  0.476773, -1.037348,  1.104304 },
+	{  0.615650,  0.311204,  1.037348,  1.104304 },
+	{  0.765917,  0.069722, -1.037348,  1.104304 },
+	{  1.003640, -0.006189,  1.037348,  1.104304 },
+	{  1.091096,  0.159381, -1.037348,  1.104304 },
+	{  0.023894,  1.189177,  1.037348,  1.104304 },
+	{ -0.118559,  1.076677, -1.037348,  1.104304 },
+	{ -0.022004,  0.830026,  1.037348,  1.104304 },
+	{  0.217005,  0.695876, -1.037348,  1.104304 },
+	{  0.359458,  0.808377,  1.037348,  1.104304 },
+	{  0.262902,  1.055027, -1.037348,  1.104304 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_5[] {
+	{ -0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.225644,  0.714046,  1.028358,  1.067763 },
+	{ -1.042760,  0.496970, -1.028358,  1.065321 },
+	{ -0.816058,  0.478091,  1.028358,  1.080164 },
+	{ -0.772240,  0.676288, -1.028358,  1.097450 },
+	{ -0.955124,  0.893364,  1.028358,  1.099893 },
+	{ -1.181826,  0.912243, -1.028358,  1.085049 },
+	{ -0.928480, -0.279413,  1.028358,  1.018029 },
+	{ -0.688722, -0.359703, -1.028358,  1.029419 },
+	{ -0.585193, -0.203518,  1.028358,  1.047970 },
+	{ -0.721422,  0.032956, -1.028358,  1.055130 },
+	{ -0.961180,  0.113247,  1.028358,  1.043740 },
+	{ -1.064709, -0.042938, -1.028358,  1.025189 },
+	{ -0.042938, -1.064709,  1.028358,  1.025189 },
+	{  0.113247, -0.961180, -1.028358,  1.043740 },
+	{  0.032956, -0.721422,  1.028358,  1.055130 },
+	{ -0.203518, -0.585193, -1.028358,  1.047970 },
+	{ -0.359703, -0.688722,  1.028358,  1.029419 },
+	{ -0.279413, -0.928480, -1.028358,  1.018029 },
+	{  0.912243, -1.181826,  1.028358,  1.085049 },
+	{  0.893364, -0.955124, -1.028358,  1.099893 },
+	{  0.676288, -0.772240,  1.028358,  1.097450 },
+	{  0.478091, -0.816058, -1.028358,  1.080164 },
+	{  0.496970, -1.042760,  1.028358,  1.065321 },
+	{  0.714046, -1.225644, -1.028358,  1.067763 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.080368,  0.431301,  1.028358,  1.212276 },
+	{  0.840610,  0.511591, -1.028358,  1.200886 },
+	{  0.737081,  0.355406,  1.028358,  1.182335 },
+	{  0.873310,  0.118931, -1.028358,  1.175175 },
+	{  1.113068,  0.038641,  1.028358,  1.186565 },
+	{  1.216597,  0.194826, -1.028358,  1.205116 },
+	{  0.194826,  1.216597,  1.028358,  1.205116 },
+	{  0.038641,  1.113068, -1.028358,  1.186565 },
+	{  0.118931,  0.873310,  1.028358,  1.175175 },
+	{  0.355406,  0.737081, -1.028358,  1.182335 },
+	{  0.511591,  0.840610,  1.028358,  1.200886 },
+	{  0.431301,  1.080368, -1.028358,  1.212276 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_6[] {
+	{  0.000000,  0.000000, -0.000000,  0.000000 },
+	{ -0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.051440,  0.563774,  1.006655,  1.130681 },
+	{ -0.921844,  0.384111, -1.006655,  1.107599 },
+	{ -0.697596,  0.423362,  1.006655,  1.130681 },
+	{ -0.602944,  0.642275, -1.006655,  1.176845 },
+	{ -0.732540,  0.821938,  1.006655,  1.199927 },
+	{ -0.956788,  0.782687, -1.006655,  1.176845 },
+	{ -1.003735, -0.398991,  1.006655,  0.960795 },
+	{ -0.781907, -0.420636, -1.006655,  0.972743 },
+	{ -0.637605, -0.230163,  1.006655,  1.017334 },
+	{ -0.715133, -0.018045, -1.006655,  1.049977 },
+	{ -0.936961,  0.003600,  1.006655,  1.038029 },
+	{ -1.081262, -0.186872, -1.006655,  0.993438 },
+	{ -0.308653, -0.990642,  1.006655,  0.903947 },
+	{ -0.124536, -0.841591, -1.006655,  0.943926 },
+	{ -0.144711, -0.611472,  1.006655,  0.983906 },
+	{ -0.349003, -0.530406, -1.006655,  0.983906 },
+	{ -0.533120, -0.679457,  1.006655,  0.943926 },
+	{ -0.512945, -0.909575, -1.006655,  0.903947 },
+	{  0.626637, -0.864599,  1.006655,  0.993438 },
+	{  0.665189, -0.632163, -1.006655,  1.038029 },
+	{  0.492356, -0.497200,  1.006655,  1.049977 },
+	{  0.280971, -0.594672, -1.006655,  1.017334 },
+	{  0.242419, -0.827108,  1.006655,  0.972743 },
+	{  0.415252, -0.962072, -1.006655,  0.960795 },
+	{  1.254255, -0.094697,  1.006655,  1.176845 },
+	{  1.124659,  0.084966, -1.006655,  1.199927 },
+	{  0.900411,  0.045715,  1.006655,  1.176845 },
+	{  0.805759, -0.173198, -1.006655,  1.130681 },
+	{  0.935355, -0.352861,  1.006655,  1.107599 },
+	{  1.159603, -0.313610, -1.006655,  1.130681 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.511468,  1.459719,  1.006655,  1.403578 },
+	{  0.327351,  1.310668, -1.006655,  1.363599 },
+	{  0.347526,  1.080549,  1.006655,  1.323620 },
+	{  0.551818,  0.999482, -1.006655,  1.323620 },
+	{  0.735935,  1.148534,  1.006655,  1.363599 },
+	{  0.715760,  1.378652, -1.006655,  1.403578 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_7[] {
+	{ -0.000000,  0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.135046,  0.789108,  0.984951,  1.377323 },
+	{ -1.001934,  0.581035, -0.984951,  1.305333 },
+	{ -0.785143,  0.615268,  0.984951,  1.317177 },
+	{ -0.701466,  0.857574, -0.984951,  1.401012 },
+	{ -0.834578,  1.065647,  0.984951,  1.473002 },
+	{ -1.051368,  1.031414, -0.984951,  1.461157 },
+	{ -1.051368, -0.297153,  0.984951,  1.001493 },
+	{ -0.834578, -0.331387, -0.984951,  0.989649 },
+	{ -0.701466, -0.123314,  0.984951,  1.061639 },
+	{ -0.785143,  0.118992, -0.984951,  1.145473 },
+	{ -1.001934,  0.153225,  0.984951,  1.157317 },
+	{ -1.135046, -0.054848, -0.984951,  1.085327 },
+	{ -0.351813, -0.994286,  0.984951,  0.760296 },
+	{ -0.178338, -0.834627, -0.984951,  0.815536 },
+	{ -0.206879, -0.574600,  0.984951,  0.905501 },
+	{ -0.408895, -0.474234, -0.984951,  0.940226 },
+	{ -0.582370, -0.633894,  0.984951,  0.884986 },
+	{ -0.553829, -0.893920, -0.984951,  0.795021 },
+	{  0.553829, -0.893920,  0.984951,  0.795021 },
+	{  0.582370, -0.633894, -0.984951,  0.884986 },
+	{  0.408895, -0.474234,  0.984951,  0.940226 },
+	{  0.206879, -0.574600, -0.984951,  0.905501 },
+	{  0.178338, -0.834627,  0.984951,  0.815536 },
+	{  0.351813, -0.994286, -0.984951,  0.760296 },
+	{  1.135046, -0.054848,  0.984951,  1.085327 },
+	{  1.001934,  0.153225, -0.984951,  1.157317 },
+	{  0.785143,  0.118992,  0.984951,  1.145473 },
+	{  0.701466, -0.123314, -0.984951,  1.061639 },
+	{  0.834578, -0.331387,  0.984951,  0.989649 },
+	{  1.051368, -0.297153, -0.984951,  1.001493 },
+	{  1.051368,  1.031414,  0.984951,  1.461157 },
+	{  0.834578,  1.065647, -0.984951,  1.473002 },
+	{  0.701466,  0.857574,  0.984951,  1.401012 },
+	{  0.785143,  0.615268, -0.984951,  1.317177 },
+	{  1.001934,  0.581035,  0.984951,  1.305333 },
+	{  1.135046,  0.789108, -0.984951,  1.377323 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2[] {
+	{ -1.031414,  1.051368,  0.984951,  1.461157 },
+	{ -1.065647,  0.834578, -0.984951,  1.473002 },
+	{ -0.857574,  0.701466,  0.984951,  1.401012 },
+	{ -0.615268,  0.785143, -0.984951,  1.317177 },
+	{ -0.581035,  1.001934,  0.984951,  1.305333 },
+	{ -0.789108,  1.135046, -0.984951,  1.377323 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.789108, -1.135046,  0.984951,  1.377323 },
+	{ -0.581035, -1.001934, -0.984951,  1.305333 },
+	{ -0.615268, -0.785143,  0.984951,  1.317177 },
+	{ -0.857574, -0.701466, -0.984951,  1.401012 },
+	{ -1.065647, -0.834578,  0.984951,  1.473002 },
+	{ -1.031414, -1.051368, -0.984951,  1.461157 },
+	{  0.297153, -1.051368,  0.984951,  1.001493 },
+	{  0.331387, -0.834578, -0.984951,  0.989649 },
+	{  0.123314, -0.701466,  0.984951,  1.061639 },
+	{ -0.118992, -0.785143, -0.984951,  1.145473 },
+	{ -0.153225, -1.001934,  0.984951,  1.157317 },
+	{  0.054848, -1.135046, -0.984951,  1.085327 },
+	{  0.994286, -0.351813,  0.984951,  0.760296 },
+	{  0.834627, -0.178338, -0.984951,  0.815536 },
+	{  0.574600, -0.206879,  0.984951,  0.905501 },
+	{  0.474234, -0.408895, -0.984951,  0.940226 },
+	{  0.633894, -0.582370,  0.984951,  0.884986 },
+	{  0.893920, -0.553829, -0.984951,  0.795021 },
+	{  0.893920,  0.553829,  0.984951,  0.795021 },
+	{  0.633894,  0.582370, -0.984951,  0.884986 },
+	{  0.474234,  0.408895,  0.984951,  0.940226 },
+	{  0.574600,  0.206879, -0.984951,  0.905501 },
+	{  0.834627,  0.178338,  0.984951,  0.815536 },
+	{  0.994286,  0.351813, -0.984951,  0.760296 },
+	{  0.054848,  1.135046,  0.984951,  1.085327 },
+	{ -0.153225,  1.001934, -0.984951,  1.157317 },
+	{ -0.118992,  0.785143,  0.984951,  1.145473 },
+	{  0.123314,  0.701466, -0.984951,  1.061639 },
+	{  0.331387,  0.834578,  0.984951,  0.989649 },
+	{  0.297153,  1.051368, -0.984951,  1.001493 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_3[] {
+	{ -0.782687,  0.956788,  1.006655,  1.176845 },
+	{ -0.821938,  0.732540, -1.006655,  1.199927 },
+	{ -0.642275,  0.602944,  1.006655,  1.176845 },
+	{ -0.423362,  0.697596, -1.006655,  1.130681 },
+	{ -0.384111,  0.921844,  1.006655,  1.107599 },
+	{ -0.563774,  1.051440, -1.006655,  1.130681 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.378652, -0.715760,  1.006655,  1.403578 },
+	{ -1.148534, -0.735935, -1.006655,  1.363599 },
+	{ -0.999482, -0.551818,  1.006655,  1.323620 },
+	{ -1.080549, -0.347526, -1.006655,  1.323620 },
+	{ -1.310668, -0.327351,  1.006655,  1.363599 },
+	{ -1.459719, -0.511468, -1.006655,  1.403578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.313610, -1.159603,  1.006655,  1.130681 },
+	{  0.352861, -0.935355, -1.006655,  1.107599 },
+	{  0.173198, -0.805759,  1.006655,  1.130681 },
+	{ -0.045715, -0.900411, -1.006655,  1.176845 },
+	{ -0.084966, -1.124659,  1.006655,  1.199927 },
+	{  0.094697, -1.254255, -1.006655,  1.176845 },
+	{  0.962072, -0.415252,  1.006655,  0.960795 },
+	{  0.827108, -0.242419, -1.006655,  0.972743 },
+	{  0.594672, -0.280971,  1.006655,  1.017334 },
+	{  0.497200, -0.492356, -1.006655,  1.049977 },
+	{  0.632163, -0.665189,  1.006655,  1.038029 },
+	{  0.864599, -0.626637, -1.006655,  0.993438 },
+	{  0.909575,  0.512945,  1.006655,  0.903947 },
+	{  0.679457,  0.533120, -1.006655,  0.943926 },
+	{  0.530406,  0.349003,  1.006655,  0.983906 },
+	{  0.611472,  0.144711, -1.006655,  0.983906 },
+	{  0.841591,  0.124536,  1.006655,  0.943926 },
+	{  0.990642,  0.308653, -1.006655,  0.903947 },
+	{  0.186872,  1.081262,  1.006655,  0.993438 },
+	{ -0.003600,  0.936961, -1.006655,  1.038029 },
+	{  0.018045,  0.715133,  1.006655,  1.049977 },
+	{  0.230163,  0.637605, -1.006655,  1.017334 },
+	{  0.420636,  0.781907,  1.006655,  0.972743 },
+	{  0.398991,  1.003735, -1.006655,  0.960795 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_4[] {
+	{ -0.912243,  1.181826,  1.028358,  1.085049 },
+	{ -0.893364,  0.955124, -1.028358,  1.099893 },
+	{ -0.676288,  0.772240,  1.028358,  1.097450 },
+	{ -0.478091,  0.816058, -1.028358,  1.080164 },
+	{ -0.496970,  1.042760,  1.028358,  1.065321 },
+	{ -0.714046,  1.225644, -1.028358,  1.067763 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.080368, -0.431301,  1.028358,  1.212276 },
+	{ -0.840610, -0.511591, -1.028358,  1.200886 },
+	{ -0.737081, -0.355406,  1.028358,  1.182335 },
+	{ -0.873310, -0.118931, -1.028358,  1.175175 },
+	{ -1.113068, -0.038641,  1.028358,  1.186565 },
+	{ -1.216597, -0.194826, -1.028358,  1.205116 },
+	{ -0.194826, -1.216597,  1.028358,  1.205116 },
+	{ -0.038641, -1.113068, -1.028358,  1.186565 },
+	{ -0.118931, -0.873310,  1.028358,  1.175175 },
+	{ -0.355406, -0.737081, -1.028358,  1.182335 },
+	{ -0.511591, -0.840610,  1.028358,  1.200886 },
+	{ -0.431301, -1.080368, -1.028358,  1.212276 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.225644, -0.714046,  1.028358,  1.067763 },
+	{  1.042760, -0.496970, -1.028358,  1.065321 },
+	{  0.816058, -0.478091,  1.028358,  1.080164 },
+	{  0.772240, -0.676288, -1.028358,  1.097450 },
+	{  0.955124, -0.893364,  1.028358,  1.099893 },
+	{  1.181826, -0.912243, -1.028358,  1.085049 },
+	{  0.928480,  0.279413,  1.028358,  1.018029 },
+	{  0.688722,  0.359703, -1.028358,  1.029419 },
+	{  0.585193,  0.203518,  1.028358,  1.047970 },
+	{  0.721422, -0.032956, -1.028358,  1.055130 },
+	{  0.961180, -0.113247,  1.028358,  1.043740 },
+	{  1.064709,  0.042938, -1.028358,  1.025189 },
+	{  0.042938,  1.064709,  1.028358,  1.025189 },
+	{ -0.113247,  0.961180, -1.028358,  1.043740 },
+	{ -0.032956,  0.721422,  1.028358,  1.055130 },
+	{  0.203518,  0.585193, -1.028358,  1.047970 },
+	{  0.359703,  0.688722,  1.028358,  1.029419 },
+	{  0.279413,  0.928480, -1.028358,  1.018029 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_5[] {
+	{ -0.829629,  1.280141,  1.037348,  1.104304 },
+	{ -0.817129,  1.059904, -1.037348,  1.104304 },
+	{ -0.597274,  0.866166,  1.037348,  1.104304 },
+	{ -0.389918,  0.892664, -1.037348,  1.104304 },
+	{ -0.402418,  1.112901,  1.037348,  1.104304 },
+	{ -0.622273,  1.306639, -1.037348,  1.104304 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.055027, -0.262902,  1.037348,  1.104304 },
+	{ -0.808377, -0.359458, -1.037348,  1.104304 },
+	{ -0.695876, -0.217005,  1.037348,  1.104304 },
+	{ -0.830026,  0.022004, -1.037348,  1.104304 },
+	{ -1.076677,  0.118559,  1.037348,  1.104304 },
+	{ -1.189177, -0.023894, -1.037348,  1.104304 },
+	{ -0.159381, -1.091096,  1.037348,  1.104304 },
+	{  0.006189, -1.003640, -1.037348,  1.104304 },
+	{ -0.069722, -0.765917,  1.037348,  1.104304 },
+	{ -0.311204, -0.615650, -1.037348,  1.104304 },
+	{ -0.476773, -0.703106,  1.037348,  1.104304 },
+	{ -0.400862, -0.940829, -1.037348,  1.104304 },
+	{  0.829629, -1.280141,  1.037348,  1.104304 },
+	{  0.817129, -1.059904, -1.037348,  1.104304 },
+	{  0.597274, -0.866166,  1.037348,  1.104304 },
+	{  0.389918, -0.892664, -1.037348,  1.104304 },
+	{  0.402418, -1.112901,  1.037348,  1.104304 },
+	{  0.622273, -1.306639, -1.037348,  1.104304 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.055027,  0.262902,  1.037348,  1.104304 },
+	{  0.808377,  0.359458, -1.037348,  1.104304 },
+	{  0.695876,  0.217005,  1.037348,  1.104304 },
+	{  0.830026, -0.022004, -1.037348,  1.104304 },
+	{  1.076677, -0.118559,  1.037348,  1.104304 },
+	{  1.189177,  0.023894, -1.037348,  1.104304 },
+	{  0.159381,  1.091096,  1.037348,  1.104304 },
+	{ -0.006189,  1.003640, -1.037348,  1.104304 },
+	{  0.069722,  0.765917,  1.037348,  1.104304 },
+	{  0.311204,  0.615650, -1.037348,  1.104304 },
+	{  0.476773,  0.703106,  1.037348,  1.104304 },
+	{  0.400862,  0.940829, -1.037348,  1.104304 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_6[] {
+	{ -0.582493,  1.191428,  1.028358,  1.205116 },
+	{ -0.612511,  0.972195, -1.028358,  1.186565 },
+	{ -0.430057,  0.837583,  1.028358,  1.175175 },
+	{ -0.217586,  0.922203, -1.028358,  1.182335 },
+	{ -0.187568,  1.141436,  1.028358,  1.200886 },
+	{ -0.370021,  1.276048, -1.028358,  1.212276 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.105782, -0.431856,  1.028358,  1.067763 },
+	{ -0.877771, -0.460719, -1.028358,  1.065321 },
+	{ -0.737770, -0.285289,  1.028358,  1.080164 },
+	{ -0.825779, -0.080996, -1.028358,  1.097450 },
+	{ -1.053789, -0.052134,  1.028358,  1.099893 },
+	{ -1.193790, -0.227564, -1.028358,  1.085049 },
+	{ -0.370021, -1.019622,  1.028358,  1.018029 },
+	{ -0.187568, -0.885010, -1.028358,  1.029419 },
+	{ -0.217586, -0.665777,  1.028358,  1.047970 },
+	{ -0.430057, -0.581156, -1.028358,  1.055130 },
+	{ -0.612511, -0.715768,  1.028358,  1.043740 },
+	{ -0.582493, -0.935001, -1.028358,  1.025189 },
+	{  0.582493, -0.935001,  1.028358,  1.025189 },
+	{  0.612511, -0.715768, -1.028358,  1.043740 },
+	{  0.430057, -0.581156,  1.028358,  1.055130 },
+	{  0.217586, -0.665777, -1.028358,  1.047970 },
+	{  0.187568, -0.885010,  1.028358,  1.029419 },
+	{  0.370021, -1.019622, -1.028358,  1.018029 },
+	{  1.193790, -0.227564,  1.028358,  1.085049 },
+	{  1.053789, -0.052134, -1.028358,  1.099893 },
+	{  0.825779, -0.080996,  1.028358,  1.097450 },
+	{  0.737770, -0.285289, -1.028358,  1.080164 },
+	{  0.877771, -0.460719,  1.028358,  1.065321 },
+	{  1.105782, -0.431856, -1.028358,  1.067763 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.370021,  1.276048,  1.028358,  1.212276 },
+	{  0.187568,  1.141436, -1.028358,  1.200886 },
+	{  0.217586,  0.922203,  1.028358,  1.182335 },
+	{  0.430057,  0.837583, -1.028358,  1.175175 },
+	{  0.612511,  0.972195,  1.028358,  1.186565 },
+	{  0.582493,  1.191428, -1.028358,  1.205116 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_7[] {
+	{ -0.715760,  1.378652,  1.006655,  1.403578 },
+	{ -0.735935,  1.148534, -1.006655,  1.363599 },
+	{ -0.551818,  0.999482,  1.006655,  1.323620 },
+	{ -0.347526,  1.080549, -1.006655,  1.323620 },
+	{ -0.327351,  1.310668,  1.006655,  1.363599 },
+	{ -0.511468,  1.459719, -1.006655,  1.403578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.159603, -0.313610,  1.006655,  1.130681 },
+	{ -0.935355, -0.352861, -1.006655,  1.107599 },
+	{ -0.805759, -0.173198,  1.006655,  1.130681 },
+	{ -0.900411,  0.045715, -1.006655,  1.176845 },
+	{ -1.124659,  0.084966,  1.006655,  1.199927 },
+	{ -1.254255, -0.094697, -1.006655,  1.176845 },
+	{ -0.415252, -0.962072,  1.006655,  0.960795 },
+	{ -0.242419, -0.827108, -1.006655,  0.972743 },
+	{ -0.280971, -0.594672,  1.006655,  1.017334 },
+	{ -0.492356, -0.497200, -1.006655,  1.049977 },
+	{ -0.665189, -0.632163,  1.006655,  1.038029 },
+	{ -0.626637, -0.864599, -1.006655,  0.993438 },
+	{  0.512945, -0.909575,  1.006655,  0.903947 },
+	{  0.533120, -0.679457, -1.006655,  0.943926 },
+	{  0.349003, -0.530406,  1.006655,  0.983906 },
+	{  0.144711, -0.611472, -1.006655,  0.983906 },
+	{  0.124536, -0.841591,  1.006655,  0.943926 },
+	{  0.308653, -0.990642, -1.006655,  0.903947 },
+	{  1.081262, -0.186872,  1.006655,  0.993438 },
+	{  0.936961,  0.003600, -1.006655,  1.038029 },
+	{  0.715133, -0.018045,  1.006655,  1.049977 },
+	{  0.637605, -0.230163, -1.006655,  1.017334 },
+	{  0.781907, -0.420636,  1.006655,  0.972743 },
+	{  1.003735, -0.398991, -1.006655,  0.960795 },
+	{  0.956788,  0.782687,  1.006655,  1.176845 },
+	{  0.732540,  0.821938, -1.006655,  1.199927 },
+	{  0.602944,  0.642275,  1.006655,  1.176845 },
+	{  0.697596,  0.423362, -1.006655,  1.130681 },
+	{  0.921844,  0.384111,  1.006655,  1.107599 },
+	{  1.051440,  0.563774, -1.006655,  1.130681 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_3[] {
+	{ -0.582118,  0.687546,  0.984951,  1.085327 },
+	{ -0.707646,  0.413118, -0.984951,  1.157317 },
+	{ -0.553494,  0.324769,  0.984951,  1.145473 },
+	{ -0.273814,  0.510846, -0.984951,  1.061639 },
+	{ -0.148286,  0.785274,  0.984951,  0.989649 },
+	{ -0.302438,  0.873624, -0.984951,  1.001493 },
+	{ -1.579317, -0.403255,  0.984951,  1.461157 },
+	{ -1.490967, -0.557407, -0.984951,  1.473002 },
+	{ -1.216540, -0.431879,  0.984951,  1.401012 },
+	{ -1.030462, -0.152199, -0.984951,  1.317177 },
+	{ -1.118812,  0.001953,  0.984951,  1.305333 },
+	{ -1.393239, -0.123575, -0.984951,  1.377323 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.123575, -1.393239,  0.984951,  1.377323 },
+	{  0.001953, -1.118812, -0.984951,  1.305333 },
+	{ -0.152199, -1.030462,  0.984951,  1.317177 },
+	{ -0.431879, -1.216540, -0.984951,  1.401012 },
+	{ -0.557407, -1.490967,  0.984951,  1.473002 },
+	{ -0.403255, -1.579317, -0.984951,  1.461157 },
+	{  0.873624, -0.302438,  0.984951,  1.001493 },
+	{  0.785274, -0.148286, -0.984951,  0.989649 },
+	{  0.510846, -0.273814,  0.984951,  1.061639 },
+	{  0.324769, -0.553494, -0.984951,  1.145473 },
+	{  0.413118, -0.707646,  0.984951,  1.157317 },
+	{  0.687546, -0.582118, -0.984951,  1.085327 },
+	{  1.152372,  0.758834,  0.984951,  0.760296 },
+	{  0.901899,  0.702410, -0.984951,  0.815536 },
+	{  0.667953,  0.436538,  0.984951,  0.905501 },
+	{  0.684479,  0.227088, -0.984951,  0.940226 },
+	{  0.934952,  0.283512,  0.984951,  0.884986 },
+	{  1.168899,  0.549384, -0.984951,  0.795021 },
+	{  0.549384,  1.168899,  0.984951,  0.795021 },
+	{  0.283512,  0.934952, -0.984951,  0.884986 },
+	{  0.227088,  0.684479,  0.984951,  0.940226 },
+	{  0.436538,  0.667953, -0.984951,  0.905501 },
+	{  0.702410,  0.901899,  0.984951,  0.815536 },
+	{  0.758834,  1.152372, -0.984951,  0.760296 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_4[] {
+	{ -0.626637,  0.864599,  1.006655,  0.993438 },
+	{ -0.665189,  0.632163, -1.006655,  1.038029 },
+	{ -0.492356,  0.497200,  1.006655,  1.049977 },
+	{ -0.280971,  0.594672, -1.006655,  1.017334 },
+	{ -0.242419,  0.827108,  1.006655,  0.972743 },
+	{ -0.415252,  0.962072, -1.006655,  0.960795 },
+	{ -1.254255,  0.094697,  1.006655,  1.176845 },
+	{ -1.124659, -0.084966, -1.006655,  1.199927 },
+	{ -0.900411, -0.045715,  1.006655,  1.176845 },
+	{ -0.805759,  0.173198, -1.006655,  1.130681 },
+	{ -0.935355,  0.352861,  1.006655,  1.107599 },
+	{ -1.159603,  0.313610, -1.006655,  1.130681 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.511468, -1.459719,  1.006655,  1.403578 },
+	{ -0.327351, -1.310668, -1.006655,  1.363599 },
+	{ -0.347526, -1.080549,  1.006655,  1.323620 },
+	{ -0.551818, -0.999482, -1.006655,  1.323620 },
+	{ -0.735935, -1.148534,  1.006655,  1.363599 },
+	{ -0.715760, -1.378652, -1.006655,  1.403578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.051440, -0.563774,  1.006655,  1.130681 },
+	{  0.921844, -0.384111, -1.006655,  1.107599 },
+	{  0.697596, -0.423362,  1.006655,  1.130681 },
+	{  0.602944, -0.642275, -1.006655,  1.176845 },
+	{  0.732540, -0.821938,  1.006655,  1.199927 },
+	{  0.956788, -0.782687, -1.006655,  1.176845 },
+	{  1.003735,  0.398991,  1.006655,  0.960795 },
+	{  0.781907,  0.420636, -1.006655,  0.972743 },
+	{  0.637605,  0.230163,  1.006655,  1.017334 },
+	{  0.715133,  0.018045, -1.006655,  1.049977 },
+	{  0.936961, -0.003600,  1.006655,  1.038029 },
+	{  1.081262,  0.186872, -1.006655,  0.993438 },
+	{  0.308653,  0.990642,  1.006655,  0.903947 },
+	{  0.124536,  0.841591, -1.006655,  0.943926 },
+	{  0.144711,  0.611472,  1.006655,  0.983906 },
+	{  0.349003,  0.530406, -1.006655,  0.983906 },
+	{  0.533120,  0.679457,  1.006655,  0.943926 },
+	{  0.512945,  0.909575, -1.006655,  0.903947 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_5[] {
+	{ -0.582493,  0.935001,  1.028358,  1.025189 },
+	{ -0.612511,  0.715768, -1.028358,  1.043740 },
+	{ -0.430057,  0.581156,  1.028358,  1.055130 },
+	{ -0.217586,  0.665777, -1.028358,  1.047970 },
+	{ -0.187568,  0.885010,  1.028358,  1.029419 },
+	{ -0.370021,  1.019622, -1.028358,  1.018029 },
+	{ -1.193790,  0.227564,  1.028358,  1.085049 },
+	{ -1.053789,  0.052134, -1.028358,  1.099893 },
+	{ -0.825779,  0.080996,  1.028358,  1.097450 },
+	{ -0.737770,  0.285289, -1.028358,  1.080164 },
+	{ -0.877771,  0.460719,  1.028358,  1.065321 },
+	{ -1.105782,  0.431856, -1.028358,  1.067763 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.370021, -1.276048,  1.028358,  1.212276 },
+	{ -0.187568, -1.141436, -1.028358,  1.200886 },
+	{ -0.217586, -0.922203,  1.028358,  1.182335 },
+	{ -0.430057, -0.837583, -1.028358,  1.175175 },
+	{ -0.612511, -0.972195,  1.028358,  1.186565 },
+	{ -0.582493, -1.191428, -1.028358,  1.205116 },
+	{  0.582493, -1.191428,  1.028358,  1.205116 },
+	{  0.612511, -0.972195, -1.028358,  1.186565 },
+	{  0.430057, -0.837583,  1.028358,  1.175175 },
+	{  0.217586, -0.922203, -1.028358,  1.182335 },
+	{  0.187568, -1.141436,  1.028358,  1.200886 },
+	{  0.370021, -1.276048, -1.028358,  1.212276 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.105782,  0.431856,  1.028358,  1.067763 },
+	{  0.877771,  0.460719, -1.028358,  1.065321 },
+	{  0.737770,  0.285289,  1.028358,  1.080164 },
+	{  0.825779,  0.080996, -1.028358,  1.097450 },
+	{  1.053789,  0.052134,  1.028358,  1.099893 },
+	{  1.193790,  0.227564, -1.028358,  1.085049 },
+	{  0.370021,  1.019622,  1.028358,  1.018029 },
+	{  0.187568,  0.885010, -1.028358,  1.029419 },
+	{  0.217586,  0.665777,  1.028358,  1.047970 },
+	{  0.430057,  0.581156, -1.028358,  1.055130 },
+	{  0.612511,  0.715768,  1.028358,  1.043740 },
+	{  0.582493,  0.935001, -1.028358,  1.025189 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_6[] {
+	{ -0.400862,  0.940829,  1.037348,  1.104304 },
+	{ -0.476773,  0.703106, -1.037348,  1.104304 },
+	{ -0.311204,  0.615650,  1.037348,  1.104304 },
+	{ -0.069722,  0.765917, -1.037348,  1.104304 },
+	{  0.006189,  1.003640,  1.037348,  1.104304 },
+	{ -0.159381,  1.091096, -1.037348,  1.104304 },
+	{ -1.189177,  0.023894,  1.037348,  1.104304 },
+	{ -1.076677, -0.118559, -1.037348,  1.104304 },
+	{ -0.830026, -0.022004,  1.037348,  1.104304 },
+	{ -0.695876,  0.217005, -1.037348,  1.104304 },
+	{ -0.808377,  0.359458,  1.037348,  1.104304 },
+	{ -1.055027,  0.262902, -1.037348,  1.104304 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.622273, -1.306639,  1.037348,  1.104304 },
+	{ -0.402418, -1.112901, -1.037348,  1.104304 },
+	{ -0.389918, -0.892664,  1.037348,  1.104304 },
+	{ -0.597274, -0.866166, -1.037348,  1.104304 },
+	{ -0.817129, -1.059904,  1.037348,  1.104304 },
+	{ -0.829629, -1.280141, -1.037348,  1.104304 },
+	{  0.400862, -0.940829,  1.037348,  1.104304 },
+	{  0.476773, -0.703106, -1.037348,  1.104304 },
+	{  0.311204, -0.615650,  1.037348,  1.104304 },
+	{  0.069722, -0.765917, -1.037348,  1.104304 },
+	{ -0.006189, -1.003640,  1.037348,  1.104304 },
+	{  0.159381, -1.091096, -1.037348,  1.104304 },
+	{  1.189177, -0.023894,  1.037348,  1.104304 },
+	{  1.076677,  0.118559, -1.037348,  1.104304 },
+	{  0.830026,  0.022004,  1.037348,  1.104304 },
+	{  0.695876, -0.217005, -1.037348,  1.104304 },
+	{  0.808377, -0.359458,  1.037348,  1.104304 },
+	{  1.055027, -0.262902, -1.037348,  1.104304 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.622273,  1.306639,  1.037348,  1.104304 },
+	{  0.402418,  1.112901, -1.037348,  1.104304 },
+	{  0.389918,  0.892664,  1.037348,  1.104304 },
+	{  0.597274,  0.866166, -1.037348,  1.104304 },
+	{  0.817129,  1.059904,  1.037348,  1.104304 },
+	{  0.829629,  1.280141, -1.037348,  1.104304 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_7[] {
+	{ -0.431301,  1.080368,  1.028358,  1.212276 },
+	{ -0.511591,  0.840610, -1.028358,  1.200886 },
+	{ -0.355406,  0.737081,  1.028358,  1.182335 },
+	{ -0.118931,  0.873310, -1.028358,  1.175175 },
+	{ -0.038641,  1.113068,  1.028358,  1.186565 },
+	{ -0.194826,  1.216597, -1.028358,  1.205116 },
+	{ -1.216597,  0.194826,  1.028358,  1.205116 },
+	{ -1.113068,  0.038641, -1.028358,  1.186565 },
+	{ -0.873310,  0.118931,  1.028358,  1.175175 },
+	{ -0.737081,  0.355406, -1.028358,  1.182335 },
+	{ -0.840610,  0.511591,  1.028358,  1.200886 },
+	{ -1.080368,  0.431301, -1.028358,  1.212276 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.714046, -1.225644,  1.028358,  1.067763 },
+	{ -0.496970, -1.042760, -1.028358,  1.065321 },
+	{ -0.478091, -0.816058,  1.028358,  1.080164 },
+	{ -0.676288, -0.772240, -1.028358,  1.097450 },
+	{ -0.893364, -0.955124,  1.028358,  1.099893 },
+	{ -0.912243, -1.181826, -1.028358,  1.085049 },
+	{  0.279413, -0.928480,  1.028358,  1.018029 },
+	{  0.359703, -0.688722, -1.028358,  1.029419 },
+	{  0.203518, -0.585193,  1.028358,  1.047970 },
+	{ -0.032956, -0.721422, -1.028358,  1.055130 },
+	{ -0.113247, -0.961180,  1.028358,  1.043740 },
+	{  0.042938, -1.064709, -1.028358,  1.025189 },
+	{  1.064709, -0.042938,  1.028358,  1.025189 },
+	{  0.961180,  0.113247, -1.028358,  1.043740 },
+	{  0.721422,  0.032956,  1.028358,  1.055130 },
+	{  0.585193, -0.203518, -1.028358,  1.047970 },
+	{  0.688722, -0.359703,  1.028358,  1.029419 },
+	{  0.928480, -0.279413, -1.028358,  1.018029 },
+	{  1.181826,  0.912243,  1.028358,  1.085049 },
+	{  0.955124,  0.893364, -1.028358,  1.099893 },
+	{  0.772240,  0.676288,  1.028358,  1.097450 },
+	{  0.816058,  0.478091, -1.028358,  1.080164 },
+	{  1.042760,  0.496970,  1.028358,  1.065321 },
+	{  1.225644,  0.714046, -1.028358,  1.067763 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_4[] {
+	{ -0.553829,  0.893920,  0.984951,  0.795021 },
+	{ -0.582370,  0.633894, -0.984951,  0.884986 },
+	{ -0.408895,  0.474234,  0.984951,  0.940226 },
+	{ -0.206879,  0.574600, -0.984951,  0.905501 },
+	{ -0.178338,  0.834627,  0.984951,  0.815536 },
+	{ -0.351813,  0.994286, -0.984951,  0.760296 },
+	{ -1.135046,  0.054848,  0.984951,  1.085327 },
+	{ -1.001934, -0.153225, -0.984951,  1.157317 },
+	{ -0.785143, -0.118992,  0.984951,  1.145473 },
+	{ -0.701466,  0.123314, -0.984951,  1.061639 },
+	{ -0.834578,  0.331387,  0.984951,  0.989649 },
+	{ -1.051368,  0.297153, -0.984951,  1.001493 },
+	{ -1.051368, -1.031414,  0.984951,  1.461157 },
+	{ -0.834578, -1.065647, -0.984951,  1.473002 },
+	{ -0.701466, -0.857574,  0.984951,  1.401012 },
+	{ -0.785143, -0.615268, -0.984951,  1.317177 },
+	{ -1.001934, -0.581035,  0.984951,  1.305333 },
+	{ -1.135046, -0.789108, -0.984951,  1.377323 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.135046, -0.789108,  0.984951,  1.377323 },
+	{  1.001934, -0.581035, -0.984951,  1.305333 },
+	{  0.785143, -0.615268,  0.984951,  1.317177 },
+	{  0.701466, -0.857574, -0.984951,  1.401012 },
+	{  0.834578, -1.065647,  0.984951,  1.473002 },
+	{  1.051368, -1.031414, -0.984951,  1.461157 },
+	{  1.051368,  0.297153,  0.984951,  1.001493 },
+	{  0.834578,  0.331387, -0.984951,  0.989649 },
+	{  0.701466,  0.123314,  0.984951,  1.061639 },
+	{  0.785143, -0.118992, -0.984951,  1.145473 },
+	{  1.001934, -0.153225,  0.984951,  1.157317 },
+	{  1.135046,  0.054848, -0.984951,  1.085327 },
+	{  0.351813,  0.994286,  0.984951,  0.760296 },
+	{  0.178338,  0.834627, -0.984951,  0.815536 },
+	{  0.206879,  0.574600,  0.984951,  0.905501 },
+	{  0.408895,  0.474234, -0.984951,  0.940226 },
+	{  0.582370,  0.633894,  0.984951,  0.884986 },
+	{  0.553829,  0.893920, -0.984951,  0.795021 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_5[] {
+	{ -0.512945,  0.909575,  1.006655,  0.903947 },
+	{ -0.533120,  0.679457, -1.006655,  0.943926 },
+	{ -0.349003,  0.530406,  1.006655,  0.983906 },
+	{ -0.144711,  0.611472, -1.006655,  0.983906 },
+	{ -0.124536,  0.841591,  1.006655,  0.943926 },
+	{ -0.308653,  0.990642, -1.006655,  0.903947 },
+	{ -1.081262,  0.186872,  1.006655,  0.993438 },
+	{ -0.936961, -0.003600, -1.006655,  1.038029 },
+	{ -0.715133,  0.018045,  1.006655,  1.049977 },
+	{ -0.637605,  0.230163, -1.006655,  1.017334 },
+	{ -0.781907,  0.420636,  1.006655,  0.972743 },
+	{ -1.003735,  0.398991, -1.006655,  0.960795 },
+	{ -0.956788, -0.782687,  1.006655,  1.176845 },
+	{ -0.732540, -0.821938, -1.006655,  1.199927 },
+	{ -0.602944, -0.642275,  1.006655,  1.176845 },
+	{ -0.697596, -0.423362, -1.006655,  1.130681 },
+	{ -0.921844, -0.384111,  1.006655,  1.107599 },
+	{ -1.051440, -0.563774, -1.006655,  1.130681 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.715760, -1.378652,  1.006655,  1.403578 },
+	{  0.735935, -1.148534, -1.006655,  1.363599 },
+	{  0.551818, -0.999482,  1.006655,  1.323620 },
+	{  0.347526, -1.080549, -1.006655,  1.323620 },
+	{  0.327351, -1.310668,  1.006655,  1.363599 },
+	{  0.511468, -1.459719, -1.006655,  1.403578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.159603,  0.313610,  1.006655,  1.130681 },
+	{  0.935355,  0.352861, -1.006655,  1.107599 },
+	{  0.805759,  0.173198,  1.006655,  1.130681 },
+	{  0.900411, -0.045715, -1.006655,  1.176845 },
+	{  1.124659, -0.084966,  1.006655,  1.199927 },
+	{  1.254255,  0.094697, -1.006655,  1.176845 },
+	{  0.415252,  0.962072,  1.006655,  0.960795 },
+	{  0.242419,  0.827108, -1.006655,  0.972743 },
+	{  0.280971,  0.594672,  1.006655,  1.017334 },
+	{  0.492356,  0.497200, -1.006655,  1.049977 },
+	{  0.665189,  0.632163,  1.006655,  1.038029 },
+	{  0.626637,  0.864599, -1.006655,  0.993438 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_6[] {
+	{ -0.279413,  0.928480,  1.028358,  1.018029 },
+	{ -0.359703,  0.688722, -1.028358,  1.029419 },
+	{ -0.203518,  0.585193,  1.028358,  1.047970 },
+	{  0.032956,  0.721422, -1.028358,  1.055130 },
+	{  0.113247,  0.961180,  1.028358,  1.043740 },
+	{ -0.042938,  1.064709, -1.028358,  1.025189 },
+	{ -1.064709,  0.042938,  1.028358,  1.025189 },
+	{ -0.961180, -0.113247, -1.028358,  1.043740 },
+	{ -0.721422, -0.032956,  1.028358,  1.055130 },
+	{ -0.585193,  0.203518, -1.028358,  1.047970 },
+	{ -0.688722,  0.359703,  1.028358,  1.029419 },
+	{ -0.928480,  0.279413, -1.028358,  1.018029 },
+	{ -1.181826, -0.912243,  1.028358,  1.085049 },
+	{ -0.955124, -0.893364, -1.028358,  1.099893 },
+	{ -0.772240, -0.676288,  1.028358,  1.097450 },
+	{ -0.816058, -0.478091, -1.028358,  1.080164 },
+	{ -1.042760, -0.496970,  1.028358,  1.065321 },
+	{ -1.225644, -0.714046, -1.028358,  1.067763 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.431301, -1.080368,  1.028358,  1.212276 },
+	{  0.511591, -0.840610, -1.028358,  1.200886 },
+	{  0.355406, -0.737081,  1.028358,  1.182335 },
+	{  0.118931, -0.873310, -1.028358,  1.175175 },
+	{  0.038641, -1.113068,  1.028358,  1.186565 },
+	{  0.194826, -1.216597, -1.028358,  1.205116 },
+	{  1.216597, -0.194826,  1.028358,  1.205116 },
+	{  1.113068, -0.038641, -1.028358,  1.186565 },
+	{  0.873310, -0.118931,  1.028358,  1.175175 },
+	{  0.737081, -0.355406, -1.028358,  1.182335 },
+	{  0.840610, -0.511591,  1.028358,  1.200886 },
+	{  1.080368, -0.431301, -1.028358,  1.212276 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.714046,  1.225644,  1.028358,  1.067763 },
+	{  0.496970,  1.042760, -1.028358,  1.065321 },
+	{  0.478091,  0.816058,  1.028358,  1.080164 },
+	{  0.676288,  0.772240, -1.028358,  1.097450 },
+	{  0.893364,  0.955124,  1.028358,  1.099893 },
+	{  0.912243,  1.181826, -1.028358,  1.085049 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_7[] {
+	{ -0.262902,  1.055027,  1.037348,  1.104304 },
+	{ -0.359458,  0.808377, -1.037348,  1.104304 },
+	{ -0.217005,  0.695876,  1.037348,  1.104304 },
+	{  0.022004,  0.830026, -1.037348,  1.104304 },
+	{  0.118559,  1.076677,  1.037348,  1.104304 },
+	{ -0.023894,  1.189177, -1.037348,  1.104304 },
+	{ -1.091096,  0.159381,  1.037348,  1.104304 },
+	{ -1.003640, -0.006189, -1.037348,  1.104304 },
+	{ -0.765917,  0.069722,  1.037348,  1.104304 },
+	{ -0.615650,  0.311204, -1.037348,  1.104304 },
+	{ -0.703106,  0.476773,  1.037348,  1.104304 },
+	{ -0.940829,  0.400862, -1.037348,  1.104304 },
+	{ -1.280141, -0.829629,  1.037348,  1.104304 },
+	{ -1.059904, -0.817129, -1.037348,  1.104304 },
+	{ -0.866166, -0.597274,  1.037348,  1.104304 },
+	{ -0.892664, -0.389918, -1.037348,  1.104304 },
+	{ -1.112901, -0.402418,  1.037348,  1.104304 },
+	{ -1.306639, -0.622273, -1.037348,  1.104304 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.262902, -1.055027,  1.037348,  1.104304 },
+	{  0.359458, -0.808377, -1.037348,  1.104304 },
+	{  0.217005, -0.695876,  1.037348,  1.104304 },
+	{ -0.022004, -0.830026, -1.037348,  1.104304 },
+	{ -0.118559, -1.076677,  1.037348,  1.104304 },
+	{  0.023894, -1.189177, -1.037348,  1.104304 },
+	{  1.091096, -0.159381,  1.037348,  1.104304 },
+	{  1.003640,  0.006189, -1.037348,  1.104304 },
+	{  0.765917, -0.069722,  1.037348,  1.104304 },
+	{  0.615650, -0.311204, -1.037348,  1.104304 },
+	{  0.703106, -0.476773,  1.037348,  1.104304 },
+	{  0.940829, -0.400862, -1.037348,  1.104304 },
+	{  1.280141,  0.829629,  1.037348,  1.104304 },
+	{  1.059904,  0.817129, -1.037348,  1.104304 },
+	{  0.866166,  0.597274,  1.037348,  1.104304 },
+	{  0.892664,  0.389918, -1.037348,  1.104304 },
+	{  1.112901,  0.402418,  1.037348,  1.104304 },
+	{  1.306639,  0.622273, -1.037348,  1.104304 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_4_5[] {
+	{ -0.758834,  1.152372,  0.984951,  0.760296 },
+	{ -0.702410,  0.901899, -0.984951,  0.815536 },
+	{ -0.436538,  0.667953,  0.984951,  0.905501 },
+	{ -0.227088,  0.684479, -0.984951,  0.940226 },
+	{ -0.283512,  0.934952,  0.984951,  0.884986 },
+	{ -0.549384,  1.168899, -0.984951,  0.795021 },
+	{ -1.168899,  0.549384,  0.984951,  0.795021 },
+	{ -0.934952,  0.283512, -0.984951,  0.884986 },
+	{ -0.684479,  0.227088,  0.984951,  0.940226 },
+	{ -0.667953,  0.436538, -0.984951,  0.905501 },
+	{ -0.901899,  0.702410,  0.984951,  0.815536 },
+	{ -1.152372,  0.758834, -0.984951,  0.760296 },
+	{ -0.687546, -0.582118,  0.984951,  1.085327 },
+	{ -0.413118, -0.707646, -0.984951,  1.157317 },
+	{ -0.324769, -0.553494,  0.984951,  1.145473 },
+	{ -0.510846, -0.273814, -0.984951,  1.061639 },
+	{ -0.785274, -0.148286,  0.984951,  0.989649 },
+	{ -0.873624, -0.302438, -0.984951,  1.001493 },
+	{  0.403255, -1.579317,  0.984951,  1.461157 },
+	{  0.557407, -1.490967, -0.984951,  1.473002 },
+	{  0.431879, -1.216540,  0.984951,  1.401012 },
+	{  0.152199, -1.030462, -0.984951,  1.317177 },
+	{ -0.001953, -1.118812,  0.984951,  1.305333 },
+	{  0.123575, -1.393239, -0.984951,  1.377323 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.393239, -0.123575,  0.984951,  1.377323 },
+	{  1.118812,  0.001953, -0.984951,  1.305333 },
+	{  1.030462, -0.152199,  0.984951,  1.317177 },
+	{  1.216540, -0.431879, -0.984951,  1.401012 },
+	{  1.490967, -0.557407,  0.984951,  1.473002 },
+	{  1.579317, -0.403255, -0.984951,  1.461157 },
+	{  0.302438,  0.873624,  0.984951,  1.001493 },
+	{  0.148286,  0.785274, -0.984951,  0.989649 },
+	{  0.273814,  0.510846,  0.984951,  1.061639 },
+	{  0.553494,  0.324769, -0.984951,  1.145473 },
+	{  0.707646,  0.413118,  0.984951,  1.157317 },
+	{  0.582118,  0.687546, -0.984951,  1.085327 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_4_6[] {
+	{ -0.398991,  1.003735,  1.006655,  0.960795 },
+	{ -0.420636,  0.781907, -1.006655,  0.972743 },
+	{ -0.230163,  0.637605,  1.006655,  1.017334 },
+	{ -0.018045,  0.715133, -1.006655,  1.049977 },
+	{  0.003600,  0.936961,  1.006655,  1.038029 },
+	{ -0.186872,  1.081262, -1.006655,  0.993438 },
+	{ -0.990642,  0.308653,  1.006655,  0.903947 },
+	{ -0.841591,  0.124536, -1.006655,  0.943926 },
+	{ -0.611472,  0.144711,  1.006655,  0.983906 },
+	{ -0.530406,  0.349003, -1.006655,  0.983906 },
+	{ -0.679457,  0.533120,  1.006655,  0.943926 },
+	{ -0.909575,  0.512945, -1.006655,  0.903947 },
+	{ -0.864599, -0.626637,  1.006655,  0.993438 },
+	{ -0.632163, -0.665189, -1.006655,  1.038029 },
+	{ -0.497200, -0.492356,  1.006655,  1.049977 },
+	{ -0.594672, -0.280971, -1.006655,  1.017334 },
+	{ -0.827108, -0.242419,  1.006655,  0.972743 },
+	{ -0.962072, -0.415252, -1.006655,  0.960795 },
+	{ -0.094697, -1.254255,  1.006655,  1.176845 },
+	{  0.084966, -1.124659, -1.006655,  1.199927 },
+	{  0.045715, -0.900411,  1.006655,  1.176845 },
+	{ -0.173198, -0.805759, -1.006655,  1.130681 },
+	{ -0.352861, -0.935355,  1.006655,  1.107599 },
+	{ -0.313610, -1.159603, -1.006655,  1.130681 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.459719, -0.511468,  1.006655,  1.403578 },
+	{  1.310668, -0.327351, -1.006655,  1.363599 },
+	{  1.080549, -0.347526,  1.006655,  1.323620 },
+	{  0.999482, -0.551818, -1.006655,  1.323620 },
+	{  1.148534, -0.735935,  1.006655,  1.363599 },
+	{  1.378652, -0.715760, -1.006655,  1.403578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.563774,  1.051440,  1.006655,  1.130681 },
+	{  0.384111,  0.921844, -1.006655,  1.107599 },
+	{  0.423362,  0.697596,  1.006655,  1.130681 },
+	{  0.642275,  0.602944, -1.006655,  1.176845 },
+	{  0.821938,  0.732540,  1.006655,  1.199927 },
+	{  0.782687,  0.956788, -1.006655,  1.176845 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_4_7[] {
+	{ -0.431856,  1.105782,  1.028358,  1.067763 },
+	{ -0.460719,  0.877771, -1.028358,  1.065321 },
+	{ -0.285289,  0.737770,  1.028358,  1.080164 },
+	{ -0.080996,  0.825779, -1.028358,  1.097450 },
+	{ -0.052134,  1.053789,  1.028358,  1.099893 },
+	{ -0.227564,  1.193790, -1.028358,  1.085049 },
+	{ -1.019622,  0.370021,  1.028358,  1.018029 },
+	{ -0.885010,  0.187568, -1.028358,  1.029419 },
+	{ -0.665777,  0.217586,  1.028358,  1.047970 },
+	{ -0.581156,  0.430057, -1.028358,  1.055130 },
+	{ -0.715768,  0.612511,  1.028358,  1.043740 },
+	{ -0.935001,  0.582493, -1.028358,  1.025189 },
+	{ -0.935001, -0.582493,  1.028358,  1.025189 },
+	{ -0.715768, -0.612511, -1.028358,  1.043740 },
+	{ -0.581156, -0.430057,  1.028358,  1.055130 },
+	{ -0.665777, -0.217586, -1.028358,  1.047970 },
+	{ -0.885010, -0.187568,  1.028358,  1.029419 },
+	{ -1.019622, -0.370021, -1.028358,  1.018029 },
+	{ -0.227564, -1.193790,  1.028358,  1.085049 },
+	{ -0.052134, -1.053789, -1.028358,  1.099893 },
+	{ -0.080996, -0.825779,  1.028358,  1.097450 },
+	{ -0.285289, -0.737770, -1.028358,  1.080164 },
+	{ -0.460719, -0.877771,  1.028358,  1.065321 },
+	{ -0.431856, -1.105782, -1.028358,  1.067763 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.276048, -0.370021,  1.028358,  1.212276 },
+	{  1.141436, -0.187568, -1.028358,  1.200886 },
+	{  0.922203, -0.217586,  1.028358,  1.182335 },
+	{  0.837583, -0.430057, -1.028358,  1.175175 },
+	{  0.972195, -0.612511,  1.028358,  1.186565 },
+	{  1.191428, -0.582493, -1.028358,  1.205116 },
+	{  1.191428,  0.582493,  1.028358,  1.205116 },
+	{  0.972195,  0.612511, -1.028358,  1.186565 },
+	{  0.837583,  0.430057,  1.028358,  1.175175 },
+	{  0.922203,  0.217586, -1.028358,  1.182335 },
+	{  1.141436,  0.187568,  1.028358,  1.200886 },
+	{  1.276048,  0.370021, -1.028358,  1.212276 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_5_6[] {
+	{ -0.297153,  1.051368,  0.984951,  1.001493 },
+	{ -0.331387,  0.834578, -0.984951,  0.989649 },
+	{ -0.123314,  0.701466,  0.984951,  1.061639 },
+	{  0.118992,  0.785143, -0.984951,  1.145473 },
+	{  0.153225,  1.001934,  0.984951,  1.157317 },
+	{ -0.054848,  1.135046, -0.984951,  1.085327 },
+	{ -0.994286,  0.351813,  0.984951,  0.760296 },
+	{ -0.834627,  0.178338, -0.984951,  0.815536 },
+	{ -0.574600,  0.206879,  0.984951,  0.905501 },
+	{ -0.474234,  0.408895, -0.984951,  0.940226 },
+	{ -0.633894,  0.582370,  0.984951,  0.884986 },
+	{ -0.893920,  0.553829, -0.984951,  0.795021 },
+	{ -0.893920, -0.553829,  0.984951,  0.795021 },
+	{ -0.633894, -0.582370, -0.984951,  0.884986 },
+	{ -0.474234, -0.408895,  0.984951,  0.940226 },
+	{ -0.574600, -0.206879, -0.984951,  0.905501 },
+	{ -0.834627, -0.178338,  0.984951,  0.815536 },
+	{ -0.994286, -0.351813, -0.984951,  0.760296 },
+	{ -0.054848, -1.135046,  0.984951,  1.085327 },
+	{  0.153225, -1.001934, -0.984951,  1.157317 },
+	{  0.118992, -0.785143,  0.984951,  1.145473 },
+	{ -0.123314, -0.701466, -0.984951,  1.061639 },
+	{ -0.331387, -0.834578,  0.984951,  0.989649 },
+	{ -0.297153, -1.051368, -0.984951,  1.001493 },
+	{  1.031414, -1.051368,  0.984951,  1.461157 },
+	{  1.065647, -0.834578, -0.984951,  1.473002 },
+	{  0.857574, -0.701466,  0.984951,  1.401012 },
+	{  0.615268, -0.785143, -0.984951,  1.317177 },
+	{  0.581035, -1.001934,  0.984951,  1.305333 },
+	{  0.789108, -1.135046, -0.984951,  1.377323 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.789108,  1.135046,  0.984951,  1.377323 },
+	{  0.581035,  1.001934, -0.984951,  1.305333 },
+	{  0.615268,  0.785143,  0.984951,  1.317177 },
+	{  0.857574,  0.701466, -0.984951,  1.401012 },
+	{  1.065647,  0.834578,  0.984951,  1.473002 },
+	{  1.031414,  1.051368, -0.984951,  1.461157 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_5_7[] {
+	{ -0.313610,  1.159603,  1.006655,  1.130681 },
+	{ -0.352861,  0.935355, -1.006655,  1.107599 },
+	{ -0.173198,  0.805759,  1.006655,  1.130681 },
+	{  0.045715,  0.900411, -1.006655,  1.176845 },
+	{  0.084966,  1.124659,  1.006655,  1.199927 },
+	{ -0.094697,  1.254255, -1.006655,  1.176845 },
+	{ -0.962072,  0.415252,  1.006655,  0.960795 },
+	{ -0.827108,  0.242419, -1.006655,  0.972743 },
+	{ -0.594672,  0.280971,  1.006655,  1.017334 },
+	{ -0.497200,  0.492356, -1.006655,  1.049977 },
+	{ -0.632163,  0.665189,  1.006655,  1.038029 },
+	{ -0.864599,  0.626637, -1.006655,  0.993438 },
+	{ -0.909575, -0.512945,  1.006655,  0.903947 },
+	{ -0.679457, -0.533120, -1.006655,  0.943926 },
+	{ -0.530406, -0.349003,  1.006655,  0.983906 },
+	{ -0.611472, -0.144711, -1.006655,  0.983906 },
+	{ -0.841591, -0.124536,  1.006655,  0.943926 },
+	{ -0.990642, -0.308653, -1.006655,  0.903947 },
+	{ -0.186872, -1.081262,  1.006655,  0.993438 },
+	{  0.003600, -0.936961, -1.006655,  1.038029 },
+	{ -0.018045, -0.715133,  1.006655,  1.049977 },
+	{ -0.230163, -0.637605, -1.006655,  1.017334 },
+	{ -0.420636, -0.781907,  1.006655,  0.972743 },
+	{ -0.398991, -1.003735, -1.006655,  0.960795 },
+	{  0.782687, -0.956788,  1.006655,  1.176845 },
+	{  0.821938, -0.732540, -1.006655,  1.199927 },
+	{  0.642275, -0.602944,  1.006655,  1.176845 },
+	{  0.423362, -0.697596, -1.006655,  1.130681 },
+	{  0.384111, -0.921844,  1.006655,  1.107599 },
+	{  0.563774, -1.051440, -1.006655,  1.130681 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.378652,  0.715760,  1.006655,  1.403578 },
+	{  1.148534,  0.735935, -1.006655,  1.363599 },
+	{  0.999482,  0.551818,  1.006655,  1.323620 },
+	{  1.080549,  0.347526, -1.006655,  1.323620 },
+	{  1.310668,  0.327351,  1.006655,  1.363599 },
+	{  1.459719,  0.511468, -1.006655,  1.403578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_6_7[] {
+	{  0.123575,  1.393239,  0.984951,  1.377323 },
+	{ -0.001953,  1.118812, -0.984951,  1.305333 },
+	{  0.152199,  1.030462,  0.984951,  1.317177 },
+	{  0.431879,  1.216540, -0.984951,  1.401012 },
+	{  0.557407,  1.490967,  0.984951,  1.473002 },
+	{  0.403255,  1.579317, -0.984951,  1.461157 },
+	{ -0.873624,  0.302438,  0.984951,  1.001493 },
+	{ -0.785274,  0.148286, -0.984951,  0.989649 },
+	{ -0.510846,  0.273814,  0.984951,  1.061639 },
+	{ -0.324769,  0.553494, -0.984951,  1.145473 },
+	{ -0.413118,  0.707646,  0.984951,  1.157317 },
+	{ -0.687546,  0.582118, -0.984951,  1.085327 },
+	{ -1.152372, -0.758834,  0.984951,  0.760296 },
+	{ -0.901899, -0.702410, -0.984951,  0.815536 },
+	{ -0.667953, -0.436538,  0.984951,  0.905501 },
+	{ -0.684479, -0.227088, -0.984951,  0.940226 },
+	{ -0.934952, -0.283512,  0.984951,  0.884986 },
+	{ -1.168899, -0.549384, -0.984951,  0.795021 },
+	{ -0.549384, -1.168899,  0.984951,  0.795021 },
+	{ -0.283512, -0.934952, -0.984951,  0.884986 },
+	{ -0.227088, -0.684479,  0.984951,  0.940226 },
+	{ -0.436538, -0.667953, -0.984951,  0.905501 },
+	{ -0.702410, -0.901899,  0.984951,  0.815536 },
+	{ -0.758834, -1.152372, -0.984951,  0.760296 },
+	{  0.582118, -0.687546,  0.984951,  1.085327 },
+	{  0.707646, -0.413118, -0.984951,  1.157317 },
+	{  0.553494, -0.324769,  0.984951,  1.145473 },
+	{  0.273814, -0.510846, -0.984951,  1.061639 },
+	{  0.148286, -0.785274,  0.984951,  0.989649 },
+	{  0.302438, -0.873624, -0.984951,  1.001493 },
+	{  1.579317,  0.403255,  0.984951,  1.461157 },
+	{  1.490967,  0.557407, -0.984951,  1.473002 },
+	{  1.216540,  0.431879,  0.984951,  1.401012 },
+	{  1.030462,  0.152199, -0.984951,  1.317177 },
+	{  1.118812, -0.001953,  0.984951,  1.305333 },
+	{  1.393239,  0.123575, -0.984951,  1.377323 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_2[] {
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.959384, -0.602226,  0.947472,  1.659480 },
+	{ -0.713659, -0.565644, -0.947472,  1.520305 },
+	{ -0.870893, -0.267701,  0.947472,  1.659480 },
+	{ -1.273852, -0.006340, -0.947472,  1.937832 },
+	{ -1.519577, -0.042922,  0.947472,  2.077008 },
+	{ -1.362343, -0.340865, -0.947472,  1.937832 },
+	{  0.622564, -1.189640,  0.947472,  0.635133 },
+	{  0.567620, -0.935437, -0.947472,  0.707176 },
+	{  0.191615, -0.632994,  0.947472,  0.976043 },
+	{ -0.129446, -0.584754, -0.947472,  1.172867 },
+	{ -0.074502, -0.838956,  0.947472,  1.100825 },
+	{  0.301503, -1.141399, -0.947472,  0.831958 },
+	{  1.321759, -0.744160,  0.947472,  0.292362 },
+	{  0.998332, -0.421246, -0.947472,  0.533422 },
+	{  0.623814, -0.291470,  0.947472,  0.774481 },
+	{  0.572724, -0.484609, -0.947472,  0.774481 },
+	{  0.896151, -0.807523,  0.947472,  0.533422 },
+	{  1.270669, -0.937299, -0.947472,  0.292362 },
+	{  0.728622,  0.473256,  0.947472,  0.831958 },
+	{  0.326171,  0.675723, -0.947472,  1.100825 },
+	{  0.172528,  0.556811,  0.947472,  1.172867 },
+	{  0.421336,  0.235432, -0.947472,  0.976043 },
+	{  0.823788,  0.032964,  0.947472,  0.707176 },
+	{  0.977431,  0.151877, -0.947472,  0.635133 },
+	{ -0.809396,  1.749463,  0.947472,  1.937832 },
+	{ -1.055120,  1.712881, -0.947472,  2.077008 },
+	{ -0.897886,  1.414938,  0.947472,  1.937832 },
+	{ -0.494928,  1.153577, -0.947472,  1.659480 },
+	{ -0.249203,  1.190160,  0.947472,  1.520305 },
+	{ -0.406437,  1.488103, -0.947472,  1.659480 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_3[] {
+	{ -0.000000, -0.000000,  0.000000,  0.000000 },
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.548440, -0.224534,  1.005587,  1.644953 },
+	{ -1.279596, -0.305817, -1.005587,  1.555970 },
+	{ -1.164210, -0.140358,  1.005587,  1.533774 },
+	{ -1.317667,  0.106383, -1.005587,  1.600563 },
+	{ -1.586511,  0.187666,  1.005587,  1.689546 },
+	{ -1.701898,  0.022207, -1.005587,  1.711742 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.516640, -1.149106,  1.005587,  0.937470 },
+	{  0.494659, -0.911123, -1.005587,  0.963216 },
+	{  0.250844, -0.721738,  1.005587,  1.053151 },
+	{  0.029008, -0.770337, -1.005587,  1.117340 },
+	{  0.050988, -1.008321,  1.005587,  1.091594 },
+	{  0.294804, -1.197705, -1.005587,  1.001659 },
+	{  1.035523, -0.491942,  1.005587,  0.830722 },
+	{  0.829879, -0.266187, -1.005587,  0.911848 },
+	{  0.575884, -0.249269,  1.005587,  0.991137 },
+	{  0.527533, -0.458106, -1.005587,  0.989299 },
+	{  0.733177, -0.683861,  1.005587,  0.908173 },
+	{  0.987172, -0.700779, -1.005587,  0.828885 },
+	{  0.699021,  0.548192,  1.005587,  1.017024 },
+	{  0.430177,  0.629474, -1.005587,  1.106007 },
+	{  0.314791,  0.464016,  1.005587,  1.128203 },
+	{  0.468248,  0.217275, -1.005587,  1.061414 },
+	{  0.737092,  0.135992,  1.005587,  0.972431 },
+	{  0.852479,  0.301451, -1.005587,  0.950235 },
+	{ -0.295746,  1.362000,  1.005587,  1.387241 },
+	{ -0.470305,  1.251196, -1.005587,  1.431957 },
+	{ -0.379492,  1.000284,  1.005587,  1.384058 },
+	{ -0.114120,  0.860176, -1.005587,  1.291443 },
+	{  0.060439,  0.970980,  1.005587,  1.246727 },
+	{ -0.030374,  1.221892, -1.005587,  1.294626 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_4[] {
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.328213,  0.027889,  1.046680,  1.397131 },
+	{ -1.019103, -0.129328, -1.046680,  1.336367 },
+	{ -0.958379,  0.032966,  1.046680,  1.339855 },
+	{ -1.206765,  0.352477, -1.046680,  1.404105 },
+	{ -1.515876,  0.509695,  1.046680,  1.464869 },
+	{ -1.576599,  0.347401, -1.046680,  1.461382 },
+	{ -0.000215, -1.142247,  1.046680,  1.096580 },
+	{  0.141746, -1.056720, -1.046680,  1.081268 },
+	{ -0.042913, -0.747337,  1.046680,  1.134771 },
+	{ -0.369533, -0.523481, -1.046680,  1.203586 },
+	{ -0.511493, -0.609007,  1.046680,  1.218898 },
+	{ -0.326834, -0.918390, -1.046680,  1.165396 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.458243, -0.893887,  1.046680,  0.888939 },
+	{  1.163057, -0.586022, -1.046680,  0.959559 },
+	{  0.892521, -0.506157,  1.046680,  1.008130 },
+	{  0.917173, -0.734158, -1.046680,  0.986081 },
+	{  1.212360, -1.042024,  1.046680,  0.915461 },
+	{  1.482895, -1.121889, -1.046680,  0.866890 },
+	{  0.734359,  0.379122,  1.046680,  1.103481 },
+	{  0.425248,  0.536340, -1.046680,  1.164245 },
+	{  0.364525,  0.374046,  1.046680,  1.160758 },
+	{  0.612911,  0.054534, -1.046680,  1.096507 },
+	{  0.922021, -0.102683,  1.046680,  1.035744 },
+	{  0.982745,  0.059611, -1.046680,  1.039231 },
+	{ -0.593639,  1.549258,  1.046680,  1.404032 },
+	{ -0.735600,  1.463731, -1.046680,  1.419345 },
+	{ -0.550941,  1.154348,  1.046680,  1.365842 },
+	{ -0.224322,  0.930492, -1.046680,  1.297027 },
+	{ -0.082361,  1.016019,  1.046680,  1.281714 },
+	{ -0.267020,  1.325402, -1.046680,  1.335217 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_5[] {
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.325402,  0.267020,  1.046680,  1.335217 },
+	{ -1.016019,  0.082361, -1.046680,  1.281714 },
+	{ -0.930492,  0.224322,  1.046680,  1.297027 },
+	{ -1.154348,  0.550941, -1.046680,  1.365842 },
+	{ -1.463731,  0.735600,  1.046680,  1.419345 },
+	{ -1.549258,  0.593639, -1.046680,  1.404032 },
+	{ -0.059611, -0.982745,  1.046680,  1.039231 },
+	{  0.102683, -0.922021, -1.046680,  1.035744 },
+	{ -0.054534, -0.612911,  1.046680,  1.096507 },
+	{ -0.374046, -0.364525, -1.046680,  1.160758 },
+	{ -0.536340, -0.425248,  1.046680,  1.164245 },
+	{ -0.379122, -0.734359, -1.046680,  1.103481 },
+	{  1.121889, -1.482895,  1.046680,  0.866890 },
+	{  1.042024, -1.212360, -1.046680,  0.915461 },
+	{  0.734158, -0.917173,  1.046680,  0.986081 },
+	{  0.506157, -0.892521, -1.046680,  1.008130 },
+	{  0.586022, -1.163057,  1.046680,  0.959559 },
+	{  0.893887, -1.458243, -1.046680,  0.888939 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.918390,  0.326834,  1.046680,  1.165396 },
+	{  0.609007,  0.511493, -1.046680,  1.218898 },
+	{  0.523481,  0.369533,  1.046680,  1.203586 },
+	{  0.747337,  0.042913, -1.046680,  1.134771 },
+	{  1.056720, -0.141746,  1.046680,  1.081268 },
+	{  1.142247,  0.000215, -1.046680,  1.096580 },
+	{ -0.347401,  1.576599,  1.046680,  1.461382 },
+	{ -0.509695,  1.515876, -1.046680,  1.464869 },
+	{ -0.352477,  1.206765,  1.046680,  1.404105 },
+	{ -0.032966,  0.958379, -1.046680,  1.339855 },
+	{  0.129328,  1.019103,  1.046680,  1.336367 },
+	{ -0.027889,  1.328213, -1.046680,  1.397131 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_6[] {
+	{  0.000000, -0.000000, -0.000000,  0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.221892,  0.030374,  1.005587,  1.294626 },
+	{ -0.970980, -0.060439, -1.005587,  1.246727 },
+	{ -0.860176,  0.114120,  1.005587,  1.291443 },
+	{ -1.000284,  0.379492, -1.005587,  1.384058 },
+	{ -1.251196,  0.470305,  1.005587,  1.431957 },
+	{ -1.362000,  0.295746, -1.005587,  1.387241 },
+	{ -0.301451, -0.852479,  1.005587,  0.950235 },
+	{ -0.135992, -0.737092, -1.005587,  0.972431 },
+	{ -0.217275, -0.468248,  1.005587,  1.061414 },
+	{ -0.464016, -0.314791, -1.005587,  1.128203 },
+	{ -0.629474, -0.430177,  1.005587,  1.106007 },
+	{ -0.548192, -0.699021, -1.005587,  1.017024 },
+	{  0.700779, -0.987172,  1.005587,  0.828885 },
+	{  0.683861, -0.733177, -1.005587,  0.908173 },
+	{  0.458106, -0.527533,  1.005587,  0.989299 },
+	{  0.249269, -0.575884, -1.005587,  0.991137 },
+	{  0.266187, -0.829879,  1.005587,  0.911848 },
+	{  0.491942, -1.035523, -1.005587,  0.830722 },
+	{  1.197705, -0.294804,  1.005587,  1.001659 },
+	{  1.008321, -0.050988, -1.005587,  1.091594 },
+	{  0.770337, -0.029008,  1.005587,  1.117340 },
+	{  0.721738, -0.250844, -1.005587,  1.053151 },
+	{  0.911123, -0.494659,  1.005587,  0.963216 },
+	{  1.149106, -0.516640, -1.005587,  0.937470 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.022207,  1.701898,  1.005587,  1.711742 },
+	{ -0.187666,  1.586511, -1.005587,  1.689546 },
+	{ -0.106383,  1.317667,  1.005587,  1.600563 },
+	{  0.140358,  1.164210, -1.005587,  1.533774 },
+	{  0.305817,  1.279596,  1.005587,  1.555970 },
+	{  0.224534,  1.548440, -1.005587,  1.644953 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_7[] {
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.488103,  0.406437,  0.947472,  1.659480 },
+	{ -1.190160,  0.249203, -0.947472,  1.520305 },
+	{ -1.153577,  0.494928,  0.947472,  1.659480 },
+	{ -1.414938,  0.897886, -0.947472,  1.937832 },
+	{ -1.712881,  1.055120,  0.947472,  2.077008 },
+	{ -1.749463,  0.809396, -0.947472,  1.937832 },
+	{ -0.151877, -0.977431,  0.947472,  0.635133 },
+	{ -0.032964, -0.823788, -0.947472,  0.707176 },
+	{ -0.235432, -0.421336,  0.947472,  0.976043 },
+	{ -0.556811, -0.172528, -0.947472,  1.172867 },
+	{ -0.675723, -0.326171,  0.947472,  1.100825 },
+	{ -0.473256, -0.728622, -0.947472,  0.831958 },
+	{  0.937299, -1.270669,  0.947472,  0.292362 },
+	{  0.807523, -0.896151, -0.947472,  0.533422 },
+	{  0.484609, -0.572724,  0.947472,  0.774481 },
+	{  0.291470, -0.623814, -0.947472,  0.774481 },
+	{  0.421246, -0.998332,  0.947472,  0.533422 },
+	{  0.744160, -1.321759, -0.947472,  0.292362 },
+	{  1.141399, -0.301503,  0.947472,  0.831958 },
+	{  0.838956,  0.074502, -0.947472,  1.100825 },
+	{  0.584754,  0.129446,  0.947472,  1.172867 },
+	{  0.632994, -0.191615, -0.947472,  0.976043 },
+	{  0.935437, -0.567620,  0.947472,  0.707176 },
+	{  1.189640, -0.622564, -0.947472,  0.635133 },
+	{  0.340865,  1.362343,  0.947472,  1.937832 },
+	{  0.042922,  1.519577, -0.947472,  2.077008 },
+	{  0.006340,  1.273852,  0.947472,  1.937832 },
+	{  0.267701,  0.870893, -0.947472,  1.659480 },
+	{  0.565644,  0.713659,  0.947472,  1.520305 },
+	{  0.602226,  0.959384, -0.947472,  1.659480 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_3[] {
+	{ -0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000, -0.000000, -0.000000 },
+	{ -0.000000, -0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.701898, -0.022207,  1.005587,  1.711742 },
+	{ -1.586511, -0.187666, -1.005587,  1.689546 },
+	{ -1.317667, -0.106383,  1.005587,  1.600563 },
+	{ -1.164210,  0.140358, -1.005587,  1.533774 },
+	{ -1.279596,  0.305817,  1.005587,  1.555970 },
+	{ -1.548440,  0.224534, -1.005587,  1.644953 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.030374, -1.221892,  1.005587,  1.294626 },
+	{  0.060439, -0.970980, -1.005587,  1.246727 },
+	{ -0.114120, -0.860176,  1.005587,  1.291443 },
+	{ -0.379492, -1.000284, -1.005587,  1.384058 },
+	{ -0.470305, -1.251196,  1.005587,  1.431957 },
+	{ -0.295746, -1.362000, -1.005587,  1.387241 },
+	{  0.852479, -0.301451,  1.005587,  0.950235 },
+	{  0.737092, -0.135992, -1.005587,  0.972431 },
+	{  0.468248, -0.217275,  1.005587,  1.061414 },
+	{  0.314791, -0.464016, -1.005587,  1.128203 },
+	{  0.430177, -0.629474,  1.005587,  1.106007 },
+	{  0.699021, -0.548192, -1.005587,  1.017024 },
+	{  0.987172,  0.700779,  1.005587,  0.828885 },
+	{  0.733177,  0.683861, -1.005587,  0.908173 },
+	{  0.527533,  0.458106,  1.005587,  0.989299 },
+	{  0.575884,  0.249269, -1.005587,  0.991137 },
+	{  0.829879,  0.266187,  1.005587,  0.911848 },
+	{  1.035523,  0.491942, -1.005587,  0.830722 },
+	{  0.294804,  1.197705,  1.005587,  1.001659 },
+	{  0.050988,  1.008321, -1.005587,  1.091594 },
+	{  0.029008,  0.770337,  1.005587,  1.117340 },
+	{  0.250844,  0.721738, -1.005587,  1.053151 },
+	{  0.494659,  0.911123,  1.005587,  0.963216 },
+	{  0.516640,  1.149106, -1.005587,  0.937470 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_4[] {
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{ -0.000000, -0.000000, -0.000000,  0.000000 },
+	{ -0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.459038,  0.446639,  1.046680,  1.379648 },
+	{ -1.291920,  0.242420, -1.046680,  1.369888 },
+	{ -1.062121,  0.249710,  1.046680,  1.333465 },
+	{ -0.999440,  0.461219, -1.046680,  1.306802 },
+	{ -1.166559,  0.665438,  1.046680,  1.316561 },
+	{ -1.396357,  0.658148, -1.046680,  1.352984 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.412217, -1.264302,  1.046680,  1.352984 },
+	{ -0.243354, -1.137978, -1.046680,  1.316561 },
+	{ -0.303651, -0.897957,  1.046680,  1.306802 },
+	{ -0.532811, -0.784260, -1.046680,  1.333465 },
+	{ -0.701674, -0.910584,  1.046680,  1.369888 },
+	{ -0.641377, -1.150605, -1.046680,  1.379648 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.083833, -0.572391,  1.046680,  1.064406 },
+	{  0.916715, -0.368172, -1.046680,  1.074165 },
+	{  0.686916, -0.375462,  1.046680,  1.110589 },
+	{  0.624236, -0.586971, -1.046680,  1.137252 },
+	{  0.791354, -0.791190,  1.046680,  1.127493 },
+	{  1.021153, -0.783900, -1.046680,  1.091069 },
+	{  0.870265,  0.426379,  1.046680,  1.017971 },
+	{  0.632690,  0.481459, -1.046680,  1.050627 },
+	{  0.512834,  0.306584,  1.046680,  1.083283 },
+	{  0.630553,  0.076629, -1.046680,  1.083283 },
+	{  0.868128,  0.021548,  1.046680,  1.050627 },
+	{  0.987984,  0.196423, -1.046680,  1.017971 },
+	{  0.037012,  1.138550,  1.046680,  1.091069 },
+	{ -0.131851,  1.012226, -1.046680,  1.127493 },
+	{ -0.071554,  0.772205,  1.046680,  1.137252 },
+	{  0.157606,  0.658508, -1.046680,  1.110589 },
+	{  0.326469,  0.784832,  1.046680,  1.074165 },
+	{  0.266172,  1.024853, -1.046680,  1.064406 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_5[] {
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.385244,  0.613433,  1.063701,  1.314297 },
+	{ -1.215188,  0.407383, -1.063701,  1.295362 },
+	{ -0.980400,  0.400122,  1.063701,  1.276428 },
+	{ -0.915668,  0.598910, -1.063701,  1.276428 },
+	{ -1.085725,  0.804960,  1.063701,  1.295362 },
+	{ -1.320513,  0.812221, -1.063701,  1.314297 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.321440, -1.090944,  1.063701,  1.185048 },
+	{ -0.148512, -0.980365, -1.063701,  1.174116 },
+	{ -0.209322, -0.746632,  1.063701,  1.185048 },
+	{ -0.443059, -0.623476, -1.063701,  1.206912 },
+	{ -0.615986, -0.734055,  1.063701,  1.217844 },
+	{ -0.555177, -0.967789, -1.063701,  1.206912 },
+	{  0.664208, -1.158801,  1.063701,  1.104587 },
+	{  0.666238, -0.934911, -1.063701,  1.110246 },
+	{  0.457219, -0.764502,  1.063701,  1.131365 },
+	{  0.246170, -0.817983, -1.063701,  1.146825 },
+	{  0.244140, -1.041873,  1.063701,  1.141166 },
+	{  0.453159, -1.212282, -1.063701,  1.120047 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.994320,  0.449611,  1.063701,  1.120047 },
+	{  0.751793,  0.517119, -1.063701,  1.141166 },
+	{  0.628772,  0.356979,  1.063701,  1.146825 },
+	{  0.748277,  0.129330, -1.063701,  1.131365 },
+	{  0.990803,  0.061822,  1.063701,  1.110246 },
+	{  1.113825,  0.221962, -1.063701,  1.104587 },
+	{  0.145409,  1.183694,  1.063701,  1.206912 },
+	{ -0.027519,  1.073115, -1.063701,  1.217844 },
+	{  0.033291,  0.839382,  1.063701,  1.206912 },
+	{  0.267028,  0.716227, -1.063701,  1.185048 },
+	{  0.439955,  0.826805,  1.063701,  1.174116 },
+	{  0.379146,  1.060539, -1.063701,  1.185048 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_6[] {
+	{  0.000000,  0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.264302,  0.412217,  1.046680,  1.352984 },
+	{ -1.137978,  0.243354, -1.046680,  1.316561 },
+	{ -0.897957,  0.303651,  1.046680,  1.306802 },
+	{ -0.784260,  0.532811, -1.046680,  1.333465 },
+	{ -0.910584,  0.701674,  1.046680,  1.369888 },
+	{ -1.150605,  0.641377, -1.046680,  1.379648 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.572391, -1.083833,  1.046680,  1.064406 },
+	{ -0.368172, -0.916715, -1.046680,  1.074165 },
+	{ -0.375462, -0.686916,  1.046680,  1.110589 },
+	{ -0.586971, -0.624236, -1.046680,  1.137252 },
+	{ -0.791190, -0.791354,  1.046680,  1.127493 },
+	{ -0.783900, -1.021153, -1.046680,  1.091069 },
+	{  0.426379, -0.870265,  1.046680,  1.017971 },
+	{  0.481459, -0.632690, -1.046680,  1.050627 },
+	{  0.306584, -0.512834,  1.046680,  1.083283 },
+	{  0.076629, -0.630553, -1.046680,  1.083283 },
+	{  0.021548, -0.868128,  1.046680,  1.050627 },
+	{  0.196423, -0.987984, -1.046680,  1.017971 },
+	{  1.138550, -0.037012,  1.046680,  1.091069 },
+	{  1.012226,  0.131851, -1.046680,  1.127493 },
+	{  0.772205,  0.071554,  1.046680,  1.137252 },
+	{  0.658508, -0.157606, -1.046680,  1.110589 },
+	{  0.784832, -0.326469,  1.046680,  1.074165 },
+	{  1.024853, -0.266172, -1.046680,  1.064406 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.446639,  1.459038,  1.046680,  1.379648 },
+	{  0.242420,  1.291920, -1.046680,  1.369888 },
+	{  0.249710,  1.062121,  1.046680,  1.333465 },
+	{  0.461219,  0.999440, -1.046680,  1.306802 },
+	{  0.665438,  1.166559,  1.046680,  1.316561 },
+	{  0.658148,  1.396357, -1.046680,  1.352984 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_7[] {
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.374343,  0.725142,  1.005587,  1.644953 },
+	{ -1.240828,  0.521623, -1.005587,  1.555970 },
+	{ -1.008442,  0.563573,  1.005587,  1.533774 },
+	{ -0.909571,  0.809041, -1.005587,  1.600563 },
+	{ -1.043087,  1.012561,  1.005587,  1.689546 },
+	{ -1.275473,  0.970611, -1.005587,  1.711742 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.611124, -1.031909,  1.005587,  0.937470 },
+	{ -0.419873, -0.865968, -1.005587,  0.963216 },
+	{ -0.439876, -0.606745,  1.005587,  1.053151 },
+	{ -0.651129, -0.513462, -1.005587,  1.117340 },
+	{ -0.842380, -0.679404,  1.005587,  1.091594 },
+	{ -0.822377, -0.938627, -1.005587,  1.001659 },
+	{  0.357962, -0.899341,  1.005587,  0.830722 },
+	{  0.398787, -0.638093, -1.005587,  0.911848 },
+	{  0.220322, -0.484458,  1.005587,  0.991137 },
+	{  0.001031, -0.592070, -1.005587,  0.989299 },
+	{ -0.039794, -0.853318,  1.005587,  0.908173 },
+	{  0.138671, -1.006953, -1.005587,  0.828885 },
+	{  1.010913, -0.038979,  1.005587,  1.017024 },
+	{  0.877397,  0.164540, -1.005587,  1.106007 },
+	{  0.645011,  0.122591,  1.005587,  1.128203 },
+	{  0.546141, -0.122878, -1.005587,  1.061414 },
+	{  0.679656, -0.326397,  1.005587,  0.972431 },
+	{  0.912042, -0.284448, -1.005587,  0.950235 },
+	{  0.965238,  1.045189,  1.005587,  1.387241 },
+	{  0.735594,  1.071761, -1.005587,  1.431957 },
+	{  0.585416,  0.858800,  1.005587,  1.384058 },
+	{  0.664882,  0.619266, -1.005587,  1.291443 },
+	{  0.894527,  0.592695,  1.005587,  1.246727 },
+	{  1.044705,  0.805656, -1.005587,  1.294626 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_3_4[] {
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.000000, -0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.282608,  0.324788,  1.046680,  1.165396 },
+	{ -1.109148,  0.096919, -1.046680,  1.218898 },
+	{ -0.891853,  0.111491,  1.046680,  1.203586 },
+	{ -0.848020,  0.353932, -1.046680,  1.134771 },
+	{ -1.021481,  0.581801,  1.046680,  1.081268 },
+	{ -1.238775,  0.567229, -1.046680,  1.096580 },
+	{ -1.006578, -0.806132,  1.046680,  1.461382 },
+	{ -0.777318, -0.862335, -1.046680,  1.464869 },
+	{ -0.676588, -0.660028,  1.046680,  1.404105 },
+	{ -0.805118, -0.401518, -1.046680,  1.339855 },
+	{ -1.034378, -0.345315,  1.046680,  1.336367 },
+	{ -1.135108, -0.547622, -1.046680,  1.397131 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.202911, -0.765590,  1.046680,  1.335217 },
+	{  1.029451, -0.537721, -1.046680,  1.281714 },
+	{  0.812156, -0.552293,  1.046680,  1.297027 },
+	{  0.768323, -0.794734, -1.046680,  1.365842 },
+	{  0.941784, -1.022603,  1.046680,  1.419345 },
+	{  1.159078, -1.008031, -1.046680,  1.404032 },
+	{  0.926881,  0.365330,  1.046680,  1.039231 },
+	{  0.697621,  0.421533, -1.046680,  1.035744 },
+	{  0.596891,  0.219226,  1.046680,  1.096507 },
+	{  0.725421, -0.039284, -1.046680,  1.160758 },
+	{  0.954681, -0.095487,  1.046680,  1.164245 },
+	{  1.055411,  0.106820, -1.046680,  1.103481 },
+	{  0.084554,  1.153138,  1.046680,  0.866890 },
+	{ -0.066208,  1.004751, -1.046680,  0.915461 },
+	{  0.008632,  0.733217,  1.046680,  0.986081 },
+	{  0.234234,  0.610070, -1.046680,  1.008130 },
+	{  0.384996,  0.758456,  1.046680,  0.959559 },
+	{  0.310156,  1.029990, -1.046680,  0.888939 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_3_5[] {
+	{ -0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000, -0.000000,  0.000000,  0.000000 },
+	{ -0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.212282,  0.453159,  1.063701,  1.120047 },
+	{ -1.041873,  0.244140, -1.063701,  1.141166 },
+	{ -0.817983,  0.246170,  1.063701,  1.146825 },
+	{ -0.764502,  0.457219, -1.063701,  1.131365 },
+	{ -0.934911,  0.666238,  1.063701,  1.110246 },
+	{ -1.158801,  0.664208, -1.063701,  1.104587 },
+	{ -0.967789, -0.555177,  1.063701,  1.206912 },
+	{ -0.734055, -0.615986, -1.063701,  1.217844 },
+	{ -0.623476, -0.443059,  1.063701,  1.206912 },
+	{ -0.746632, -0.209322, -1.063701,  1.185048 },
+	{ -0.980365, -0.148512,  1.063701,  1.174116 },
+	{ -1.090944, -0.321440, -1.063701,  1.185048 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.812221, -1.320513,  1.063701,  1.314297 },
+	{  0.804960, -1.085725, -1.063701,  1.295362 },
+	{  0.598910, -0.915668,  1.063701,  1.276428 },
+	{  0.400122, -0.980400, -1.063701,  1.276428 },
+	{  0.407383, -1.215188,  1.063701,  1.295362 },
+	{  0.613433, -1.385244, -1.063701,  1.314297 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.060539,  0.379146,  1.063701,  1.185048 },
+	{  0.826805,  0.439955, -1.063701,  1.174116 },
+	{  0.716227,  0.267028,  1.063701,  1.185048 },
+	{  0.839382,  0.033291, -1.063701,  1.206912 },
+	{  1.073115, -0.027519,  1.063701,  1.217844 },
+	{  1.183694,  0.145409, -1.063701,  1.206912 },
+	{  0.221962,  1.113825,  1.063701,  1.104587 },
+	{  0.061822,  0.990803, -1.063701,  1.110246 },
+	{  0.129330,  0.748277,  1.063701,  1.131365 },
+	{  0.356979,  0.628772, -1.063701,  1.146825 },
+	{  0.517119,  0.751793,  1.063701,  1.141166 },
+	{  0.449611,  0.994320, -1.063701,  1.120047 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_3_6[] {
+	{ -0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.090944,  0.321440,  1.063701,  1.185048 },
+	{ -0.980365,  0.148512, -1.063701,  1.174116 },
+	{ -0.746632,  0.209322,  1.063701,  1.185048 },
+	{ -0.623476,  0.443059, -1.063701,  1.206912 },
+	{ -0.734055,  0.615986,  1.063701,  1.217844 },
+	{ -0.967789,  0.555177, -1.063701,  1.206912 },
+	{ -1.158801, -0.664208,  1.063701,  1.104587 },
+	{ -0.934911, -0.666238, -1.063701,  1.110246 },
+	{ -0.764502, -0.457219,  1.063701,  1.131365 },
+	{ -0.817983, -0.246170, -1.063701,  1.146825 },
+	{ -1.041873, -0.244140,  1.063701,  1.141166 },
+	{ -1.212282, -0.453159, -1.063701,  1.120047 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.449611, -0.994320,  1.063701,  1.120047 },
+	{  0.517119, -0.751793, -1.063701,  1.141166 },
+	{  0.356979, -0.628772,  1.063701,  1.146825 },
+	{  0.129330, -0.748277, -1.063701,  1.131365 },
+	{  0.061822, -0.990803,  1.063701,  1.110246 },
+	{  0.221962, -1.113825, -1.063701,  1.104587 },
+	{  1.183694, -0.145409,  1.063701,  1.206912 },
+	{  1.073115,  0.027519, -1.063701,  1.217844 },
+	{  0.839382, -0.033291,  1.063701,  1.206912 },
+	{  0.716227, -0.267028, -1.063701,  1.185048 },
+	{  0.826805, -0.439955,  1.063701,  1.174116 },
+	{  1.060539, -0.379146, -1.063701,  1.185048 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.613433,  1.385244,  1.063701,  1.314297 },
+	{  0.407383,  1.215188, -1.063701,  1.295362 },
+	{  0.400122,  0.980400,  1.063701,  1.276428 },
+	{  0.598910,  0.915668, -1.063701,  1.276428 },
+	{  0.804960,  1.085725,  1.063701,  1.295362 },
+	{  0.812221,  1.320513, -1.063701,  1.314297 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_3_7[] {
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.135108,  0.547622,  1.046680,  1.397131 },
+	{ -1.034378,  0.345315, -1.046680,  1.336367 },
+	{ -0.805118,  0.401518,  1.046680,  1.339855 },
+	{ -0.676588,  0.660028, -1.046680,  1.404105 },
+	{ -0.777318,  0.862335,  1.046680,  1.464869 },
+	{ -1.006578,  0.806132, -1.046680,  1.461382 },
+	{ -1.238775, -0.567229,  1.046680,  1.096580 },
+	{ -1.021481, -0.581801, -1.046680,  1.081268 },
+	{ -0.848020, -0.353932,  1.046680,  1.134771 },
+	{ -0.891853, -0.111491, -1.046680,  1.203586 },
+	{ -1.109148, -0.096919,  1.046680,  1.218898 },
+	{ -1.282608, -0.324788, -1.046680,  1.165396 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.310156, -1.029990,  1.046680,  0.888939 },
+	{  0.384996, -0.758456, -1.046680,  0.959559 },
+	{  0.234234, -0.610070,  1.046680,  1.008130 },
+	{  0.008632, -0.733217, -1.046680,  0.986081 },
+	{ -0.066208, -1.004751,  1.046680,  0.915461 },
+	{  0.084554, -1.153138, -1.046680,  0.866890 },
+	{  1.055411, -0.106820,  1.046680,  1.103481 },
+	{  0.954681,  0.095487, -1.046680,  1.164245 },
+	{  0.725421,  0.039284,  1.046680,  1.160758 },
+	{  0.596891, -0.219226, -1.046680,  1.096507 },
+	{  0.697621, -0.421533,  1.046680,  1.035744 },
+	{  0.926881, -0.365330, -1.046680,  1.039231 },
+	{  1.159078,  1.008031,  1.046680,  1.404032 },
+	{  0.941784,  1.022603, -1.046680,  1.419345 },
+	{  0.768323,  0.794734,  1.046680,  1.365842 },
+	{  0.812156,  0.552293, -1.046680,  1.297027 },
+	{  1.029451,  0.537721,  1.046680,  1.281714 },
+	{  1.202911,  0.765590, -1.046680,  1.335217 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_4_5[] {
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000, -0.000000,  0.000000,  0.000000 },
+	{ -0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.458243,  0.893887,  1.046680,  0.888939 },
+	{ -1.163057,  0.586022, -1.046680,  0.959559 },
+	{ -0.892521,  0.506157,  1.046680,  1.008130 },
+	{ -0.917173,  0.734158, -1.046680,  0.986081 },
+	{ -1.212360,  1.042024,  1.046680,  0.915461 },
+	{ -1.482895,  1.121889, -1.046680,  0.866890 },
+	{ -0.734359, -0.379122,  1.046680,  1.103481 },
+	{ -0.425248, -0.536340, -1.046680,  1.164245 },
+	{ -0.364525, -0.374046,  1.046680,  1.160758 },
+	{ -0.612911, -0.054534, -1.046680,  1.096507 },
+	{ -0.922021,  0.102683,  1.046680,  1.035744 },
+	{ -0.982745, -0.059611, -1.046680,  1.039231 },
+	{  0.593639, -1.549258,  1.046680,  1.404032 },
+	{  0.735600, -1.463731, -1.046680,  1.419345 },
+	{  0.550941, -1.154348,  1.046680,  1.365842 },
+	{  0.224322, -0.930492, -1.046680,  1.297027 },
+	{  0.082361, -1.016019,  1.046680,  1.281714 },
+	{  0.267020, -1.325402, -1.046680,  1.335217 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.328213, -0.027889,  1.046680,  1.397131 },
+	{  1.019103,  0.129328, -1.046680,  1.336367 },
+	{  0.958379, -0.032966,  1.046680,  1.339855 },
+	{  1.206765, -0.352477, -1.046680,  1.404105 },
+	{  1.515876, -0.509695,  1.046680,  1.464869 },
+	{  1.576599, -0.347401, -1.046680,  1.461382 },
+	{  0.000215,  1.142247,  1.046680,  1.096580 },
+	{ -0.141746,  1.056720, -1.046680,  1.081268 },
+	{  0.042913,  0.747337,  1.046680,  1.134771 },
+	{  0.369533,  0.523481, -1.046680,  1.203586 },
+	{  0.511493,  0.609007,  1.046680,  1.218898 },
+	{  0.326834,  0.918390, -1.046680,  1.165396 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_4_6[] {
+	{ -0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.083833,  0.572391,  1.046680,  1.064406 },
+	{ -0.916715,  0.368172, -1.046680,  1.074165 },
+	{ -0.686916,  0.375462,  1.046680,  1.110589 },
+	{ -0.624236,  0.586971, -1.046680,  1.137252 },
+	{ -0.791354,  0.791190,  1.046680,  1.127493 },
+	{ -1.021153,  0.783900, -1.046680,  1.091069 },
+	{ -0.870265, -0.426379,  1.046680,  1.017971 },
+	{ -0.632690, -0.481459, -1.046680,  1.050627 },
+	{ -0.512834, -0.306584,  1.046680,  1.083283 },
+	{ -0.630553, -0.076629, -1.046680,  1.083283 },
+	{ -0.868128, -0.021548,  1.046680,  1.050627 },
+	{ -0.987984, -0.196423, -1.046680,  1.017971 },
+	{ -0.037012, -1.138550,  1.046680,  1.091069 },
+	{  0.131851, -1.012226, -1.046680,  1.127493 },
+	{  0.071554, -0.772205,  1.046680,  1.137252 },
+	{ -0.157606, -0.658508, -1.046680,  1.110589 },
+	{ -0.326469, -0.784832,  1.046680,  1.074165 },
+	{ -0.266172, -1.024853, -1.046680,  1.064406 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.459038, -0.446639,  1.046680,  1.379648 },
+	{  1.291920, -0.242420, -1.046680,  1.369888 },
+	{  1.062121, -0.249710,  1.046680,  1.333465 },
+	{  0.999440, -0.461219, -1.046680,  1.306802 },
+	{  1.166559, -0.665438,  1.046680,  1.316561 },
+	{  1.396357, -0.658148, -1.046680,  1.352984 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.412217,  1.264302,  1.046680,  1.352984 },
+	{  0.243354,  1.137978, -1.046680,  1.316561 },
+	{  0.303651,  0.897957,  1.046680,  1.306802 },
+	{  0.532811,  0.784260, -1.046680,  1.333465 },
+	{  0.701674,  0.910584,  1.046680,  1.369888 },
+	{  0.641377,  1.150605, -1.046680,  1.379648 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_4_7[] {
+	{  0.000000, -0.000000,  0.000000,  0.000000 },
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.202911,  0.765590,  1.046680,  1.335217 },
+	{ -1.029451,  0.537721, -1.046680,  1.281714 },
+	{ -0.812156,  0.552293,  1.046680,  1.297027 },
+	{ -0.768323,  0.794734, -1.046680,  1.365842 },
+	{ -0.941784,  1.022603,  1.046680,  1.419345 },
+	{ -1.159078,  1.008031, -1.046680,  1.404032 },
+	{ -0.926881, -0.365330,  1.046680,  1.039231 },
+	{ -0.697621, -0.421533, -1.046680,  1.035744 },
+	{ -0.596891, -0.219226,  1.046680,  1.096507 },
+	{ -0.725421,  0.039284, -1.046680,  1.160758 },
+	{ -0.954681,  0.095487,  1.046680,  1.164245 },
+	{ -1.055411, -0.106820, -1.046680,  1.103481 },
+	{ -0.084554, -1.153138,  1.046680,  0.866890 },
+	{  0.066208, -1.004751, -1.046680,  0.915461 },
+	{ -0.008632, -0.733217,  1.046680,  0.986081 },
+	{ -0.234234, -0.610070, -1.046680,  1.008130 },
+	{ -0.384996, -0.758456,  1.046680,  0.959559 },
+	{ -0.310156, -1.029990, -1.046680,  0.888939 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.282608, -0.324788,  1.046680,  1.165396 },
+	{  1.109148, -0.096919, -1.046680,  1.218898 },
+	{  0.891853, -0.111491,  1.046680,  1.203586 },
+	{  0.848020, -0.353932, -1.046680,  1.134771 },
+	{  1.021481, -0.581801,  1.046680,  1.081268 },
+	{  1.238775, -0.567229, -1.046680,  1.096580 },
+	{  1.006578,  0.806132,  1.046680,  1.461382 },
+	{  0.777318,  0.862335, -1.046680,  1.464869 },
+	{  0.676588,  0.660028,  1.046680,  1.404105 },
+	{  0.805118,  0.401518, -1.046680,  1.339855 },
+	{  1.034378,  0.345315,  1.046680,  1.336367 },
+	{  1.135108,  0.547622, -1.046680,  1.397131 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_5_6[] {
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.031909,  0.611124,  1.005587,  0.937470 },
+	{ -0.865968,  0.419873, -1.005587,  0.963216 },
+	{ -0.606745,  0.439876,  1.005587,  1.053151 },
+	{ -0.513462,  0.651129, -1.005587,  1.117340 },
+	{ -0.679404,  0.842380,  1.005587,  1.091594 },
+	{ -0.938627,  0.822377, -1.005587,  1.001659 },
+	{ -0.899341, -0.357962,  1.005587,  0.830722 },
+	{ -0.638093, -0.398787, -1.005587,  0.911848 },
+	{ -0.484458, -0.220322,  1.005587,  0.991137 },
+	{ -0.592070, -0.001031, -1.005587,  0.989299 },
+	{ -0.853318,  0.039794,  1.005587,  0.908173 },
+	{ -1.006953, -0.138671, -1.005587,  0.828885 },
+	{ -0.038979, -1.010913,  1.005587,  1.017024 },
+	{  0.164540, -0.877397, -1.005587,  1.106007 },
+	{  0.122591, -0.645011,  1.005587,  1.128203 },
+	{ -0.122878, -0.546141, -1.005587,  1.061414 },
+	{ -0.326397, -0.679656,  1.005587,  0.972431 },
+	{ -0.284448, -0.912042, -1.005587,  0.950235 },
+	{  1.045189, -0.965238,  1.005587,  1.387241 },
+	{  1.071761, -0.735594, -1.005587,  1.431957 },
+	{  0.858800, -0.585416,  1.005587,  1.384058 },
+	{  0.619266, -0.664882, -1.005587,  1.291443 },
+	{  0.592695, -0.894527,  1.005587,  1.246727 },
+	{  0.805656, -1.044705, -1.005587,  1.294626 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.725142,  1.374343,  1.005587,  1.644953 },
+	{  0.521623,  1.240828, -1.005587,  1.555970 },
+	{  0.563573,  1.008442,  1.005587,  1.533774 },
+	{  0.809041,  0.909571, -1.005587,  1.600563 },
+	{  1.012561,  1.043087,  1.005587,  1.689546 },
+	{  0.970611,  1.275473, -1.005587,  1.711742 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_5_7[] {
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.044705,  0.805656,  1.005587,  1.294626 },
+	{ -0.894527,  0.592695, -1.005587,  1.246727 },
+	{ -0.664882,  0.619266,  1.005587,  1.291443 },
+	{ -0.585416,  0.858800, -1.005587,  1.384058 },
+	{ -0.735594,  1.071761,  1.005587,  1.431957 },
+	{ -0.965238,  1.045189, -1.005587,  1.387241 },
+	{ -0.912042, -0.284448,  1.005587,  0.950235 },
+	{ -0.679656, -0.326397, -1.005587,  0.972431 },
+	{ -0.546141, -0.122878,  1.005587,  1.061414 },
+	{ -0.645011,  0.122591, -1.005587,  1.128203 },
+	{ -0.877397,  0.164540,  1.005587,  1.106007 },
+	{ -1.010913, -0.038979, -1.005587,  1.017024 },
+	{ -0.138671, -1.006953,  1.005587,  0.828885 },
+	{  0.039794, -0.853318, -1.005587,  0.908173 },
+	{ -0.001031, -0.592070,  1.005587,  0.989299 },
+	{ -0.220322, -0.484458, -1.005587,  0.991137 },
+	{ -0.398787, -0.638093,  1.005587,  0.911848 },
+	{ -0.357962, -0.899341, -1.005587,  0.830722 },
+	{  0.822377, -0.938627,  1.005587,  1.001659 },
+	{  0.842380, -0.679404, -1.005587,  1.091594 },
+	{  0.651129, -0.513462,  1.005587,  1.117340 },
+	{  0.439876, -0.606745, -1.005587,  1.053151 },
+	{  0.419873, -0.865968,  1.005587,  0.963216 },
+	{  0.611124, -1.031909, -1.005587,  0.937470 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.275473,  0.970611,  1.005587,  1.711742 },
+	{  1.043087,  1.012561, -1.005587,  1.689546 },
+	{  0.909571,  0.809041,  1.005587,  1.600563 },
+	{  1.008442,  0.563573, -1.005587,  1.533774 },
+	{  1.240828,  0.521623,  1.005587,  1.555970 },
+	{  1.374343,  0.725142, -1.005587,  1.644953 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_6_7[] {
+	{ -0.000000, -0.000000, -0.000000,  0.000000 },
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.602226,  0.959384,  0.947472,  1.659480 },
+	{ -0.565644,  0.713659, -0.947472,  1.520305 },
+	{ -0.267701,  0.870893,  0.947472,  1.659480 },
+	{ -0.006340,  1.273852, -0.947472,  1.937832 },
+	{ -0.042922,  1.519577,  0.947472,  2.077008 },
+	{ -0.340865,  1.362343, -0.947472,  1.937832 },
+	{ -1.189640, -0.622564,  0.947472,  0.635133 },
+	{ -0.935437, -0.567620, -0.947472,  0.707176 },
+	{ -0.632994, -0.191615,  0.947472,  0.976043 },
+	{ -0.584754,  0.129446, -0.947472,  1.172867 },
+	{ -0.838956,  0.074502,  0.947472,  1.100825 },
+	{ -1.141399, -0.301503, -0.947472,  0.831958 },
+	{ -0.744160, -1.321759,  0.947472,  0.292362 },
+	{ -0.421246, -0.998332, -0.947472,  0.533422 },
+	{ -0.291470, -0.623814,  0.947472,  0.774481 },
+	{ -0.484609, -0.572724, -0.947472,  0.774481 },
+	{ -0.807523, -0.896151,  0.947472,  0.533422 },
+	{ -0.937299, -1.270669, -0.947472,  0.292362 },
+	{  0.473256, -0.728622,  0.947472,  0.831958 },
+	{  0.675723, -0.326171, -0.947472,  1.100825 },
+	{  0.556811, -0.172528,  0.947472,  1.172867 },
+	{  0.235432, -0.421336, -0.947472,  0.976043 },
+	{  0.032964, -0.823788,  0.947472,  0.707176 },
+	{  0.151877, -0.977431, -0.947472,  0.635133 },
+	{  1.749463,  0.809396,  0.947472,  1.937832 },
+	{  1.712881,  1.055120, -0.947472,  2.077008 },
+	{  1.414938,  0.897886,  0.947472,  1.937832 },
+	{  1.153577,  0.494928, -0.947472,  1.659480 },
+	{  1.190160,  0.249203,  0.947472,  1.520305 },
+	{  1.488103,  0.406437, -0.947472,  1.659480 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_3[] {
+	{ -1.362343,  0.340865,  0.947472,  1.937832 },
+	{ -1.519577,  0.042922, -0.947472,  2.077008 },
+	{ -1.273852,  0.006340,  0.947472,  1.937832 },
+	{ -0.870893,  0.267701, -0.947472,  1.659480 },
+	{ -0.713659,  0.565644,  0.947472,  1.520305 },
+	{ -0.959384,  0.602226, -0.947472,  1.659480 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.406437, -1.488103,  0.947472,  1.659480 },
+	{ -0.249203, -1.190160, -0.947472,  1.520305 },
+	{ -0.494928, -1.153577,  0.947472,  1.659480 },
+	{ -0.897886, -1.414938, -0.947472,  1.937832 },
+	{ -1.055120, -1.712881,  0.947472,  2.077008 },
+	{ -0.809396, -1.749463, -0.947472,  1.937832 },
+	{  0.977431, -0.151877,  0.947472,  0.635133 },
+	{  0.823788, -0.032964, -0.947472,  0.707176 },
+	{  0.421336, -0.235432,  0.947472,  0.976043 },
+	{  0.172528, -0.556811, -0.947472,  1.172867 },
+	{  0.326171, -0.675723,  0.947472,  1.100825 },
+	{  0.728622, -0.473256, -0.947472,  0.831958 },
+	{  1.270669,  0.937299,  0.947472,  0.292362 },
+	{  0.896151,  0.807523, -0.947472,  0.533422 },
+	{  0.572724,  0.484609,  0.947472,  0.774481 },
+	{  0.623814,  0.291470, -0.947472,  0.774481 },
+	{  0.998332,  0.421246,  0.947472,  0.533422 },
+	{  1.321759,  0.744160, -0.947472,  0.292362 },
+	{  0.301503,  1.141399,  0.947472,  0.831958 },
+	{ -0.074502,  0.838956, -0.947472,  1.100825 },
+	{ -0.129446,  0.584754,  0.947472,  1.172867 },
+	{  0.191615,  0.632994, -0.947472,  0.976043 },
+	{  0.567620,  0.935437,  0.947472,  0.707176 },
+	{  0.622564,  1.189640, -0.947472,  0.635133 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_4[] {
+	{ -1.045189,  0.965238,  1.005587,  1.387241 },
+	{ -1.071761,  0.735594, -1.005587,  1.431957 },
+	{ -0.858800,  0.585416,  1.005587,  1.384058 },
+	{ -0.619266,  0.664882, -1.005587,  1.291443 },
+	{ -0.592695,  0.894527,  1.005587,  1.246727 },
+	{ -0.805656,  1.044705, -1.005587,  1.294626 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.725142, -1.374343,  1.005587,  1.644953 },
+	{ -0.521623, -1.240828, -1.005587,  1.555970 },
+	{ -0.563573, -1.008442,  1.005587,  1.533774 },
+	{ -0.809041, -0.909571, -1.005587,  1.600563 },
+	{ -1.012561, -1.043087,  1.005587,  1.689546 },
+	{ -0.970611, -1.275473, -1.005587,  1.711742 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.031909, -0.611124,  1.005587,  0.937470 },
+	{  0.865968, -0.419873, -1.005587,  0.963216 },
+	{  0.606745, -0.439876,  1.005587,  1.053151 },
+	{  0.513462, -0.651129, -1.005587,  1.117340 },
+	{  0.679404, -0.842380,  1.005587,  1.091594 },
+	{  0.938627, -0.822377, -1.005587,  1.001659 },
+	{  0.899341,  0.357962,  1.005587,  0.830722 },
+	{  0.638093,  0.398787, -1.005587,  0.911848 },
+	{  0.484458,  0.220322,  1.005587,  0.991137 },
+	{  0.592070,  0.001031, -1.005587,  0.989299 },
+	{  0.853318, -0.039794,  1.005587,  0.908173 },
+	{  1.006953,  0.138671, -1.005587,  0.828885 },
+	{  0.038979,  1.010913,  1.005587,  1.017024 },
+	{ -0.164540,  0.877397, -1.005587,  1.106007 },
+	{ -0.122591,  0.645011,  1.005587,  1.128203 },
+	{  0.122878,  0.546141, -1.005587,  1.061414 },
+	{  0.326397,  0.679656,  1.005587,  0.972431 },
+	{  0.284448,  0.912042, -1.005587,  0.950235 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_5[] {
+	{ -1.008031,  1.159078,  1.046680,  1.404032 },
+	{ -1.022603,  0.941784, -1.046680,  1.419345 },
+	{ -0.794734,  0.768323,  1.046680,  1.365842 },
+	{ -0.552293,  0.812156, -1.046680,  1.297027 },
+	{ -0.537721,  1.029451,  1.046680,  1.281714 },
+	{ -0.765590,  1.202911, -1.046680,  1.335217 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.547622, -1.135108,  1.046680,  1.397131 },
+	{ -0.345315, -1.034378, -1.046680,  1.336367 },
+	{ -0.401518, -0.805118,  1.046680,  1.339855 },
+	{ -0.660028, -0.676588, -1.046680,  1.404105 },
+	{ -0.862335, -0.777318,  1.046680,  1.464869 },
+	{ -0.806132, -1.006578, -1.046680,  1.461382 },
+	{  0.567229, -1.238775,  1.046680,  1.096580 },
+	{  0.581801, -1.021481, -1.046680,  1.081268 },
+	{  0.353932, -0.848020,  1.046680,  1.134771 },
+	{  0.111491, -0.891853, -1.046680,  1.203586 },
+	{  0.096919, -1.109148,  1.046680,  1.218898 },
+	{  0.324788, -1.282608, -1.046680,  1.165396 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.029990,  0.310156,  1.046680,  0.888939 },
+	{  0.758456,  0.384996, -1.046680,  0.959559 },
+	{  0.610070,  0.234234,  1.046680,  1.008130 },
+	{  0.733217,  0.008632, -1.046680,  0.986081 },
+	{  1.004751, -0.066208,  1.046680,  0.915461 },
+	{  1.153138,  0.084554, -1.046680,  0.866890 },
+	{  0.106820,  1.055411,  1.046680,  1.103481 },
+	{ -0.095487,  0.954681, -1.046680,  1.164245 },
+	{ -0.039284,  0.725421,  1.046680,  1.160758 },
+	{  0.219226,  0.596891, -1.046680,  1.096507 },
+	{  0.421533,  0.697621,  1.046680,  1.035744 },
+	{  0.365330,  0.926881, -1.046680,  1.039231 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_6[] {
+	{ -0.806132,  1.006578,  1.046680,  1.461382 },
+	{ -0.862335,  0.777318, -1.046680,  1.464869 },
+	{ -0.660028,  0.676588,  1.046680,  1.404105 },
+	{ -0.401518,  0.805118, -1.046680,  1.339855 },
+	{ -0.345315,  1.034378,  1.046680,  1.336367 },
+	{ -0.547622,  1.135108, -1.046680,  1.397131 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.765590, -1.202911,  1.046680,  1.335217 },
+	{ -0.537721, -1.029451, -1.046680,  1.281714 },
+	{ -0.552293, -0.812156,  1.046680,  1.297027 },
+	{ -0.794734, -0.768323, -1.046680,  1.365842 },
+	{ -1.022603, -0.941784,  1.046680,  1.419345 },
+	{ -1.008031, -1.159078, -1.046680,  1.404032 },
+	{  0.365330, -0.926881,  1.046680,  1.039231 },
+	{  0.421533, -0.697621, -1.046680,  1.035744 },
+	{  0.219226, -0.596891,  1.046680,  1.096507 },
+	{ -0.039284, -0.725421, -1.046680,  1.160758 },
+	{ -0.095487, -0.954681,  1.046680,  1.164245 },
+	{  0.106820, -1.055411, -1.046680,  1.103481 },
+	{  1.153138, -0.084554,  1.046680,  0.866890 },
+	{  1.004751,  0.066208, -1.046680,  0.915461 },
+	{  0.733217, -0.008632,  1.046680,  0.986081 },
+	{  0.610070, -0.234234, -1.046680,  1.008130 },
+	{  0.758456, -0.384996,  1.046680,  0.959559 },
+	{  1.029990, -0.310156, -1.046680,  0.888939 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.324788,  1.282608,  1.046680,  1.165396 },
+	{  0.096919,  1.109148, -1.046680,  1.218898 },
+	{  0.111491,  0.891853,  1.046680,  1.203586 },
+	{  0.353932,  0.848020, -1.046680,  1.134771 },
+	{  0.581801,  1.021481,  1.046680,  1.081268 },
+	{  0.567229,  1.238775, -1.046680,  1.096580 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_7[] {
+	{ -0.970611,  1.275473,  1.005587,  1.711742 },
+	{ -1.012561,  1.043087, -1.005587,  1.689546 },
+	{ -0.809041,  0.909571,  1.005587,  1.600563 },
+	{ -0.563573,  1.008442, -1.005587,  1.533774 },
+	{ -0.521623,  1.240828,  1.005587,  1.555970 },
+	{ -0.725142,  1.374343, -1.005587,  1.644953 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.805656, -1.044705,  1.005587,  1.294626 },
+	{ -0.592695, -0.894527, -1.005587,  1.246727 },
+	{ -0.619266, -0.664882,  1.005587,  1.291443 },
+	{ -0.858800, -0.585416, -1.005587,  1.384058 },
+	{ -1.071761, -0.735594,  1.005587,  1.431957 },
+	{ -1.045189, -0.965238, -1.005587,  1.387241 },
+	{  0.284448, -0.912042,  1.005587,  0.950235 },
+	{  0.326397, -0.679656, -1.005587,  0.972431 },
+	{  0.122878, -0.546141,  1.005587,  1.061414 },
+	{ -0.122591, -0.645011, -1.005587,  1.128203 },
+	{ -0.164540, -0.877397,  1.005587,  1.106007 },
+	{  0.038979, -1.010913, -1.005587,  1.017024 },
+	{  1.006953, -0.138671,  1.005587,  0.828885 },
+	{  0.853318,  0.039794, -1.005587,  0.908173 },
+	{  0.592070, -0.001031,  1.005587,  0.989299 },
+	{  0.484458, -0.220322, -1.005587,  0.991137 },
+	{  0.638093, -0.398787,  1.005587,  0.911848 },
+	{  0.899341, -0.357962, -1.005587,  0.830722 },
+	{  0.938627,  0.822377,  1.005587,  1.001659 },
+	{  0.679404,  0.842380, -1.005587,  1.091594 },
+	{  0.513462,  0.651129,  1.005587,  1.117340 },
+	{  0.606745,  0.439876, -1.005587,  1.053151 },
+	{  0.865968,  0.419873,  1.005587,  0.963216 },
+	{  1.031909,  0.611124, -1.005587,  0.937470 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_3_4[] {
+	{ -0.822377,  0.938627,  1.005587,  1.001659 },
+	{ -0.842380,  0.679404, -1.005587,  1.091594 },
+	{ -0.651129,  0.513462,  1.005587,  1.117340 },
+	{ -0.439876,  0.606745, -1.005587,  1.053151 },
+	{ -0.419873,  0.865968,  1.005587,  0.963216 },
+	{ -0.611124,  1.031909, -1.005587,  0.937470 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.275473, -0.970611,  1.005587,  1.711742 },
+	{ -1.043087, -1.012561, -1.005587,  1.689546 },
+	{ -0.909571, -0.809041,  1.005587,  1.600563 },
+	{ -1.008442, -0.563573, -1.005587,  1.533774 },
+	{ -1.240828, -0.521623,  1.005587,  1.555970 },
+	{ -1.374343, -0.725142, -1.005587,  1.644953 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.044705, -0.805656,  1.005587,  1.294626 },
+	{  0.894527, -0.592695, -1.005587,  1.246727 },
+	{  0.664882, -0.619266,  1.005587,  1.291443 },
+	{  0.585416, -0.858800, -1.005587,  1.384058 },
+	{  0.735594, -1.071761,  1.005587,  1.431957 },
+	{  0.965238, -1.045189, -1.005587,  1.387241 },
+	{  0.912042,  0.284448,  1.005587,  0.950235 },
+	{  0.679656,  0.326397, -1.005587,  0.972431 },
+	{  0.546141,  0.122878,  1.005587,  1.061414 },
+	{  0.645011, -0.122591, -1.005587,  1.128203 },
+	{  0.877397, -0.164540,  1.005587,  1.106007 },
+	{  1.010913,  0.038979, -1.005587,  1.017024 },
+	{  0.138671,  1.006953,  1.005587,  0.828885 },
+	{ -0.039794,  0.853318, -1.005587,  0.908173 },
+	{  0.001031,  0.592070,  1.005587,  0.989299 },
+	{  0.220322,  0.484458, -1.005587,  0.991137 },
+	{  0.398787,  0.638093,  1.005587,  0.911848 },
+	{  0.357962,  0.899341, -1.005587,  0.830722 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_3_5[] {
+	{ -0.783900,  1.021153,  1.046680,  1.091069 },
+	{ -0.791190,  0.791354, -1.046680,  1.127493 },
+	{ -0.586971,  0.624236,  1.046680,  1.137252 },
+	{ -0.375462,  0.686916, -1.046680,  1.110589 },
+	{ -0.368172,  0.916715,  1.046680,  1.074165 },
+	{ -0.572391,  1.083833, -1.046680,  1.064406 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.150605, -0.641377,  1.046680,  1.379648 },
+	{ -0.910584, -0.701674, -1.046680,  1.369888 },
+	{ -0.784260, -0.532811,  1.046680,  1.333465 },
+	{ -0.897957, -0.303651, -1.046680,  1.306802 },
+	{ -1.137978, -0.243354,  1.046680,  1.316561 },
+	{ -1.264302, -0.412217, -1.046680,  1.352984 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.658148, -1.396357,  1.046680,  1.352984 },
+	{  0.665438, -1.166559, -1.046680,  1.316561 },
+	{  0.461219, -0.999440,  1.046680,  1.306802 },
+	{  0.249710, -1.062121, -1.046680,  1.333465 },
+	{  0.242420, -1.291920,  1.046680,  1.369888 },
+	{  0.446639, -1.459038, -1.046680,  1.379648 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.024853,  0.266172,  1.046680,  1.064406 },
+	{  0.784832,  0.326469, -1.046680,  1.074165 },
+	{  0.658508,  0.157606,  1.046680,  1.110589 },
+	{  0.772205, -0.071554, -1.046680,  1.137252 },
+	{  1.012226, -0.131851,  1.046680,  1.127493 },
+	{  1.138550,  0.037012, -1.046680,  1.091069 },
+	{  0.196423,  0.987984,  1.046680,  1.017971 },
+	{  0.021548,  0.868128, -1.046680,  1.050627 },
+	{  0.076629,  0.630553,  1.046680,  1.083283 },
+	{  0.306584,  0.512834, -1.046680,  1.083283 },
+	{  0.481459,  0.632690,  1.046680,  1.050627 },
+	{  0.426379,  0.870265, -1.046680,  1.017971 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_3_6[] {
+	{ -0.555177,  0.967789,  1.063701,  1.206912 },
+	{ -0.615986,  0.734055, -1.063701,  1.217844 },
+	{ -0.443059,  0.623476,  1.063701,  1.206912 },
+	{ -0.209322,  0.746632, -1.063701,  1.185048 },
+	{ -0.148512,  0.980365,  1.063701,  1.174116 },
+	{ -0.321440,  1.090944, -1.063701,  1.185048 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.320513, -0.812221,  1.063701,  1.314297 },
+	{ -1.085725, -0.804960, -1.063701,  1.295362 },
+	{ -0.915668, -0.598910,  1.063701,  1.276428 },
+	{ -0.980400, -0.400122, -1.063701,  1.276428 },
+	{ -1.215188, -0.407383,  1.063701,  1.295362 },
+	{ -1.385244, -0.613433, -1.063701,  1.314297 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.379146, -1.060539,  1.063701,  1.185048 },
+	{  0.439955, -0.826805, -1.063701,  1.174116 },
+	{  0.267028, -0.716227,  1.063701,  1.185048 },
+	{  0.033291, -0.839382, -1.063701,  1.206912 },
+	{ -0.027519, -1.073115,  1.063701,  1.217844 },
+	{  0.145409, -1.183694, -1.063701,  1.206912 },
+	{  1.113825, -0.221962,  1.063701,  1.104587 },
+	{  0.990803, -0.061822, -1.063701,  1.110246 },
+	{  0.748277, -0.129330,  1.063701,  1.131365 },
+	{  0.628772, -0.356979, -1.063701,  1.146825 },
+	{  0.751793, -0.517119,  1.063701,  1.141166 },
+	{  0.994320, -0.449611, -1.063701,  1.120047 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.453159,  1.212282,  1.063701,  1.120047 },
+	{  0.244140,  1.041873, -1.063701,  1.141166 },
+	{  0.246170,  0.817983,  1.063701,  1.146825 },
+	{  0.457219,  0.764502, -1.063701,  1.131365 },
+	{  0.666238,  0.934911,  1.063701,  1.110246 },
+	{  0.664208,  1.158801, -1.063701,  1.104587 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_3_7[] {
+	{ -0.641377,  1.150605,  1.046680,  1.379648 },
+	{ -0.701674,  0.910584, -1.046680,  1.369888 },
+	{ -0.532811,  0.784260,  1.046680,  1.333465 },
+	{ -0.303651,  0.897957, -1.046680,  1.306802 },
+	{ -0.243354,  1.137978,  1.046680,  1.316561 },
+	{ -0.412217,  1.264302, -1.046680,  1.352984 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.396357, -0.658148,  1.046680,  1.352984 },
+	{ -1.166559, -0.665438, -1.046680,  1.316561 },
+	{ -0.999440, -0.461219,  1.046680,  1.306802 },
+	{ -1.062121, -0.249710, -1.046680,  1.333465 },
+	{ -1.291920, -0.242420,  1.046680,  1.369888 },
+	{ -1.459038, -0.446639, -1.046680,  1.379648 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.266172, -1.024853,  1.046680,  1.064406 },
+	{  0.326469, -0.784832, -1.046680,  1.074165 },
+	{  0.157606, -0.658508,  1.046680,  1.110589 },
+	{ -0.071554, -0.772205, -1.046680,  1.137252 },
+	{ -0.131851, -1.012226,  1.046680,  1.127493 },
+	{  0.037012, -1.138550, -1.046680,  1.091069 },
+	{  0.987984, -0.196423,  1.046680,  1.017971 },
+	{  0.868128, -0.021548, -1.046680,  1.050627 },
+	{  0.630553, -0.076629,  1.046680,  1.083283 },
+	{  0.512834, -0.306584, -1.046680,  1.083283 },
+	{  0.632690, -0.481459,  1.046680,  1.050627 },
+	{  0.870265, -0.426379, -1.046680,  1.017971 },
+	{  1.021153,  0.783900,  1.046680,  1.091069 },
+	{  0.791354,  0.791190, -1.046680,  1.127493 },
+	{  0.624236,  0.586971,  1.046680,  1.137252 },
+	{  0.686916,  0.375462, -1.046680,  1.110589 },
+	{  0.916715,  0.368172,  1.046680,  1.074165 },
+	{  1.083833,  0.572391, -1.046680,  1.064406 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_4_5[] {
+	{ -1.121889,  1.482895,  1.046680,  0.866890 },
+	{ -1.042024,  1.212360, -1.046680,  0.915461 },
+	{ -0.734158,  0.917173,  1.046680,  0.986081 },
+	{ -0.506157,  0.892521, -1.046680,  1.008130 },
+	{ -0.586022,  1.163057,  1.046680,  0.959559 },
+	{ -0.893887,  1.458243, -1.046680,  0.888939 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.918390, -0.326834,  1.046680,  1.165396 },
+	{ -0.609007, -0.511493, -1.046680,  1.218898 },
+	{ -0.523481, -0.369533,  1.046680,  1.203586 },
+	{ -0.747337, -0.042913, -1.046680,  1.134771 },
+	{ -1.056720,  0.141746,  1.046680,  1.081268 },
+	{ -1.142247, -0.000215, -1.046680,  1.096580 },
+	{  0.347401, -1.576599,  1.046680,  1.461382 },
+	{  0.509695, -1.515876, -1.046680,  1.464869 },
+	{  0.352477, -1.206765,  1.046680,  1.404105 },
+	{  0.032966, -0.958379, -1.046680,  1.339855 },
+	{ -0.129328, -1.019103,  1.046680,  1.336367 },
+	{  0.027889, -1.328213, -1.046680,  1.397131 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.325402, -0.267020,  1.046680,  1.335217 },
+	{  1.016019, -0.082361, -1.046680,  1.281714 },
+	{  0.930492, -0.224322,  1.046680,  1.297027 },
+	{  1.154348, -0.550941, -1.046680,  1.365842 },
+	{  1.463731, -0.735600,  1.046680,  1.419345 },
+	{  1.549258, -0.593639, -1.046680,  1.404032 },
+	{  0.059611,  0.982745,  1.046680,  1.039231 },
+	{ -0.102683,  0.922021, -1.046680,  1.035744 },
+	{  0.054534,  0.612911,  1.046680,  1.096507 },
+	{  0.374046,  0.364525, -1.046680,  1.160758 },
+	{  0.536340,  0.425248,  1.046680,  1.164245 },
+	{  0.379122,  0.734359, -1.046680,  1.103481 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_4_6[] {
+	{ -0.664208,  1.158801,  1.063701,  1.104587 },
+	{ -0.666238,  0.934911, -1.063701,  1.110246 },
+	{ -0.457219,  0.764502,  1.063701,  1.131365 },
+	{ -0.246170,  0.817983, -1.063701,  1.146825 },
+	{ -0.244140,  1.041873,  1.063701,  1.141166 },
+	{ -0.453159,  1.212282, -1.063701,  1.120047 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.994320, -0.449611,  1.063701,  1.120047 },
+	{ -0.751793, -0.517119, -1.063701,  1.141166 },
+	{ -0.628772, -0.356979,  1.063701,  1.146825 },
+	{ -0.748277, -0.129330, -1.063701,  1.131365 },
+	{ -0.990803, -0.061822,  1.063701,  1.110246 },
+	{ -1.113825, -0.221962, -1.063701,  1.104587 },
+	{ -0.145409, -1.183694,  1.063701,  1.206912 },
+	{  0.027519, -1.073115, -1.063701,  1.217844 },
+	{ -0.033291, -0.839382,  1.063701,  1.206912 },
+	{ -0.267028, -0.716227, -1.063701,  1.185048 },
+	{ -0.439955, -0.826805,  1.063701,  1.174116 },
+	{ -0.379146, -1.060539, -1.063701,  1.185048 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.385244, -0.613433,  1.063701,  1.314297 },
+	{  1.215188, -0.407383, -1.063701,  1.295362 },
+	{  0.980400, -0.400122,  1.063701,  1.276428 },
+	{  0.915668, -0.598910, -1.063701,  1.276428 },
+	{  1.085725, -0.804960,  1.063701,  1.295362 },
+	{  1.320513, -0.812221, -1.063701,  1.314297 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.321440,  1.090944,  1.063701,  1.185048 },
+	{  0.148512,  0.980365, -1.063701,  1.174116 },
+	{  0.209322,  0.746632,  1.063701,  1.185048 },
+	{  0.443059,  0.623476, -1.063701,  1.206912 },
+	{  0.615986,  0.734055,  1.063701,  1.217844 },
+	{  0.555177,  0.967789, -1.063701,  1.206912 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_4_7[] {
+	{ -0.812221,  1.320513,  1.063701,  1.314297 },
+	{ -0.804960,  1.085725, -1.063701,  1.295362 },
+	{ -0.598910,  0.915668,  1.063701,  1.276428 },
+	{ -0.400122,  0.980400, -1.063701,  1.276428 },
+	{ -0.407383,  1.215188,  1.063701,  1.295362 },
+	{ -0.613433,  1.385244, -1.063701,  1.314297 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.060539, -0.379146,  1.063701,  1.185048 },
+	{ -0.826805, -0.439955, -1.063701,  1.174116 },
+	{ -0.716227, -0.267028,  1.063701,  1.185048 },
+	{ -0.839382, -0.033291, -1.063701,  1.206912 },
+	{ -1.073115,  0.027519,  1.063701,  1.217844 },
+	{ -1.183694, -0.145409, -1.063701,  1.206912 },
+	{ -0.221962, -1.113825,  1.063701,  1.104587 },
+	{ -0.061822, -0.990803, -1.063701,  1.110246 },
+	{ -0.129330, -0.748277,  1.063701,  1.131365 },
+	{ -0.356979, -0.628772, -1.063701,  1.146825 },
+	{ -0.517119, -0.751793,  1.063701,  1.141166 },
+	{ -0.449611, -0.994320, -1.063701,  1.120047 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.212282, -0.453159,  1.063701,  1.120047 },
+	{  1.041873, -0.244140, -1.063701,  1.141166 },
+	{  0.817983, -0.246170,  1.063701,  1.146825 },
+	{  0.764502, -0.457219, -1.063701,  1.131365 },
+	{  0.934911, -0.666238,  1.063701,  1.110246 },
+	{  1.158801, -0.664208, -1.063701,  1.104587 },
+	{  0.967789,  0.555177,  1.063701,  1.206912 },
+	{  0.734055,  0.615986, -1.063701,  1.217844 },
+	{  0.623476,  0.443059,  1.063701,  1.206912 },
+	{  0.746632,  0.209322, -1.063701,  1.185048 },
+	{  0.980365,  0.148512,  1.063701,  1.174116 },
+	{  1.090944,  0.321440, -1.063701,  1.185048 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_5_6[] {
+	{ -0.567229,  1.238775,  1.046680,  1.096580 },
+	{ -0.581801,  1.021481, -1.046680,  1.081268 },
+	{ -0.353932,  0.848020,  1.046680,  1.134771 },
+	{ -0.111491,  0.891853, -1.046680,  1.203586 },
+	{ -0.096919,  1.109148,  1.046680,  1.218898 },
+	{ -0.324788,  1.282608, -1.046680,  1.165396 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.029990, -0.310156,  1.046680,  0.888939 },
+	{ -0.758456, -0.384996, -1.046680,  0.959559 },
+	{ -0.610070, -0.234234,  1.046680,  1.008130 },
+	{ -0.733217, -0.008632, -1.046680,  0.986081 },
+	{ -1.004751,  0.066208,  1.046680,  0.915461 },
+	{ -1.153138, -0.084554, -1.046680,  0.866890 },
+	{ -0.106820, -1.055411,  1.046680,  1.103481 },
+	{  0.095487, -0.954681, -1.046680,  1.164245 },
+	{  0.039284, -0.725421,  1.046680,  1.160758 },
+	{ -0.219226, -0.596891, -1.046680,  1.096507 },
+	{ -0.421533, -0.697621,  1.046680,  1.035744 },
+	{ -0.365330, -0.926881, -1.046680,  1.039231 },
+	{  1.008031, -1.159078,  1.046680,  1.404032 },
+	{  1.022603, -0.941784, -1.046680,  1.419345 },
+	{  0.794734, -0.768323,  1.046680,  1.365842 },
+	{  0.552293, -0.812156, -1.046680,  1.297027 },
+	{  0.537721, -1.029451,  1.046680,  1.281714 },
+	{  0.765590, -1.202911, -1.046680,  1.335217 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.547622,  1.135108,  1.046680,  1.397131 },
+	{  0.345315,  1.034378, -1.046680,  1.336367 },
+	{  0.401518,  0.805118,  1.046680,  1.339855 },
+	{  0.660028,  0.676588, -1.046680,  1.404105 },
+	{  0.862335,  0.777318,  1.046680,  1.464869 },
+	{  0.806132,  1.006578, -1.046680,  1.461382 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_5_7[] {
+	{ -0.658148,  1.396357,  1.046680,  1.352984 },
+	{ -0.665438,  1.166559, -1.046680,  1.316561 },
+	{ -0.461219,  0.999440,  1.046680,  1.306802 },
+	{ -0.249710,  1.062121, -1.046680,  1.333465 },
+	{ -0.242420,  1.291920,  1.046680,  1.369888 },
+	{ -0.446639,  1.459038, -1.046680,  1.379648 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.024853, -0.266172,  1.046680,  1.064406 },
+	{ -0.784832, -0.326469, -1.046680,  1.074165 },
+	{ -0.658508, -0.157606,  1.046680,  1.110589 },
+	{ -0.772205,  0.071554, -1.046680,  1.137252 },
+	{ -1.012226,  0.131851,  1.046680,  1.127493 },
+	{ -1.138550, -0.037012, -1.046680,  1.091069 },
+	{ -0.196423, -0.987984,  1.046680,  1.017971 },
+	{ -0.021548, -0.868128, -1.046680,  1.050627 },
+	{ -0.076629, -0.630553,  1.046680,  1.083283 },
+	{ -0.306584, -0.512834, -1.046680,  1.083283 },
+	{ -0.481459, -0.632690,  1.046680,  1.050627 },
+	{ -0.426379, -0.870265, -1.046680,  1.017971 },
+	{  0.783900, -1.021153,  1.046680,  1.091069 },
+	{  0.791190, -0.791354, -1.046680,  1.127493 },
+	{  0.586971, -0.624236,  1.046680,  1.137252 },
+	{  0.375462, -0.686916, -1.046680,  1.110589 },
+	{  0.368172, -0.916715,  1.046680,  1.074165 },
+	{  0.572391, -1.083833, -1.046680,  1.064406 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.150605,  0.641377,  1.046680,  1.379648 },
+	{  0.910584,  0.701674, -1.046680,  1.369888 },
+	{  0.784260,  0.532811,  1.046680,  1.333465 },
+	{  0.897957,  0.303651, -1.046680,  1.306802 },
+	{  1.137978,  0.243354,  1.046680,  1.316561 },
+	{  1.264302,  0.412217, -1.046680,  1.352984 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_6_7[] {
+	{ -0.224534,  1.548440,  1.005587,  1.644953 },
+	{ -0.305817,  1.279596, -1.005587,  1.555970 },
+	{ -0.140358,  1.164210,  1.005587,  1.533774 },
+	{  0.106383,  1.317667, -1.005587,  1.600563 },
+	{  0.187666,  1.586511,  1.005587,  1.689546 },
+	{  0.022207,  1.701898, -1.005587,  1.711742 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.149106, -0.516640,  1.005587,  0.937470 },
+	{ -0.911123, -0.494659, -1.005587,  0.963216 },
+	{ -0.721738, -0.250844,  1.005587,  1.053151 },
+	{ -0.770337, -0.029008, -1.005587,  1.117340 },
+	{ -1.008321, -0.050988,  1.005587,  1.091594 },
+	{ -1.197705, -0.294804, -1.005587,  1.001659 },
+	{ -0.491942, -1.035523,  1.005587,  0.830722 },
+	{ -0.266187, -0.829879, -1.005587,  0.911848 },
+	{ -0.249269, -0.575884,  1.005587,  0.991137 },
+	{ -0.458106, -0.527533, -1.005587,  0.989299 },
+	{ -0.683861, -0.733177,  1.005587,  0.908173 },
+	{ -0.700779, -0.987172, -1.005587,  0.828885 },
+	{  0.548192, -0.699021,  1.005587,  1.017024 },
+	{  0.629474, -0.430177, -1.005587,  1.106007 },
+	{  0.464016, -0.314791,  1.005587,  1.128203 },
+	{  0.217275, -0.468248, -1.005587,  1.061414 },
+	{  0.135992, -0.737092,  1.005587,  0.972431 },
+	{  0.301451, -0.852479, -1.005587,  0.950235 },
+	{  1.362000,  0.295746,  1.005587,  1.387241 },
+	{  1.251196,  0.470305, -1.005587,  1.431957 },
+	{  1.000284,  0.379492,  1.005587,  1.384058 },
+	{  0.860176,  0.114120, -1.005587,  1.291443 },
+	{  0.970980, -0.060439,  1.005587,  1.246727 },
+	{  1.221892,  0.030374, -1.005587,  1.294626 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_3_4[] {
+	{ -0.473256,  0.728622,  0.947472,  0.831958 },
+	{ -0.675723,  0.326171, -0.947472,  1.100825 },
+	{ -0.556811,  0.172528,  0.947472,  1.172867 },
+	{ -0.235432,  0.421336, -0.947472,  0.976043 },
+	{ -0.032964,  0.823788,  0.947472,  0.707176 },
+	{ -0.151877,  0.977431, -0.947472,  0.635133 },
+	{ -1.749463, -0.809396,  0.947472,  1.937832 },
+	{ -1.712881, -1.055120, -0.947472,  2.077008 },
+	{ -1.414938, -0.897886,  0.947472,  1.937832 },
+	{ -1.153577, -0.494928, -0.947472,  1.659480 },
+	{ -1.190160, -0.249203,  0.947472,  1.520305 },
+	{ -1.488103, -0.406437, -0.947472,  1.659480 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.602226, -0.959384,  0.947472,  1.659480 },
+	{  0.565644, -0.713659, -0.947472,  1.520305 },
+	{  0.267701, -0.870893,  0.947472,  1.659480 },
+	{  0.006340, -1.273852, -0.947472,  1.937832 },
+	{  0.042922, -1.519577,  0.947472,  2.077008 },
+	{  0.340865, -1.362343, -0.947472,  1.937832 },
+	{  1.189640,  0.622564,  0.947472,  0.635133 },
+	{  0.935437,  0.567620, -0.947472,  0.707176 },
+	{  0.632994,  0.191615,  0.947472,  0.976043 },
+	{  0.584754, -0.129446, -0.947472,  1.172867 },
+	{  0.838956, -0.074502,  0.947472,  1.100825 },
+	{  1.141399,  0.301503, -0.947472,  0.831958 },
+	{  0.744160,  1.321759,  0.947472,  0.292362 },
+	{  0.421246,  0.998332, -0.947472,  0.533422 },
+	{  0.291470,  0.623814,  0.947472,  0.774481 },
+	{  0.484609,  0.572724, -0.947472,  0.774481 },
+	{  0.807523,  0.896151,  0.947472,  0.533422 },
+	{  0.937299,  1.270669, -0.947472,  0.292362 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_3_5[] {
+	{ -0.548192,  0.699021,  1.005587,  1.017024 },
+	{ -0.629474,  0.430177, -1.005587,  1.106007 },
+	{ -0.464016,  0.314791,  1.005587,  1.128203 },
+	{ -0.217275,  0.468248, -1.005587,  1.061414 },
+	{ -0.135992,  0.737092,  1.005587,  0.972431 },
+	{ -0.301451,  0.852479, -1.005587,  0.950235 },
+	{ -1.362000, -0.295746,  1.005587,  1.387241 },
+	{ -1.251196, -0.470305, -1.005587,  1.431957 },
+	{ -1.000284, -0.379492,  1.005587,  1.384058 },
+	{ -0.860176, -0.114120, -1.005587,  1.291443 },
+	{ -0.970980,  0.060439,  1.005587,  1.246727 },
+	{ -1.221892, -0.030374, -1.005587,  1.294626 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.224534, -1.548440,  1.005587,  1.644953 },
+	{  0.305817, -1.279596, -1.005587,  1.555970 },
+	{  0.140358, -1.164210,  1.005587,  1.533774 },
+	{ -0.106383, -1.317667, -1.005587,  1.600563 },
+	{ -0.187666, -1.586511,  1.005587,  1.689546 },
+	{ -0.022207, -1.701898, -1.005587,  1.711742 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.149106,  0.516640,  1.005587,  0.937470 },
+	{  0.911123,  0.494659, -1.005587,  0.963216 },
+	{  0.721738,  0.250844,  1.005587,  1.053151 },
+	{  0.770337,  0.029008, -1.005587,  1.117340 },
+	{  1.008321,  0.050988,  1.005587,  1.091594 },
+	{  1.197705,  0.294804, -1.005587,  1.001659 },
+	{  0.491942,  1.035523,  1.005587,  0.830722 },
+	{  0.266187,  0.829879, -1.005587,  0.911848 },
+	{  0.249269,  0.575884,  1.005587,  0.991137 },
+	{  0.458106,  0.527533, -1.005587,  0.989299 },
+	{  0.683861,  0.733177,  1.005587,  0.908173 },
+	{  0.700779,  0.987172, -1.005587,  0.828885 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_3_6[] {
+	{ -0.379122,  0.734359,  1.046680,  1.103481 },
+	{ -0.536340,  0.425248, -1.046680,  1.164245 },
+	{ -0.374046,  0.364525,  1.046680,  1.160758 },
+	{ -0.054534,  0.612911, -1.046680,  1.096507 },
+	{  0.102683,  0.922021,  1.046680,  1.035744 },
+	{ -0.059611,  0.982745, -1.046680,  1.039231 },
+	{ -1.549258, -0.593639,  1.046680,  1.404032 },
+	{ -1.463731, -0.735600, -1.046680,  1.419345 },
+	{ -1.154348, -0.550941,  1.046680,  1.365842 },
+	{ -0.930492, -0.224322, -1.046680,  1.297027 },
+	{ -1.016019, -0.082361,  1.046680,  1.281714 },
+	{ -1.325402, -0.267020, -1.046680,  1.335217 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.027889, -1.328213,  1.046680,  1.397131 },
+	{  0.129328, -1.019103, -1.046680,  1.336367 },
+	{ -0.032966, -0.958379,  1.046680,  1.339855 },
+	{ -0.352477, -1.206765, -1.046680,  1.404105 },
+	{ -0.509695, -1.515876,  1.046680,  1.464869 },
+	{ -0.347401, -1.576599, -1.046680,  1.461382 },
+	{  1.142247, -0.000215,  1.046680,  1.096580 },
+	{  1.056720,  0.141746, -1.046680,  1.081268 },
+	{  0.747337, -0.042913,  1.046680,  1.134771 },
+	{  0.523481, -0.369533, -1.046680,  1.203586 },
+	{  0.609007, -0.511493,  1.046680,  1.218898 },
+	{  0.918390, -0.326834, -1.046680,  1.165396 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.893887,  1.458243,  1.046680,  0.888939 },
+	{  0.586022,  1.163057, -1.046680,  0.959559 },
+	{  0.506157,  0.892521,  1.046680,  1.008130 },
+	{  0.734158,  0.917173, -1.046680,  0.986081 },
+	{  1.042024,  1.212360,  1.046680,  0.915461 },
+	{  1.121889,  1.482895, -1.046680,  0.866890 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_3_7[] {
+	{ -0.326834,  0.918390,  1.046680,  1.165396 },
+	{ -0.511493,  0.609007, -1.046680,  1.218898 },
+	{ -0.369533,  0.523481,  1.046680,  1.203586 },
+	{ -0.042913,  0.747337, -1.046680,  1.134771 },
+	{  0.141746,  1.056720,  1.046680,  1.081268 },
+	{ -0.000215,  1.142247, -1.046680,  1.096580 },
+	{ -1.576599, -0.347401,  1.046680,  1.461382 },
+	{ -1.515876, -0.509695, -1.046680,  1.464869 },
+	{ -1.206765, -0.352477,  1.046680,  1.404105 },
+	{ -0.958379, -0.032966, -1.046680,  1.339855 },
+	{ -1.019103,  0.129328,  1.046680,  1.336367 },
+	{ -1.328213, -0.027889, -1.046680,  1.397131 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.267020, -1.325402,  1.046680,  1.335217 },
+	{ -0.082361, -1.016019, -1.046680,  1.281714 },
+	{ -0.224322, -0.930492,  1.046680,  1.297027 },
+	{ -0.550941, -1.154348, -1.046680,  1.365842 },
+	{ -0.735600, -1.463731,  1.046680,  1.419345 },
+	{ -0.593639, -1.549258, -1.046680,  1.404032 },
+	{  0.982745, -0.059611,  1.046680,  1.039231 },
+	{  0.922021,  0.102683, -1.046680,  1.035744 },
+	{  0.612911, -0.054534,  1.046680,  1.096507 },
+	{  0.364525, -0.374046, -1.046680,  1.160758 },
+	{  0.425248, -0.536340,  1.046680,  1.164245 },
+	{  0.734359, -0.379122, -1.046680,  1.103481 },
+	{  1.482895,  1.121889,  1.046680,  0.866890 },
+	{  1.212360,  1.042024, -1.046680,  0.915461 },
+	{  0.917173,  0.734158,  1.046680,  0.986081 },
+	{  0.892521,  0.506157, -1.046680,  1.008130 },
+	{  1.163057,  0.586022,  1.046680,  0.959559 },
+	{  1.458243,  0.893887, -1.046680,  0.888939 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_4_5[] {
+	{ -0.700779,  0.987172,  1.005587,  0.828885 },
+	{ -0.683861,  0.733177, -1.005587,  0.908173 },
+	{ -0.458106,  0.527533,  1.005587,  0.989299 },
+	{ -0.249269,  0.575884, -1.005587,  0.991137 },
+	{ -0.266187,  0.829879,  1.005587,  0.911848 },
+	{ -0.491942,  1.035523, -1.005587,  0.830722 },
+	{ -1.197705,  0.294804,  1.005587,  1.001659 },
+	{ -1.008321,  0.050988, -1.005587,  1.091594 },
+	{ -0.770337,  0.029008,  1.005587,  1.117340 },
+	{ -0.721738,  0.250844, -1.005587,  1.053151 },
+	{ -0.911123,  0.494659,  1.005587,  0.963216 },
+	{ -1.149106,  0.516640, -1.005587,  0.937470 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.022207, -1.701898,  1.005587,  1.711742 },
+	{  0.187666, -1.586511, -1.005587,  1.689546 },
+	{  0.106383, -1.317667,  1.005587,  1.600563 },
+	{ -0.140358, -1.164210, -1.005587,  1.533774 },
+	{ -0.305817, -1.279596,  1.005587,  1.555970 },
+	{ -0.224534, -1.548440, -1.005587,  1.644953 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.221892, -0.030374,  1.005587,  1.294626 },
+	{  0.970980,  0.060439, -1.005587,  1.246727 },
+	{  0.860176, -0.114120,  1.005587,  1.291443 },
+	{  1.000284, -0.379492, -1.005587,  1.384058 },
+	{  1.251196, -0.470305,  1.005587,  1.431957 },
+	{  1.362000, -0.295746, -1.005587,  1.387241 },
+	{  0.301451,  0.852479,  1.005587,  0.950235 },
+	{  0.135992,  0.737092, -1.005587,  0.972431 },
+	{  0.217275,  0.468248,  1.005587,  1.061414 },
+	{  0.464016,  0.314791, -1.005587,  1.128203 },
+	{  0.629474,  0.430177,  1.005587,  1.106007 },
+	{  0.548192,  0.699021, -1.005587,  1.017024 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_4_6[] {
+	{ -0.426379,  0.870265,  1.046680,  1.017971 },
+	{ -0.481459,  0.632690, -1.046680,  1.050627 },
+	{ -0.306584,  0.512834,  1.046680,  1.083283 },
+	{ -0.076629,  0.630553, -1.046680,  1.083283 },
+	{ -0.021548,  0.868128,  1.046680,  1.050627 },
+	{ -0.196423,  0.987984, -1.046680,  1.017971 },
+	{ -1.138550,  0.037012,  1.046680,  1.091069 },
+	{ -1.012226, -0.131851, -1.046680,  1.127493 },
+	{ -0.772205, -0.071554,  1.046680,  1.137252 },
+	{ -0.658508,  0.157606, -1.046680,  1.110589 },
+	{ -0.784832,  0.326469,  1.046680,  1.074165 },
+	{ -1.024853,  0.266172, -1.046680,  1.064406 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.446639, -1.459038,  1.046680,  1.379648 },
+	{ -0.242420, -1.291920, -1.046680,  1.369888 },
+	{ -0.249710, -1.062121,  1.046680,  1.333465 },
+	{ -0.461219, -0.999440, -1.046680,  1.306802 },
+	{ -0.665438, -1.166559,  1.046680,  1.316561 },
+	{ -0.658148, -1.396357, -1.046680,  1.352984 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.264302, -0.412217,  1.046680,  1.352984 },
+	{  1.137978, -0.243354, -1.046680,  1.316561 },
+	{  0.897957, -0.303651,  1.046680,  1.306802 },
+	{  0.784260, -0.532811, -1.046680,  1.333465 },
+	{  0.910584, -0.701674,  1.046680,  1.369888 },
+	{  1.150605, -0.641377, -1.046680,  1.379648 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.572391,  1.083833,  1.046680,  1.064406 },
+	{  0.368172,  0.916715, -1.046680,  1.074165 },
+	{  0.375462,  0.686916,  1.046680,  1.110589 },
+	{  0.586971,  0.624236, -1.046680,  1.137252 },
+	{  0.791190,  0.791354,  1.046680,  1.127493 },
+	{  0.783900,  1.021153, -1.046680,  1.091069 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_4_7[] {
+	{ -0.449611,  0.994320,  1.063701,  1.120047 },
+	{ -0.517119,  0.751793, -1.063701,  1.141166 },
+	{ -0.356979,  0.628772,  1.063701,  1.146825 },
+	{ -0.129330,  0.748277, -1.063701,  1.131365 },
+	{ -0.061822,  0.990803,  1.063701,  1.110246 },
+	{ -0.221962,  1.113825, -1.063701,  1.104587 },
+	{ -1.183694,  0.145409,  1.063701,  1.206912 },
+	{ -1.073115, -0.027519, -1.063701,  1.217844 },
+	{ -0.839382,  0.033291,  1.063701,  1.206912 },
+	{ -0.716227,  0.267028, -1.063701,  1.185048 },
+	{ -0.826805,  0.439955,  1.063701,  1.174116 },
+	{ -1.060539,  0.379146, -1.063701,  1.185048 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.613433, -1.385244,  1.063701,  1.314297 },
+	{ -0.407383, -1.215188, -1.063701,  1.295362 },
+	{ -0.400122, -0.980400,  1.063701,  1.276428 },
+	{ -0.598910, -0.915668, -1.063701,  1.276428 },
+	{ -0.804960, -1.085725,  1.063701,  1.295362 },
+	{ -0.812221, -1.320513, -1.063701,  1.314297 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.090944, -0.321440,  1.063701,  1.185048 },
+	{  0.980365, -0.148512, -1.063701,  1.174116 },
+	{  0.746632, -0.209322,  1.063701,  1.185048 },
+	{  0.623476, -0.443059, -1.063701,  1.206912 },
+	{  0.734055, -0.615986,  1.063701,  1.217844 },
+	{  0.967789, -0.555177, -1.063701,  1.206912 },
+	{  1.158801,  0.664208,  1.063701,  1.104587 },
+	{  0.934911,  0.666238, -1.063701,  1.110246 },
+	{  0.764502,  0.457219,  1.063701,  1.131365 },
+	{  0.817983,  0.246170, -1.063701,  1.146825 },
+	{  1.041873,  0.244140,  1.063701,  1.141166 },
+	{  1.212282,  0.453159, -1.063701,  1.120047 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_5_6[] {
+	{ -0.365330,  0.926881,  1.046680,  1.039231 },
+	{ -0.421533,  0.697621, -1.046680,  1.035744 },
+	{ -0.219226,  0.596891,  1.046680,  1.096507 },
+	{  0.039284,  0.725421, -1.046680,  1.160758 },
+	{  0.095487,  0.954681,  1.046680,  1.164245 },
+	{ -0.106820,  1.055411, -1.046680,  1.103481 },
+	{ -1.153138,  0.084554,  1.046680,  0.866890 },
+	{ -1.004751, -0.066208, -1.046680,  0.915461 },
+	{ -0.733217,  0.008632,  1.046680,  0.986081 },
+	{ -0.610070,  0.234234, -1.046680,  1.008130 },
+	{ -0.758456,  0.384996,  1.046680,  0.959559 },
+	{ -1.029990,  0.310156, -1.046680,  0.888939 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.324788, -1.282608,  1.046680,  1.165396 },
+	{ -0.096919, -1.109148, -1.046680,  1.218898 },
+	{ -0.111491, -0.891853,  1.046680,  1.203586 },
+	{ -0.353932, -0.848020, -1.046680,  1.134771 },
+	{ -0.581801, -1.021481,  1.046680,  1.081268 },
+	{ -0.567229, -1.238775, -1.046680,  1.096580 },
+	{  0.806132, -1.006578,  1.046680,  1.461382 },
+	{  0.862335, -0.777318, -1.046680,  1.464869 },
+	{  0.660028, -0.676588,  1.046680,  1.404105 },
+	{  0.401518, -0.805118, -1.046680,  1.339855 },
+	{  0.345315, -1.034378,  1.046680,  1.336367 },
+	{  0.547622, -1.135108, -1.046680,  1.397131 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.765590,  1.202911,  1.046680,  1.335217 },
+	{  0.537721,  1.029451, -1.046680,  1.281714 },
+	{  0.552293,  0.812156,  1.046680,  1.297027 },
+	{  0.794734,  0.768323, -1.046680,  1.365842 },
+	{  1.022603,  0.941784,  1.046680,  1.419345 },
+	{  1.008031,  1.159078, -1.046680,  1.404032 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_5_7[] {
+	{ -0.379146,  1.060539,  1.063701,  1.185048 },
+	{ -0.439955,  0.826805, -1.063701,  1.174116 },
+	{ -0.267028,  0.716227,  1.063701,  1.185048 },
+	{ -0.033291,  0.839382, -1.063701,  1.206912 },
+	{  0.027519,  1.073115,  1.063701,  1.217844 },
+	{ -0.145409,  1.183694, -1.063701,  1.206912 },
+	{ -1.113825,  0.221962,  1.063701,  1.104587 },
+	{ -0.990803,  0.061822, -1.063701,  1.110246 },
+	{ -0.748277,  0.129330,  1.063701,  1.131365 },
+	{ -0.628772,  0.356979, -1.063701,  1.146825 },
+	{ -0.751793,  0.517119,  1.063701,  1.141166 },
+	{ -0.994320,  0.449611, -1.063701,  1.120047 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.453159, -1.212282,  1.063701,  1.120047 },
+	{ -0.244140, -1.041873, -1.063701,  1.141166 },
+	{ -0.246170, -0.817983,  1.063701,  1.146825 },
+	{ -0.457219, -0.764502, -1.063701,  1.131365 },
+	{ -0.666238, -0.934911,  1.063701,  1.110246 },
+	{ -0.664208, -1.158801, -1.063701,  1.104587 },
+	{  0.555177, -0.967789,  1.063701,  1.206912 },
+	{  0.615986, -0.734055, -1.063701,  1.217844 },
+	{  0.443059, -0.623476,  1.063701,  1.206912 },
+	{  0.209322, -0.746632, -1.063701,  1.185048 },
+	{  0.148512, -0.980365,  1.063701,  1.174116 },
+	{  0.321440, -1.090944, -1.063701,  1.185048 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.320513,  0.812221,  1.063701,  1.314297 },
+	{  1.085725,  0.804960, -1.063701,  1.295362 },
+	{  0.915668,  0.598910,  1.063701,  1.276428 },
+	{  0.980400,  0.400122, -1.063701,  1.276428 },
+	{  1.215188,  0.407383,  1.063701,  1.295362 },
+	{  1.385244,  0.613433, -1.063701,  1.314297 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_6_7[] {
+	{  0.027889,  1.328213,  1.046680,  1.397131 },
+	{ -0.129328,  1.019103, -1.046680,  1.336367 },
+	{  0.032966,  0.958379,  1.046680,  1.339855 },
+	{  0.352477,  1.206765, -1.046680,  1.404105 },
+	{  0.509695,  1.515876,  1.046680,  1.464869 },
+	{  0.347401,  1.576599, -1.046680,  1.461382 },
+	{ -1.142247,  0.000215,  1.046680,  1.096580 },
+	{ -1.056720, -0.141746, -1.046680,  1.081268 },
+	{ -0.747337,  0.042913,  1.046680,  1.134771 },
+	{ -0.523481,  0.369533, -1.046680,  1.203586 },
+	{ -0.609007,  0.511493,  1.046680,  1.218898 },
+	{ -0.918390,  0.326834, -1.046680,  1.165396 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.893887, -1.458243,  1.046680,  0.888939 },
+	{ -0.586022, -1.163057, -1.046680,  0.959559 },
+	{ -0.506157, -0.892521,  1.046680,  1.008130 },
+	{ -0.734158, -0.917173, -1.046680,  0.986081 },
+	{ -1.042024, -1.212360,  1.046680,  0.915461 },
+	{ -1.121889, -1.482895, -1.046680,  0.866890 },
+	{  0.379122, -0.734359,  1.046680,  1.103481 },
+	{  0.536340, -0.425248, -1.046680,  1.164245 },
+	{  0.374046, -0.364525,  1.046680,  1.160758 },
+	{  0.054534, -0.612911, -1.046680,  1.096507 },
+	{ -0.102683, -0.922021,  1.046680,  1.035744 },
+	{  0.059611, -0.982745, -1.046680,  1.039231 },
+	{  1.549258,  0.593639,  1.046680,  1.404032 },
+	{  1.463731,  0.735600, -1.046680,  1.419345 },
+	{  1.154348,  0.550941,  1.046680,  1.365842 },
+	{  0.930492,  0.224322, -1.046680,  1.297027 },
+	{  1.016019,  0.082361,  1.046680,  1.281714 },
+	{  1.325402,  0.267020, -1.046680,  1.335217 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_4_5[] {
+	{ -0.937299,  1.270669,  0.947472,  0.292362 },
+	{ -0.807523,  0.896151, -0.947472,  0.533422 },
+	{ -0.484609,  0.572724,  0.947472,  0.774481 },
+	{ -0.291470,  0.623814, -0.947472,  0.774481 },
+	{ -0.421246,  0.998332,  0.947472,  0.533422 },
+	{ -0.744160,  1.321759, -0.947472,  0.292362 },
+	{ -1.141399,  0.301503,  0.947472,  0.831958 },
+	{ -0.838956, -0.074502, -0.947472,  1.100825 },
+	{ -0.584754, -0.129446,  0.947472,  1.172867 },
+	{ -0.632994,  0.191615, -0.947472,  0.976043 },
+	{ -0.935437,  0.567620,  0.947472,  0.707176 },
+	{ -1.189640,  0.622564, -0.947472,  0.635133 },
+	{ -0.340865, -1.362343,  0.947472,  1.937832 },
+	{ -0.042922, -1.519577, -0.947472,  2.077008 },
+	{ -0.006340, -1.273852,  0.947472,  1.937832 },
+	{ -0.267701, -0.870893, -0.947472,  1.659480 },
+	{ -0.565644, -0.713659,  0.947472,  1.520305 },
+	{ -0.602226, -0.959384, -0.947472,  1.659480 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.488103, -0.406437,  0.947472,  1.659480 },
+	{  1.190160, -0.249203, -0.947472,  1.520305 },
+	{  1.153577, -0.494928,  0.947472,  1.659480 },
+	{  1.414938, -0.897886, -0.947472,  1.937832 },
+	{  1.712881, -1.055120,  0.947472,  2.077008 },
+	{  1.749463, -0.809396, -0.947472,  1.937832 },
+	{  0.151877,  0.977431,  0.947472,  0.635133 },
+	{  0.032964,  0.823788, -0.947472,  0.707176 },
+	{  0.235432,  0.421336,  0.947472,  0.976043 },
+	{  0.556811,  0.172528, -0.947472,  1.172867 },
+	{  0.675723,  0.326171,  0.947472,  1.100825 },
+	{  0.473256,  0.728622, -0.947472,  0.831958 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_4_6[] {
+	{ -0.357962,  0.899341,  1.005587,  0.830722 },
+	{ -0.398787,  0.638093, -1.005587,  0.911848 },
+	{ -0.220322,  0.484458,  1.005587,  0.991137 },
+	{ -0.001031,  0.592070, -1.005587,  0.989299 },
+	{  0.039794,  0.853318,  1.005587,  0.908173 },
+	{ -0.138671,  1.006953, -1.005587,  0.828885 },
+	{ -1.010913,  0.038979,  1.005587,  1.017024 },
+	{ -0.877397, -0.164540, -1.005587,  1.106007 },
+	{ -0.645011, -0.122591,  1.005587,  1.128203 },
+	{ -0.546141,  0.122878, -1.005587,  1.061414 },
+	{ -0.679656,  0.326397,  1.005587,  0.972431 },
+	{ -0.912042,  0.284448, -1.005587,  0.950235 },
+	{ -0.965238, -1.045189,  1.005587,  1.387241 },
+	{ -0.735594, -1.071761, -1.005587,  1.431957 },
+	{ -0.585416, -0.858800,  1.005587,  1.384058 },
+	{ -0.664882, -0.619266, -1.005587,  1.291443 },
+	{ -0.894527, -0.592695,  1.005587,  1.246727 },
+	{ -1.044705, -0.805656, -1.005587,  1.294626 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.374343, -0.725142,  1.005587,  1.644953 },
+	{  1.240828, -0.521623, -1.005587,  1.555970 },
+	{  1.008442, -0.563573,  1.005587,  1.533774 },
+	{  0.909571, -0.809041, -1.005587,  1.600563 },
+	{  1.043087, -1.012561,  1.005587,  1.689546 },
+	{  1.275473, -0.970611, -1.005587,  1.711742 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.611124,  1.031909,  1.005587,  0.937470 },
+	{  0.419873,  0.865968, -1.005587,  0.963216 },
+	{  0.439876,  0.606745,  1.005587,  1.053151 },
+	{  0.651129,  0.513462, -1.005587,  1.117340 },
+	{  0.842380,  0.679404,  1.005587,  1.091594 },
+	{  0.822377,  0.938627, -1.005587,  1.001659 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_4_7[] {
+	{ -0.310156,  1.029990,  1.046680,  0.888939 },
+	{ -0.384996,  0.758456, -1.046680,  0.959559 },
+	{ -0.234234,  0.610070,  1.046680,  1.008130 },
+	{ -0.008632,  0.733217, -1.046680,  0.986081 },
+	{  0.066208,  1.004751,  1.046680,  0.915461 },
+	{ -0.084554,  1.153138, -1.046680,  0.866890 },
+	{ -1.055411,  0.106820,  1.046680,  1.103481 },
+	{ -0.954681, -0.095487, -1.046680,  1.164245 },
+	{ -0.725421, -0.039284,  1.046680,  1.160758 },
+	{ -0.596891,  0.219226, -1.046680,  1.096507 },
+	{ -0.697621,  0.421533,  1.046680,  1.035744 },
+	{ -0.926881,  0.365330, -1.046680,  1.039231 },
+	{ -1.159078, -1.008031,  1.046680,  1.404032 },
+	{ -0.941784, -1.022603, -1.046680,  1.419345 },
+	{ -0.768323, -0.794734,  1.046680,  1.365842 },
+	{ -0.812156, -0.552293, -1.046680,  1.297027 },
+	{ -1.029451, -0.537721,  1.046680,  1.281714 },
+	{ -1.202911, -0.765590, -1.046680,  1.335217 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.135108, -0.547622,  1.046680,  1.397131 },
+	{  1.034378, -0.345315, -1.046680,  1.336367 },
+	{  0.805118, -0.401518,  1.046680,  1.339855 },
+	{  0.676588, -0.660028, -1.046680,  1.404105 },
+	{  0.777318, -0.862335,  1.046680,  1.464869 },
+	{  1.006578, -0.806132, -1.046680,  1.461382 },
+	{  1.238775,  0.567229,  1.046680,  1.096580 },
+	{  1.021481,  0.581801, -1.046680,  1.081268 },
+	{  0.848020,  0.353932,  1.046680,  1.134771 },
+	{  0.891853,  0.111491, -1.046680,  1.203586 },
+	{  1.109148,  0.096919,  1.046680,  1.218898 },
+	{  1.282608,  0.324788, -1.046680,  1.165396 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_5_6[] {
+	{ -0.284448,  0.912042,  1.005587,  0.950235 },
+	{ -0.326397,  0.679656, -1.005587,  0.972431 },
+	{ -0.122878,  0.546141,  1.005587,  1.061414 },
+	{  0.122591,  0.645011, -1.005587,  1.128203 },
+	{  0.164540,  0.877397,  1.005587,  1.106007 },
+	{ -0.038979,  1.010913, -1.005587,  1.017024 },
+	{ -1.006953,  0.138671,  1.005587,  0.828885 },
+	{ -0.853318, -0.039794, -1.005587,  0.908173 },
+	{ -0.592070,  0.001031,  1.005587,  0.989299 },
+	{ -0.484458,  0.220322, -1.005587,  0.991137 },
+	{ -0.638093,  0.398787,  1.005587,  0.911848 },
+	{ -0.899341,  0.357962, -1.005587,  0.830722 },
+	{ -0.938627, -0.822377,  1.005587,  1.001659 },
+	{ -0.679404, -0.842380, -1.005587,  1.091594 },
+	{ -0.513462, -0.651129,  1.005587,  1.117340 },
+	{ -0.606745, -0.439876, -1.005587,  1.053151 },
+	{ -0.865968, -0.419873,  1.005587,  0.963216 },
+	{ -1.031909, -0.611124, -1.005587,  0.937470 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.970611, -1.275473,  1.005587,  1.711742 },
+	{  1.012561, -1.043087, -1.005587,  1.689546 },
+	{  0.809041, -0.909571,  1.005587,  1.600563 },
+	{  0.563573, -1.008442, -1.005587,  1.533774 },
+	{  0.521623, -1.240828,  1.005587,  1.555970 },
+	{  0.725142, -1.374343, -1.005587,  1.644953 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.805656,  1.044705,  1.005587,  1.294626 },
+	{  0.592695,  0.894527, -1.005587,  1.246727 },
+	{  0.619266,  0.664882,  1.005587,  1.291443 },
+	{  0.858800,  0.585416, -1.005587,  1.384058 },
+	{  1.071761,  0.735594,  1.005587,  1.431957 },
+	{  1.045189,  0.965238, -1.005587,  1.387241 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_5_7[] {
+	{ -0.266172,  1.024853,  1.046680,  1.064406 },
+	{ -0.326469,  0.784832, -1.046680,  1.074165 },
+	{ -0.157606,  0.658508,  1.046680,  1.110589 },
+	{  0.071554,  0.772205, -1.046680,  1.137252 },
+	{  0.131851,  1.012226,  1.046680,  1.127493 },
+	{ -0.037012,  1.138550, -1.046680,  1.091069 },
+	{ -0.987984,  0.196423,  1.046680,  1.017971 },
+	{ -0.868128,  0.021548, -1.046680,  1.050627 },
+	{ -0.630553,  0.076629,  1.046680,  1.083283 },
+	{ -0.512834,  0.306584, -1.046680,  1.083283 },
+	{ -0.632690,  0.481459,  1.046680,  1.050627 },
+	{ -0.870265,  0.426379, -1.046680,  1.017971 },
+	{ -1.021153, -0.783900,  1.046680,  1.091069 },
+	{ -0.791354, -0.791190, -1.046680,  1.127493 },
+	{ -0.624236, -0.586971,  1.046680,  1.137252 },
+	{ -0.686916, -0.375462, -1.046680,  1.110589 },
+	{ -0.916715, -0.368172,  1.046680,  1.074165 },
+	{ -1.083833, -0.572391, -1.046680,  1.064406 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.641377, -1.150605,  1.046680,  1.379648 },
+	{  0.701674, -0.910584, -1.046680,  1.369888 },
+	{  0.532811, -0.784260,  1.046680,  1.333465 },
+	{  0.303651, -0.897957, -1.046680,  1.306802 },
+	{  0.243354, -1.137978,  1.046680,  1.316561 },
+	{  0.412217, -1.264302, -1.046680,  1.352984 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.396357,  0.658148,  1.046680,  1.352984 },
+	{  1.166559,  0.665438, -1.046680,  1.316561 },
+	{  0.999440,  0.461219,  1.046680,  1.306802 },
+	{  1.062121,  0.249710, -1.046680,  1.333465 },
+	{  1.291920,  0.242420,  1.046680,  1.369888 },
+	{  1.459038,  0.446639, -1.046680,  1.379648 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_6_7[] {
+	{  0.267020,  1.325402,  1.046680,  1.335217 },
+	{  0.082361,  1.016019, -1.046680,  1.281714 },
+	{  0.224322,  0.930492,  1.046680,  1.297027 },
+	{  0.550941,  1.154348, -1.046680,  1.365842 },
+	{  0.735600,  1.463731,  1.046680,  1.419345 },
+	{  0.593639,  1.549258, -1.046680,  1.404032 },
+	{ -0.982745,  0.059611,  1.046680,  1.039231 },
+	{ -0.922021, -0.102683, -1.046680,  1.035744 },
+	{ -0.612911,  0.054534,  1.046680,  1.096507 },
+	{ -0.364525,  0.374046, -1.046680,  1.160758 },
+	{ -0.425248,  0.536340,  1.046680,  1.164245 },
+	{ -0.734359,  0.379122, -1.046680,  1.103481 },
+	{ -1.482895, -1.121889,  1.046680,  0.866890 },
+	{ -1.212360, -1.042024, -1.046680,  0.915461 },
+	{ -0.917173, -0.734158,  1.046680,  0.986081 },
+	{ -0.892521, -0.506157, -1.046680,  1.008130 },
+	{ -1.163057, -0.586022,  1.046680,  0.959559 },
+	{ -1.458243, -0.893887, -1.046680,  0.888939 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.326834, -0.918390,  1.046680,  1.165396 },
+	{  0.511493, -0.609007, -1.046680,  1.218898 },
+	{  0.369533, -0.523481,  1.046680,  1.203586 },
+	{  0.042913, -0.747337, -1.046680,  1.134771 },
+	{ -0.141746, -1.056720,  1.046680,  1.081268 },
+	{  0.000215, -1.142247, -1.046680,  1.096580 },
+	{  1.576599,  0.347401,  1.046680,  1.461382 },
+	{  1.515876,  0.509695, -1.046680,  1.464869 },
+	{  1.206765,  0.352477,  1.046680,  1.404105 },
+	{  0.958379,  0.032966, -1.046680,  1.339855 },
+	{  1.019103, -0.129328,  1.046680,  1.336367 },
+	{  1.328213,  0.027889, -1.046680,  1.397131 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_4_5_6[] {
+	{ -0.622564,  1.189640,  0.947472,  0.635133 },
+	{ -0.567620,  0.935437, -0.947472,  0.707176 },
+	{ -0.191615,  0.632994,  0.947472,  0.976043 },
+	{  0.129446,  0.584754, -0.947472,  1.172867 },
+	{  0.074502,  0.838956,  0.947472,  1.100825 },
+	{ -0.301503,  1.141399, -0.947472,  0.831958 },
+	{ -1.321759,  0.744160,  0.947472,  0.292362 },
+	{ -0.998332,  0.421246, -0.947472,  0.533422 },
+	{ -0.623814,  0.291470,  0.947472,  0.774481 },
+	{ -0.572724,  0.484609, -0.947472,  0.774481 },
+	{ -0.896151,  0.807523,  0.947472,  0.533422 },
+	{ -1.270669,  0.937299, -0.947472,  0.292362 },
+	{ -0.728622, -0.473256,  0.947472,  0.831958 },
+	{ -0.326171, -0.675723, -0.947472,  1.100825 },
+	{ -0.172528, -0.556811,  0.947472,  1.172867 },
+	{ -0.421336, -0.235432, -0.947472,  0.976043 },
+	{ -0.823788, -0.032964,  0.947472,  0.707176 },
+	{ -0.977431, -0.151877, -0.947472,  0.635133 },
+	{  0.809396, -1.749463,  0.947472,  1.937832 },
+	{  1.055120, -1.712881, -0.947472,  2.077008 },
+	{  0.897886, -1.414938,  0.947472,  1.937832 },
+	{  0.494928, -1.153577, -0.947472,  1.659480 },
+	{  0.249203, -1.190160,  0.947472,  1.520305 },
+	{  0.406437, -1.488103, -0.947472,  1.659480 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.959384,  0.602226,  0.947472,  1.659480 },
+	{  0.713659,  0.565644, -0.947472,  1.520305 },
+	{  0.870893,  0.267701,  0.947472,  1.659480 },
+	{  1.273852,  0.006340, -0.947472,  1.937832 },
+	{  1.519577,  0.042922,  0.947472,  2.077008 },
+	{  1.362343,  0.340865, -0.947472,  1.937832 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_4_5_7[] {
+	{ -0.516640,  1.149106,  1.005587,  0.937470 },
+	{ -0.494659,  0.911123, -1.005587,  0.963216 },
+	{ -0.250844,  0.721738,  1.005587,  1.053151 },
+	{ -0.029008,  0.770337, -1.005587,  1.117340 },
+	{ -0.050988,  1.008321,  1.005587,  1.091594 },
+	{ -0.294804,  1.197705, -1.005587,  1.001659 },
+	{ -1.035523,  0.491942,  1.005587,  0.830722 },
+	{ -0.829879,  0.266187, -1.005587,  0.911848 },
+	{ -0.575884,  0.249269,  1.005587,  0.991137 },
+	{ -0.527533,  0.458106, -1.005587,  0.989299 },
+	{ -0.733177,  0.683861,  1.005587,  0.908173 },
+	{ -0.987172,  0.700779, -1.005587,  0.828885 },
+	{ -0.699021, -0.548192,  1.005587,  1.017024 },
+	{ -0.430177, -0.629474, -1.005587,  1.106007 },
+	{ -0.314791, -0.464016,  1.005587,  1.128203 },
+	{ -0.468248, -0.217275, -1.005587,  1.061414 },
+	{ -0.737092, -0.135992,  1.005587,  0.972431 },
+	{ -0.852479, -0.301451, -1.005587,  0.950235 },
+	{  0.295746, -1.362000,  1.005587,  1.387241 },
+	{  0.470305, -1.251196, -1.005587,  1.431957 },
+	{  0.379492, -1.000284,  1.005587,  1.384058 },
+	{  0.114120, -0.860176, -1.005587,  1.291443 },
+	{ -0.060439, -0.970980,  1.005587,  1.246727 },
+	{  0.030374, -1.221892, -1.005587,  1.294626 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.548440,  0.224534,  1.005587,  1.644953 },
+	{  1.279596,  0.305817, -1.005587,  1.555970 },
+	{  1.164210,  0.140358,  1.005587,  1.533774 },
+	{  1.317667, -0.106383, -1.005587,  1.600563 },
+	{  1.586511, -0.187666,  1.005587,  1.689546 },
+	{  1.701898, -0.022207, -1.005587,  1.711742 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_4_6_7[] {
+	{  0.030374,  1.221892,  1.005587,  1.294626 },
+	{ -0.060439,  0.970980, -1.005587,  1.246727 },
+	{  0.114120,  0.860176,  1.005587,  1.291443 },
+	{  0.379492,  1.000284, -1.005587,  1.384058 },
+	{  0.470305,  1.251196,  1.005587,  1.431957 },
+	{  0.295746,  1.362000, -1.005587,  1.387241 },
+	{ -0.852479,  0.301451,  1.005587,  0.950235 },
+	{ -0.737092,  0.135992, -1.005587,  0.972431 },
+	{ -0.468248,  0.217275,  1.005587,  1.061414 },
+	{ -0.314791,  0.464016, -1.005587,  1.128203 },
+	{ -0.430177,  0.629474,  1.005587,  1.106007 },
+	{ -0.699021,  0.548192, -1.005587,  1.017024 },
+	{ -0.987172, -0.700779,  1.005587,  0.828885 },
+	{ -0.733177, -0.683861, -1.005587,  0.908173 },
+	{ -0.527533, -0.458106,  1.005587,  0.989299 },
+	{ -0.575884, -0.249269, -1.005587,  0.991137 },
+	{ -0.829879, -0.266187,  1.005587,  0.911848 },
+	{ -1.035523, -0.491942, -1.005587,  0.830722 },
+	{ -0.294804, -1.197705,  1.005587,  1.001659 },
+	{ -0.050988, -1.008321, -1.005587,  1.091594 },
+	{ -0.029008, -0.770337,  1.005587,  1.117340 },
+	{ -0.250844, -0.721738, -1.005587,  1.053151 },
+	{ -0.494659, -0.911123,  1.005587,  0.963216 },
+	{ -0.516640, -1.149106, -1.005587,  0.937470 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.701898,  0.022207,  1.005587,  1.711742 },
+	{  1.586511,  0.187666, -1.005587,  1.689546 },
+	{  1.317667,  0.106383,  1.005587,  1.600563 },
+	{  1.164210, -0.140358, -1.005587,  1.533774 },
+	{  1.279596, -0.305817,  1.005587,  1.555970 },
+	{  1.548440, -0.224534, -1.005587,  1.644953 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_5_6_7[] {
+	{  0.406437,  1.488103,  0.947472,  1.659480 },
+	{  0.249203,  1.190160, -0.947472,  1.520305 },
+	{  0.494928,  1.153577,  0.947472,  1.659480 },
+	{  0.897886,  1.414938, -0.947472,  1.937832 },
+	{  1.055120,  1.712881,  0.947472,  2.077008 },
+	{  0.809396,  1.749463, -0.947472,  1.937832 },
+	{ -0.977431,  0.151877,  0.947472,  0.635133 },
+	{ -0.823788,  0.032964, -0.947472,  0.707176 },
+	{ -0.421336,  0.235432,  0.947472,  0.976043 },
+	{ -0.172528,  0.556811, -0.947472,  1.172867 },
+	{ -0.326171,  0.675723,  0.947472,  1.100825 },
+	{ -0.728622,  0.473256, -0.947472,  0.831958 },
+	{ -1.270669, -0.937299,  0.947472,  0.292362 },
+	{ -0.896151, -0.807523, -0.947472,  0.533422 },
+	{ -0.572724, -0.484609,  0.947472,  0.774481 },
+	{ -0.623814, -0.291470, -0.947472,  0.774481 },
+	{ -0.998332, -0.421246,  0.947472,  0.533422 },
+	{ -1.321759, -0.744160, -0.947472,  0.292362 },
+	{ -0.301503, -1.141399,  0.947472,  0.831958 },
+	{  0.074502, -0.838956, -0.947472,  1.100825 },
+	{  0.129446, -0.584754,  0.947472,  1.172867 },
+	{ -0.191615, -0.632994, -0.947472,  0.976043 },
+	{ -0.567620, -0.935437,  0.947472,  0.707176 },
+	{ -0.622564, -1.189640, -0.947472,  0.635133 },
+	{  1.362343, -0.340865,  0.947472,  1.937832 },
+	{  1.519577, -0.042922, -0.947472,  2.077008 },
+	{  1.273852, -0.006340,  0.947472,  1.937832 },
+	{  0.870893, -0.267701, -0.947472,  1.659480 },
+	{  0.713659, -0.565644,  0.947472,  1.520305 },
+	{  0.959384, -0.602226, -0.947472,  1.659480 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_2_3[] {
+	{ -0.000000, -0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.362921, -1.150732,  0.913723,  1.716031 },
+	{ -0.254431, -0.913454, -0.913723,  1.595524 },
+	{ -0.913843, -0.767761,  0.913723,  2.327975 },
+	{ -1.681745, -0.859347, -0.913723,  3.180933 },
+	{ -1.790234, -1.096626,  0.913723,  3.301439 },
+	{ -1.130822, -1.242319, -0.913723,  2.568988 },
+	{  1.846393, -0.385063,  0.913723, -0.737994 },
+	{  1.340408, -0.195192, -0.913723, -0.175965 },
+	{  0.516348, -0.226431,  0.913723,  0.739371 },
+	{  0.198273, -0.447539, -0.913723,  1.092678 },
+	{  0.704257, -0.637410,  0.913723,  0.530648 },
+	{  1.528317, -0.606171, -0.913723, -0.384688 },
+	{  1.528317,  0.606171,  0.913723, -0.384688 },
+	{  0.704257,  0.637410, -0.913723,  0.530648 },
+	{  0.198273,  0.447539,  0.913723,  1.092678 },
+	{  0.516348,  0.226431, -0.913723,  0.739371 },
+	{  1.340408,  0.195192,  0.913723, -0.175965 },
+	{  1.846393,  0.385063, -0.913723, -0.737994 },
+	{ -1.130822,  1.242319,  0.913723,  2.568988 },
+	{ -1.790234,  1.096626, -0.913723,  3.301439 },
+	{ -1.681745,  0.859347,  0.913723,  3.180933 },
+	{ -0.913843,  0.767761, -0.913723,  2.327975 },
+	{ -0.254431,  0.913454,  0.913723,  1.595524 },
+	{ -0.362921,  1.150732, -0.913723,  1.716031 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_2_4[] {
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.804585, -0.912524,  1.012883,  1.808691 },
+	{ -0.562955, -0.865874, -1.012883,  1.659800 },
+	{ -0.753968, -0.550300,  1.012883,  1.777501 },
+	{ -1.186611, -0.281375, -1.012883,  2.044092 },
+	{ -1.428241, -0.328025,  1.012883,  2.192983 },
+	{ -1.237228, -0.643599, -1.012883,  2.075282 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.493086, -0.997071,  1.012883,  0.392883 },
+	{  1.133019, -0.659610, -1.012883,  0.614754 },
+	{  0.743727, -0.531280,  1.012883,  0.854633 },
+	{  0.714503, -0.740411, -1.012883,  0.872640 },
+	{  1.074571, -1.077871,  1.012883,  0.650769 },
+	{  1.463863, -1.206201, -1.012883,  0.410891 },
+	{  0.761936,  0.293858,  1.012883,  0.843413 },
+	{  0.336471,  0.499492, -1.012883,  1.105581 },
+	{  0.196267,  0.367091,  1.012883,  1.191973 },
+	{  0.481528,  0.029055, -1.012883,  1.016198 },
+	{  0.906992, -0.176579,  1.012883,  0.754030 },
+	{  1.047196, -0.044177, -1.012883,  0.667637 },
+	{ -0.920941,  1.619808,  1.012883,  1.880389 },
+	{ -1.162571,  1.573158, -1.012883,  2.029279 },
+	{ -0.971558,  1.257584,  1.012883,  1.911578 },
+	{ -0.538916,  0.988659, -1.012883,  1.644987 },
+	{ -0.297286,  1.035309,  1.012883,  1.496097 },
+	{ -0.488299,  1.350883, -1.012883,  1.613798 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_2_5[] {
+	{ -0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.754110, -0.574398,  1.053957,  1.674099 },
+	{ -0.475242, -0.613926, -1.053957,  1.510970 },
+	{ -0.686363, -0.246270,  1.053957,  1.674099 },
+	{ -1.176353,  0.160914, -1.053957,  2.000356 },
+	{ -1.455221,  0.200442,  1.053957,  2.163485 },
+	{ -1.244099, -0.167214, -1.053957,  2.000356 },
+	{  1.124897, -1.705609,  1.053957,  0.473455 },
+	{  1.035859, -1.417232, -1.053957,  0.557897 },
+	{  0.572689, -0.974891,  1.053957,  0.873038 },
+	{  0.198557, -0.820926, -1.053957,  1.103736 },
+	{  0.287595, -1.109302,  1.053957,  1.019295 },
+	{  0.750765, -1.551643, -1.053957,  0.704154 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.077758,  0.032131,  1.053957,  0.704154 },
+	{  0.594341,  0.376408, -1.053957,  1.019295 },
+	{  0.429742,  0.298806,  1.053957,  1.103736 },
+	{  0.748559, -0.123074, -1.053957,  0.873038 },
+	{  1.231976, -0.467352,  1.053957,  0.557897 },
+	{  1.396575, -0.389749, -1.053957,  0.473455 },
+	{ -0.820775,  1.883137,  1.053957,  2.000356 },
+	{ -1.099643,  1.922665, -1.053957,  2.163485 },
+	{ -0.888522,  1.555009,  1.053957,  2.000356 },
+	{ -0.398533,  1.147825, -1.053957,  1.674099 },
+	{ -0.119665,  1.108297,  1.053957,  1.510970 },
+	{ -0.330786,  1.475953, -1.053957,  1.674099 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_2_6[] {
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.867206, -0.638358,  1.012883,  1.613798 },
+	{ -0.622910, -0.568060, -1.012883,  1.496097 },
+	{ -0.733092, -0.281198,  1.012883,  1.644987 },
+	{ -1.087570, -0.064634, -1.012883,  1.911578 },
+	{ -1.331866, -0.134931,  1.012883,  2.029279 },
+	{ -1.221684, -0.421793, -1.012883,  1.880389 },
+	{  0.587391, -1.035587,  1.012883,  0.667637 },
+	{  0.570438, -0.780356, -1.012883,  0.754030 },
+	{  0.248079, -0.517800,  1.012883,  1.016198 },
+	{ -0.057326, -0.510476, -1.012883,  1.191973 },
+	{ -0.040373, -0.765707,  1.012883,  1.105581 },
+	{  0.281986, -1.028262, -1.012883,  0.843413 },
+	{  1.331533, -0.483026,  1.012883,  0.410891 },
+	{  1.063261, -0.192373, -1.012883,  0.650769 },
+	{  0.717559, -0.107925,  1.012883,  0.872640 },
+	{  0.640129, -0.314132, -1.012883,  0.854633 },
+	{  0.908401, -0.604785,  1.012883,  0.614754 },
+	{  1.254103, -0.689232, -1.012883,  0.392883 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.383658,  1.809968,  1.012883,  2.075282 },
+	{ -0.627953,  1.739671, -1.012883,  2.192983 },
+	{ -0.517771,  1.452809,  1.012883,  2.044092 },
+	{ -0.163293,  1.236244, -1.012883,  1.777501 },
+	{  0.081002,  1.306542,  1.012883,  1.659800 },
+	{ -0.029180,  1.593404, -1.012883,  1.808691 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_2_7[] {
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.996550, -0.342341,  0.913723,  1.716031 },
+	{ -0.760729, -0.302085, -0.913723,  1.595524 },
+	{ -1.270308,  0.377009,  0.913723,  2.327975 },
+	{ -2.015708,  1.015847, -0.913723,  3.180933 },
+	{ -2.251529,  0.975592,  0.913723,  3.301439 },
+	{ -1.741950,  0.296498, -0.913723,  2.568988 },
+	{  1.440164, -1.888189,  0.913723, -0.737994 },
+	{  1.094572, -1.321681, -0.913723, -0.175965 },
+	{  0.333663, -0.597118,  0.913723,  0.739371 },
+	{ -0.081653, -0.439064, -0.913723,  1.092678 },
+	{  0.263939, -1.005573,  0.913723,  0.530648 },
+	{  1.024847, -1.730135, -0.913723, -0.384688 },
+	{  1.730135, -1.024847,  0.913723, -0.384688 },
+	{  1.005573, -0.263939, -0.913723,  0.530648 },
+	{  0.439064,  0.081653,  0.913723,  1.092678 },
+	{  0.597118, -0.333663, -0.913723,  0.739371 },
+	{  1.321681, -1.094572,  0.913723, -0.175965 },
+	{  1.888189, -1.440164, -0.913723, -0.737994 },
+	{ -0.296498,  1.741950,  0.913723,  2.568988 },
+	{ -0.975592,  2.251529, -0.913723,  3.301439 },
+	{ -1.015847,  2.015708,  0.913723,  3.180933 },
+	{ -0.377009,  1.270308, -0.913723,  2.327975 },
+	{  0.302085,  0.760729,  0.913723,  1.595524 },
+	{  0.342341,  0.996550, -0.913723,  1.716031 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_3_4[] {
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.389274, -0.514317,  1.053957,  1.839168 },
+	{ -1.100622, -0.618047, -1.053957,  1.774233 },
+	{ -1.020673, -0.424121,  1.053957,  1.709298 },
+	{ -1.229377, -0.126465, -1.053957,  1.709298 },
+	{ -1.518029, -0.022735,  1.053957,  1.774233 },
+	{ -1.597977, -0.216661, -1.053957,  1.839168 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.272377, -0.899753,  1.053957,  1.119987 },
+	{  1.015705, -0.625718, -1.053957,  1.139393 },
+	{  0.756128, -0.598979,  1.053957,  1.211819 },
+	{  0.753224, -0.846276, -1.053957,  1.264839 },
+	{  1.009896, -1.120311,  1.053957,  1.245432 },
+	{  1.269472, -1.147050, -1.053957,  1.173006 },
+	{  0.705272,  0.346942,  1.053957,  1.027653 },
+	{  0.416620,  0.450672, -1.053957,  1.092588 },
+	{  0.336672,  0.256746,  1.053957,  1.157524 },
+	{  0.545375, -0.040910, -1.053957,  1.157524 },
+	{  0.834027, -0.144639,  1.053957,  1.092588 },
+	{  0.913976,  0.049286, -1.053957,  1.027653 },
+	{ -0.475311,  1.341380,  1.053957,  1.173006 },
+	{ -0.626855,  1.214041, -1.053957,  1.245432 },
+	{ -0.480342,  0.913050,  1.053957,  1.264839 },
+	{ -0.182286,  0.739398, -1.053957,  1.211819 },
+	{ -0.030742,  0.866737,  1.053957,  1.139393 },
+	{ -0.177255,  1.167728, -1.053957,  1.119987 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_3_5[] {
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.371026, -0.129315,  1.095031,  1.609843 },
+	{ -1.076726, -0.262914, -1.095031,  1.546105 },
+	{ -0.979745, -0.106774,  1.095031,  1.525101 },
+	{ -1.177064,  0.182964, -1.095031,  1.567836 },
+	{ -1.471364,  0.316563,  1.095031,  1.631574 },
+	{ -1.568345,  0.160424, -1.095031,  1.652578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.933544, -1.475428,  1.095031,  1.110728 },
+	{  0.875614, -1.218001, -1.095031,  1.123275 },
+	{  0.591777, -0.973587,  1.095031,  1.184747 },
+	{  0.365871, -0.986601, -1.095031,  1.233673 },
+	{  0.423801, -1.244028,  1.095031,  1.221126 },
+	{  0.707637, -1.488442, -1.095031,  1.159654 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.876632,  0.301270,  1.095031,  1.123054 },
+	{  0.582332,  0.434869, -1.095031,  1.186792 },
+	{  0.485350,  0.278730,  1.095031,  1.207796 },
+	{  0.682669, -0.011009, -1.095031,  1.165062 },
+	{  0.976970, -0.144608,  1.095031,  1.101323 },
+	{  1.073951,  0.011532, -1.095031,  1.080319 },
+	{ -0.287440,  1.342293,  1.095031,  1.375164 },
+	{ -0.454579,  1.254733, -1.095031,  1.411363 },
+	{ -0.322452,  0.971499,  1.095031,  1.382747 },
+	{ -0.023187,  0.775825, -1.095031,  1.317933 },
+	{  0.143952,  0.863385,  1.095031,  1.281735 },
+	{  0.011826,  1.146619, -1.095031,  1.310350 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_3_6[] {
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.393185, -0.310282,  1.078018,  1.547443 },
+	{ -1.141987, -0.361706, -1.078018,  1.481902 },
+	{ -1.004203, -0.174133,  1.078018,  1.492685 },
+	{ -1.117617,  0.064864, -1.078018,  1.569009 },
+	{ -1.368815,  0.116288,  1.078018,  1.634550 },
+	{ -1.506599, -0.071285, -1.078018,  1.623767 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.491439, -1.019437,  1.078018,  0.985692 },
+	{  0.505509, -0.773157, -1.078018,  1.035983 },
+	{  0.295000, -0.605482,  1.078018,  1.117889 },
+	{  0.070421, -0.684087, -1.078018,  1.149503 },
+	{  0.056351, -0.930368,  1.078018,  1.099212 },
+	{  0.266860, -1.098042, -1.078018,  1.017306 },
+	{  1.098042, -0.266860,  1.078018,  1.017306 },
+	{  0.930368, -0.056351, -1.078018,  1.099212 },
+	{  0.684087, -0.070421,  1.078018,  1.149503 },
+	{  0.605482, -0.295000, -1.078018,  1.117889 },
+	{  0.773157, -0.505509,  1.078018,  1.035983 },
+	{  1.019437, -0.491439, -1.078018,  0.985692 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.071285,  1.506599,  1.078018,  1.623767 },
+	{ -0.116288,  1.368815, -1.078018,  1.634550 },
+	{ -0.064864,  1.117617,  1.078018,  1.569009 },
+	{  0.174133,  1.004203, -1.078018,  1.492685 },
+	{  0.361706,  1.141987,  1.078018,  1.481902 },
+	{  0.310282,  1.393185, -1.078018,  1.547443 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_3_7[] {
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.593404,  0.029180,  1.012883,  1.808691 },
+	{ -1.306542, -0.081002, -1.012883,  1.659800 },
+	{ -1.236244,  0.163293,  1.012883,  1.777501 },
+	{ -1.452809,  0.517771, -1.012883,  2.044092 },
+	{ -1.739671,  0.627953,  1.012883,  2.192983 },
+	{ -1.809968,  0.383658, -1.012883,  2.075282 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.689232, -1.254103,  1.012883,  0.392883 },
+	{  0.604785, -0.908401, -1.012883,  0.614754 },
+	{  0.314132, -0.640129,  1.012883,  0.854633 },
+	{  0.107925, -0.717559, -1.012883,  0.872640 },
+	{  0.192373, -1.063261,  1.012883,  0.650769 },
+	{  0.483026, -1.331533, -1.012883,  0.410891 },
+	{  1.028262, -0.281986,  1.012883,  0.843413 },
+	{  0.765707,  0.040373, -1.012883,  1.105581 },
+	{  0.510476,  0.057326,  1.012883,  1.191973 },
+	{  0.517800, -0.248079, -1.012883,  1.016198 },
+	{  0.780356, -0.570438,  1.012883,  0.754030 },
+	{  1.035587, -0.587391, -1.012883,  0.667637 },
+	{  0.421793,  1.221684,  1.012883,  1.880389 },
+	{  0.134931,  1.331866, -1.012883,  2.029279 },
+	{  0.064634,  1.087570,  1.012883,  1.911578 },
+	{  0.281198,  0.733092, -1.012883,  1.644987 },
+	{  0.568060,  0.622910,  1.012883,  1.496097 },
+	{  0.638358,  0.867206, -1.012883,  1.613798 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_4_5[] {
+	{  0.000000, -0.000000,  0.000000,  0.000000 },
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.361021,  0.311786,  1.112044,  1.312912 },
+	{ -0.887075, -0.039111, -1.112044,  1.312912 },
+	{ -0.854728,  0.128943,  1.112044,  1.312912 },
+	{ -1.296327,  0.647894, -1.112044,  1.312912 },
+	{ -1.770274,  0.998791,  1.112044,  1.312912 },
+	{ -1.802620,  0.830738, -1.112044,  1.312912 },
+	{  0.830738, -1.802620,  1.112044,  1.312912 },
+	{  0.998791, -1.770274, -1.112044,  1.312912 },
+	{  0.647894, -1.296327,  1.112044,  1.312912 },
+	{  0.128943, -0.854728, -1.112044,  1.312912 },
+	{ -0.039111, -0.887075,  1.112044,  1.312912 },
+	{  0.311786, -1.361021, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.361021, -0.311786,  1.112044,  1.312912 },
+	{  0.887075,  0.039111, -1.112044,  1.312912 },
+	{  0.854728, -0.128943,  1.112044,  1.312912 },
+	{  1.296327, -0.647894, -1.112044,  1.312912 },
+	{  1.770274, -0.998791,  1.112044,  1.312912 },
+	{  1.802620, -0.830738, -1.112044,  1.312912 },
+	{ -0.830738,  1.802620,  1.112044,  1.312912 },
+	{ -0.998791,  1.770274, -1.112044,  1.312912 },
+	{ -0.647894,  1.296327,  1.112044,  1.312912 },
+	{ -0.128943,  0.854728, -1.112044,  1.312912 },
+	{  0.039111,  0.887075,  1.112044,  1.312912 },
+	{ -0.311786,  1.361021, -1.112044,  1.312912 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_4_6[] {
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.146619, -0.011826,  1.095031,  1.310350 },
+	{ -0.863385, -0.143952, -1.095031,  1.281735 },
+	{ -0.775825,  0.023187,  1.095031,  1.317933 },
+	{ -0.971499,  0.322452, -1.095031,  1.382747 },
+	{ -1.254733,  0.454579,  1.095031,  1.411363 },
+	{ -1.342293,  0.287440, -1.095031,  1.375164 },
+	{ -0.011532, -1.073951,  1.095031,  1.080319 },
+	{  0.144608, -0.976970, -1.095031,  1.101323 },
+	{  0.011009, -0.682669,  1.095031,  1.165062 },
+	{ -0.278730, -0.485350, -1.095031,  1.207796 },
+	{ -0.434869, -0.582332,  1.095031,  1.186792 },
+	{ -0.301270, -0.876632, -1.095031,  1.123054 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.488442, -0.707637,  1.095031,  1.159654 },
+	{  1.244028, -0.423801, -1.095031,  1.221126 },
+	{  0.986601, -0.365871,  1.095031,  1.233673 },
+	{  0.973587, -0.591777, -1.095031,  1.184747 },
+	{  1.218001, -0.875614,  1.095031,  1.123275 },
+	{  1.475428, -0.933544, -1.095031,  1.110728 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.160424,  1.568345,  1.095031,  1.652578 },
+	{ -0.316563,  1.471364, -1.095031,  1.631574 },
+	{ -0.182964,  1.177064,  1.095031,  1.567836 },
+	{  0.106774,  0.979745, -1.095031,  1.525101 },
+	{  0.262914,  1.076726,  1.095031,  1.546105 },
+	{  0.129315,  1.371026, -1.095031,  1.609843 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_4_7[] {
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.475953,  0.330786,  1.053957,  1.674099 },
+	{ -1.108297,  0.119665, -1.053957,  1.510970 },
+	{ -1.147825,  0.398533,  1.053957,  1.674099 },
+	{ -1.555009,  0.888522, -1.053957,  2.000356 },
+	{ -1.922665,  1.099643,  1.053957,  2.163485 },
+	{ -1.883137,  0.820775, -1.053957,  2.000356 },
+	{  0.389749, -1.396575,  1.053957,  0.473455 },
+	{  0.467352, -1.231976, -1.053957,  0.557897 },
+	{  0.123074, -0.748559,  1.053957,  0.873038 },
+	{ -0.298806, -0.429742, -1.053957,  1.103736 },
+	{ -0.376408, -0.594341,  1.053957,  1.019295 },
+	{ -0.032131, -1.077758, -1.053957,  0.704154 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.551643, -0.750765,  1.053957,  0.704154 },
+	{  1.109302, -0.287595, -1.053957,  1.019295 },
+	{  0.820926, -0.198557,  1.053957,  1.103736 },
+	{  0.974891, -0.572689, -1.053957,  0.873038 },
+	{  1.417232, -1.035859,  1.053957,  0.557897 },
+	{  1.705609, -1.124897, -1.053957,  0.473455 },
+	{  0.167214,  1.244099,  1.053957,  2.000356 },
+	{ -0.200442,  1.455221, -1.053957,  2.163485 },
+	{ -0.160914,  1.176353,  1.053957,  2.000356 },
+	{  0.246270,  0.686363, -1.053957,  1.674099 },
+	{  0.613926,  0.475242,  1.053957,  1.510970 },
+	{  0.574398,  0.754110, -1.053957,  1.674099 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_5_6[] {
+	{  0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.167728,  0.177255,  1.053957,  1.119987 },
+	{ -0.866737,  0.030742, -1.053957,  1.139393 },
+	{ -0.739398,  0.182286,  1.053957,  1.211819 },
+	{ -0.913050,  0.480342, -1.053957,  1.264839 },
+	{ -1.214041,  0.626855,  1.053957,  1.245432 },
+	{ -1.341380,  0.475311, -1.053957,  1.173006 },
+	{ -0.049286, -0.913976,  1.053957,  1.027653 },
+	{  0.144639, -0.834027, -1.053957,  1.092588 },
+	{  0.040910, -0.545375,  1.053957,  1.157524 },
+	{ -0.256746, -0.336672, -1.053957,  1.157524 },
+	{ -0.450672, -0.416620,  1.053957,  1.092588 },
+	{ -0.346942, -0.705272, -1.053957,  1.027653 },
+	{  1.147050, -1.269472,  1.053957,  1.173006 },
+	{  1.120311, -1.009896, -1.053957,  1.245432 },
+	{  0.846276, -0.753224,  1.053957,  1.264839 },
+	{  0.598979, -0.756128, -1.053957,  1.211819 },
+	{  0.625718, -1.015705,  1.053957,  1.139393 },
+	{  0.899753, -1.272377, -1.053957,  1.119987 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.216661,  1.597977,  1.053957,  1.839168 },
+	{  0.022735,  1.518029, -1.053957,  1.774233 },
+	{  0.126465,  1.229377,  1.053957,  1.709298 },
+	{  0.424121,  1.020673, -1.053957,  1.709298 },
+	{  0.618047,  1.100622,  1.053957,  1.774233 },
+	{  0.514317,  1.389274, -1.053957,  1.839168 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_5_7[] {
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.350883,  0.488299,  1.012883,  1.613798 },
+	{ -1.035309,  0.297286, -1.012883,  1.496097 },
+	{ -0.988659,  0.538916,  1.012883,  1.644987 },
+	{ -1.257584,  0.971558, -1.012883,  1.911578 },
+	{ -1.573158,  1.162571,  1.012883,  2.029279 },
+	{ -1.619808,  0.920941, -1.012883,  1.880389 },
+	{  0.044177, -1.047196,  1.012883,  0.667637 },
+	{  0.176579, -0.906992, -1.012883,  0.754030 },
+	{ -0.029055, -0.481528,  1.012883,  1.016198 },
+	{ -0.367091, -0.196267, -1.012883,  1.191973 },
+	{ -0.499492, -0.336471,  1.012883,  1.105581 },
+	{ -0.293858, -0.761936, -1.012883,  0.843413 },
+	{  1.206201, -1.463863,  1.012883,  0.410891 },
+	{  1.077871, -1.074571, -1.012883,  0.650769 },
+	{  0.740411, -0.714503,  1.012883,  0.872640 },
+	{  0.531280, -0.743727, -1.012883,  0.854633 },
+	{  0.659610, -1.133019,  1.012883,  0.614754 },
+	{  0.997071, -1.493086, -1.012883,  0.392883 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.643599,  1.237228,  1.012883,  2.075282 },
+	{  0.328025,  1.428241, -1.012883,  2.192983 },
+	{  0.281375,  1.186611,  1.012883,  2.044092 },
+	{  0.550300,  0.753968, -1.012883,  1.777501 },
+	{  0.865874,  0.562955,  1.012883,  1.659800 },
+	{  0.912524,  0.804585, -1.012883,  1.808691 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_1_6_7[] {
+	{ -0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000, -0.000000,  0.000000 },
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.150732,  0.362921,  0.913723,  1.716031 },
+	{ -0.913454,  0.254431, -0.913723,  1.595524 },
+	{ -0.767761,  0.913843,  0.913723,  2.327975 },
+	{ -0.859347,  1.681745, -0.913723,  3.180933 },
+	{ -1.096626,  1.790234,  0.913723,  3.301439 },
+	{ -1.242319,  1.130822, -0.913723,  2.568988 },
+	{ -0.385063, -1.846393,  0.913723, -0.737994 },
+	{ -0.195192, -1.340408, -0.913723, -0.175965 },
+	{ -0.226431, -0.516348,  0.913723,  0.739371 },
+	{ -0.447539, -0.198273, -0.913723,  1.092678 },
+	{ -0.637410, -0.704257,  0.913723,  0.530648 },
+	{ -0.606171, -1.528317, -0.913723, -0.384688 },
+	{  0.606171, -1.528317,  0.913723, -0.384688 },
+	{  0.637410, -0.704257, -0.913723,  0.530648 },
+	{  0.447539, -0.198273,  0.913723,  1.092678 },
+	{  0.226431, -0.516348, -0.913723,  0.739371 },
+	{  0.195192, -1.340408,  0.913723, -0.175965 },
+	{  0.385063, -1.846393, -0.913723, -0.737994 },
+	{  1.242319,  1.130822,  0.913723,  2.568988 },
+	{  1.096626,  1.790234, -0.913723,  3.301439 },
+	{  0.859347,  1.681745,  0.913723,  3.180933 },
+	{  0.767761,  0.913843, -0.913723,  2.327975 },
+	{  0.913454,  0.254431,  0.913723,  1.595524 },
+	{  1.150732,  0.362921, -0.913723,  1.716031 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_3_4[] {
+	{ -0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000, -0.000000, -0.000000 },
+	{ -0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.809968, -0.383658,  1.012883,  2.075282 },
+	{ -1.739671, -0.627953, -1.012883,  2.192983 },
+	{ -1.452809, -0.517771,  1.012883,  2.044092 },
+	{ -1.236244, -0.163293, -1.012883,  1.777501 },
+	{ -1.306542,  0.081002,  1.012883,  1.659800 },
+	{ -1.593404, -0.029180, -1.012883,  1.808691 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.638358, -0.867206,  1.012883,  1.613798 },
+	{  0.568060, -0.622910, -1.012883,  1.496097 },
+	{  0.281198, -0.733092,  1.012883,  1.644987 },
+	{  0.064634, -1.087570, -1.012883,  1.911578 },
+	{  0.134931, -1.331866,  1.012883,  2.029279 },
+	{  0.421793, -1.221684, -1.012883,  1.880389 },
+	{  1.035587,  0.587391,  1.012883,  0.667637 },
+	{  0.780356,  0.570438, -1.012883,  0.754030 },
+	{  0.517800,  0.248079,  1.012883,  1.016198 },
+	{  0.510476, -0.057326, -1.012883,  1.191973 },
+	{  0.765707, -0.040373,  1.012883,  1.105581 },
+	{  1.028262,  0.281986, -1.012883,  0.843413 },
+	{  0.483026,  1.331533,  1.012883,  0.410891 },
+	{  0.192373,  1.063261, -1.012883,  0.650769 },
+	{  0.107925,  0.717559,  1.012883,  0.872640 },
+	{  0.314132,  0.640129, -1.012883,  0.854633 },
+	{  0.604785,  0.908401,  1.012883,  0.614754 },
+	{  0.689232,  1.254103, -1.012883,  0.392883 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_3_5[] {
+	{ -0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.506599,  0.071285,  1.078018,  1.623767 },
+	{ -1.368815, -0.116288, -1.078018,  1.634550 },
+	{ -1.117617, -0.064864,  1.078018,  1.569009 },
+	{ -1.004203,  0.174133, -1.078018,  1.492685 },
+	{ -1.141987,  0.361706,  1.078018,  1.481902 },
+	{ -1.393185,  0.310282, -1.078018,  1.547443 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.310282, -1.393185,  1.078018,  1.547443 },
+	{  0.361706, -1.141987, -1.078018,  1.481902 },
+	{  0.174133, -1.004203,  1.078018,  1.492685 },
+	{ -0.064864, -1.117617, -1.078018,  1.569009 },
+	{ -0.116288, -1.368815,  1.078018,  1.634550 },
+	{  0.071285, -1.506599, -1.078018,  1.623767 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.019437,  0.491439,  1.078018,  0.985692 },
+	{  0.773157,  0.505509, -1.078018,  1.035983 },
+	{  0.605482,  0.295000,  1.078018,  1.117889 },
+	{  0.684087,  0.070421, -1.078018,  1.149503 },
+	{  0.930368,  0.056351,  1.078018,  1.099212 },
+	{  1.098042,  0.266860, -1.078018,  1.017306 },
+	{  0.266860,  1.098042,  1.078018,  1.017306 },
+	{  0.056351,  0.930368, -1.078018,  1.099212 },
+	{  0.070421,  0.684087,  1.078018,  1.149503 },
+	{  0.295000,  0.605482, -1.078018,  1.117889 },
+	{  0.505509,  0.773157,  1.078018,  1.035983 },
+	{  0.491439,  1.019437, -1.078018,  0.985692 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_3_6[] {
+	{ -0.000000, -0.000000, -0.000000, -0.000000 },
+	{ -0.000000, -0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.568345, -0.160424,  1.095031,  1.652578 },
+	{ -1.471364, -0.316563, -1.095031,  1.631574 },
+	{ -1.177064, -0.182964,  1.095031,  1.567836 },
+	{ -0.979745,  0.106774, -1.095031,  1.525101 },
+	{ -1.076726,  0.262914,  1.095031,  1.546105 },
+	{ -1.371026,  0.129315, -1.095031,  1.609843 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.011826, -1.146619,  1.095031,  1.310350 },
+	{  0.143952, -0.863385, -1.095031,  1.281735 },
+	{ -0.023187, -0.775825,  1.095031,  1.317933 },
+	{ -0.322452, -0.971499, -1.095031,  1.382747 },
+	{ -0.454579, -1.254733,  1.095031,  1.411363 },
+	{ -0.287440, -1.342293, -1.095031,  1.375164 },
+	{  1.073951, -0.011532,  1.095031,  1.080319 },
+	{  0.976970,  0.144608, -1.095031,  1.101323 },
+	{  0.682669,  0.011009,  1.095031,  1.165062 },
+	{  0.485350, -0.278730, -1.095031,  1.207796 },
+	{  0.582332, -0.434869,  1.095031,  1.186792 },
+	{  0.876632, -0.301270, -1.095031,  1.123054 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.707637,  1.488442,  1.095031,  1.159654 },
+	{  0.423801,  1.244028, -1.095031,  1.221126 },
+	{  0.365871,  0.986601,  1.095031,  1.233673 },
+	{  0.591777,  0.973587, -1.095031,  1.184747 },
+	{  0.875614,  1.218001,  1.095031,  1.123275 },
+	{  0.933544,  1.475428, -1.095031,  1.110728 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_3_7[] {
+	{ -0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.597977,  0.216661,  1.053957,  1.839168 },
+	{ -1.518029,  0.022735, -1.053957,  1.774233 },
+	{ -1.229377,  0.126465,  1.053957,  1.709298 },
+	{ -1.020673,  0.424121, -1.053957,  1.709298 },
+	{ -1.100622,  0.618047,  1.053957,  1.774233 },
+	{ -1.389274,  0.514317, -1.053957,  1.839168 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.177255, -1.167728,  1.053957,  1.119987 },
+	{ -0.030742, -0.866737, -1.053957,  1.139393 },
+	{ -0.182286, -0.739398,  1.053957,  1.211819 },
+	{ -0.480342, -0.913050, -1.053957,  1.264839 },
+	{ -0.626855, -1.214041,  1.053957,  1.245432 },
+	{ -0.475311, -1.341380, -1.053957,  1.173006 },
+	{  0.913976, -0.049286,  1.053957,  1.027653 },
+	{  0.834027,  0.144639, -1.053957,  1.092588 },
+	{  0.545375,  0.040910,  1.053957,  1.157524 },
+	{  0.336672, -0.256746, -1.053957,  1.157524 },
+	{  0.416620, -0.450672,  1.053957,  1.092588 },
+	{  0.705272, -0.346942, -1.053957,  1.027653 },
+	{  1.269472,  1.147050,  1.053957,  1.173006 },
+	{  1.009896,  1.120311, -1.053957,  1.245432 },
+	{  0.753224,  0.846276,  1.053957,  1.264839 },
+	{  0.756128,  0.598979, -1.053957,  1.211819 },
+	{  1.015705,  0.625718,  1.053957,  1.139393 },
+	{  1.272377,  0.899753, -1.053957,  1.119987 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_4_5[] {
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.488442,  0.707637,  1.095031,  1.159654 },
+	{ -1.244028,  0.423801, -1.095031,  1.221126 },
+	{ -0.986601,  0.365871,  1.095031,  1.233673 },
+	{ -0.973587,  0.591777, -1.095031,  1.184747 },
+	{ -1.218001,  0.875614,  1.095031,  1.123275 },
+	{ -1.475428,  0.933544, -1.095031,  1.110728 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.160424, -1.568345,  1.095031,  1.652578 },
+	{  0.316563, -1.471364, -1.095031,  1.631574 },
+	{  0.182964, -1.177064,  1.095031,  1.567836 },
+	{ -0.106774, -0.979745, -1.095031,  1.525101 },
+	{ -0.262914, -1.076726,  1.095031,  1.546105 },
+	{ -0.129315, -1.371026, -1.095031,  1.609843 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.146619,  0.011826,  1.095031,  1.310350 },
+	{  0.863385,  0.143952, -1.095031,  1.281735 },
+	{  0.775825, -0.023187,  1.095031,  1.317933 },
+	{  0.971499, -0.322452, -1.095031,  1.382747 },
+	{  1.254733, -0.454579,  1.095031,  1.411363 },
+	{  1.342293, -0.287440, -1.095031,  1.375164 },
+	{  0.011532,  1.073951,  1.095031,  1.080319 },
+	{ -0.144608,  0.976970, -1.095031,  1.101323 },
+	{ -0.011009,  0.682669,  1.095031,  1.165062 },
+	{  0.278730,  0.485350, -1.095031,  1.207796 },
+	{  0.434869,  0.582332,  1.095031,  1.186792 },
+	{  0.301270,  0.876632, -1.095031,  1.123054 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_4_6[] {
+	{ -0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.242319,  0.385063,  1.112044,  1.312912 },
+	{ -1.096626,  0.195192, -1.112044,  1.312912 },
+	{ -0.859347,  0.226431,  1.112044,  1.312912 },
+	{ -0.767761,  0.447539, -1.112044,  1.312912 },
+	{ -0.913454,  0.637410,  1.112044,  1.312912 },
+	{ -1.150732,  0.606171, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.385063, -1.242319,  1.112044,  1.312912 },
+	{ -0.195192, -1.096626, -1.112044,  1.312912 },
+	{ -0.226431, -0.859347,  1.112044,  1.312912 },
+	{ -0.447539, -0.767761, -1.112044,  1.312912 },
+	{ -0.637410, -0.913454,  1.112044,  1.312912 },
+	{ -0.606171, -1.150732, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.242319, -0.385063,  1.112044,  1.312912 },
+	{  1.096626, -0.195192, -1.112044,  1.312912 },
+	{  0.859347, -0.226431,  1.112044,  1.312912 },
+	{  0.767761, -0.447539, -1.112044,  1.312912 },
+	{  0.913454, -0.637410,  1.112044,  1.312912 },
+	{  1.150732, -0.606171, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.385063,  1.242319,  1.112044,  1.312912 },
+	{  0.195192,  1.096626, -1.112044,  1.312912 },
+	{  0.226431,  0.859347,  1.112044,  1.312912 },
+	{  0.447539,  0.767761, -1.112044,  1.312912 },
+	{  0.637410,  0.913454,  1.112044,  1.312912 },
+	{  0.606171,  1.150732, -1.112044,  1.312912 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_4_7[] {
+	{  0.000000,  0.000000, -0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.380961,  0.639694,  1.095031,  1.609843 },
+	{ -1.228908,  0.422035, -1.095031,  1.546105 },
+	{ -0.999698,  0.449977,  1.095031,  1.525101 },
+	{ -0.922541,  0.695577, -1.095031,  1.567836 },
+	{ -1.074594,  0.913235,  1.095031,  1.631574 },
+	{ -1.303804,  0.885294, -1.095031,  1.652578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.458665, -1.214068,  1.095031,  1.110728 },
+	{ -0.281784, -1.056139, -1.095031,  1.123275 },
+	{ -0.325026, -0.788677,  1.095031,  1.184747 },
+	{ -0.545148, -0.679144, -1.095031,  1.233673 },
+	{ -0.722029, -0.837073,  1.095031,  1.221126 },
+	{ -0.678788, -1.104535, -1.095031,  1.159654 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.078571, -0.300180,  1.095031,  1.123054 },
+	{  0.926518, -0.082521, -1.095031,  1.186792 },
+	{  0.697308, -0.110463,  1.095031,  1.207796 },
+	{  0.620152, -0.356062, -1.095031,  1.165062 },
+	{  0.772205, -0.573721,  1.095031,  1.101323 },
+	{  1.001415, -0.545779, -1.095031,  1.080319 },
+	{  0.935796,  0.815974,  1.095031,  1.375164 },
+	{  0.703204,  0.858209, -1.095031,  1.411363 },
+	{  0.571705,  0.649327,  1.095031,  1.382747 },
+	{  0.672797,  0.398210, -1.095031,  1.317933 },
+	{  0.905388,  0.355975,  1.095031,  1.281735 },
+	{  1.036888,  0.564857, -1.095031,  1.310350 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_5_6[] {
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.214068,  0.458665,  1.095031,  1.110728 },
+	{ -1.056139,  0.281784, -1.095031,  1.123275 },
+	{ -0.788677,  0.325026,  1.095031,  1.184747 },
+	{ -0.679144,  0.545148, -1.095031,  1.233673 },
+	{ -0.837073,  0.722029,  1.095031,  1.221126 },
+	{ -1.104535,  0.678788, -1.095031,  1.159654 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.300180, -1.078571,  1.095031,  1.123054 },
+	{ -0.082521, -0.926518, -1.095031,  1.186792 },
+	{ -0.110463, -0.697308,  1.095031,  1.207796 },
+	{ -0.356062, -0.620152, -1.095031,  1.165062 },
+	{ -0.573721, -0.772205,  1.095031,  1.101323 },
+	{ -0.545779, -1.001415, -1.095031,  1.080319 },
+	{  0.815974, -0.935796,  1.095031,  1.375164 },
+	{  0.858209, -0.703204, -1.095031,  1.411363 },
+	{  0.649327, -0.571705,  1.095031,  1.382747 },
+	{  0.398210, -0.672797, -1.095031,  1.317933 },
+	{  0.355975, -0.905388,  1.095031,  1.281735 },
+	{  0.564857, -1.036888, -1.095031,  1.310350 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.639694,  1.380961,  1.095031,  1.609843 },
+	{  0.422035,  1.228908, -1.095031,  1.546105 },
+	{  0.449977,  0.999698,  1.095031,  1.525101 },
+	{  0.695577,  0.922541, -1.095031,  1.567836 },
+	{  0.913235,  1.074594,  1.095031,  1.631574 },
+	{  0.885294,  1.303804, -1.095031,  1.652578 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_5_7[] {
+	{ -0.000000, -0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000, -0.000000,  0.000000 },
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.242319,  0.741708,  1.078018,  1.547443 },
+	{ -1.096626,  0.534434, -1.078018,  1.481902 },
+	{ -0.859347,  0.568536,  1.078018,  1.492685 },
+	{ -0.767761,  0.809911, -1.078018,  1.569009 },
+	{ -0.913454,  1.017185,  1.078018,  1.634550 },
+	{ -1.150732,  0.983083, -1.078018,  1.623767 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.385063, -1.034837,  1.078018,  0.985692 },
+	{ -0.195192, -0.875791, -1.078018,  1.035983 },
+	{ -0.226431, -0.616763,  1.078018,  1.117889 },
+	{ -0.447539, -0.516782, -1.078018,  1.149503 },
+	{ -0.637410, -0.675829,  1.078018,  1.099212 },
+	{ -0.606171, -0.934856, -1.078018,  1.017306 },
+	{  0.606171, -0.934856,  1.078018,  1.017306 },
+	{  0.637410, -0.675829, -1.078018,  1.099212 },
+	{  0.447539, -0.516782,  1.078018,  1.149503 },
+	{  0.226431, -0.616763, -1.078018,  1.117889 },
+	{  0.195192, -0.875791,  1.078018,  1.035983 },
+	{  0.385063, -1.034837, -1.078018,  0.985692 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.150732,  0.983083,  1.078018,  1.623767 },
+	{  0.913454,  1.017185, -1.078018,  1.634550 },
+	{  0.767761,  0.809911,  1.078018,  1.569009 },
+	{  0.859347,  0.568536, -1.078018,  1.492685 },
+	{  1.096626,  0.534434,  1.078018,  1.481902 },
+	{  1.242319,  0.741708, -1.078018,  1.547443 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_2_6_7[] {
+	{ -0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000, -0.000000,  0.000000 },
+	{ -0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.912524,  0.804585,  1.012883,  1.808691 },
+	{ -0.865874,  0.562955, -1.012883,  1.659800 },
+	{ -0.550300,  0.753968,  1.012883,  1.777501 },
+	{ -0.281375,  1.186611, -1.012883,  2.044092 },
+	{ -0.328025,  1.428241,  1.012883,  2.192983 },
+	{ -0.643599,  1.237228, -1.012883,  2.075282 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.997071, -1.493086,  1.012883,  0.392883 },
+	{ -0.659610, -1.133019, -1.012883,  0.614754 },
+	{ -0.531280, -0.743727,  1.012883,  0.854633 },
+	{ -0.740411, -0.714503, -1.012883,  0.872640 },
+	{ -1.077871, -1.074571,  1.012883,  0.650769 },
+	{ -1.206201, -1.463863, -1.012883,  0.410891 },
+	{  0.293858, -0.761936,  1.012883,  0.843413 },
+	{  0.499492, -0.336471, -1.012883,  1.105581 },
+	{  0.367091, -0.196267,  1.012883,  1.191973 },
+	{  0.029055, -0.481528, -1.012883,  1.016198 },
+	{ -0.176579, -0.906992,  1.012883,  0.754030 },
+	{ -0.044177, -1.047196, -1.012883,  0.667637 },
+	{  1.619808,  0.920941,  1.012883,  1.880389 },
+	{  1.573158,  1.162571, -1.012883,  2.029279 },
+	{  1.257584,  0.971558,  1.012883,  1.911578 },
+	{  0.988659,  0.538916, -1.012883,  1.644987 },
+	{  1.035309,  0.297286,  1.012883,  1.496097 },
+	{  1.350883,  0.488299, -1.012883,  1.613798 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_3_4_5[] {
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000, -0.000000, -0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.551643,  0.750765,  1.053957,  0.704154 },
+	{ -1.109302,  0.287595, -1.053957,  1.019295 },
+	{ -0.820926,  0.198557,  1.053957,  1.103736 },
+	{ -0.974891,  0.572689, -1.053957,  0.873038 },
+	{ -1.417232,  1.035859,  1.053957,  0.557897 },
+	{ -1.705609,  1.124897, -1.053957,  0.473455 },
+	{ -0.167214, -1.244099,  1.053957,  2.000356 },
+	{  0.200442, -1.455221, -1.053957,  2.163485 },
+	{  0.160914, -1.176353,  1.053957,  2.000356 },
+	{ -0.246270, -0.686363, -1.053957,  1.674099 },
+	{ -0.613926, -0.475242,  1.053957,  1.510970 },
+	{ -0.574398, -0.754110, -1.053957,  1.674099 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.475953, -0.330786,  1.053957,  1.674099 },
+	{  1.108297, -0.119665, -1.053957,  1.510970 },
+	{  1.147825, -0.398533,  1.053957,  1.674099 },
+	{  1.555009, -0.888522, -1.053957,  2.000356 },
+	{  1.922665, -1.099643,  1.053957,  2.163485 },
+	{  1.883137, -0.820775, -1.053957,  2.000356 },
+	{ -0.389749,  1.396575,  1.053957,  0.473455 },
+	{ -0.467352,  1.231976, -1.053957,  0.557897 },
+	{ -0.123074,  0.748559,  1.053957,  0.873038 },
+	{  0.298806,  0.429742, -1.053957,  1.103736 },
+	{  0.376408,  0.594341,  1.053957,  1.019295 },
+	{  0.032131,  1.077758, -1.053957,  0.704154 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_3_4_6[] {
+	{ -0.000000,  0.000000, -0.000000, -0.000000 },
+	{  0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000, -0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.078571,  0.300180,  1.095031,  1.123054 },
+	{ -0.926518,  0.082521, -1.095031,  1.186792 },
+	{ -0.697308,  0.110463,  1.095031,  1.207796 },
+	{ -0.620152,  0.356062, -1.095031,  1.165062 },
+	{ -0.772205,  0.573721,  1.095031,  1.101323 },
+	{ -1.001415,  0.545779, -1.095031,  1.080319 },
+	{ -0.935796, -0.815974,  1.095031,  1.375164 },
+	{ -0.703204, -0.858209, -1.095031,  1.411363 },
+	{ -0.571705, -0.649327,  1.095031,  1.382747 },
+	{ -0.672797, -0.398210, -1.095031,  1.317933 },
+	{ -0.905388, -0.355975,  1.095031,  1.281735 },
+	{ -1.036888, -0.564857, -1.095031,  1.310350 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.380961, -0.639694,  1.095031,  1.609843 },
+	{  1.228908, -0.422035, -1.095031,  1.546105 },
+	{  0.999698, -0.449977,  1.095031,  1.525101 },
+	{  0.922541, -0.695577, -1.095031,  1.567836 },
+	{  1.074594, -0.913235,  1.095031,  1.631574 },
+	{  1.303804, -0.885294, -1.095031,  1.652578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.458665,  1.214068,  1.095031,  1.110728 },
+	{  0.281784,  1.056139, -1.095031,  1.123275 },
+	{  0.325026,  0.788677,  1.095031,  1.184747 },
+	{  0.545148,  0.679144, -1.095031,  1.233673 },
+	{  0.722029,  0.837073,  1.095031,  1.221126 },
+	{  0.678788,  1.104535, -1.095031,  1.159654 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_3_4_7[] {
+	{ -0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.158317,  0.518988,  1.112044,  1.312912 },
+	{ -1.022476,  0.263080, -1.112044,  1.312912 },
+	{ -0.801241,  0.305183,  1.112044,  1.312912 },
+	{ -0.715847,  0.603194, -1.112044,  1.312912 },
+	{ -0.851689,  0.859101,  1.112044,  1.312912 },
+	{ -1.072924,  0.816998, -1.112044,  1.312912 },
+	{ -1.072924, -0.816998,  1.112044,  1.312912 },
+	{ -0.851689, -0.859101, -1.112044,  1.312912 },
+	{ -0.715847, -0.603194,  1.112044,  1.312912 },
+	{ -0.801241, -0.305183, -1.112044,  1.312912 },
+	{ -1.022476, -0.263080,  1.112044,  1.312912 },
+	{ -1.158317, -0.518988, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.158317, -0.518988,  1.112044,  1.312912 },
+	{  1.022476, -0.263080, -1.112044,  1.312912 },
+	{  0.801241, -0.305183,  1.112044,  1.312912 },
+	{  0.715847, -0.603194, -1.112044,  1.312912 },
+	{  0.851689, -0.859101,  1.112044,  1.312912 },
+	{  1.072924, -0.816998, -1.112044,  1.312912 },
+	{  1.072924,  0.816998,  1.112044,  1.312912 },
+	{  0.851689,  0.859101, -1.112044,  1.312912 },
+	{  0.715847,  0.603194,  1.112044,  1.312912 },
+	{  0.801241,  0.305183, -1.112044,  1.312912 },
+	{  1.022476,  0.263080,  1.112044,  1.312912 },
+	{  1.158317,  0.518988, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_3_5_6[] {
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000, -0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.034837,  0.385063,  1.078018,  0.985692 },
+	{ -0.875791,  0.195192, -1.078018,  1.035983 },
+	{ -0.616763,  0.226431,  1.078018,  1.117889 },
+	{ -0.516782,  0.447539, -1.078018,  1.149503 },
+	{ -0.675829,  0.637410,  1.078018,  1.099212 },
+	{ -0.934856,  0.606171, -1.078018,  1.017306 },
+	{ -0.934856, -0.606171,  1.078018,  1.017306 },
+	{ -0.675829, -0.637410, -1.078018,  1.099212 },
+	{ -0.516782, -0.447539,  1.078018,  1.149503 },
+	{ -0.616763, -0.226431, -1.078018,  1.117889 },
+	{ -0.875791, -0.195192,  1.078018,  1.035983 },
+	{ -1.034837, -0.385063, -1.078018,  0.985692 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.983083, -1.150732,  1.078018,  1.623767 },
+	{  1.017185, -0.913454, -1.078018,  1.634550 },
+	{  0.809911, -0.767761,  1.078018,  1.569009 },
+	{  0.568536, -0.859347, -1.078018,  1.492685 },
+	{  0.534434, -1.096626,  1.078018,  1.481902 },
+	{  0.741708, -1.242319, -1.078018,  1.547443 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.741708,  1.242319,  1.078018,  1.547443 },
+	{  0.534434,  1.096626, -1.078018,  1.481902 },
+	{  0.568536,  0.859347,  1.078018,  1.492685 },
+	{  0.809911,  0.767761, -1.078018,  1.569009 },
+	{  1.017185,  0.913454,  1.078018,  1.634550 },
+	{  0.983083,  1.150732, -1.078018,  1.623767 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_3_5_7[] {
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.036888,  0.564857,  1.095031,  1.310350 },
+	{ -0.905388,  0.355975, -1.095031,  1.281735 },
+	{ -0.672797,  0.398210,  1.095031,  1.317933 },
+	{ -0.571705,  0.649327, -1.095031,  1.382747 },
+	{ -0.703204,  0.858209,  1.095031,  1.411363 },
+	{ -0.935796,  0.815974, -1.095031,  1.375164 },
+	{ -1.001415, -0.545779,  1.095031,  1.080319 },
+	{ -0.772205, -0.573721, -1.095031,  1.101323 },
+	{ -0.620152, -0.356062,  1.095031,  1.165062 },
+	{ -0.697308, -0.110463, -1.095031,  1.207796 },
+	{ -0.926518, -0.082521,  1.095031,  1.186792 },
+	{ -1.078571, -0.300180, -1.095031,  1.123054 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.678788, -1.104535,  1.095031,  1.159654 },
+	{  0.722029, -0.837073, -1.095031,  1.221126 },
+	{  0.545148, -0.679144,  1.095031,  1.233673 },
+	{  0.325026, -0.788677, -1.095031,  1.184747 },
+	{  0.281784, -1.056139,  1.095031,  1.123275 },
+	{  0.458665, -1.214068, -1.095031,  1.110728 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.303804,  0.885294,  1.095031,  1.652578 },
+	{  1.074594,  0.913235, -1.095031,  1.631574 },
+	{  0.922541,  0.695577,  1.095031,  1.567836 },
+	{  0.999698,  0.449977, -1.095031,  1.525101 },
+	{  1.228908,  0.422035,  1.095031,  1.546105 },
+	{  1.380961,  0.639694, -1.095031,  1.609843 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_3_6_7[] {
+	{ -0.000000, -0.000000, -0.000000, -0.000000 },
+	{  0.000000,  0.000000, -0.000000,  0.000000 },
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.574398,  0.754110,  1.053957,  1.674099 },
+	{ -0.613926,  0.475242, -1.053957,  1.510970 },
+	{ -0.246270,  0.686363,  1.053957,  1.674099 },
+	{  0.160914,  1.176353, -1.053957,  2.000356 },
+	{  0.200442,  1.455221,  1.053957,  2.163485 },
+	{ -0.167214,  1.244099, -1.053957,  2.000356 },
+	{ -1.705609, -1.124897,  1.053957,  0.473455 },
+	{ -1.417232, -1.035859, -1.053957,  0.557897 },
+	{ -0.974891, -0.572689,  1.053957,  0.873038 },
+	{ -0.820926, -0.198557, -1.053957,  1.103736 },
+	{ -1.109302, -0.287595,  1.053957,  1.019295 },
+	{ -1.551643, -0.750765, -1.053957,  0.704154 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.032131, -1.077758,  1.053957,  0.704154 },
+	{  0.376408, -0.594341, -1.053957,  1.019295 },
+	{  0.298806, -0.429742,  1.053957,  1.103736 },
+	{ -0.123074, -0.748559, -1.053957,  0.873038 },
+	{ -0.467352, -1.231976,  1.053957,  0.557897 },
+	{ -0.389749, -1.396575, -1.053957,  0.473455 },
+	{  1.883137,  0.820775,  1.053957,  2.000356 },
+	{  1.922665,  1.099643, -1.053957,  2.163485 },
+	{  1.555009,  0.888522,  1.053957,  2.000356 },
+	{  1.147825,  0.398533, -1.053957,  1.674099 },
+	{  1.108297,  0.119665,  1.053957,  1.510970 },
+	{  1.475953,  0.330786, -1.053957,  1.674099 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_4_5_6[] {
+	{ -0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.493086,  0.997071,  1.012883,  0.392883 },
+	{ -1.133019,  0.659610, -1.012883,  0.614754 },
+	{ -0.743727,  0.531280,  1.012883,  0.854633 },
+	{ -0.714503,  0.740411, -1.012883,  0.872640 },
+	{ -1.074571,  1.077871,  1.012883,  0.650769 },
+	{ -1.463863,  1.206201, -1.012883,  0.410891 },
+	{ -0.761936, -0.293858,  1.012883,  0.843413 },
+	{ -0.336471, -0.499492, -1.012883,  1.105581 },
+	{ -0.196267, -0.367091,  1.012883,  1.191973 },
+	{ -0.481528, -0.029055, -1.012883,  1.016198 },
+	{ -0.906992,  0.176579,  1.012883,  0.754030 },
+	{ -1.047196,  0.044177, -1.012883,  0.667637 },
+	{  0.920941, -1.619808,  1.012883,  1.880389 },
+	{  1.162571, -1.573158, -1.012883,  2.029279 },
+	{  0.971558, -1.257584,  1.012883,  1.911578 },
+	{  0.538916, -0.988659, -1.012883,  1.644987 },
+	{  0.297286, -1.035309,  1.012883,  1.496097 },
+	{  0.488299, -1.350883, -1.012883,  1.613798 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.804585,  0.912524,  1.012883,  1.808691 },
+	{  0.562955,  0.865874, -1.012883,  1.659800 },
+	{  0.753968,  0.550300,  1.012883,  1.777501 },
+	{  1.186611,  0.281375, -1.012883,  2.044092 },
+	{  1.428241,  0.328025,  1.012883,  2.192983 },
+	{  1.237228,  0.643599, -1.012883,  2.075282 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_4_5_7[] {
+	{ -0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.272377,  0.899753,  1.053957,  1.119987 },
+	{ -1.015705,  0.625718, -1.053957,  1.139393 },
+	{ -0.756128,  0.598979,  1.053957,  1.211819 },
+	{ -0.753224,  0.846276, -1.053957,  1.264839 },
+	{ -1.009896,  1.120311,  1.053957,  1.245432 },
+	{ -1.269472,  1.147050, -1.053957,  1.173006 },
+	{ -0.705272, -0.346942,  1.053957,  1.027653 },
+	{ -0.416620, -0.450672, -1.053957,  1.092588 },
+	{ -0.336672, -0.256746,  1.053957,  1.157524 },
+	{ -0.545375,  0.040910, -1.053957,  1.157524 },
+	{ -0.834027,  0.144639,  1.053957,  1.092588 },
+	{ -0.913976, -0.049286, -1.053957,  1.027653 },
+	{  0.475311, -1.341380,  1.053957,  1.173006 },
+	{  0.626855, -1.214041, -1.053957,  1.245432 },
+	{  0.480342, -0.913050,  1.053957,  1.264839 },
+	{  0.182286, -0.739398, -1.053957,  1.211819 },
+	{  0.030742, -0.866737,  1.053957,  1.139393 },
+	{  0.177255, -1.167728, -1.053957,  1.119987 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.389274,  0.514317,  1.053957,  1.839168 },
+	{  1.100622,  0.618047, -1.053957,  1.774233 },
+	{  1.020673,  0.424121,  1.053957,  1.709298 },
+	{  1.229377,  0.126465, -1.053957,  1.709298 },
+	{  1.518029,  0.022735,  1.053957,  1.774233 },
+	{  1.597977,  0.216661, -1.053957,  1.839168 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_4_6_7[] {
+	{  0.000000,  0.000000, -0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.638358,  0.867206,  1.012883,  1.613798 },
+	{ -0.568060,  0.622910, -1.012883,  1.496097 },
+	{ -0.281198,  0.733092,  1.012883,  1.644987 },
+	{ -0.064634,  1.087570, -1.012883,  1.911578 },
+	{ -0.134931,  1.331866,  1.012883,  2.029279 },
+	{ -0.421793,  1.221684, -1.012883,  1.880389 },
+	{ -1.035587, -0.587391,  1.012883,  0.667637 },
+	{ -0.780356, -0.570438, -1.012883,  0.754030 },
+	{ -0.517800, -0.248079,  1.012883,  1.016198 },
+	{ -0.510476,  0.057326, -1.012883,  1.191973 },
+	{ -0.765707,  0.040373,  1.012883,  1.105581 },
+	{ -1.028262, -0.281986, -1.012883,  0.843413 },
+	{ -0.483026, -1.331533,  1.012883,  0.410891 },
+	{ -0.192373, -1.063261, -1.012883,  0.650769 },
+	{ -0.107925, -0.717559,  1.012883,  0.872640 },
+	{ -0.314132, -0.640129, -1.012883,  0.854633 },
+	{ -0.604785, -0.908401,  1.012883,  0.614754 },
+	{ -0.689232, -1.254103, -1.012883,  0.392883 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.809968,  0.383658,  1.012883,  2.075282 },
+	{  1.739671,  0.627953, -1.012883,  2.192983 },
+	{  1.452809,  0.517771,  1.012883,  2.044092 },
+	{  1.236244,  0.163293, -1.012883,  1.777501 },
+	{  1.306542, -0.081002,  1.012883,  1.659800 },
+	{  1.593404,  0.029180, -1.012883,  1.808691 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_0_5_6_7[] {
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{ -0.000000, -0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000,  0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.342341,  0.996550,  0.913723,  1.716031 },
+	{ -0.302085,  0.760729, -0.913723,  1.595524 },
+	{  0.377009,  1.270308,  0.913723,  2.327975 },
+	{  1.015847,  2.015708, -0.913723,  3.180933 },
+	{  0.975592,  2.251529,  0.913723,  3.301439 },
+	{  0.296498,  1.741950, -0.913723,  2.568988 },
+	{ -1.888189, -1.440164,  0.913723, -0.737994 },
+	{ -1.321681, -1.094572, -0.913723, -0.175965 },
+	{ -0.597118, -0.333663,  0.913723,  0.739371 },
+	{ -0.439064,  0.081653, -0.913723,  1.092678 },
+	{ -1.005573, -0.263939,  0.913723,  0.530648 },
+	{ -1.730135, -1.024847, -0.913723, -0.384688 },
+	{ -1.024847, -1.730135,  0.913723, -0.384688 },
+	{ -0.263939, -1.005573, -0.913723,  0.530648 },
+	{  0.081653, -0.439064,  0.913723,  1.092678 },
+	{ -0.333663, -0.597118, -0.913723,  0.739371 },
+	{ -1.094572, -1.321681,  0.913723, -0.175965 },
+	{ -1.440164, -1.888189, -0.913723, -0.737994 },
+	{  1.741950,  0.296498,  0.913723,  2.568988 },
+	{  2.251529,  0.975592, -0.913723,  3.301439 },
+	{  2.015708,  1.015847,  0.913723,  3.180933 },
+	{  1.270308,  0.377009, -0.913723,  2.327975 },
+	{  0.760729, -0.302085,  0.913723,  1.595524 },
+	{  0.996550, -0.342341, -0.913723,  1.716031 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_3_4[] {
+	{ -1.741950, -0.296498,  0.913723,  2.568988 },
+	{ -2.251529, -0.975592, -0.913723,  3.301439 },
+	{ -2.015708, -1.015847,  0.913723,  3.180933 },
+	{ -1.270308, -0.377009, -0.913723,  2.327975 },
+	{ -0.760729,  0.302085,  0.913723,  1.595524 },
+	{ -0.996550,  0.342341, -0.913723,  1.716031 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.342341, -0.996550,  0.913723,  1.716031 },
+	{  0.302085, -0.760729, -0.913723,  1.595524 },
+	{ -0.377009, -1.270308,  0.913723,  2.327975 },
+	{ -1.015847, -2.015708, -0.913723,  3.180933 },
+	{ -0.975592, -2.251529,  0.913723,  3.301439 },
+	{ -0.296498, -1.741950, -0.913723,  2.568988 },
+	{  1.888189,  1.440164,  0.913723, -0.737994 },
+	{  1.321681,  1.094572, -0.913723, -0.175965 },
+	{  0.597118,  0.333663,  0.913723,  0.739371 },
+	{  0.439064, -0.081653, -0.913723,  1.092678 },
+	{  1.005573,  0.263939,  0.913723,  0.530648 },
+	{  1.730135,  1.024847, -0.913723, -0.384688 },
+	{  1.024847,  1.730135,  0.913723, -0.384688 },
+	{  0.263939,  1.005573, -0.913723,  0.530648 },
+	{ -0.081653,  0.439064,  0.913723,  1.092678 },
+	{  0.333663,  0.597118, -0.913723,  0.739371 },
+	{  1.094572,  1.321681,  0.913723, -0.175965 },
+	{  1.440164,  1.888189, -0.913723, -0.737994 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_3_5[] {
+	{ -1.221684,  0.421793,  1.012883,  1.880389 },
+	{ -1.331866,  0.134931, -1.012883,  2.029279 },
+	{ -1.087570,  0.064634,  1.012883,  1.911578 },
+	{ -0.733092,  0.281198, -1.012883,  1.644987 },
+	{ -0.622910,  0.568060,  1.012883,  1.496097 },
+	{ -0.867206,  0.638358, -1.012883,  1.613798 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.029180, -1.593404,  1.012883,  1.808691 },
+	{  0.081002, -1.306542, -1.012883,  1.659800 },
+	{ -0.163293, -1.236244,  1.012883,  1.777501 },
+	{ -0.517771, -1.452809, -1.012883,  2.044092 },
+	{ -0.627953, -1.739671,  1.012883,  2.192983 },
+	{ -0.383658, -1.809968, -1.012883,  2.075282 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.254103,  0.689232,  1.012883,  0.392883 },
+	{  0.908401,  0.604785, -1.012883,  0.614754 },
+	{  0.640129,  0.314132,  1.012883,  0.854633 },
+	{  0.717559,  0.107925, -1.012883,  0.872640 },
+	{  1.063261,  0.192373,  1.012883,  0.650769 },
+	{  1.331533,  0.483026, -1.012883,  0.410891 },
+	{  0.281986,  1.028262,  1.012883,  0.843413 },
+	{ -0.040373,  0.765707, -1.012883,  1.105581 },
+	{ -0.057326,  0.510476,  1.012883,  1.191973 },
+	{  0.248079,  0.517800, -1.012883,  1.016198 },
+	{  0.570438,  0.780356,  1.012883,  0.754030 },
+	{  0.587391,  1.035587, -1.012883,  0.667637 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_3_6[] {
+	{ -1.244099,  0.167214,  1.053957,  2.000356 },
+	{ -1.455221, -0.200442, -1.053957,  2.163485 },
+	{ -1.176353, -0.160914,  1.053957,  2.000356 },
+	{ -0.686363,  0.246270, -1.053957,  1.674099 },
+	{ -0.475242,  0.613926,  1.053957,  1.510970 },
+	{ -0.754110,  0.574398, -1.053957,  1.674099 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.330786, -1.475953,  1.053957,  1.674099 },
+	{ -0.119665, -1.108297, -1.053957,  1.510970 },
+	{ -0.398533, -1.147825,  1.053957,  1.674099 },
+	{ -0.888522, -1.555009, -1.053957,  2.000356 },
+	{ -1.099643, -1.922665,  1.053957,  2.163485 },
+	{ -0.820775, -1.883137, -1.053957,  2.000356 },
+	{  1.396575,  0.389749,  1.053957,  0.473455 },
+	{  1.231976,  0.467352, -1.053957,  0.557897 },
+	{  0.748559,  0.123074,  1.053957,  0.873038 },
+	{  0.429742, -0.298806, -1.053957,  1.103736 },
+	{  0.594341, -0.376408,  1.053957,  1.019295 },
+	{  1.077758, -0.032131, -1.053957,  0.704154 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.750765,  1.551643,  1.053957,  0.704154 },
+	{  0.287595,  1.109302, -1.053957,  1.019295 },
+	{  0.198557,  0.820926,  1.053957,  1.103736 },
+	{  0.572689,  0.974891, -1.053957,  0.873038 },
+	{  1.035859,  1.417232,  1.053957,  0.557897 },
+	{  1.124897,  1.705609, -1.053957,  0.473455 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_3_7[] {
+	{ -1.237228,  0.643599,  1.012883,  2.075282 },
+	{ -1.428241,  0.328025, -1.012883,  2.192983 },
+	{ -1.186611,  0.281375,  1.012883,  2.044092 },
+	{ -0.753968,  0.550300, -1.012883,  1.777501 },
+	{ -0.562955,  0.865874,  1.012883,  1.659800 },
+	{ -0.804585,  0.912524, -1.012883,  1.808691 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.488299, -1.350883,  1.012883,  1.613798 },
+	{ -0.297286, -1.035309, -1.012883,  1.496097 },
+	{ -0.538916, -0.988659,  1.012883,  1.644987 },
+	{ -0.971558, -1.257584, -1.012883,  1.911578 },
+	{ -1.162571, -1.573158,  1.012883,  2.029279 },
+	{ -0.920941, -1.619808, -1.012883,  1.880389 },
+	{  1.047196,  0.044177,  1.012883,  0.667637 },
+	{  0.906992,  0.176579, -1.012883,  0.754030 },
+	{  0.481528, -0.029055,  1.012883,  1.016198 },
+	{  0.196267, -0.367091, -1.012883,  1.191973 },
+	{  0.336471, -0.499492,  1.012883,  1.105581 },
+	{  0.761936, -0.293858, -1.012883,  0.843413 },
+	{  1.463863,  1.206201,  1.012883,  0.410891 },
+	{  1.074571,  1.077871, -1.012883,  0.650769 },
+	{  0.714503,  0.740411,  1.012883,  0.872640 },
+	{  0.743727,  0.531280, -1.012883,  0.854633 },
+	{  1.133019,  0.659610,  1.012883,  0.614754 },
+	{  1.493086,  0.997071, -1.012883,  0.392883 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_4_5[] {
+	{ -1.147050,  1.269472,  1.053957,  1.173006 },
+	{ -1.120311,  1.009896, -1.053957,  1.245432 },
+	{ -0.846276,  0.753224,  1.053957,  1.264839 },
+	{ -0.598979,  0.756128, -1.053957,  1.211819 },
+	{ -0.625718,  1.015705,  1.053957,  1.139393 },
+	{ -0.899753,  1.272377, -1.053957,  1.119987 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.216661, -1.597977,  1.053957,  1.839168 },
+	{ -0.022735, -1.518029, -1.053957,  1.774233 },
+	{ -0.126465, -1.229377,  1.053957,  1.709298 },
+	{ -0.424121, -1.020673, -1.053957,  1.709298 },
+	{ -0.618047, -1.100622,  1.053957,  1.774233 },
+	{ -0.514317, -1.389274, -1.053957,  1.839168 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.167728, -0.177255,  1.053957,  1.119987 },
+	{  0.866737, -0.030742, -1.053957,  1.139393 },
+	{  0.739398, -0.182286,  1.053957,  1.211819 },
+	{  0.913050, -0.480342, -1.053957,  1.264839 },
+	{  1.214041, -0.626855,  1.053957,  1.245432 },
+	{  1.341380, -0.475311, -1.053957,  1.173006 },
+	{  0.049286,  0.913976,  1.053957,  1.027653 },
+	{ -0.144639,  0.834027, -1.053957,  1.092588 },
+	{ -0.040910,  0.545375,  1.053957,  1.157524 },
+	{  0.256746,  0.336672, -1.053957,  1.157524 },
+	{  0.450672,  0.416620,  1.053957,  1.092588 },
+	{  0.346942,  0.705272, -1.053957,  1.027653 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_4_6[] {
+	{ -0.815974,  0.935796,  1.095031,  1.375164 },
+	{ -0.858209,  0.703204, -1.095031,  1.411363 },
+	{ -0.649327,  0.571705,  1.095031,  1.382747 },
+	{ -0.398210,  0.672797, -1.095031,  1.317933 },
+	{ -0.355975,  0.905388,  1.095031,  1.281735 },
+	{ -0.564857,  1.036888, -1.095031,  1.310350 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.639694, -1.380961,  1.095031,  1.609843 },
+	{ -0.422035, -1.228908, -1.095031,  1.546105 },
+	{ -0.449977, -0.999698,  1.095031,  1.525101 },
+	{ -0.695577, -0.922541, -1.095031,  1.567836 },
+	{ -0.913235, -1.074594,  1.095031,  1.631574 },
+	{ -0.885294, -1.303804, -1.095031,  1.652578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.214068, -0.458665,  1.095031,  1.110728 },
+	{  1.056139, -0.281784, -1.095031,  1.123275 },
+	{  0.788677, -0.325026,  1.095031,  1.184747 },
+	{  0.679144, -0.545148, -1.095031,  1.233673 },
+	{  0.837073, -0.722029,  1.095031,  1.221126 },
+	{  1.104535, -0.678788, -1.095031,  1.159654 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.300180,  1.078571,  1.095031,  1.123054 },
+	{  0.082521,  0.926518, -1.095031,  1.186792 },
+	{  0.110463,  0.697308,  1.095031,  1.207796 },
+	{  0.356062,  0.620152, -1.095031,  1.165062 },
+	{  0.573721,  0.772205,  1.095031,  1.101323 },
+	{  0.545779,  1.001415, -1.095031,  1.080319 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_4_7[] {
+	{ -0.983083,  1.150732,  1.078018,  1.623767 },
+	{ -1.017185,  0.913454, -1.078018,  1.634550 },
+	{ -0.809911,  0.767761,  1.078018,  1.569009 },
+	{ -0.568536,  0.859347, -1.078018,  1.492685 },
+	{ -0.534434,  1.096626,  1.078018,  1.481902 },
+	{ -0.741708,  1.242319, -1.078018,  1.547443 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.741708, -1.242319,  1.078018,  1.547443 },
+	{ -0.534434, -1.096626, -1.078018,  1.481902 },
+	{ -0.568536, -0.859347,  1.078018,  1.492685 },
+	{ -0.809911, -0.767761, -1.078018,  1.569009 },
+	{ -1.017185, -0.913454,  1.078018,  1.634550 },
+	{ -0.983083, -1.150732, -1.078018,  1.623767 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.034837, -0.385063,  1.078018,  0.985692 },
+	{  0.875791, -0.195192, -1.078018,  1.035983 },
+	{  0.616763, -0.226431,  1.078018,  1.117889 },
+	{  0.516782, -0.447539, -1.078018,  1.149503 },
+	{  0.675829, -0.637410,  1.078018,  1.099212 },
+	{  0.934856, -0.606171, -1.078018,  1.017306 },
+	{  0.934856,  0.606171,  1.078018,  1.017306 },
+	{  0.675829,  0.637410, -1.078018,  1.099212 },
+	{  0.516782,  0.447539,  1.078018,  1.149503 },
+	{  0.616763,  0.226431, -1.078018,  1.117889 },
+	{  0.875791,  0.195192,  1.078018,  1.035983 },
+	{  1.034837,  0.385063, -1.078018,  0.985692 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_5_6[] {
+	{ -0.816998,  1.072924,  1.112044,  1.312912 },
+	{ -0.859101,  0.851689, -1.112044,  1.312912 },
+	{ -0.603194,  0.715847,  1.112044,  1.312912 },
+	{ -0.305183,  0.801241, -1.112044,  1.312912 },
+	{ -0.263080,  1.022476,  1.112044,  1.312912 },
+	{ -0.518988,  1.158317, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.518988, -1.158317,  1.112044,  1.312912 },
+	{ -0.263080, -1.022476, -1.112044,  1.312912 },
+	{ -0.305183, -0.801241,  1.112044,  1.312912 },
+	{ -0.603194, -0.715847, -1.112044,  1.312912 },
+	{ -0.859101, -0.851689,  1.112044,  1.312912 },
+	{ -0.816998, -1.072924, -1.112044,  1.312912 },
+	{  0.816998, -1.072924,  1.112044,  1.312912 },
+	{  0.859101, -0.851689, -1.112044,  1.312912 },
+	{  0.603194, -0.715847,  1.112044,  1.312912 },
+	{  0.305183, -0.801241, -1.112044,  1.312912 },
+	{  0.263080, -1.022476,  1.112044,  1.312912 },
+	{  0.518988, -1.158317, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.518988,  1.158317,  1.112044,  1.312912 },
+	{  0.263080,  1.022476, -1.112044,  1.312912 },
+	{  0.305183,  0.801241,  1.112044,  1.312912 },
+	{  0.603194,  0.715847, -1.112044,  1.312912 },
+	{  0.859101,  0.851689,  1.112044,  1.312912 },
+	{  0.816998,  1.072924, -1.112044,  1.312912 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_5_7[] {
+	{ -0.885294,  1.303804,  1.095031,  1.652578 },
+	{ -0.913235,  1.074594, -1.095031,  1.631574 },
+	{ -0.695577,  0.922541,  1.095031,  1.567836 },
+	{ -0.449977,  0.999698, -1.095031,  1.525101 },
+	{ -0.422035,  1.228908,  1.095031,  1.546105 },
+	{ -0.639694,  1.380961, -1.095031,  1.609843 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.564857, -1.036888,  1.095031,  1.310350 },
+	{ -0.355975, -0.905388, -1.095031,  1.281735 },
+	{ -0.398210, -0.672797,  1.095031,  1.317933 },
+	{ -0.649327, -0.571705, -1.095031,  1.382747 },
+	{ -0.858209, -0.703204,  1.095031,  1.411363 },
+	{ -0.815974, -0.935796, -1.095031,  1.375164 },
+	{  0.545779, -1.001415,  1.095031,  1.080319 },
+	{  0.573721, -0.772205, -1.095031,  1.101323 },
+	{  0.356062, -0.620152,  1.095031,  1.165062 },
+	{  0.110463, -0.697308, -1.095031,  1.207796 },
+	{  0.082521, -0.926518,  1.095031,  1.186792 },
+	{  0.300180, -1.078571, -1.095031,  1.123054 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.104535,  0.678788,  1.095031,  1.159654 },
+	{  0.837073,  0.722029, -1.095031,  1.221126 },
+	{  0.679144,  0.545148,  1.095031,  1.233673 },
+	{  0.788677,  0.325026, -1.095031,  1.184747 },
+	{  1.056139,  0.281784,  1.095031,  1.123275 },
+	{  1.214068,  0.458665, -1.095031,  1.110728 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_2_6_7[] {
+	{ -0.514317,  1.389274,  1.053957,  1.839168 },
+	{ -0.618047,  1.100622, -1.053957,  1.774233 },
+	{ -0.424121,  1.020673,  1.053957,  1.709298 },
+	{ -0.126465,  1.229377, -1.053957,  1.709298 },
+	{ -0.022735,  1.518029,  1.053957,  1.774233 },
+	{ -0.216661,  1.597977, -1.053957,  1.839168 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.899753, -1.272377,  1.053957,  1.119987 },
+	{ -0.625718, -1.015705, -1.053957,  1.139393 },
+	{ -0.598979, -0.756128,  1.053957,  1.211819 },
+	{ -0.846276, -0.753224, -1.053957,  1.264839 },
+	{ -1.120311, -1.009896,  1.053957,  1.245432 },
+	{ -1.147050, -1.269472, -1.053957,  1.173006 },
+	{  0.346942, -0.705272,  1.053957,  1.027653 },
+	{  0.450672, -0.416620, -1.053957,  1.092588 },
+	{  0.256746, -0.336672,  1.053957,  1.157524 },
+	{ -0.040910, -0.545375, -1.053957,  1.157524 },
+	{ -0.144639, -0.834027,  1.053957,  1.092588 },
+	{  0.049286, -0.913976, -1.053957,  1.027653 },
+	{  1.341380,  0.475311,  1.053957,  1.173006 },
+	{  1.214041,  0.626855, -1.053957,  1.245432 },
+	{  0.913050,  0.480342,  1.053957,  1.264839 },
+	{  0.739398,  0.182286, -1.053957,  1.211819 },
+	{  0.866737,  0.030742,  1.053957,  1.139393 },
+	{  1.167728,  0.177255, -1.053957,  1.119987 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_3_4_5[] {
+	{ -1.206201,  1.463863,  1.012883,  0.410891 },
+	{ -1.077871,  1.074571, -1.012883,  0.650769 },
+	{ -0.740411,  0.714503,  1.012883,  0.872640 },
+	{ -0.531280,  0.743727, -1.012883,  0.854633 },
+	{ -0.659610,  1.133019,  1.012883,  0.614754 },
+	{ -0.997071,  1.493086, -1.012883,  0.392883 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.643599, -1.237228,  1.012883,  2.075282 },
+	{ -0.328025, -1.428241, -1.012883,  2.192983 },
+	{ -0.281375, -1.186611,  1.012883,  2.044092 },
+	{ -0.550300, -0.753968, -1.012883,  1.777501 },
+	{ -0.865874, -0.562955,  1.012883,  1.659800 },
+	{ -0.912524, -0.804585, -1.012883,  1.808691 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.350883, -0.488299,  1.012883,  1.613798 },
+	{  1.035309, -0.297286, -1.012883,  1.496097 },
+	{  0.988659, -0.538916,  1.012883,  1.644987 },
+	{  1.257584, -0.971558, -1.012883,  1.911578 },
+	{  1.573158, -1.162571,  1.012883,  2.029279 },
+	{  1.619808, -0.920941, -1.012883,  1.880389 },
+	{ -0.044177,  1.047196,  1.012883,  0.667637 },
+	{ -0.176579,  0.906992, -1.012883,  0.754030 },
+	{  0.029055,  0.481528,  1.012883,  1.016198 },
+	{  0.367091,  0.196267, -1.012883,  1.191973 },
+	{  0.499492,  0.336471,  1.012883,  1.105581 },
+	{  0.293858,  0.761936, -1.012883,  0.843413 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_3_4_6[] {
+	{ -0.606171,  0.934856,  1.078018,  1.017306 },
+	{ -0.637410,  0.675829, -1.078018,  1.099212 },
+	{ -0.447539,  0.516782,  1.078018,  1.149503 },
+	{ -0.226431,  0.616763, -1.078018,  1.117889 },
+	{ -0.195192,  0.875791,  1.078018,  1.035983 },
+	{ -0.385063,  1.034837, -1.078018,  0.985692 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.150732, -0.983083,  1.078018,  1.623767 },
+	{ -0.913454, -1.017185, -1.078018,  1.634550 },
+	{ -0.767761, -0.809911,  1.078018,  1.569009 },
+	{ -0.859347, -0.568536, -1.078018,  1.492685 },
+	{ -1.096626, -0.534434,  1.078018,  1.481902 },
+	{ -1.242319, -0.741708, -1.078018,  1.547443 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.242319, -0.741708,  1.078018,  1.547443 },
+	{  1.096626, -0.534434, -1.078018,  1.481902 },
+	{  0.859347, -0.568536,  1.078018,  1.492685 },
+	{  0.767761, -0.809911, -1.078018,  1.569009 },
+	{  0.913454, -1.017185,  1.078018,  1.634550 },
+	{  1.150732, -0.983083, -1.078018,  1.623767 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.385063,  1.034837,  1.078018,  0.985692 },
+	{  0.195192,  0.875791, -1.078018,  1.035983 },
+	{  0.226431,  0.616763,  1.078018,  1.117889 },
+	{  0.447539,  0.516782, -1.078018,  1.149503 },
+	{  0.637410,  0.675829,  1.078018,  1.099212 },
+	{  0.606171,  0.934856, -1.078018,  1.017306 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_3_4_7[] {
+	{ -0.678788,  1.104535,  1.095031,  1.159654 },
+	{ -0.722029,  0.837073, -1.095031,  1.221126 },
+	{ -0.545148,  0.679144,  1.095031,  1.233673 },
+	{ -0.325026,  0.788677, -1.095031,  1.184747 },
+	{ -0.281784,  1.056139,  1.095031,  1.123275 },
+	{ -0.458665,  1.214068, -1.095031,  1.110728 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.303804, -0.885294,  1.095031,  1.652578 },
+	{ -1.074594, -0.913235, -1.095031,  1.631574 },
+	{ -0.922541, -0.695577,  1.095031,  1.567836 },
+	{ -0.999698, -0.449977, -1.095031,  1.525101 },
+	{ -1.228908, -0.422035,  1.095031,  1.546105 },
+	{ -1.380961, -0.639694, -1.095031,  1.609843 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.036888, -0.564857,  1.095031,  1.310350 },
+	{  0.905388, -0.355975, -1.095031,  1.281735 },
+	{  0.672797, -0.398210,  1.095031,  1.317933 },
+	{  0.571705, -0.649327, -1.095031,  1.382747 },
+	{  0.703204, -0.858209,  1.095031,  1.411363 },
+	{  0.935796, -0.815974, -1.095031,  1.375164 },
+	{  1.001415,  0.545779,  1.095031,  1.080319 },
+	{  0.772205,  0.573721, -1.095031,  1.101323 },
+	{  0.620152,  0.356062,  1.095031,  1.165062 },
+	{  0.697308,  0.110463, -1.095031,  1.207796 },
+	{  0.926518,  0.082521,  1.095031,  1.186792 },
+	{  1.078571,  0.300180, -1.095031,  1.123054 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_3_5_6[] {
+	{ -0.545779,  1.001415,  1.095031,  1.080319 },
+	{ -0.573721,  0.772205, -1.095031,  1.101323 },
+	{ -0.356062,  0.620152,  1.095031,  1.165062 },
+	{ -0.110463,  0.697308, -1.095031,  1.207796 },
+	{ -0.082521,  0.926518,  1.095031,  1.186792 },
+	{ -0.300180,  1.078571, -1.095031,  1.123054 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.104535, -0.678788,  1.095031,  1.159654 },
+	{ -0.837073, -0.722029, -1.095031,  1.221126 },
+	{ -0.679144, -0.545148,  1.095031,  1.233673 },
+	{ -0.788677, -0.325026, -1.095031,  1.184747 },
+	{ -1.056139, -0.281784,  1.095031,  1.123275 },
+	{ -1.214068, -0.458665, -1.095031,  1.110728 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.885294, -1.303804,  1.095031,  1.652578 },
+	{  0.913235, -1.074594, -1.095031,  1.631574 },
+	{  0.695577, -0.922541,  1.095031,  1.567836 },
+	{  0.449977, -0.999698, -1.095031,  1.525101 },
+	{  0.422035, -1.228908,  1.095031,  1.546105 },
+	{  0.639694, -1.380961, -1.095031,  1.609843 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.564857,  1.036888,  1.095031,  1.310350 },
+	{  0.355975,  0.905388, -1.095031,  1.281735 },
+	{  0.398210,  0.672797,  1.095031,  1.317933 },
+	{  0.649327,  0.571705, -1.095031,  1.382747 },
+	{  0.858209,  0.703204,  1.095031,  1.411363 },
+	{  0.815974,  0.935796, -1.095031,  1.375164 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_3_5_7[] {
+	{ -0.606171,  1.150732,  1.112044,  1.312912 },
+	{ -0.637410,  0.913454, -1.112044,  1.312912 },
+	{ -0.447539,  0.767761,  1.112044,  1.312912 },
+	{ -0.226431,  0.859347, -1.112044,  1.312912 },
+	{ -0.195192,  1.096626,  1.112044,  1.312912 },
+	{ -0.385063,  1.242319, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.150732, -0.606171,  1.112044,  1.312912 },
+	{ -0.913454, -0.637410, -1.112044,  1.312912 },
+	{ -0.767761, -0.447539,  1.112044,  1.312912 },
+	{ -0.859347, -0.226431, -1.112044,  1.312912 },
+	{ -1.096626, -0.195192,  1.112044,  1.312912 },
+	{ -1.242319, -0.385063, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.606171, -1.150732,  1.112044,  1.312912 },
+	{  0.637410, -0.913454, -1.112044,  1.312912 },
+	{  0.447539, -0.767761,  1.112044,  1.312912 },
+	{  0.226431, -0.859347, -1.112044,  1.312912 },
+	{  0.195192, -1.096626,  1.112044,  1.312912 },
+	{  0.385063, -1.242319, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.150732,  0.606171,  1.112044,  1.312912 },
+	{  0.913454,  0.637410, -1.112044,  1.312912 },
+	{  0.767761,  0.447539,  1.112044,  1.312912 },
+	{  0.859347,  0.226431, -1.112044,  1.312912 },
+	{  1.096626,  0.195192,  1.112044,  1.312912 },
+	{  1.242319,  0.385063, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_3_6_7[] {
+	{ -0.129315,  1.371026,  1.095031,  1.609843 },
+	{ -0.262914,  1.076726, -1.095031,  1.546105 },
+	{ -0.106774,  0.979745,  1.095031,  1.525101 },
+	{  0.182964,  1.177064, -1.095031,  1.567836 },
+	{  0.316563,  1.471364,  1.095031,  1.631574 },
+	{  0.160424,  1.568345, -1.095031,  1.652578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.475428, -0.933544,  1.095031,  1.110728 },
+	{ -1.218001, -0.875614, -1.095031,  1.123275 },
+	{ -0.973587, -0.591777,  1.095031,  1.184747 },
+	{ -0.986601, -0.365871, -1.095031,  1.233673 },
+	{ -1.244028, -0.423801,  1.095031,  1.221126 },
+	{ -1.488442, -0.707637, -1.095031,  1.159654 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.301270, -0.876632,  1.095031,  1.123054 },
+	{  0.434869, -0.582332, -1.095031,  1.186792 },
+	{  0.278730, -0.485350,  1.095031,  1.207796 },
+	{ -0.011009, -0.682669, -1.095031,  1.165062 },
+	{ -0.144608, -0.976970,  1.095031,  1.101323 },
+	{  0.011532, -1.073951, -1.095031,  1.080319 },
+	{  1.342293,  0.287440,  1.095031,  1.375164 },
+	{  1.254733,  0.454579, -1.095031,  1.411363 },
+	{  0.971499,  0.322452,  1.095031,  1.382747 },
+	{  0.775825,  0.023187, -1.095031,  1.317933 },
+	{  0.863385, -0.143952,  1.095031,  1.281735 },
+	{  1.146619, -0.011826, -1.095031,  1.310350 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_4_5_6[] {
+	{ -1.124897,  1.705609,  1.053957,  0.473455 },
+	{ -1.035859,  1.417232, -1.053957,  0.557897 },
+	{ -0.572689,  0.974891,  1.053957,  0.873038 },
+	{ -0.198557,  0.820926, -1.053957,  1.103736 },
+	{ -0.287595,  1.109302,  1.053957,  1.019295 },
+	{ -0.750765,  1.551643, -1.053957,  0.704154 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.077758, -0.032131,  1.053957,  0.704154 },
+	{ -0.594341, -0.376408, -1.053957,  1.019295 },
+	{ -0.429742, -0.298806,  1.053957,  1.103736 },
+	{ -0.748559,  0.123074, -1.053957,  0.873038 },
+	{ -1.231976,  0.467352,  1.053957,  0.557897 },
+	{ -1.396575,  0.389749, -1.053957,  0.473455 },
+	{  0.820775, -1.883137,  1.053957,  2.000356 },
+	{  1.099643, -1.922665, -1.053957,  2.163485 },
+	{  0.888522, -1.555009,  1.053957,  2.000356 },
+	{  0.398533, -1.147825, -1.053957,  1.674099 },
+	{  0.119665, -1.108297,  1.053957,  1.510970 },
+	{  0.330786, -1.475953, -1.053957,  1.674099 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.754110,  0.574398,  1.053957,  1.674099 },
+	{  0.475242,  0.613926, -1.053957,  1.510970 },
+	{  0.686363,  0.246270,  1.053957,  1.674099 },
+	{  1.176353, -0.160914, -1.053957,  2.000356 },
+	{  1.455221, -0.200442,  1.053957,  2.163485 },
+	{  1.244099,  0.167214, -1.053957,  2.000356 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_4_5_7[] {
+	{ -0.933544,  1.475428,  1.095031,  1.110728 },
+	{ -0.875614,  1.218001, -1.095031,  1.123275 },
+	{ -0.591777,  0.973587,  1.095031,  1.184747 },
+	{ -0.365871,  0.986601, -1.095031,  1.233673 },
+	{ -0.423801,  1.244028,  1.095031,  1.221126 },
+	{ -0.707637,  1.488442, -1.095031,  1.159654 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.876632, -0.301270,  1.095031,  1.123054 },
+	{ -0.582332, -0.434869, -1.095031,  1.186792 },
+	{ -0.485350, -0.278730,  1.095031,  1.207796 },
+	{ -0.682669,  0.011009, -1.095031,  1.165062 },
+	{ -0.976970,  0.144608,  1.095031,  1.101323 },
+	{ -1.073951, -0.011532, -1.095031,  1.080319 },
+	{  0.287440, -1.342293,  1.095031,  1.375164 },
+	{  0.454579, -1.254733, -1.095031,  1.411363 },
+	{  0.322452, -0.971499,  1.095031,  1.382747 },
+	{  0.023187, -0.775825, -1.095031,  1.317933 },
+	{ -0.143952, -0.863385,  1.095031,  1.281735 },
+	{ -0.011826, -1.146619, -1.095031,  1.310350 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.371026,  0.129315,  1.095031,  1.609843 },
+	{  1.076726,  0.262914, -1.095031,  1.546105 },
+	{  0.979745,  0.106774,  1.095031,  1.525101 },
+	{  1.177064, -0.182964, -1.095031,  1.567836 },
+	{  1.471364, -0.316563,  1.095031,  1.631574 },
+	{  1.568345, -0.160424, -1.095031,  1.652578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_4_6_7[] {
+	{ -0.310282,  1.393185,  1.078018,  1.547443 },
+	{ -0.361706,  1.141987, -1.078018,  1.481902 },
+	{ -0.174133,  1.004203,  1.078018,  1.492685 },
+	{  0.064864,  1.117617, -1.078018,  1.569009 },
+	{  0.116288,  1.368815,  1.078018,  1.634550 },
+	{ -0.071285,  1.506599, -1.078018,  1.623767 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.019437, -0.491439,  1.078018,  0.985692 },
+	{ -0.773157, -0.505509, -1.078018,  1.035983 },
+	{ -0.605482, -0.295000,  1.078018,  1.117889 },
+	{ -0.684087, -0.070421, -1.078018,  1.149503 },
+	{ -0.930368, -0.056351,  1.078018,  1.099212 },
+	{ -1.098042, -0.266860, -1.078018,  1.017306 },
+	{ -0.266860, -1.098042,  1.078018,  1.017306 },
+	{ -0.056351, -0.930368, -1.078018,  1.099212 },
+	{ -0.070421, -0.684087,  1.078018,  1.149503 },
+	{ -0.295000, -0.605482, -1.078018,  1.117889 },
+	{ -0.505509, -0.773157,  1.078018,  1.035983 },
+	{ -0.491439, -1.019437, -1.078018,  0.985692 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.506599, -0.071285,  1.078018,  1.623767 },
+	{  1.368815,  0.116288, -1.078018,  1.634550 },
+	{  1.117617,  0.064864,  1.078018,  1.569009 },
+	{  1.004203, -0.174133, -1.078018,  1.492685 },
+	{  1.141987, -0.361706,  1.078018,  1.481902 },
+	{  1.393185, -0.310282, -1.078018,  1.547443 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_1_5_6_7[] {
+	{  0.029180,  1.593404,  1.012883,  1.808691 },
+	{ -0.081002,  1.306542, -1.012883,  1.659800 },
+	{  0.163293,  1.236244,  1.012883,  1.777501 },
+	{  0.517771,  1.452809, -1.012883,  2.044092 },
+	{  0.627953,  1.739671,  1.012883,  2.192983 },
+	{  0.383658,  1.809968, -1.012883,  2.075282 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -1.254103, -0.689232,  1.012883,  0.392883 },
+	{ -0.908401, -0.604785, -1.012883,  0.614754 },
+	{ -0.640129, -0.314132,  1.012883,  0.854633 },
+	{ -0.717559, -0.107925, -1.012883,  0.872640 },
+	{ -1.063261, -0.192373,  1.012883,  0.650769 },
+	{ -1.331533, -0.483026, -1.012883,  0.410891 },
+	{ -0.281986, -1.028262,  1.012883,  0.843413 },
+	{  0.040373, -0.765707, -1.012883,  1.105581 },
+	{  0.057326, -0.510476,  1.012883,  1.191973 },
+	{ -0.248079, -0.517800, -1.012883,  1.016198 },
+	{ -0.570438, -0.780356,  1.012883,  0.754030 },
+	{ -0.587391, -1.035587, -1.012883,  0.667637 },
+	{  1.221684, -0.421793,  1.012883,  1.880389 },
+	{  1.331866, -0.134931, -1.012883,  2.029279 },
+	{  1.087570, -0.064634,  1.012883,  1.911578 },
+	{  0.733092, -0.281198, -1.012883,  1.644987 },
+	{  0.622910, -0.568060,  1.012883,  1.496097 },
+	{  0.867206, -0.638358, -1.012883,  1.613798 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_3_4_5[] {
+	{ -0.606171,  1.528317,  0.913723, -0.384688 },
+	{ -0.637410,  0.704257, -0.913723,  0.530648 },
+	{ -0.447539,  0.198273,  0.913723,  1.092678 },
+	{ -0.226431,  0.516348, -0.913723,  0.739371 },
+	{ -0.195192,  1.340408,  0.913723, -0.175965 },
+	{ -0.385063,  1.846393, -0.913723, -0.737994 },
+	{ -1.242319, -1.130822,  0.913723,  2.568988 },
+	{ -1.096626, -1.790234, -0.913723,  3.301439 },
+	{ -0.859347, -1.681745,  0.913723,  3.180933 },
+	{ -0.767761, -0.913843, -0.913723,  2.327975 },
+	{ -0.913454, -0.254431,  0.913723,  1.595524 },
+	{ -1.150732, -0.362921, -0.913723,  1.716031 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.150732, -0.362921,  0.913723,  1.716031 },
+	{  0.913454, -0.254431, -0.913723,  1.595524 },
+	{  0.767761, -0.913843,  0.913723,  2.327975 },
+	{  0.859347, -1.681745, -0.913723,  3.180933 },
+	{  1.096626, -1.790234,  0.913723,  3.301439 },
+	{  1.242319, -1.130822, -0.913723,  2.568988 },
+	{  0.385063,  1.846393,  0.913723, -0.737994 },
+	{  0.195192,  1.340408, -0.913723, -0.175965 },
+	{  0.226431,  0.516348,  0.913723,  0.739371 },
+	{  0.447539,  0.198273, -0.913723,  1.092678 },
+	{  0.637410,  0.704257,  0.913723,  0.530648 },
+	{  0.606171,  1.528317, -0.913723, -0.384688 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_3_4_6[] {
+	{ -0.293858,  0.761936,  1.012883,  0.843413 },
+	{ -0.499492,  0.336471, -1.012883,  1.105581 },
+	{ -0.367091,  0.196267,  1.012883,  1.191973 },
+	{ -0.029055,  0.481528, -1.012883,  1.016198 },
+	{  0.176579,  0.906992,  1.012883,  0.754030 },
+	{  0.044177,  1.047196, -1.012883,  0.667637 },
+	{ -1.619808, -0.920941,  1.012883,  1.880389 },
+	{ -1.573158, -1.162571, -1.012883,  2.029279 },
+	{ -1.257584, -0.971558,  1.012883,  1.911578 },
+	{ -0.988659, -0.538916, -1.012883,  1.644987 },
+	{ -1.035309, -0.297286,  1.012883,  1.496097 },
+	{ -1.350883, -0.488299, -1.012883,  1.613798 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.912524, -0.804585,  1.012883,  1.808691 },
+	{  0.865874, -0.562955, -1.012883,  1.659800 },
+	{  0.550300, -0.753968,  1.012883,  1.777501 },
+	{  0.281375, -1.186611, -1.012883,  2.044092 },
+	{  0.328025, -1.428241,  1.012883,  2.192983 },
+	{  0.643599, -1.237228, -1.012883,  2.075282 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.997071,  1.493086,  1.012883,  0.392883 },
+	{  0.659610,  1.133019, -1.012883,  0.614754 },
+	{  0.531280,  0.743727,  1.012883,  0.854633 },
+	{  0.740411,  0.714503, -1.012883,  0.872640 },
+	{  1.077871,  1.074571,  1.012883,  0.650769 },
+	{  1.206201,  1.463863, -1.012883,  0.410891 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_3_4_7[] {
+	{ -0.032131,  1.077758,  1.053957,  0.704154 },
+	{ -0.376408,  0.594341, -1.053957,  1.019295 },
+	{ -0.298806,  0.429742,  1.053957,  1.103736 },
+	{  0.123074,  0.748559, -1.053957,  0.873038 },
+	{  0.467352,  1.231976,  1.053957,  0.557897 },
+	{  0.389749,  1.396575, -1.053957,  0.473455 },
+	{ -1.883137, -0.820775,  1.053957,  2.000356 },
+	{ -1.922665, -1.099643, -1.053957,  2.163485 },
+	{ -1.555009, -0.888522,  1.053957,  2.000356 },
+	{ -1.147825, -0.398533, -1.053957,  1.674099 },
+	{ -1.108297, -0.119665,  1.053957,  1.510970 },
+	{ -1.475953, -0.330786, -1.053957,  1.674099 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.574398, -0.754110,  1.053957,  1.674099 },
+	{  0.613926, -0.475242, -1.053957,  1.510970 },
+	{  0.246270, -0.686363,  1.053957,  1.674099 },
+	{ -0.160914, -1.176353, -1.053957,  2.000356 },
+	{ -0.200442, -1.455221,  1.053957,  2.163485 },
+	{  0.167214, -1.244099, -1.053957,  2.000356 },
+	{  1.705609,  1.124897,  1.053957,  0.473455 },
+	{  1.417232,  1.035859, -1.053957,  0.557897 },
+	{  0.974891,  0.572689,  1.053957,  0.873038 },
+	{  0.820926,  0.198557, -1.053957,  1.103736 },
+	{  1.109302,  0.287595,  1.053957,  1.019295 },
+	{  1.551643,  0.750765, -1.053957,  0.704154 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_3_5_6[] {
+	{ -0.346942,  0.705272,  1.053957,  1.027653 },
+	{ -0.450672,  0.416620, -1.053957,  1.092588 },
+	{ -0.256746,  0.336672,  1.053957,  1.157524 },
+	{  0.040910,  0.545375, -1.053957,  1.157524 },
+	{  0.144639,  0.834027,  1.053957,  1.092588 },
+	{ -0.049286,  0.913976, -1.053957,  1.027653 },
+	{ -1.341380, -0.475311,  1.053957,  1.173006 },
+	{ -1.214041, -0.626855, -1.053957,  1.245432 },
+	{ -0.913050, -0.480342,  1.053957,  1.264839 },
+	{ -0.739398, -0.182286, -1.053957,  1.211819 },
+	{ -0.866737, -0.030742,  1.053957,  1.139393 },
+	{ -1.167728, -0.177255, -1.053957,  1.119987 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.514317, -1.389274,  1.053957,  1.839168 },
+	{  0.618047, -1.100622, -1.053957,  1.774233 },
+	{  0.424121, -1.020673,  1.053957,  1.709298 },
+	{  0.126465, -1.229377, -1.053957,  1.709298 },
+	{  0.022735, -1.518029,  1.053957,  1.774233 },
+	{  0.216661, -1.597977, -1.053957,  1.839168 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.899753,  1.272377,  1.053957,  1.119987 },
+	{  0.625718,  1.015705, -1.053957,  1.139393 },
+	{  0.598979,  0.756128,  1.053957,  1.211819 },
+	{  0.846276,  0.753224, -1.053957,  1.264839 },
+	{  1.120311,  1.009896,  1.053957,  1.245432 },
+	{  1.147050,  1.269472, -1.053957,  1.173006 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_3_5_7[] {
+	{ -0.301270,  0.876632,  1.095031,  1.123054 },
+	{ -0.434869,  0.582332, -1.095031,  1.186792 },
+	{ -0.278730,  0.485350,  1.095031,  1.207796 },
+	{  0.011009,  0.682669, -1.095031,  1.165062 },
+	{  0.144608,  0.976970,  1.095031,  1.101323 },
+	{ -0.011532,  1.073951, -1.095031,  1.080319 },
+	{ -1.342293, -0.287440,  1.095031,  1.375164 },
+	{ -1.254733, -0.454579, -1.095031,  1.411363 },
+	{ -0.971499, -0.322452,  1.095031,  1.382747 },
+	{ -0.775825, -0.023187, -1.095031,  1.317933 },
+	{ -0.863385,  0.143952,  1.095031,  1.281735 },
+	{ -1.146619,  0.011826, -1.095031,  1.310350 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.129315, -1.371026,  1.095031,  1.609843 },
+	{  0.262914, -1.076726, -1.095031,  1.546105 },
+	{  0.106774, -0.979745,  1.095031,  1.525101 },
+	{ -0.182964, -1.177064, -1.095031,  1.567836 },
+	{ -0.316563, -1.471364,  1.095031,  1.631574 },
+	{ -0.160424, -1.568345, -1.095031,  1.652578 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.475428,  0.933544,  1.095031,  1.110728 },
+	{  1.218001,  0.875614, -1.095031,  1.123275 },
+	{  0.973587,  0.591777,  1.095031,  1.184747 },
+	{  0.986601,  0.365871, -1.095031,  1.233673 },
+	{  1.244028,  0.423801,  1.095031,  1.221126 },
+	{  1.488442,  0.707637, -1.095031,  1.159654 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_3_6_7[] {
+	{  0.311786,  1.361021,  1.112044,  1.312912 },
+	{ -0.039111,  0.887075, -1.112044,  1.312912 },
+	{  0.128943,  0.854728,  1.112044,  1.312912 },
+	{  0.647894,  1.296327, -1.112044,  1.312912 },
+	{  0.998791,  1.770274,  1.112044,  1.312912 },
+	{  0.830738,  1.802620, -1.112044,  1.312912 },
+	{ -1.802620, -0.830738,  1.112044,  1.312912 },
+	{ -1.770274, -0.998791, -1.112044,  1.312912 },
+	{ -1.296327, -0.647894,  1.112044,  1.312912 },
+	{ -0.854728, -0.128943, -1.112044,  1.312912 },
+	{ -0.887075,  0.039111,  1.112044,  1.312912 },
+	{ -1.361021, -0.311786, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.311786, -1.361021,  1.112044,  1.312912 },
+	{  0.039111, -0.887075, -1.112044,  1.312912 },
+	{ -0.128943, -0.854728,  1.112044,  1.312912 },
+	{ -0.647894, -1.296327, -1.112044,  1.312912 },
+	{ -0.998791, -1.770274,  1.112044,  1.312912 },
+	{ -0.830738, -1.802620, -1.112044,  1.312912 },
+	{  1.802620,  0.830738,  1.112044,  1.312912 },
+	{  1.770274,  0.998791, -1.112044,  1.312912 },
+	{  1.296327,  0.647894,  1.112044,  1.312912 },
+	{  0.854728,  0.128943, -1.112044,  1.312912 },
+	{  0.887075, -0.039111,  1.112044,  1.312912 },
+	{  1.361021,  0.311786, -1.112044,  1.312912 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_4_5_6[] {
+	{ -0.587391,  1.035587,  1.012883,  0.667637 },
+	{ -0.570438,  0.780356, -1.012883,  0.754030 },
+	{ -0.248079,  0.517800,  1.012883,  1.016198 },
+	{  0.057326,  0.510476, -1.012883,  1.191973 },
+	{  0.040373,  0.765707,  1.012883,  1.105581 },
+	{ -0.281986,  1.028262, -1.012883,  0.843413 },
+	{ -1.331533,  0.483026,  1.012883,  0.410891 },
+	{ -1.063261,  0.192373, -1.012883,  0.650769 },
+	{ -0.717559,  0.107925,  1.012883,  0.872640 },
+	{ -0.640129,  0.314132, -1.012883,  0.854633 },
+	{ -0.908401,  0.604785,  1.012883,  0.614754 },
+	{ -1.254103,  0.689232, -1.012883,  0.392883 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.383658, -1.809968,  1.012883,  2.075282 },
+	{  0.627953, -1.739671, -1.012883,  2.192983 },
+	{  0.517771, -1.452809,  1.012883,  2.044092 },
+	{  0.163293, -1.236244, -1.012883,  1.777501 },
+	{ -0.081002, -1.306542,  1.012883,  1.659800 },
+	{  0.029180, -1.593404, -1.012883,  1.808691 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.867206,  0.638358,  1.012883,  1.613798 },
+	{  0.622910,  0.568060, -1.012883,  1.496097 },
+	{  0.733092,  0.281198,  1.012883,  1.644987 },
+	{  1.087570,  0.064634, -1.012883,  1.911578 },
+	{  1.331866,  0.134931,  1.012883,  2.029279 },
+	{  1.221684,  0.421793, -1.012883,  1.880389 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_4_5_7[] {
+	{ -0.491439,  1.019437,  1.078018,  0.985692 },
+	{ -0.505509,  0.773157, -1.078018,  1.035983 },
+	{ -0.295000,  0.605482,  1.078018,  1.117889 },
+	{ -0.070421,  0.684087, -1.078018,  1.149503 },
+	{ -0.056351,  0.930368,  1.078018,  1.099212 },
+	{ -0.266860,  1.098042, -1.078018,  1.017306 },
+	{ -1.098042,  0.266860,  1.078018,  1.017306 },
+	{ -0.930368,  0.056351, -1.078018,  1.099212 },
+	{ -0.684087,  0.070421,  1.078018,  1.149503 },
+	{ -0.605482,  0.295000, -1.078018,  1.117889 },
+	{ -0.773157,  0.505509,  1.078018,  1.035983 },
+	{ -1.019437,  0.491439, -1.078018,  0.985692 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.071285, -1.506599,  1.078018,  1.623767 },
+	{  0.116288, -1.368815, -1.078018,  1.634550 },
+	{  0.064864, -1.117617,  1.078018,  1.569009 },
+	{ -0.174133, -1.004203, -1.078018,  1.492685 },
+	{ -0.361706, -1.141987,  1.078018,  1.481902 },
+	{ -0.310282, -1.393185, -1.078018,  1.547443 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.393185,  0.310282,  1.078018,  1.547443 },
+	{  1.141987,  0.361706, -1.078018,  1.481902 },
+	{  1.004203,  0.174133,  1.078018,  1.492685 },
+	{  1.117617, -0.064864, -1.078018,  1.569009 },
+	{  1.368815, -0.116288,  1.078018,  1.634550 },
+	{  1.506599,  0.071285, -1.078018,  1.623767 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_4_6_7[] {
+	{ -0.011826,  1.146619,  1.095031,  1.310350 },
+	{ -0.143952,  0.863385, -1.095031,  1.281735 },
+	{  0.023187,  0.775825,  1.095031,  1.317933 },
+	{  0.322452,  0.971499, -1.095031,  1.382747 },
+	{  0.454579,  1.254733,  1.095031,  1.411363 },
+	{  0.287440,  1.342293, -1.095031,  1.375164 },
+	{ -1.073951,  0.011532,  1.095031,  1.080319 },
+	{ -0.976970, -0.144608, -1.095031,  1.101323 },
+	{ -0.682669, -0.011009,  1.095031,  1.165062 },
+	{ -0.485350,  0.278730, -1.095031,  1.207796 },
+	{ -0.582332,  0.434869,  1.095031,  1.186792 },
+	{ -0.876632,  0.301270, -1.095031,  1.123054 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.707637, -1.488442,  1.095031,  1.159654 },
+	{ -0.423801, -1.244028, -1.095031,  1.221126 },
+	{ -0.365871, -0.986601,  1.095031,  1.233673 },
+	{ -0.591777, -0.973587, -1.095031,  1.184747 },
+	{ -0.875614, -1.218001,  1.095031,  1.123275 },
+	{ -0.933544, -1.475428, -1.095031,  1.110728 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.568345,  0.160424,  1.095031,  1.652578 },
+	{  1.471364,  0.316563, -1.095031,  1.631574 },
+	{  1.177064,  0.182964,  1.095031,  1.567836 },
+	{  0.979745, -0.106774, -1.095031,  1.525101 },
+	{  1.076726, -0.262914,  1.095031,  1.546105 },
+	{  1.371026, -0.129315, -1.095031,  1.609843 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_2_5_6_7[] {
+	{  0.330786,  1.475953,  1.053957,  1.674099 },
+	{  0.119665,  1.108297, -1.053957,  1.510970 },
+	{  0.398533,  1.147825,  1.053957,  1.674099 },
+	{  0.888522,  1.555009, -1.053957,  2.000356 },
+	{  1.099643,  1.922665,  1.053957,  2.163485 },
+	{  0.820775,  1.883137, -1.053957,  2.000356 },
+	{ -1.396575, -0.389749,  1.053957,  0.473455 },
+	{ -1.231976, -0.467352, -1.053957,  0.557897 },
+	{ -0.748559, -0.123074,  1.053957,  0.873038 },
+	{ -0.429742,  0.298806, -1.053957,  1.103736 },
+	{ -0.594341,  0.376408,  1.053957,  1.019295 },
+	{ -1.077758,  0.032131, -1.053957,  0.704154 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{ -0.750765, -1.551643,  1.053957,  0.704154 },
+	{ -0.287595, -1.109302, -1.053957,  1.019295 },
+	{ -0.198557, -0.820926,  1.053957,  1.103736 },
+	{ -0.572689, -0.974891, -1.053957,  0.873038 },
+	{ -1.035859, -1.417232,  1.053957,  0.557897 },
+	{ -1.124897, -1.705609, -1.053957,  0.473455 },
+	{  1.244099, -0.167214,  1.053957,  2.000356 },
+	{  1.455221,  0.200442, -1.053957,  2.163485 },
+	{  1.176353,  0.160914,  1.053957,  2.000356 },
+	{  0.686363, -0.246270, -1.053957,  1.674099 },
+	{  0.475242, -0.613926,  1.053957,  1.510970 },
+	{  0.754110, -0.574398, -1.053957,  1.674099 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_4_5_6[] {
+	{ -1.440164,  1.888189,  0.913723, -0.737994 },
+	{ -1.094572,  1.321681, -0.913723, -0.175965 },
+	{ -0.333663,  0.597118,  0.913723,  0.739371 },
+	{  0.081653,  0.439064, -0.913723,  1.092678 },
+	{ -0.263939,  1.005573,  0.913723,  0.530648 },
+	{ -1.024847,  1.730135, -0.913723, -0.384688 },
+	{ -1.730135,  1.024847,  0.913723, -0.384688 },
+	{ -1.005573,  0.263939, -0.913723,  0.530648 },
+	{ -0.439064, -0.081653,  0.913723,  1.092678 },
+	{ -0.597118,  0.333663, -0.913723,  0.739371 },
+	{ -1.321681,  1.094572,  0.913723, -0.175965 },
+	{ -1.888189,  1.440164, -0.913723, -0.737994 },
+	{  0.296498, -1.741950,  0.913723,  2.568988 },
+	{  0.975592, -2.251529, -0.913723,  3.301439 },
+	{  1.015847, -2.015708,  0.913723,  3.180933 },
+	{  0.377009, -1.270308, -0.913723,  2.327975 },
+	{ -0.302085, -0.760729,  0.913723,  1.595524 },
+	{ -0.342341, -0.996550, -0.913723,  1.716031 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.996550,  0.342341,  0.913723,  1.716031 },
+	{  0.760729,  0.302085, -0.913723,  1.595524 },
+	{  1.270308, -0.377009,  0.913723,  2.327975 },
+	{  2.015708, -1.015847, -0.913723,  3.180933 },
+	{  2.251529, -0.975592,  0.913723,  3.301439 },
+	{  1.741950, -0.296498, -0.913723,  2.568988 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_4_5_7[] {
+	{ -0.689232,  1.254103,  1.012883,  0.392883 },
+	{ -0.604785,  0.908401, -1.012883,  0.614754 },
+	{ -0.314132,  0.640129,  1.012883,  0.854633 },
+	{ -0.107925,  0.717559, -1.012883,  0.872640 },
+	{ -0.192373,  1.063261,  1.012883,  0.650769 },
+	{ -0.483026,  1.331533, -1.012883,  0.410891 },
+	{ -1.028262,  0.281986,  1.012883,  0.843413 },
+	{ -0.765707, -0.040373, -1.012883,  1.105581 },
+	{ -0.510476, -0.057326,  1.012883,  1.191973 },
+	{ -0.517800,  0.248079, -1.012883,  1.016198 },
+	{ -0.780356,  0.570438,  1.012883,  0.754030 },
+	{ -1.035587,  0.587391, -1.012883,  0.667637 },
+	{ -0.421793, -1.221684,  1.012883,  1.880389 },
+	{ -0.134931, -1.331866, -1.012883,  2.029279 },
+	{ -0.064634, -1.087570,  1.012883,  1.911578 },
+	{ -0.281198, -0.733092, -1.012883,  1.644987 },
+	{ -0.568060, -0.622910,  1.012883,  1.496097 },
+	{ -0.638358, -0.867206, -1.012883,  1.613798 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.593404, -0.029180,  1.012883,  1.808691 },
+	{  1.306542,  0.081002, -1.012883,  1.659800 },
+	{  1.236244, -0.163293,  1.012883,  1.777501 },
+	{  1.452809, -0.517771, -1.012883,  2.044092 },
+	{  1.739671, -0.627953,  1.012883,  2.192983 },
+	{  1.809968, -0.383658, -1.012883,  2.075282 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_4_6_7[] {
+	{  0.177255,  1.167728,  1.053957,  1.119987 },
+	{  0.030742,  0.866737, -1.053957,  1.139393 },
+	{  0.182286,  0.739398,  1.053957,  1.211819 },
+	{  0.480342,  0.913050, -1.053957,  1.264839 },
+	{  0.626855,  1.214041,  1.053957,  1.245432 },
+	{  0.475311,  1.341380, -1.053957,  1.173006 },
+	{ -0.913976,  0.049286,  1.053957,  1.027653 },
+	{ -0.834027, -0.144639, -1.053957,  1.092588 },
+	{ -0.545375, -0.040910,  1.053957,  1.157524 },
+	{ -0.336672,  0.256746, -1.053957,  1.157524 },
+	{ -0.416620,  0.450672,  1.053957,  1.092588 },
+	{ -0.705272,  0.346942, -1.053957,  1.027653 },
+	{ -1.269472, -1.147050,  1.053957,  1.173006 },
+	{ -1.009896, -1.120311, -1.053957,  1.245432 },
+	{ -0.753224, -0.846276,  1.053957,  1.264839 },
+	{ -0.756128, -0.598979, -1.053957,  1.211819 },
+	{ -1.015705, -0.625718,  1.053957,  1.139393 },
+	{ -1.272377, -0.899753, -1.053957,  1.119987 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.597977, -0.216661,  1.053957,  1.839168 },
+	{  1.518029, -0.022735, -1.053957,  1.774233 },
+	{  1.229377, -0.126465,  1.053957,  1.709298 },
+	{  1.020673, -0.424121, -1.053957,  1.709298 },
+	{  1.100622, -0.618047,  1.053957,  1.774233 },
+	{  1.389274, -0.514317, -1.053957,  1.839168 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_3_5_6_7[] {
+	{  0.488299,  1.350883,  1.012883,  1.613798 },
+	{  0.297286,  1.035309, -1.012883,  1.496097 },
+	{  0.538916,  0.988659,  1.012883,  1.644987 },
+	{  0.971558,  1.257584, -1.012883,  1.911578 },
+	{  1.162571,  1.573158,  1.012883,  2.029279 },
+	{  0.920941,  1.619808, -1.012883,  1.880389 },
+	{ -1.047196, -0.044177,  1.012883,  0.667637 },
+	{ -0.906992, -0.176579, -1.012883,  0.754030 },
+	{ -0.481528,  0.029055,  1.012883,  1.016198 },
+	{ -0.196267,  0.367091, -1.012883,  1.191973 },
+	{ -0.336471,  0.499492,  1.012883,  1.105581 },
+	{ -0.761936,  0.293858, -1.012883,  0.843413 },
+	{ -1.463863, -1.206201,  1.012883,  0.410891 },
+	{ -1.074571, -1.077871, -1.012883,  0.650769 },
+	{ -0.714503, -0.740411,  1.012883,  0.872640 },
+	{ -0.743727, -0.531280, -1.012883,  0.854633 },
+	{ -1.133019, -0.659610,  1.012883,  0.614754 },
+	{ -1.493086, -0.997071, -1.012883,  0.392883 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  1.237228, -0.643599,  1.012883,  2.075282 },
+	{  1.428241, -0.328025, -1.012883,  2.192983 },
+	{  1.186611, -0.281375,  1.012883,  2.044092 },
+	{  0.753968, -0.550300, -1.012883,  1.777501 },
+	{  0.562955, -0.865874,  1.012883,  1.659800 },
+	{  0.804585, -0.912524, -1.012883,  1.808691 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+};
+
+static constexpr MultirotorMixer::Rotor _config_aviata_missing_4_5_6_7[] {
+	{  0.362921,  1.150732,  0.913723,  1.716031 },
+	{  0.254431,  0.913454, -0.913723,  1.595524 },
+	{  0.913843,  0.767761,  0.913723,  2.327975 },
+	{  1.681745,  0.859347, -0.913723,  3.180933 },
+	{  1.790234,  1.096626,  0.913723,  3.301439 },
+	{  1.130822,  1.242319, -0.913723,  2.568988 },
+	{ -1.846393,  0.385063,  0.913723, -0.737994 },
+	{ -1.340408,  0.195192, -0.913723, -0.175965 },
+	{ -0.516348,  0.226431,  0.913723,  0.739371 },
+	{ -0.198273,  0.447539, -0.913723,  1.092678 },
+	{ -0.704257,  0.637410,  0.913723,  0.530648 },
+	{ -1.528317,  0.606171, -0.913723, -0.384688 },
+	{ -1.528317, -0.606171,  0.913723, -0.384688 },
+	{ -0.704257, -0.637410, -0.913723,  0.530648 },
+	{ -0.198273, -0.447539,  0.913723,  1.092678 },
+	{ -0.516348, -0.226431, -0.913723,  0.739371 },
+	{ -1.340408, -0.195192,  0.913723, -0.175965 },
+	{ -1.846393, -0.385063, -0.913723, -0.737994 },
+	{  1.130822, -1.242319,  0.913723,  2.568988 },
+	{  1.790234, -1.096626, -0.913723,  3.301439 },
+	{  1.681745, -0.859347,  0.913723,  3.180933 },
+	{  0.913843, -0.767761, -0.913723,  2.327975 },
+	{  0.254431, -0.913454,  0.913723,  1.595524 },
+	{  0.362921, -1.150732, -0.913723,  1.716031 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
+	{  0.000000,  0.000000,  0.000000, -0.000000 },
 };
 
 static constexpr const MultirotorMixer::Rotor *_config_index[] {
-	&_config_aviata_pos_0_missing_[0],
-	&_config_aviata_pos_1_missing_[0],
-	&_config_aviata_pos_2_missing_[0],
-	&_config_aviata_pos_3_missing_[0],
-	&_config_aviata_pos_4_missing_[0],
-	&_config_aviata_pos_5_missing_[0],
-	&_config_aviata_pos_6_missing_[0],
-	&_config_aviata_pos_7_missing_[0],
-	&_config_aviata_pos_1_missing_0[0],
-	&_config_aviata_pos_2_missing_0[0],
-	&_config_aviata_pos_3_missing_0[0],
-	&_config_aviata_pos_4_missing_0[0],
-	&_config_aviata_pos_5_missing_0[0],
-	&_config_aviata_pos_6_missing_0[0],
-	&_config_aviata_pos_7_missing_0[0],
-	&_config_aviata_pos_0_missing_1[0],
-	&_config_aviata_pos_2_missing_1[0],
-	&_config_aviata_pos_3_missing_1[0],
-	&_config_aviata_pos_4_missing_1[0],
-	&_config_aviata_pos_5_missing_1[0],
-	&_config_aviata_pos_6_missing_1[0],
-	&_config_aviata_pos_7_missing_1[0],
-	&_config_aviata_pos_0_missing_2[0],
-	&_config_aviata_pos_1_missing_2[0],
-	&_config_aviata_pos_3_missing_2[0],
-	&_config_aviata_pos_4_missing_2[0],
-	&_config_aviata_pos_5_missing_2[0],
-	&_config_aviata_pos_6_missing_2[0],
-	&_config_aviata_pos_7_missing_2[0],
-	&_config_aviata_pos_0_missing_3[0],
-	&_config_aviata_pos_1_missing_3[0],
-	&_config_aviata_pos_2_missing_3[0],
-	&_config_aviata_pos_4_missing_3[0],
-	&_config_aviata_pos_5_missing_3[0],
-	&_config_aviata_pos_6_missing_3[0],
-	&_config_aviata_pos_7_missing_3[0],
-	&_config_aviata_pos_0_missing_4[0],
-	&_config_aviata_pos_1_missing_4[0],
-	&_config_aviata_pos_2_missing_4[0],
-	&_config_aviata_pos_3_missing_4[0],
-	&_config_aviata_pos_5_missing_4[0],
-	&_config_aviata_pos_6_missing_4[0],
-	&_config_aviata_pos_7_missing_4[0],
-	&_config_aviata_pos_0_missing_5[0],
-	&_config_aviata_pos_1_missing_5[0],
-	&_config_aviata_pos_2_missing_5[0],
-	&_config_aviata_pos_3_missing_5[0],
-	&_config_aviata_pos_4_missing_5[0],
-	&_config_aviata_pos_6_missing_5[0],
-	&_config_aviata_pos_7_missing_5[0],
-	&_config_aviata_pos_0_missing_6[0],
-	&_config_aviata_pos_1_missing_6[0],
-	&_config_aviata_pos_2_missing_6[0],
-	&_config_aviata_pos_3_missing_6[0],
-	&_config_aviata_pos_4_missing_6[0],
-	&_config_aviata_pos_5_missing_6[0],
-	&_config_aviata_pos_7_missing_6[0],
-	&_config_aviata_pos_0_missing_7[0],
-	&_config_aviata_pos_1_missing_7[0],
-	&_config_aviata_pos_2_missing_7[0],
-	&_config_aviata_pos_3_missing_7[0],
-	&_config_aviata_pos_4_missing_7[0],
-	&_config_aviata_pos_5_missing_7[0],
-	&_config_aviata_pos_6_missing_7[0],
-	&_config_aviata_pos_2_missing_0_1[0],
-	&_config_aviata_pos_3_missing_0_1[0],
-	&_config_aviata_pos_4_missing_0_1[0],
-	&_config_aviata_pos_5_missing_0_1[0],
-	&_config_aviata_pos_6_missing_0_1[0],
-	&_config_aviata_pos_7_missing_0_1[0],
-	&_config_aviata_pos_1_missing_0_2[0],
-	&_config_aviata_pos_3_missing_0_2[0],
-	&_config_aviata_pos_4_missing_0_2[0],
-	&_config_aviata_pos_5_missing_0_2[0],
-	&_config_aviata_pos_6_missing_0_2[0],
-	&_config_aviata_pos_7_missing_0_2[0],
-	&_config_aviata_pos_1_missing_0_3[0],
-	&_config_aviata_pos_2_missing_0_3[0],
-	&_config_aviata_pos_4_missing_0_3[0],
-	&_config_aviata_pos_5_missing_0_3[0],
-	&_config_aviata_pos_6_missing_0_3[0],
-	&_config_aviata_pos_7_missing_0_3[0],
-	&_config_aviata_pos_1_missing_0_4[0],
-	&_config_aviata_pos_2_missing_0_4[0],
-	&_config_aviata_pos_3_missing_0_4[0],
-	&_config_aviata_pos_5_missing_0_4[0],
-	&_config_aviata_pos_6_missing_0_4[0],
-	&_config_aviata_pos_7_missing_0_4[0],
-	&_config_aviata_pos_1_missing_0_5[0],
-	&_config_aviata_pos_2_missing_0_5[0],
-	&_config_aviata_pos_3_missing_0_5[0],
-	&_config_aviata_pos_4_missing_0_5[0],
-	&_config_aviata_pos_6_missing_0_5[0],
-	&_config_aviata_pos_7_missing_0_5[0],
-	&_config_aviata_pos_1_missing_0_6[0],
-	&_config_aviata_pos_2_missing_0_6[0],
-	&_config_aviata_pos_3_missing_0_6[0],
-	&_config_aviata_pos_4_missing_0_6[0],
-	&_config_aviata_pos_5_missing_0_6[0],
-	&_config_aviata_pos_7_missing_0_6[0],
-	&_config_aviata_pos_1_missing_0_7[0],
-	&_config_aviata_pos_2_missing_0_7[0],
-	&_config_aviata_pos_3_missing_0_7[0],
-	&_config_aviata_pos_4_missing_0_7[0],
-	&_config_aviata_pos_5_missing_0_7[0],
-	&_config_aviata_pos_6_missing_0_7[0],
-	&_config_aviata_pos_0_missing_1_2[0],
-	&_config_aviata_pos_3_missing_1_2[0],
-	&_config_aviata_pos_4_missing_1_2[0],
-	&_config_aviata_pos_5_missing_1_2[0],
-	&_config_aviata_pos_6_missing_1_2[0],
-	&_config_aviata_pos_7_missing_1_2[0],
-	&_config_aviata_pos_0_missing_1_3[0],
-	&_config_aviata_pos_2_missing_1_3[0],
-	&_config_aviata_pos_4_missing_1_3[0],
-	&_config_aviata_pos_5_missing_1_3[0],
-	&_config_aviata_pos_6_missing_1_3[0],
-	&_config_aviata_pos_7_missing_1_3[0],
-	&_config_aviata_pos_0_missing_1_4[0],
-	&_config_aviata_pos_2_missing_1_4[0],
-	&_config_aviata_pos_3_missing_1_4[0],
-	&_config_aviata_pos_5_missing_1_4[0],
-	&_config_aviata_pos_6_missing_1_4[0],
-	&_config_aviata_pos_7_missing_1_4[0],
-	&_config_aviata_pos_0_missing_1_5[0],
-	&_config_aviata_pos_2_missing_1_5[0],
-	&_config_aviata_pos_3_missing_1_5[0],
-	&_config_aviata_pos_4_missing_1_5[0],
-	&_config_aviata_pos_6_missing_1_5[0],
-	&_config_aviata_pos_7_missing_1_5[0],
-	&_config_aviata_pos_0_missing_1_6[0],
-	&_config_aviata_pos_2_missing_1_6[0],
-	&_config_aviata_pos_3_missing_1_6[0],
-	&_config_aviata_pos_4_missing_1_6[0],
-	&_config_aviata_pos_5_missing_1_6[0],
-	&_config_aviata_pos_7_missing_1_6[0],
-	&_config_aviata_pos_0_missing_1_7[0],
-	&_config_aviata_pos_2_missing_1_7[0],
-	&_config_aviata_pos_3_missing_1_7[0],
-	&_config_aviata_pos_4_missing_1_7[0],
-	&_config_aviata_pos_5_missing_1_7[0],
-	&_config_aviata_pos_6_missing_1_7[0],
-	&_config_aviata_pos_0_missing_2_3[0],
-	&_config_aviata_pos_1_missing_2_3[0],
-	&_config_aviata_pos_4_missing_2_3[0],
-	&_config_aviata_pos_5_missing_2_3[0],
-	&_config_aviata_pos_6_missing_2_3[0],
-	&_config_aviata_pos_7_missing_2_3[0],
-	&_config_aviata_pos_0_missing_2_4[0],
-	&_config_aviata_pos_1_missing_2_4[0],
-	&_config_aviata_pos_3_missing_2_4[0],
-	&_config_aviata_pos_5_missing_2_4[0],
-	&_config_aviata_pos_6_missing_2_4[0],
-	&_config_aviata_pos_7_missing_2_4[0],
-	&_config_aviata_pos_0_missing_2_5[0],
-	&_config_aviata_pos_1_missing_2_5[0],
-	&_config_aviata_pos_3_missing_2_5[0],
-	&_config_aviata_pos_4_missing_2_5[0],
-	&_config_aviata_pos_6_missing_2_5[0],
-	&_config_aviata_pos_7_missing_2_5[0],
-	&_config_aviata_pos_0_missing_2_6[0],
-	&_config_aviata_pos_1_missing_2_6[0],
-	&_config_aviata_pos_3_missing_2_6[0],
-	&_config_aviata_pos_4_missing_2_6[0],
-	&_config_aviata_pos_5_missing_2_6[0],
-	&_config_aviata_pos_7_missing_2_6[0],
-	&_config_aviata_pos_0_missing_2_7[0],
-	&_config_aviata_pos_1_missing_2_7[0],
-	&_config_aviata_pos_3_missing_2_7[0],
-	&_config_aviata_pos_4_missing_2_7[0],
-	&_config_aviata_pos_5_missing_2_7[0],
-	&_config_aviata_pos_6_missing_2_7[0],
-	&_config_aviata_pos_0_missing_3_4[0],
-	&_config_aviata_pos_1_missing_3_4[0],
-	&_config_aviata_pos_2_missing_3_4[0],
-	&_config_aviata_pos_5_missing_3_4[0],
-	&_config_aviata_pos_6_missing_3_4[0],
-	&_config_aviata_pos_7_missing_3_4[0],
-	&_config_aviata_pos_0_missing_3_5[0],
-	&_config_aviata_pos_1_missing_3_5[0],
-	&_config_aviata_pos_2_missing_3_5[0],
-	&_config_aviata_pos_4_missing_3_5[0],
-	&_config_aviata_pos_6_missing_3_5[0],
-	&_config_aviata_pos_7_missing_3_5[0],
-	&_config_aviata_pos_0_missing_3_6[0],
-	&_config_aviata_pos_1_missing_3_6[0],
-	&_config_aviata_pos_2_missing_3_6[0],
-	&_config_aviata_pos_4_missing_3_6[0],
-	&_config_aviata_pos_5_missing_3_6[0],
-	&_config_aviata_pos_7_missing_3_6[0],
-	&_config_aviata_pos_0_missing_3_7[0],
-	&_config_aviata_pos_1_missing_3_7[0],
-	&_config_aviata_pos_2_missing_3_7[0],
-	&_config_aviata_pos_4_missing_3_7[0],
-	&_config_aviata_pos_5_missing_3_7[0],
-	&_config_aviata_pos_6_missing_3_7[0],
-	&_config_aviata_pos_0_missing_4_5[0],
-	&_config_aviata_pos_1_missing_4_5[0],
-	&_config_aviata_pos_2_missing_4_5[0],
-	&_config_aviata_pos_3_missing_4_5[0],
-	&_config_aviata_pos_6_missing_4_5[0],
-	&_config_aviata_pos_7_missing_4_5[0],
-	&_config_aviata_pos_0_missing_4_6[0],
-	&_config_aviata_pos_1_missing_4_6[0],
-	&_config_aviata_pos_2_missing_4_6[0],
-	&_config_aviata_pos_3_missing_4_6[0],
-	&_config_aviata_pos_5_missing_4_6[0],
-	&_config_aviata_pos_7_missing_4_6[0],
-	&_config_aviata_pos_0_missing_4_7[0],
-	&_config_aviata_pos_1_missing_4_7[0],
-	&_config_aviata_pos_2_missing_4_7[0],
-	&_config_aviata_pos_3_missing_4_7[0],
-	&_config_aviata_pos_5_missing_4_7[0],
-	&_config_aviata_pos_6_missing_4_7[0],
-	&_config_aviata_pos_0_missing_5_6[0],
-	&_config_aviata_pos_1_missing_5_6[0],
-	&_config_aviata_pos_2_missing_5_6[0],
-	&_config_aviata_pos_3_missing_5_6[0],
-	&_config_aviata_pos_4_missing_5_6[0],
-	&_config_aviata_pos_7_missing_5_6[0],
-	&_config_aviata_pos_0_missing_5_7[0],
-	&_config_aviata_pos_1_missing_5_7[0],
-	&_config_aviata_pos_2_missing_5_7[0],
-	&_config_aviata_pos_3_missing_5_7[0],
-	&_config_aviata_pos_4_missing_5_7[0],
-	&_config_aviata_pos_6_missing_5_7[0],
-	&_config_aviata_pos_0_missing_6_7[0],
-	&_config_aviata_pos_1_missing_6_7[0],
-	&_config_aviata_pos_2_missing_6_7[0],
-	&_config_aviata_pos_3_missing_6_7[0],
-	&_config_aviata_pos_4_missing_6_7[0],
-	&_config_aviata_pos_5_missing_6_7[0],
-	&_config_aviata_pos_3_missing_0_1_2[0],
-	&_config_aviata_pos_4_missing_0_1_2[0],
-	&_config_aviata_pos_5_missing_0_1_2[0],
-	&_config_aviata_pos_6_missing_0_1_2[0],
-	&_config_aviata_pos_7_missing_0_1_2[0],
-	&_config_aviata_pos_2_missing_0_1_3[0],
-	&_config_aviata_pos_4_missing_0_1_3[0],
-	&_config_aviata_pos_5_missing_0_1_3[0],
-	&_config_aviata_pos_6_missing_0_1_3[0],
-	&_config_aviata_pos_7_missing_0_1_3[0],
-	&_config_aviata_pos_2_missing_0_1_4[0],
-	&_config_aviata_pos_3_missing_0_1_4[0],
-	&_config_aviata_pos_5_missing_0_1_4[0],
-	&_config_aviata_pos_6_missing_0_1_4[0],
-	&_config_aviata_pos_7_missing_0_1_4[0],
-	&_config_aviata_pos_2_missing_0_1_5[0],
-	&_config_aviata_pos_3_missing_0_1_5[0],
-	&_config_aviata_pos_4_missing_0_1_5[0],
-	&_config_aviata_pos_6_missing_0_1_5[0],
-	&_config_aviata_pos_7_missing_0_1_5[0],
-	&_config_aviata_pos_2_missing_0_1_6[0],
-	&_config_aviata_pos_3_missing_0_1_6[0],
-	&_config_aviata_pos_4_missing_0_1_6[0],
-	&_config_aviata_pos_5_missing_0_1_6[0],
-	&_config_aviata_pos_7_missing_0_1_6[0],
-	&_config_aviata_pos_2_missing_0_1_7[0],
-	&_config_aviata_pos_3_missing_0_1_7[0],
-	&_config_aviata_pos_4_missing_0_1_7[0],
-	&_config_aviata_pos_5_missing_0_1_7[0],
-	&_config_aviata_pos_6_missing_0_1_7[0],
-	&_config_aviata_pos_1_missing_0_2_3[0],
-	&_config_aviata_pos_4_missing_0_2_3[0],
-	&_config_aviata_pos_5_missing_0_2_3[0],
-	&_config_aviata_pos_6_missing_0_2_3[0],
-	&_config_aviata_pos_7_missing_0_2_3[0],
-	&_config_aviata_pos_1_missing_0_2_4[0],
-	&_config_aviata_pos_3_missing_0_2_4[0],
-	&_config_aviata_pos_5_missing_0_2_4[0],
-	&_config_aviata_pos_6_missing_0_2_4[0],
-	&_config_aviata_pos_7_missing_0_2_4[0],
-	&_config_aviata_pos_1_missing_0_2_5[0],
-	&_config_aviata_pos_3_missing_0_2_5[0],
-	&_config_aviata_pos_4_missing_0_2_5[0],
-	&_config_aviata_pos_6_missing_0_2_5[0],
-	&_config_aviata_pos_7_missing_0_2_5[0],
-	&_config_aviata_pos_1_missing_0_2_6[0],
-	&_config_aviata_pos_3_missing_0_2_6[0],
-	&_config_aviata_pos_4_missing_0_2_6[0],
-	&_config_aviata_pos_5_missing_0_2_6[0],
-	&_config_aviata_pos_7_missing_0_2_6[0],
-	&_config_aviata_pos_1_missing_0_2_7[0],
-	&_config_aviata_pos_3_missing_0_2_7[0],
-	&_config_aviata_pos_4_missing_0_2_7[0],
-	&_config_aviata_pos_5_missing_0_2_7[0],
-	&_config_aviata_pos_6_missing_0_2_7[0],
-	&_config_aviata_pos_1_missing_0_3_4[0],
-	&_config_aviata_pos_2_missing_0_3_4[0],
-	&_config_aviata_pos_5_missing_0_3_4[0],
-	&_config_aviata_pos_6_missing_0_3_4[0],
-	&_config_aviata_pos_7_missing_0_3_4[0],
-	&_config_aviata_pos_1_missing_0_3_5[0],
-	&_config_aviata_pos_2_missing_0_3_5[0],
-	&_config_aviata_pos_4_missing_0_3_5[0],
-	&_config_aviata_pos_6_missing_0_3_5[0],
-	&_config_aviata_pos_7_missing_0_3_5[0],
-	&_config_aviata_pos_1_missing_0_3_6[0],
-	&_config_aviata_pos_2_missing_0_3_6[0],
-	&_config_aviata_pos_4_missing_0_3_6[0],
-	&_config_aviata_pos_5_missing_0_3_6[0],
-	&_config_aviata_pos_7_missing_0_3_6[0],
-	&_config_aviata_pos_1_missing_0_3_7[0],
-	&_config_aviata_pos_2_missing_0_3_7[0],
-	&_config_aviata_pos_4_missing_0_3_7[0],
-	&_config_aviata_pos_5_missing_0_3_7[0],
-	&_config_aviata_pos_6_missing_0_3_7[0],
-	&_config_aviata_pos_1_missing_0_4_5[0],
-	&_config_aviata_pos_2_missing_0_4_5[0],
-	&_config_aviata_pos_3_missing_0_4_5[0],
-	&_config_aviata_pos_6_missing_0_4_5[0],
-	&_config_aviata_pos_7_missing_0_4_5[0],
-	&_config_aviata_pos_1_missing_0_4_6[0],
-	&_config_aviata_pos_2_missing_0_4_6[0],
-	&_config_aviata_pos_3_missing_0_4_6[0],
-	&_config_aviata_pos_5_missing_0_4_6[0],
-	&_config_aviata_pos_7_missing_0_4_6[0],
-	&_config_aviata_pos_1_missing_0_4_7[0],
-	&_config_aviata_pos_2_missing_0_4_7[0],
-	&_config_aviata_pos_3_missing_0_4_7[0],
-	&_config_aviata_pos_5_missing_0_4_7[0],
-	&_config_aviata_pos_6_missing_0_4_7[0],
-	&_config_aviata_pos_1_missing_0_5_6[0],
-	&_config_aviata_pos_2_missing_0_5_6[0],
-	&_config_aviata_pos_3_missing_0_5_6[0],
-	&_config_aviata_pos_4_missing_0_5_6[0],
-	&_config_aviata_pos_7_missing_0_5_6[0],
-	&_config_aviata_pos_1_missing_0_5_7[0],
-	&_config_aviata_pos_2_missing_0_5_7[0],
-	&_config_aviata_pos_3_missing_0_5_7[0],
-	&_config_aviata_pos_4_missing_0_5_7[0],
-	&_config_aviata_pos_6_missing_0_5_7[0],
-	&_config_aviata_pos_1_missing_0_6_7[0],
-	&_config_aviata_pos_2_missing_0_6_7[0],
-	&_config_aviata_pos_3_missing_0_6_7[0],
-	&_config_aviata_pos_4_missing_0_6_7[0],
-	&_config_aviata_pos_5_missing_0_6_7[0],
-	&_config_aviata_pos_0_missing_1_2_3[0],
-	&_config_aviata_pos_4_missing_1_2_3[0],
-	&_config_aviata_pos_5_missing_1_2_3[0],
-	&_config_aviata_pos_6_missing_1_2_3[0],
-	&_config_aviata_pos_7_missing_1_2_3[0],
-	&_config_aviata_pos_0_missing_1_2_4[0],
-	&_config_aviata_pos_3_missing_1_2_4[0],
-	&_config_aviata_pos_5_missing_1_2_4[0],
-	&_config_aviata_pos_6_missing_1_2_4[0],
-	&_config_aviata_pos_7_missing_1_2_4[0],
-	&_config_aviata_pos_0_missing_1_2_5[0],
-	&_config_aviata_pos_3_missing_1_2_5[0],
-	&_config_aviata_pos_4_missing_1_2_5[0],
-	&_config_aviata_pos_6_missing_1_2_5[0],
-	&_config_aviata_pos_7_missing_1_2_5[0],
-	&_config_aviata_pos_0_missing_1_2_6[0],
-	&_config_aviata_pos_3_missing_1_2_6[0],
-	&_config_aviata_pos_4_missing_1_2_6[0],
-	&_config_aviata_pos_5_missing_1_2_6[0],
-	&_config_aviata_pos_7_missing_1_2_6[0],
-	&_config_aviata_pos_0_missing_1_2_7[0],
-	&_config_aviata_pos_3_missing_1_2_7[0],
-	&_config_aviata_pos_4_missing_1_2_7[0],
-	&_config_aviata_pos_5_missing_1_2_7[0],
-	&_config_aviata_pos_6_missing_1_2_7[0],
-	&_config_aviata_pos_0_missing_1_3_4[0],
-	&_config_aviata_pos_2_missing_1_3_4[0],
-	&_config_aviata_pos_5_missing_1_3_4[0],
-	&_config_aviata_pos_6_missing_1_3_4[0],
-	&_config_aviata_pos_7_missing_1_3_4[0],
-	&_config_aviata_pos_0_missing_1_3_5[0],
-	&_config_aviata_pos_2_missing_1_3_5[0],
-	&_config_aviata_pos_4_missing_1_3_5[0],
-	&_config_aviata_pos_6_missing_1_3_5[0],
-	&_config_aviata_pos_7_missing_1_3_5[0],
-	&_config_aviata_pos_0_missing_1_3_6[0],
-	&_config_aviata_pos_2_missing_1_3_6[0],
-	&_config_aviata_pos_4_missing_1_3_6[0],
-	&_config_aviata_pos_5_missing_1_3_6[0],
-	&_config_aviata_pos_7_missing_1_3_6[0],
-	&_config_aviata_pos_0_missing_1_3_7[0],
-	&_config_aviata_pos_2_missing_1_3_7[0],
-	&_config_aviata_pos_4_missing_1_3_7[0],
-	&_config_aviata_pos_5_missing_1_3_7[0],
-	&_config_aviata_pos_6_missing_1_3_7[0],
-	&_config_aviata_pos_0_missing_1_4_5[0],
-	&_config_aviata_pos_2_missing_1_4_5[0],
-	&_config_aviata_pos_3_missing_1_4_5[0],
-	&_config_aviata_pos_6_missing_1_4_5[0],
-	&_config_aviata_pos_7_missing_1_4_5[0],
-	&_config_aviata_pos_0_missing_1_4_6[0],
-	&_config_aviata_pos_2_missing_1_4_6[0],
-	&_config_aviata_pos_3_missing_1_4_6[0],
-	&_config_aviata_pos_5_missing_1_4_6[0],
-	&_config_aviata_pos_7_missing_1_4_6[0],
-	&_config_aviata_pos_0_missing_1_4_7[0],
-	&_config_aviata_pos_2_missing_1_4_7[0],
-	&_config_aviata_pos_3_missing_1_4_7[0],
-	&_config_aviata_pos_5_missing_1_4_7[0],
-	&_config_aviata_pos_6_missing_1_4_7[0],
-	&_config_aviata_pos_0_missing_1_5_6[0],
-	&_config_aviata_pos_2_missing_1_5_6[0],
-	&_config_aviata_pos_3_missing_1_5_6[0],
-	&_config_aviata_pos_4_missing_1_5_6[0],
-	&_config_aviata_pos_7_missing_1_5_6[0],
-	&_config_aviata_pos_0_missing_1_5_7[0],
-	&_config_aviata_pos_2_missing_1_5_7[0],
-	&_config_aviata_pos_3_missing_1_5_7[0],
-	&_config_aviata_pos_4_missing_1_5_7[0],
-	&_config_aviata_pos_6_missing_1_5_7[0],
-	&_config_aviata_pos_0_missing_1_6_7[0],
-	&_config_aviata_pos_2_missing_1_6_7[0],
-	&_config_aviata_pos_3_missing_1_6_7[0],
-	&_config_aviata_pos_4_missing_1_6_7[0],
-	&_config_aviata_pos_5_missing_1_6_7[0],
-	&_config_aviata_pos_0_missing_2_3_4[0],
-	&_config_aviata_pos_1_missing_2_3_4[0],
-	&_config_aviata_pos_5_missing_2_3_4[0],
-	&_config_aviata_pos_6_missing_2_3_4[0],
-	&_config_aviata_pos_7_missing_2_3_4[0],
-	&_config_aviata_pos_0_missing_2_3_5[0],
-	&_config_aviata_pos_1_missing_2_3_5[0],
-	&_config_aviata_pos_4_missing_2_3_5[0],
-	&_config_aviata_pos_6_missing_2_3_5[0],
-	&_config_aviata_pos_7_missing_2_3_5[0],
-	&_config_aviata_pos_0_missing_2_3_6[0],
-	&_config_aviata_pos_1_missing_2_3_6[0],
-	&_config_aviata_pos_4_missing_2_3_6[0],
-	&_config_aviata_pos_5_missing_2_3_6[0],
-	&_config_aviata_pos_7_missing_2_3_6[0],
-	&_config_aviata_pos_0_missing_2_3_7[0],
-	&_config_aviata_pos_1_missing_2_3_7[0],
-	&_config_aviata_pos_4_missing_2_3_7[0],
-	&_config_aviata_pos_5_missing_2_3_7[0],
-	&_config_aviata_pos_6_missing_2_3_7[0],
-	&_config_aviata_pos_0_missing_2_4_5[0],
-	&_config_aviata_pos_1_missing_2_4_5[0],
-	&_config_aviata_pos_3_missing_2_4_5[0],
-	&_config_aviata_pos_6_missing_2_4_5[0],
-	&_config_aviata_pos_7_missing_2_4_5[0],
-	&_config_aviata_pos_0_missing_2_4_6[0],
-	&_config_aviata_pos_1_missing_2_4_6[0],
-	&_config_aviata_pos_3_missing_2_4_6[0],
-	&_config_aviata_pos_5_missing_2_4_6[0],
-	&_config_aviata_pos_7_missing_2_4_6[0],
-	&_config_aviata_pos_0_missing_2_4_7[0],
-	&_config_aviata_pos_1_missing_2_4_7[0],
-	&_config_aviata_pos_3_missing_2_4_7[0],
-	&_config_aviata_pos_5_missing_2_4_7[0],
-	&_config_aviata_pos_6_missing_2_4_7[0],
-	&_config_aviata_pos_0_missing_2_5_6[0],
-	&_config_aviata_pos_1_missing_2_5_6[0],
-	&_config_aviata_pos_3_missing_2_5_6[0],
-	&_config_aviata_pos_4_missing_2_5_6[0],
-	&_config_aviata_pos_7_missing_2_5_6[0],
-	&_config_aviata_pos_0_missing_2_5_7[0],
-	&_config_aviata_pos_1_missing_2_5_7[0],
-	&_config_aviata_pos_3_missing_2_5_7[0],
-	&_config_aviata_pos_4_missing_2_5_7[0],
-	&_config_aviata_pos_6_missing_2_5_7[0],
-	&_config_aviata_pos_0_missing_2_6_7[0],
-	&_config_aviata_pos_1_missing_2_6_7[0],
-	&_config_aviata_pos_3_missing_2_6_7[0],
-	&_config_aviata_pos_4_missing_2_6_7[0],
-	&_config_aviata_pos_5_missing_2_6_7[0],
-	&_config_aviata_pos_0_missing_3_4_5[0],
-	&_config_aviata_pos_1_missing_3_4_5[0],
-	&_config_aviata_pos_2_missing_3_4_5[0],
-	&_config_aviata_pos_6_missing_3_4_5[0],
-	&_config_aviata_pos_7_missing_3_4_5[0],
-	&_config_aviata_pos_0_missing_3_4_6[0],
-	&_config_aviata_pos_1_missing_3_4_6[0],
-	&_config_aviata_pos_2_missing_3_4_6[0],
-	&_config_aviata_pos_5_missing_3_4_6[0],
-	&_config_aviata_pos_7_missing_3_4_6[0],
-	&_config_aviata_pos_0_missing_3_4_7[0],
-	&_config_aviata_pos_1_missing_3_4_7[0],
-	&_config_aviata_pos_2_missing_3_4_7[0],
-	&_config_aviata_pos_5_missing_3_4_7[0],
-	&_config_aviata_pos_6_missing_3_4_7[0],
-	&_config_aviata_pos_0_missing_3_5_6[0],
-	&_config_aviata_pos_1_missing_3_5_6[0],
-	&_config_aviata_pos_2_missing_3_5_6[0],
-	&_config_aviata_pos_4_missing_3_5_6[0],
-	&_config_aviata_pos_7_missing_3_5_6[0],
-	&_config_aviata_pos_0_missing_3_5_7[0],
-	&_config_aviata_pos_1_missing_3_5_7[0],
-	&_config_aviata_pos_2_missing_3_5_7[0],
-	&_config_aviata_pos_4_missing_3_5_7[0],
-	&_config_aviata_pos_6_missing_3_5_7[0],
-	&_config_aviata_pos_0_missing_3_6_7[0],
-	&_config_aviata_pos_1_missing_3_6_7[0],
-	&_config_aviata_pos_2_missing_3_6_7[0],
-	&_config_aviata_pos_4_missing_3_6_7[0],
-	&_config_aviata_pos_5_missing_3_6_7[0],
-	&_config_aviata_pos_0_missing_4_5_6[0],
-	&_config_aviata_pos_1_missing_4_5_6[0],
-	&_config_aviata_pos_2_missing_4_5_6[0],
-	&_config_aviata_pos_3_missing_4_5_6[0],
-	&_config_aviata_pos_7_missing_4_5_6[0],
-	&_config_aviata_pos_0_missing_4_5_7[0],
-	&_config_aviata_pos_1_missing_4_5_7[0],
-	&_config_aviata_pos_2_missing_4_5_7[0],
-	&_config_aviata_pos_3_missing_4_5_7[0],
-	&_config_aviata_pos_6_missing_4_5_7[0],
-	&_config_aviata_pos_0_missing_4_6_7[0],
-	&_config_aviata_pos_1_missing_4_6_7[0],
-	&_config_aviata_pos_2_missing_4_6_7[0],
-	&_config_aviata_pos_3_missing_4_6_7[0],
-	&_config_aviata_pos_5_missing_4_6_7[0],
-	&_config_aviata_pos_0_missing_5_6_7[0],
-	&_config_aviata_pos_1_missing_5_6_7[0],
-	&_config_aviata_pos_2_missing_5_6_7[0],
-	&_config_aviata_pos_3_missing_5_6_7[0],
-	&_config_aviata_pos_4_missing_5_6_7[0],
+	&_config_aviata_missing_[0],
+	&_config_aviata_missing_0[0],
+	&_config_aviata_missing_1[0],
+	&_config_aviata_missing_2[0],
+	&_config_aviata_missing_3[0],
+	&_config_aviata_missing_4[0],
+	&_config_aviata_missing_5[0],
+	&_config_aviata_missing_6[0],
+	&_config_aviata_missing_7[0],
+	&_config_aviata_missing_0_1[0],
+	&_config_aviata_missing_0_2[0],
+	&_config_aviata_missing_0_3[0],
+	&_config_aviata_missing_0_4[0],
+	&_config_aviata_missing_0_5[0],
+	&_config_aviata_missing_0_6[0],
+	&_config_aviata_missing_0_7[0],
+	&_config_aviata_missing_1_2[0],
+	&_config_aviata_missing_1_3[0],
+	&_config_aviata_missing_1_4[0],
+	&_config_aviata_missing_1_5[0],
+	&_config_aviata_missing_1_6[0],
+	&_config_aviata_missing_1_7[0],
+	&_config_aviata_missing_2_3[0],
+	&_config_aviata_missing_2_4[0],
+	&_config_aviata_missing_2_5[0],
+	&_config_aviata_missing_2_6[0],
+	&_config_aviata_missing_2_7[0],
+	&_config_aviata_missing_3_4[0],
+	&_config_aviata_missing_3_5[0],
+	&_config_aviata_missing_3_6[0],
+	&_config_aviata_missing_3_7[0],
+	&_config_aviata_missing_4_5[0],
+	&_config_aviata_missing_4_6[0],
+	&_config_aviata_missing_4_7[0],
+	&_config_aviata_missing_5_6[0],
+	&_config_aviata_missing_5_7[0],
+	&_config_aviata_missing_6_7[0],
+	&_config_aviata_missing_0_1_2[0],
+	&_config_aviata_missing_0_1_3[0],
+	&_config_aviata_missing_0_1_4[0],
+	&_config_aviata_missing_0_1_5[0],
+	&_config_aviata_missing_0_1_6[0],
+	&_config_aviata_missing_0_1_7[0],
+	&_config_aviata_missing_0_2_3[0],
+	&_config_aviata_missing_0_2_4[0],
+	&_config_aviata_missing_0_2_5[0],
+	&_config_aviata_missing_0_2_6[0],
+	&_config_aviata_missing_0_2_7[0],
+	&_config_aviata_missing_0_3_4[0],
+	&_config_aviata_missing_0_3_5[0],
+	&_config_aviata_missing_0_3_6[0],
+	&_config_aviata_missing_0_3_7[0],
+	&_config_aviata_missing_0_4_5[0],
+	&_config_aviata_missing_0_4_6[0],
+	&_config_aviata_missing_0_4_7[0],
+	&_config_aviata_missing_0_5_6[0],
+	&_config_aviata_missing_0_5_7[0],
+	&_config_aviata_missing_0_6_7[0],
+	&_config_aviata_missing_1_2_3[0],
+	&_config_aviata_missing_1_2_4[0],
+	&_config_aviata_missing_1_2_5[0],
+	&_config_aviata_missing_1_2_6[0],
+	&_config_aviata_missing_1_2_7[0],
+	&_config_aviata_missing_1_3_4[0],
+	&_config_aviata_missing_1_3_5[0],
+	&_config_aviata_missing_1_3_6[0],
+	&_config_aviata_missing_1_3_7[0],
+	&_config_aviata_missing_1_4_5[0],
+	&_config_aviata_missing_1_4_6[0],
+	&_config_aviata_missing_1_4_7[0],
+	&_config_aviata_missing_1_5_6[0],
+	&_config_aviata_missing_1_5_7[0],
+	&_config_aviata_missing_1_6_7[0],
+	&_config_aviata_missing_2_3_4[0],
+	&_config_aviata_missing_2_3_5[0],
+	&_config_aviata_missing_2_3_6[0],
+	&_config_aviata_missing_2_3_7[0],
+	&_config_aviata_missing_2_4_5[0],
+	&_config_aviata_missing_2_4_6[0],
+	&_config_aviata_missing_2_4_7[0],
+	&_config_aviata_missing_2_5_6[0],
+	&_config_aviata_missing_2_5_7[0],
+	&_config_aviata_missing_2_6_7[0],
+	&_config_aviata_missing_3_4_5[0],
+	&_config_aviata_missing_3_4_6[0],
+	&_config_aviata_missing_3_4_7[0],
+	&_config_aviata_missing_3_5_6[0],
+	&_config_aviata_missing_3_5_7[0],
+	&_config_aviata_missing_3_6_7[0],
+	&_config_aviata_missing_4_5_6[0],
+	&_config_aviata_missing_4_5_7[0],
+	&_config_aviata_missing_4_6_7[0],
+	&_config_aviata_missing_5_6_7[0],
+	&_config_aviata_missing_0_1_2_3[0],
+	&_config_aviata_missing_0_1_2_4[0],
+	&_config_aviata_missing_0_1_2_5[0],
+	&_config_aviata_missing_0_1_2_6[0],
+	&_config_aviata_missing_0_1_2_7[0],
+	&_config_aviata_missing_0_1_3_4[0],
+	&_config_aviata_missing_0_1_3_5[0],
+	&_config_aviata_missing_0_1_3_6[0],
+	&_config_aviata_missing_0_1_3_7[0],
+	&_config_aviata_missing_0_1_4_5[0],
+	&_config_aviata_missing_0_1_4_6[0],
+	&_config_aviata_missing_0_1_4_7[0],
+	&_config_aviata_missing_0_1_5_6[0],
+	&_config_aviata_missing_0_1_5_7[0],
+	&_config_aviata_missing_0_1_6_7[0],
+	&_config_aviata_missing_0_2_3_4[0],
+	&_config_aviata_missing_0_2_3_5[0],
+	&_config_aviata_missing_0_2_3_6[0],
+	&_config_aviata_missing_0_2_3_7[0],
+	&_config_aviata_missing_0_2_4_5[0],
+	&_config_aviata_missing_0_2_4_6[0],
+	&_config_aviata_missing_0_2_4_7[0],
+	&_config_aviata_missing_0_2_5_6[0],
+	&_config_aviata_missing_0_2_5_7[0],
+	&_config_aviata_missing_0_2_6_7[0],
+	&_config_aviata_missing_0_3_4_5[0],
+	&_config_aviata_missing_0_3_4_6[0],
+	&_config_aviata_missing_0_3_4_7[0],
+	&_config_aviata_missing_0_3_5_6[0],
+	&_config_aviata_missing_0_3_5_7[0],
+	&_config_aviata_missing_0_3_6_7[0],
+	&_config_aviata_missing_0_4_5_6[0],
+	&_config_aviata_missing_0_4_5_7[0],
+	&_config_aviata_missing_0_4_6_7[0],
+	&_config_aviata_missing_0_5_6_7[0],
+	&_config_aviata_missing_1_2_3_4[0],
+	&_config_aviata_missing_1_2_3_5[0],
+	&_config_aviata_missing_1_2_3_6[0],
+	&_config_aviata_missing_1_2_3_7[0],
+	&_config_aviata_missing_1_2_4_5[0],
+	&_config_aviata_missing_1_2_4_6[0],
+	&_config_aviata_missing_1_2_4_7[0],
+	&_config_aviata_missing_1_2_5_6[0],
+	&_config_aviata_missing_1_2_5_7[0],
+	&_config_aviata_missing_1_2_6_7[0],
+	&_config_aviata_missing_1_3_4_5[0],
+	&_config_aviata_missing_1_3_4_6[0],
+	&_config_aviata_missing_1_3_4_7[0],
+	&_config_aviata_missing_1_3_5_6[0],
+	&_config_aviata_missing_1_3_5_7[0],
+	&_config_aviata_missing_1_3_6_7[0],
+	&_config_aviata_missing_1_4_5_6[0],
+	&_config_aviata_missing_1_4_5_7[0],
+	&_config_aviata_missing_1_4_6_7[0],
+	&_config_aviata_missing_1_5_6_7[0],
+	&_config_aviata_missing_2_3_4_5[0],
+	&_config_aviata_missing_2_3_4_6[0],
+	&_config_aviata_missing_2_3_4_7[0],
+	&_config_aviata_missing_2_3_5_6[0],
+	&_config_aviata_missing_2_3_5_7[0],
+	&_config_aviata_missing_2_3_6_7[0],
+	&_config_aviata_missing_2_4_5_6[0],
+	&_config_aviata_missing_2_4_5_7[0],
+	&_config_aviata_missing_2_4_6_7[0],
+	&_config_aviata_missing_2_5_6_7[0],
+	&_config_aviata_missing_3_4_5_6[0],
+	&_config_aviata_missing_3_4_5_7[0],
+	&_config_aviata_missing_3_4_6_7[0],
+	&_config_aviata_missing_3_5_6_7[0],
+	&_config_aviata_missing_4_5_6_7[0],
 };
 
 static constexpr unsigned _config_rotor_count[] {
-	6, /* aviata_pos_0_missing_ */
-	6, /* aviata_pos_1_missing_ */
-	6, /* aviata_pos_2_missing_ */
-	6, /* aviata_pos_3_missing_ */
-	6, /* aviata_pos_4_missing_ */
-	6, /* aviata_pos_5_missing_ */
-	6, /* aviata_pos_6_missing_ */
-	6, /* aviata_pos_7_missing_ */
-	6, /* aviata_pos_1_missing_0 */
-	6, /* aviata_pos_2_missing_0 */
-	6, /* aviata_pos_3_missing_0 */
-	6, /* aviata_pos_4_missing_0 */
-	6, /* aviata_pos_5_missing_0 */
-	6, /* aviata_pos_6_missing_0 */
-	6, /* aviata_pos_7_missing_0 */
-	6, /* aviata_pos_0_missing_1 */
-	6, /* aviata_pos_2_missing_1 */
-	6, /* aviata_pos_3_missing_1 */
-	6, /* aviata_pos_4_missing_1 */
-	6, /* aviata_pos_5_missing_1 */
-	6, /* aviata_pos_6_missing_1 */
-	6, /* aviata_pos_7_missing_1 */
-	6, /* aviata_pos_0_missing_2 */
-	6, /* aviata_pos_1_missing_2 */
-	6, /* aviata_pos_3_missing_2 */
-	6, /* aviata_pos_4_missing_2 */
-	6, /* aviata_pos_5_missing_2 */
-	6, /* aviata_pos_6_missing_2 */
-	6, /* aviata_pos_7_missing_2 */
-	6, /* aviata_pos_0_missing_3 */
-	6, /* aviata_pos_1_missing_3 */
-	6, /* aviata_pos_2_missing_3 */
-	6, /* aviata_pos_4_missing_3 */
-	6, /* aviata_pos_5_missing_3 */
-	6, /* aviata_pos_6_missing_3 */
-	6, /* aviata_pos_7_missing_3 */
-	6, /* aviata_pos_0_missing_4 */
-	6, /* aviata_pos_1_missing_4 */
-	6, /* aviata_pos_2_missing_4 */
-	6, /* aviata_pos_3_missing_4 */
-	6, /* aviata_pos_5_missing_4 */
-	6, /* aviata_pos_6_missing_4 */
-	6, /* aviata_pos_7_missing_4 */
-	6, /* aviata_pos_0_missing_5 */
-	6, /* aviata_pos_1_missing_5 */
-	6, /* aviata_pos_2_missing_5 */
-	6, /* aviata_pos_3_missing_5 */
-	6, /* aviata_pos_4_missing_5 */
-	6, /* aviata_pos_6_missing_5 */
-	6, /* aviata_pos_7_missing_5 */
-	6, /* aviata_pos_0_missing_6 */
-	6, /* aviata_pos_1_missing_6 */
-	6, /* aviata_pos_2_missing_6 */
-	6, /* aviata_pos_3_missing_6 */
-	6, /* aviata_pos_4_missing_6 */
-	6, /* aviata_pos_5_missing_6 */
-	6, /* aviata_pos_7_missing_6 */
-	6, /* aviata_pos_0_missing_7 */
-	6, /* aviata_pos_1_missing_7 */
-	6, /* aviata_pos_2_missing_7 */
-	6, /* aviata_pos_3_missing_7 */
-	6, /* aviata_pos_4_missing_7 */
-	6, /* aviata_pos_5_missing_7 */
-	6, /* aviata_pos_6_missing_7 */
-	6, /* aviata_pos_2_missing_0_1 */
-	6, /* aviata_pos_3_missing_0_1 */
-	6, /* aviata_pos_4_missing_0_1 */
-	6, /* aviata_pos_5_missing_0_1 */
-	6, /* aviata_pos_6_missing_0_1 */
-	6, /* aviata_pos_7_missing_0_1 */
-	6, /* aviata_pos_1_missing_0_2 */
-	6, /* aviata_pos_3_missing_0_2 */
-	6, /* aviata_pos_4_missing_0_2 */
-	6, /* aviata_pos_5_missing_0_2 */
-	6, /* aviata_pos_6_missing_0_2 */
-	6, /* aviata_pos_7_missing_0_2 */
-	6, /* aviata_pos_1_missing_0_3 */
-	6, /* aviata_pos_2_missing_0_3 */
-	6, /* aviata_pos_4_missing_0_3 */
-	6, /* aviata_pos_5_missing_0_3 */
-	6, /* aviata_pos_6_missing_0_3 */
-	6, /* aviata_pos_7_missing_0_3 */
-	6, /* aviata_pos_1_missing_0_4 */
-	6, /* aviata_pos_2_missing_0_4 */
-	6, /* aviata_pos_3_missing_0_4 */
-	6, /* aviata_pos_5_missing_0_4 */
-	6, /* aviata_pos_6_missing_0_4 */
-	6, /* aviata_pos_7_missing_0_4 */
-	6, /* aviata_pos_1_missing_0_5 */
-	6, /* aviata_pos_2_missing_0_5 */
-	6, /* aviata_pos_3_missing_0_5 */
-	6, /* aviata_pos_4_missing_0_5 */
-	6, /* aviata_pos_6_missing_0_5 */
-	6, /* aviata_pos_7_missing_0_5 */
-	6, /* aviata_pos_1_missing_0_6 */
-	6, /* aviata_pos_2_missing_0_6 */
-	6, /* aviata_pos_3_missing_0_6 */
-	6, /* aviata_pos_4_missing_0_6 */
-	6, /* aviata_pos_5_missing_0_6 */
-	6, /* aviata_pos_7_missing_0_6 */
-	6, /* aviata_pos_1_missing_0_7 */
-	6, /* aviata_pos_2_missing_0_7 */
-	6, /* aviata_pos_3_missing_0_7 */
-	6, /* aviata_pos_4_missing_0_7 */
-	6, /* aviata_pos_5_missing_0_7 */
-	6, /* aviata_pos_6_missing_0_7 */
-	6, /* aviata_pos_0_missing_1_2 */
-	6, /* aviata_pos_3_missing_1_2 */
-	6, /* aviata_pos_4_missing_1_2 */
-	6, /* aviata_pos_5_missing_1_2 */
-	6, /* aviata_pos_6_missing_1_2 */
-	6, /* aviata_pos_7_missing_1_2 */
-	6, /* aviata_pos_0_missing_1_3 */
-	6, /* aviata_pos_2_missing_1_3 */
-	6, /* aviata_pos_4_missing_1_3 */
-	6, /* aviata_pos_5_missing_1_3 */
-	6, /* aviata_pos_6_missing_1_3 */
-	6, /* aviata_pos_7_missing_1_3 */
-	6, /* aviata_pos_0_missing_1_4 */
-	6, /* aviata_pos_2_missing_1_4 */
-	6, /* aviata_pos_3_missing_1_4 */
-	6, /* aviata_pos_5_missing_1_4 */
-	6, /* aviata_pos_6_missing_1_4 */
-	6, /* aviata_pos_7_missing_1_4 */
-	6, /* aviata_pos_0_missing_1_5 */
-	6, /* aviata_pos_2_missing_1_5 */
-	6, /* aviata_pos_3_missing_1_5 */
-	6, /* aviata_pos_4_missing_1_5 */
-	6, /* aviata_pos_6_missing_1_5 */
-	6, /* aviata_pos_7_missing_1_5 */
-	6, /* aviata_pos_0_missing_1_6 */
-	6, /* aviata_pos_2_missing_1_6 */
-	6, /* aviata_pos_3_missing_1_6 */
-	6, /* aviata_pos_4_missing_1_6 */
-	6, /* aviata_pos_5_missing_1_6 */
-	6, /* aviata_pos_7_missing_1_6 */
-	6, /* aviata_pos_0_missing_1_7 */
-	6, /* aviata_pos_2_missing_1_7 */
-	6, /* aviata_pos_3_missing_1_7 */
-	6, /* aviata_pos_4_missing_1_7 */
-	6, /* aviata_pos_5_missing_1_7 */
-	6, /* aviata_pos_6_missing_1_7 */
-	6, /* aviata_pos_0_missing_2_3 */
-	6, /* aviata_pos_1_missing_2_3 */
-	6, /* aviata_pos_4_missing_2_3 */
-	6, /* aviata_pos_5_missing_2_3 */
-	6, /* aviata_pos_6_missing_2_3 */
-	6, /* aviata_pos_7_missing_2_3 */
-	6, /* aviata_pos_0_missing_2_4 */
-	6, /* aviata_pos_1_missing_2_4 */
-	6, /* aviata_pos_3_missing_2_4 */
-	6, /* aviata_pos_5_missing_2_4 */
-	6, /* aviata_pos_6_missing_2_4 */
-	6, /* aviata_pos_7_missing_2_4 */
-	6, /* aviata_pos_0_missing_2_5 */
-	6, /* aviata_pos_1_missing_2_5 */
-	6, /* aviata_pos_3_missing_2_5 */
-	6, /* aviata_pos_4_missing_2_5 */
-	6, /* aviata_pos_6_missing_2_5 */
-	6, /* aviata_pos_7_missing_2_5 */
-	6, /* aviata_pos_0_missing_2_6 */
-	6, /* aviata_pos_1_missing_2_6 */
-	6, /* aviata_pos_3_missing_2_6 */
-	6, /* aviata_pos_4_missing_2_6 */
-	6, /* aviata_pos_5_missing_2_6 */
-	6, /* aviata_pos_7_missing_2_6 */
-	6, /* aviata_pos_0_missing_2_7 */
-	6, /* aviata_pos_1_missing_2_7 */
-	6, /* aviata_pos_3_missing_2_7 */
-	6, /* aviata_pos_4_missing_2_7 */
-	6, /* aviata_pos_5_missing_2_7 */
-	6, /* aviata_pos_6_missing_2_7 */
-	6, /* aviata_pos_0_missing_3_4 */
-	6, /* aviata_pos_1_missing_3_4 */
-	6, /* aviata_pos_2_missing_3_4 */
-	6, /* aviata_pos_5_missing_3_4 */
-	6, /* aviata_pos_6_missing_3_4 */
-	6, /* aviata_pos_7_missing_3_4 */
-	6, /* aviata_pos_0_missing_3_5 */
-	6, /* aviata_pos_1_missing_3_5 */
-	6, /* aviata_pos_2_missing_3_5 */
-	6, /* aviata_pos_4_missing_3_5 */
-	6, /* aviata_pos_6_missing_3_5 */
-	6, /* aviata_pos_7_missing_3_5 */
-	6, /* aviata_pos_0_missing_3_6 */
-	6, /* aviata_pos_1_missing_3_6 */
-	6, /* aviata_pos_2_missing_3_6 */
-	6, /* aviata_pos_4_missing_3_6 */
-	6, /* aviata_pos_5_missing_3_6 */
-	6, /* aviata_pos_7_missing_3_6 */
-	6, /* aviata_pos_0_missing_3_7 */
-	6, /* aviata_pos_1_missing_3_7 */
-	6, /* aviata_pos_2_missing_3_7 */
-	6, /* aviata_pos_4_missing_3_7 */
-	6, /* aviata_pos_5_missing_3_7 */
-	6, /* aviata_pos_6_missing_3_7 */
-	6, /* aviata_pos_0_missing_4_5 */
-	6, /* aviata_pos_1_missing_4_5 */
-	6, /* aviata_pos_2_missing_4_5 */
-	6, /* aviata_pos_3_missing_4_5 */
-	6, /* aviata_pos_6_missing_4_5 */
-	6, /* aviata_pos_7_missing_4_5 */
-	6, /* aviata_pos_0_missing_4_6 */
-	6, /* aviata_pos_1_missing_4_6 */
-	6, /* aviata_pos_2_missing_4_6 */
-	6, /* aviata_pos_3_missing_4_6 */
-	6, /* aviata_pos_5_missing_4_6 */
-	6, /* aviata_pos_7_missing_4_6 */
-	6, /* aviata_pos_0_missing_4_7 */
-	6, /* aviata_pos_1_missing_4_7 */
-	6, /* aviata_pos_2_missing_4_7 */
-	6, /* aviata_pos_3_missing_4_7 */
-	6, /* aviata_pos_5_missing_4_7 */
-	6, /* aviata_pos_6_missing_4_7 */
-	6, /* aviata_pos_0_missing_5_6 */
-	6, /* aviata_pos_1_missing_5_6 */
-	6, /* aviata_pos_2_missing_5_6 */
-	6, /* aviata_pos_3_missing_5_6 */
-	6, /* aviata_pos_4_missing_5_6 */
-	6, /* aviata_pos_7_missing_5_6 */
-	6, /* aviata_pos_0_missing_5_7 */
-	6, /* aviata_pos_1_missing_5_7 */
-	6, /* aviata_pos_2_missing_5_7 */
-	6, /* aviata_pos_3_missing_5_7 */
-	6, /* aviata_pos_4_missing_5_7 */
-	6, /* aviata_pos_6_missing_5_7 */
-	6, /* aviata_pos_0_missing_6_7 */
-	6, /* aviata_pos_1_missing_6_7 */
-	6, /* aviata_pos_2_missing_6_7 */
-	6, /* aviata_pos_3_missing_6_7 */
-	6, /* aviata_pos_4_missing_6_7 */
-	6, /* aviata_pos_5_missing_6_7 */
-	6, /* aviata_pos_3_missing_0_1_2 */
-	6, /* aviata_pos_4_missing_0_1_2 */
-	6, /* aviata_pos_5_missing_0_1_2 */
-	6, /* aviata_pos_6_missing_0_1_2 */
-	6, /* aviata_pos_7_missing_0_1_2 */
-	6, /* aviata_pos_2_missing_0_1_3 */
-	6, /* aviata_pos_4_missing_0_1_3 */
-	6, /* aviata_pos_5_missing_0_1_3 */
-	6, /* aviata_pos_6_missing_0_1_3 */
-	6, /* aviata_pos_7_missing_0_1_3 */
-	6, /* aviata_pos_2_missing_0_1_4 */
-	6, /* aviata_pos_3_missing_0_1_4 */
-	6, /* aviata_pos_5_missing_0_1_4 */
-	6, /* aviata_pos_6_missing_0_1_4 */
-	6, /* aviata_pos_7_missing_0_1_4 */
-	6, /* aviata_pos_2_missing_0_1_5 */
-	6, /* aviata_pos_3_missing_0_1_5 */
-	6, /* aviata_pos_4_missing_0_1_5 */
-	6, /* aviata_pos_6_missing_0_1_5 */
-	6, /* aviata_pos_7_missing_0_1_5 */
-	6, /* aviata_pos_2_missing_0_1_6 */
-	6, /* aviata_pos_3_missing_0_1_6 */
-	6, /* aviata_pos_4_missing_0_1_6 */
-	6, /* aviata_pos_5_missing_0_1_6 */
-	6, /* aviata_pos_7_missing_0_1_6 */
-	6, /* aviata_pos_2_missing_0_1_7 */
-	6, /* aviata_pos_3_missing_0_1_7 */
-	6, /* aviata_pos_4_missing_0_1_7 */
-	6, /* aviata_pos_5_missing_0_1_7 */
-	6, /* aviata_pos_6_missing_0_1_7 */
-	6, /* aviata_pos_1_missing_0_2_3 */
-	6, /* aviata_pos_4_missing_0_2_3 */
-	6, /* aviata_pos_5_missing_0_2_3 */
-	6, /* aviata_pos_6_missing_0_2_3 */
-	6, /* aviata_pos_7_missing_0_2_3 */
-	6, /* aviata_pos_1_missing_0_2_4 */
-	6, /* aviata_pos_3_missing_0_2_4 */
-	6, /* aviata_pos_5_missing_0_2_4 */
-	6, /* aviata_pos_6_missing_0_2_4 */
-	6, /* aviata_pos_7_missing_0_2_4 */
-	6, /* aviata_pos_1_missing_0_2_5 */
-	6, /* aviata_pos_3_missing_0_2_5 */
-	6, /* aviata_pos_4_missing_0_2_5 */
-	6, /* aviata_pos_6_missing_0_2_5 */
-	6, /* aviata_pos_7_missing_0_2_5 */
-	6, /* aviata_pos_1_missing_0_2_6 */
-	6, /* aviata_pos_3_missing_0_2_6 */
-	6, /* aviata_pos_4_missing_0_2_6 */
-	6, /* aviata_pos_5_missing_0_2_6 */
-	6, /* aviata_pos_7_missing_0_2_6 */
-	6, /* aviata_pos_1_missing_0_2_7 */
-	6, /* aviata_pos_3_missing_0_2_7 */
-	6, /* aviata_pos_4_missing_0_2_7 */
-	6, /* aviata_pos_5_missing_0_2_7 */
-	6, /* aviata_pos_6_missing_0_2_7 */
-	6, /* aviata_pos_1_missing_0_3_4 */
-	6, /* aviata_pos_2_missing_0_3_4 */
-	6, /* aviata_pos_5_missing_0_3_4 */
-	6, /* aviata_pos_6_missing_0_3_4 */
-	6, /* aviata_pos_7_missing_0_3_4 */
-	6, /* aviata_pos_1_missing_0_3_5 */
-	6, /* aviata_pos_2_missing_0_3_5 */
-	6, /* aviata_pos_4_missing_0_3_5 */
-	6, /* aviata_pos_6_missing_0_3_5 */
-	6, /* aviata_pos_7_missing_0_3_5 */
-	6, /* aviata_pos_1_missing_0_3_6 */
-	6, /* aviata_pos_2_missing_0_3_6 */
-	6, /* aviata_pos_4_missing_0_3_6 */
-	6, /* aviata_pos_5_missing_0_3_6 */
-	6, /* aviata_pos_7_missing_0_3_6 */
-	6, /* aviata_pos_1_missing_0_3_7 */
-	6, /* aviata_pos_2_missing_0_3_7 */
-	6, /* aviata_pos_4_missing_0_3_7 */
-	6, /* aviata_pos_5_missing_0_3_7 */
-	6, /* aviata_pos_6_missing_0_3_7 */
-	6, /* aviata_pos_1_missing_0_4_5 */
-	6, /* aviata_pos_2_missing_0_4_5 */
-	6, /* aviata_pos_3_missing_0_4_5 */
-	6, /* aviata_pos_6_missing_0_4_5 */
-	6, /* aviata_pos_7_missing_0_4_5 */
-	6, /* aviata_pos_1_missing_0_4_6 */
-	6, /* aviata_pos_2_missing_0_4_6 */
-	6, /* aviata_pos_3_missing_0_4_6 */
-	6, /* aviata_pos_5_missing_0_4_6 */
-	6, /* aviata_pos_7_missing_0_4_6 */
-	6, /* aviata_pos_1_missing_0_4_7 */
-	6, /* aviata_pos_2_missing_0_4_7 */
-	6, /* aviata_pos_3_missing_0_4_7 */
-	6, /* aviata_pos_5_missing_0_4_7 */
-	6, /* aviata_pos_6_missing_0_4_7 */
-	6, /* aviata_pos_1_missing_0_5_6 */
-	6, /* aviata_pos_2_missing_0_5_6 */
-	6, /* aviata_pos_3_missing_0_5_6 */
-	6, /* aviata_pos_4_missing_0_5_6 */
-	6, /* aviata_pos_7_missing_0_5_6 */
-	6, /* aviata_pos_1_missing_0_5_7 */
-	6, /* aviata_pos_2_missing_0_5_7 */
-	6, /* aviata_pos_3_missing_0_5_7 */
-	6, /* aviata_pos_4_missing_0_5_7 */
-	6, /* aviata_pos_6_missing_0_5_7 */
-	6, /* aviata_pos_1_missing_0_6_7 */
-	6, /* aviata_pos_2_missing_0_6_7 */
-	6, /* aviata_pos_3_missing_0_6_7 */
-	6, /* aviata_pos_4_missing_0_6_7 */
-	6, /* aviata_pos_5_missing_0_6_7 */
-	6, /* aviata_pos_0_missing_1_2_3 */
-	6, /* aviata_pos_4_missing_1_2_3 */
-	6, /* aviata_pos_5_missing_1_2_3 */
-	6, /* aviata_pos_6_missing_1_2_3 */
-	6, /* aviata_pos_7_missing_1_2_3 */
-	6, /* aviata_pos_0_missing_1_2_4 */
-	6, /* aviata_pos_3_missing_1_2_4 */
-	6, /* aviata_pos_5_missing_1_2_4 */
-	6, /* aviata_pos_6_missing_1_2_4 */
-	6, /* aviata_pos_7_missing_1_2_4 */
-	6, /* aviata_pos_0_missing_1_2_5 */
-	6, /* aviata_pos_3_missing_1_2_5 */
-	6, /* aviata_pos_4_missing_1_2_5 */
-	6, /* aviata_pos_6_missing_1_2_5 */
-	6, /* aviata_pos_7_missing_1_2_5 */
-	6, /* aviata_pos_0_missing_1_2_6 */
-	6, /* aviata_pos_3_missing_1_2_6 */
-	6, /* aviata_pos_4_missing_1_2_6 */
-	6, /* aviata_pos_5_missing_1_2_6 */
-	6, /* aviata_pos_7_missing_1_2_6 */
-	6, /* aviata_pos_0_missing_1_2_7 */
-	6, /* aviata_pos_3_missing_1_2_7 */
-	6, /* aviata_pos_4_missing_1_2_7 */
-	6, /* aviata_pos_5_missing_1_2_7 */
-	6, /* aviata_pos_6_missing_1_2_7 */
-	6, /* aviata_pos_0_missing_1_3_4 */
-	6, /* aviata_pos_2_missing_1_3_4 */
-	6, /* aviata_pos_5_missing_1_3_4 */
-	6, /* aviata_pos_6_missing_1_3_4 */
-	6, /* aviata_pos_7_missing_1_3_4 */
-	6, /* aviata_pos_0_missing_1_3_5 */
-	6, /* aviata_pos_2_missing_1_3_5 */
-	6, /* aviata_pos_4_missing_1_3_5 */
-	6, /* aviata_pos_6_missing_1_3_5 */
-	6, /* aviata_pos_7_missing_1_3_5 */
-	6, /* aviata_pos_0_missing_1_3_6 */
-	6, /* aviata_pos_2_missing_1_3_6 */
-	6, /* aviata_pos_4_missing_1_3_6 */
-	6, /* aviata_pos_5_missing_1_3_6 */
-	6, /* aviata_pos_7_missing_1_3_6 */
-	6, /* aviata_pos_0_missing_1_3_7 */
-	6, /* aviata_pos_2_missing_1_3_7 */
-	6, /* aviata_pos_4_missing_1_3_7 */
-	6, /* aviata_pos_5_missing_1_3_7 */
-	6, /* aviata_pos_6_missing_1_3_7 */
-	6, /* aviata_pos_0_missing_1_4_5 */
-	6, /* aviata_pos_2_missing_1_4_5 */
-	6, /* aviata_pos_3_missing_1_4_5 */
-	6, /* aviata_pos_6_missing_1_4_5 */
-	6, /* aviata_pos_7_missing_1_4_5 */
-	6, /* aviata_pos_0_missing_1_4_6 */
-	6, /* aviata_pos_2_missing_1_4_6 */
-	6, /* aviata_pos_3_missing_1_4_6 */
-	6, /* aviata_pos_5_missing_1_4_6 */
-	6, /* aviata_pos_7_missing_1_4_6 */
-	6, /* aviata_pos_0_missing_1_4_7 */
-	6, /* aviata_pos_2_missing_1_4_7 */
-	6, /* aviata_pos_3_missing_1_4_7 */
-	6, /* aviata_pos_5_missing_1_4_7 */
-	6, /* aviata_pos_6_missing_1_4_7 */
-	6, /* aviata_pos_0_missing_1_5_6 */
-	6, /* aviata_pos_2_missing_1_5_6 */
-	6, /* aviata_pos_3_missing_1_5_6 */
-	6, /* aviata_pos_4_missing_1_5_6 */
-	6, /* aviata_pos_7_missing_1_5_6 */
-	6, /* aviata_pos_0_missing_1_5_7 */
-	6, /* aviata_pos_2_missing_1_5_7 */
-	6, /* aviata_pos_3_missing_1_5_7 */
-	6, /* aviata_pos_4_missing_1_5_7 */
-	6, /* aviata_pos_6_missing_1_5_7 */
-	6, /* aviata_pos_0_missing_1_6_7 */
-	6, /* aviata_pos_2_missing_1_6_7 */
-	6, /* aviata_pos_3_missing_1_6_7 */
-	6, /* aviata_pos_4_missing_1_6_7 */
-	6, /* aviata_pos_5_missing_1_6_7 */
-	6, /* aviata_pos_0_missing_2_3_4 */
-	6, /* aviata_pos_1_missing_2_3_4 */
-	6, /* aviata_pos_5_missing_2_3_4 */
-	6, /* aviata_pos_6_missing_2_3_4 */
-	6, /* aviata_pos_7_missing_2_3_4 */
-	6, /* aviata_pos_0_missing_2_3_5 */
-	6, /* aviata_pos_1_missing_2_3_5 */
-	6, /* aviata_pos_4_missing_2_3_5 */
-	6, /* aviata_pos_6_missing_2_3_5 */
-	6, /* aviata_pos_7_missing_2_3_5 */
-	6, /* aviata_pos_0_missing_2_3_6 */
-	6, /* aviata_pos_1_missing_2_3_6 */
-	6, /* aviata_pos_4_missing_2_3_6 */
-	6, /* aviata_pos_5_missing_2_3_6 */
-	6, /* aviata_pos_7_missing_2_3_6 */
-	6, /* aviata_pos_0_missing_2_3_7 */
-	6, /* aviata_pos_1_missing_2_3_7 */
-	6, /* aviata_pos_4_missing_2_3_7 */
-	6, /* aviata_pos_5_missing_2_3_7 */
-	6, /* aviata_pos_6_missing_2_3_7 */
-	6, /* aviata_pos_0_missing_2_4_5 */
-	6, /* aviata_pos_1_missing_2_4_5 */
-	6, /* aviata_pos_3_missing_2_4_5 */
-	6, /* aviata_pos_6_missing_2_4_5 */
-	6, /* aviata_pos_7_missing_2_4_5 */
-	6, /* aviata_pos_0_missing_2_4_6 */
-	6, /* aviata_pos_1_missing_2_4_6 */
-	6, /* aviata_pos_3_missing_2_4_6 */
-	6, /* aviata_pos_5_missing_2_4_6 */
-	6, /* aviata_pos_7_missing_2_4_6 */
-	6, /* aviata_pos_0_missing_2_4_7 */
-	6, /* aviata_pos_1_missing_2_4_7 */
-	6, /* aviata_pos_3_missing_2_4_7 */
-	6, /* aviata_pos_5_missing_2_4_7 */
-	6, /* aviata_pos_6_missing_2_4_7 */
-	6, /* aviata_pos_0_missing_2_5_6 */
-	6, /* aviata_pos_1_missing_2_5_6 */
-	6, /* aviata_pos_3_missing_2_5_6 */
-	6, /* aviata_pos_4_missing_2_5_6 */
-	6, /* aviata_pos_7_missing_2_5_6 */
-	6, /* aviata_pos_0_missing_2_5_7 */
-	6, /* aviata_pos_1_missing_2_5_7 */
-	6, /* aviata_pos_3_missing_2_5_7 */
-	6, /* aviata_pos_4_missing_2_5_7 */
-	6, /* aviata_pos_6_missing_2_5_7 */
-	6, /* aviata_pos_0_missing_2_6_7 */
-	6, /* aviata_pos_1_missing_2_6_7 */
-	6, /* aviata_pos_3_missing_2_6_7 */
-	6, /* aviata_pos_4_missing_2_6_7 */
-	6, /* aviata_pos_5_missing_2_6_7 */
-	6, /* aviata_pos_0_missing_3_4_5 */
-	6, /* aviata_pos_1_missing_3_4_5 */
-	6, /* aviata_pos_2_missing_3_4_5 */
-	6, /* aviata_pos_6_missing_3_4_5 */
-	6, /* aviata_pos_7_missing_3_4_5 */
-	6, /* aviata_pos_0_missing_3_4_6 */
-	6, /* aviata_pos_1_missing_3_4_6 */
-	6, /* aviata_pos_2_missing_3_4_6 */
-	6, /* aviata_pos_5_missing_3_4_6 */
-	6, /* aviata_pos_7_missing_3_4_6 */
-	6, /* aviata_pos_0_missing_3_4_7 */
-	6, /* aviata_pos_1_missing_3_4_7 */
-	6, /* aviata_pos_2_missing_3_4_7 */
-	6, /* aviata_pos_5_missing_3_4_7 */
-	6, /* aviata_pos_6_missing_3_4_7 */
-	6, /* aviata_pos_0_missing_3_5_6 */
-	6, /* aviata_pos_1_missing_3_5_6 */
-	6, /* aviata_pos_2_missing_3_5_6 */
-	6, /* aviata_pos_4_missing_3_5_6 */
-	6, /* aviata_pos_7_missing_3_5_6 */
-	6, /* aviata_pos_0_missing_3_5_7 */
-	6, /* aviata_pos_1_missing_3_5_7 */
-	6, /* aviata_pos_2_missing_3_5_7 */
-	6, /* aviata_pos_4_missing_3_5_7 */
-	6, /* aviata_pos_6_missing_3_5_7 */
-	6, /* aviata_pos_0_missing_3_6_7 */
-	6, /* aviata_pos_1_missing_3_6_7 */
-	6, /* aviata_pos_2_missing_3_6_7 */
-	6, /* aviata_pos_4_missing_3_6_7 */
-	6, /* aviata_pos_5_missing_3_6_7 */
-	6, /* aviata_pos_0_missing_4_5_6 */
-	6, /* aviata_pos_1_missing_4_5_6 */
-	6, /* aviata_pos_2_missing_4_5_6 */
-	6, /* aviata_pos_3_missing_4_5_6 */
-	6, /* aviata_pos_7_missing_4_5_6 */
-	6, /* aviata_pos_0_missing_4_5_7 */
-	6, /* aviata_pos_1_missing_4_5_7 */
-	6, /* aviata_pos_2_missing_4_5_7 */
-	6, /* aviata_pos_3_missing_4_5_7 */
-	6, /* aviata_pos_6_missing_4_5_7 */
-	6, /* aviata_pos_0_missing_4_6_7 */
-	6, /* aviata_pos_1_missing_4_6_7 */
-	6, /* aviata_pos_2_missing_4_6_7 */
-	6, /* aviata_pos_3_missing_4_6_7 */
-	6, /* aviata_pos_5_missing_4_6_7 */
-	6, /* aviata_pos_0_missing_5_6_7 */
-	6, /* aviata_pos_1_missing_5_6_7 */
-	6, /* aviata_pos_2_missing_5_6_7 */
-	6, /* aviata_pos_3_missing_5_6_7 */
-	6, /* aviata_pos_4_missing_5_6_7 */
+	48, /* aviata_missing_ */
+	48, /* aviata_missing_0 */
+	48, /* aviata_missing_1 */
+	48, /* aviata_missing_2 */
+	48, /* aviata_missing_3 */
+	48, /* aviata_missing_4 */
+	48, /* aviata_missing_5 */
+	48, /* aviata_missing_6 */
+	48, /* aviata_missing_7 */
+	48, /* aviata_missing_0_1 */
+	48, /* aviata_missing_0_2 */
+	48, /* aviata_missing_0_3 */
+	48, /* aviata_missing_0_4 */
+	48, /* aviata_missing_0_5 */
+	48, /* aviata_missing_0_6 */
+	48, /* aviata_missing_0_7 */
+	48, /* aviata_missing_1_2 */
+	48, /* aviata_missing_1_3 */
+	48, /* aviata_missing_1_4 */
+	48, /* aviata_missing_1_5 */
+	48, /* aviata_missing_1_6 */
+	48, /* aviata_missing_1_7 */
+	48, /* aviata_missing_2_3 */
+	48, /* aviata_missing_2_4 */
+	48, /* aviata_missing_2_5 */
+	48, /* aviata_missing_2_6 */
+	48, /* aviata_missing_2_7 */
+	48, /* aviata_missing_3_4 */
+	48, /* aviata_missing_3_5 */
+	48, /* aviata_missing_3_6 */
+	48, /* aviata_missing_3_7 */
+	48, /* aviata_missing_4_5 */
+	48, /* aviata_missing_4_6 */
+	48, /* aviata_missing_4_7 */
+	48, /* aviata_missing_5_6 */
+	48, /* aviata_missing_5_7 */
+	48, /* aviata_missing_6_7 */
+	48, /* aviata_missing_0_1_2 */
+	48, /* aviata_missing_0_1_3 */
+	48, /* aviata_missing_0_1_4 */
+	48, /* aviata_missing_0_1_5 */
+	48, /* aviata_missing_0_1_6 */
+	48, /* aviata_missing_0_1_7 */
+	48, /* aviata_missing_0_2_3 */
+	48, /* aviata_missing_0_2_4 */
+	48, /* aviata_missing_0_2_5 */
+	48, /* aviata_missing_0_2_6 */
+	48, /* aviata_missing_0_2_7 */
+	48, /* aviata_missing_0_3_4 */
+	48, /* aviata_missing_0_3_5 */
+	48, /* aviata_missing_0_3_6 */
+	48, /* aviata_missing_0_3_7 */
+	48, /* aviata_missing_0_4_5 */
+	48, /* aviata_missing_0_4_6 */
+	48, /* aviata_missing_0_4_7 */
+	48, /* aviata_missing_0_5_6 */
+	48, /* aviata_missing_0_5_7 */
+	48, /* aviata_missing_0_6_7 */
+	48, /* aviata_missing_1_2_3 */
+	48, /* aviata_missing_1_2_4 */
+	48, /* aviata_missing_1_2_5 */
+	48, /* aviata_missing_1_2_6 */
+	48, /* aviata_missing_1_2_7 */
+	48, /* aviata_missing_1_3_4 */
+	48, /* aviata_missing_1_3_5 */
+	48, /* aviata_missing_1_3_6 */
+	48, /* aviata_missing_1_3_7 */
+	48, /* aviata_missing_1_4_5 */
+	48, /* aviata_missing_1_4_6 */
+	48, /* aviata_missing_1_4_7 */
+	48, /* aviata_missing_1_5_6 */
+	48, /* aviata_missing_1_5_7 */
+	48, /* aviata_missing_1_6_7 */
+	48, /* aviata_missing_2_3_4 */
+	48, /* aviata_missing_2_3_5 */
+	48, /* aviata_missing_2_3_6 */
+	48, /* aviata_missing_2_3_7 */
+	48, /* aviata_missing_2_4_5 */
+	48, /* aviata_missing_2_4_6 */
+	48, /* aviata_missing_2_4_7 */
+	48, /* aviata_missing_2_5_6 */
+	48, /* aviata_missing_2_5_7 */
+	48, /* aviata_missing_2_6_7 */
+	48, /* aviata_missing_3_4_5 */
+	48, /* aviata_missing_3_4_6 */
+	48, /* aviata_missing_3_4_7 */
+	48, /* aviata_missing_3_5_6 */
+	48, /* aviata_missing_3_5_7 */
+	48, /* aviata_missing_3_6_7 */
+	48, /* aviata_missing_4_5_6 */
+	48, /* aviata_missing_4_5_7 */
+	48, /* aviata_missing_4_6_7 */
+	48, /* aviata_missing_5_6_7 */
+	48, /* aviata_missing_0_1_2_3 */
+	48, /* aviata_missing_0_1_2_4 */
+	48, /* aviata_missing_0_1_2_5 */
+	48, /* aviata_missing_0_1_2_6 */
+	48, /* aviata_missing_0_1_2_7 */
+	48, /* aviata_missing_0_1_3_4 */
+	48, /* aviata_missing_0_1_3_5 */
+	48, /* aviata_missing_0_1_3_6 */
+	48, /* aviata_missing_0_1_3_7 */
+	48, /* aviata_missing_0_1_4_5 */
+	48, /* aviata_missing_0_1_4_6 */
+	48, /* aviata_missing_0_1_4_7 */
+	48, /* aviata_missing_0_1_5_6 */
+	48, /* aviata_missing_0_1_5_7 */
+	48, /* aviata_missing_0_1_6_7 */
+	48, /* aviata_missing_0_2_3_4 */
+	48, /* aviata_missing_0_2_3_5 */
+	48, /* aviata_missing_0_2_3_6 */
+	48, /* aviata_missing_0_2_3_7 */
+	48, /* aviata_missing_0_2_4_5 */
+	48, /* aviata_missing_0_2_4_6 */
+	48, /* aviata_missing_0_2_4_7 */
+	48, /* aviata_missing_0_2_5_6 */
+	48, /* aviata_missing_0_2_5_7 */
+	48, /* aviata_missing_0_2_6_7 */
+	48, /* aviata_missing_0_3_4_5 */
+	48, /* aviata_missing_0_3_4_6 */
+	48, /* aviata_missing_0_3_4_7 */
+	48, /* aviata_missing_0_3_5_6 */
+	48, /* aviata_missing_0_3_5_7 */
+	48, /* aviata_missing_0_3_6_7 */
+	48, /* aviata_missing_0_4_5_6 */
+	48, /* aviata_missing_0_4_5_7 */
+	48, /* aviata_missing_0_4_6_7 */
+	48, /* aviata_missing_0_5_6_7 */
+	48, /* aviata_missing_1_2_3_4 */
+	48, /* aviata_missing_1_2_3_5 */
+	48, /* aviata_missing_1_2_3_6 */
+	48, /* aviata_missing_1_2_3_7 */
+	48, /* aviata_missing_1_2_4_5 */
+	48, /* aviata_missing_1_2_4_6 */
+	48, /* aviata_missing_1_2_4_7 */
+	48, /* aviata_missing_1_2_5_6 */
+	48, /* aviata_missing_1_2_5_7 */
+	48, /* aviata_missing_1_2_6_7 */
+	48, /* aviata_missing_1_3_4_5 */
+	48, /* aviata_missing_1_3_4_6 */
+	48, /* aviata_missing_1_3_4_7 */
+	48, /* aviata_missing_1_3_5_6 */
+	48, /* aviata_missing_1_3_5_7 */
+	48, /* aviata_missing_1_3_6_7 */
+	48, /* aviata_missing_1_4_5_6 */
+	48, /* aviata_missing_1_4_5_7 */
+	48, /* aviata_missing_1_4_6_7 */
+	48, /* aviata_missing_1_5_6_7 */
+	48, /* aviata_missing_2_3_4_5 */
+	48, /* aviata_missing_2_3_4_6 */
+	48, /* aviata_missing_2_3_4_7 */
+	48, /* aviata_missing_2_3_5_6 */
+	48, /* aviata_missing_2_3_5_7 */
+	48, /* aviata_missing_2_3_6_7 */
+	48, /* aviata_missing_2_4_5_6 */
+	48, /* aviata_missing_2_4_5_7 */
+	48, /* aviata_missing_2_4_6_7 */
+	48, /* aviata_missing_2_5_6_7 */
+	48, /* aviata_missing_3_4_5_6 */
+	48, /* aviata_missing_3_4_5_7 */
+	48, /* aviata_missing_3_4_6_7 */
+	48, /* aviata_missing_3_5_6_7 */
+	48, /* aviata_missing_4_5_6_7 */
 };
 
 const char* _config_key[] {
-	"aviata_pos_0_missing_",	/* aviata_pos_0_missing_ */
-	"aviata_pos_1_missing_",	/* aviata_pos_1_missing_ */
-	"aviata_pos_2_missing_",	/* aviata_pos_2_missing_ */
-	"aviata_pos_3_missing_",	/* aviata_pos_3_missing_ */
-	"aviata_pos_4_missing_",	/* aviata_pos_4_missing_ */
-	"aviata_pos_5_missing_",	/* aviata_pos_5_missing_ */
-	"aviata_pos_6_missing_",	/* aviata_pos_6_missing_ */
-	"aviata_pos_7_missing_",	/* aviata_pos_7_missing_ */
-	"aviata_pos_1_missing_0",	/* aviata_pos_1_missing_0 */
-	"aviata_pos_2_missing_0",	/* aviata_pos_2_missing_0 */
-	"aviata_pos_3_missing_0",	/* aviata_pos_3_missing_0 */
-	"aviata_pos_4_missing_0",	/* aviata_pos_4_missing_0 */
-	"aviata_pos_5_missing_0",	/* aviata_pos_5_missing_0 */
-	"aviata_pos_6_missing_0",	/* aviata_pos_6_missing_0 */
-	"aviata_pos_7_missing_0",	/* aviata_pos_7_missing_0 */
-	"aviata_pos_0_missing_1",	/* aviata_pos_0_missing_1 */
-	"aviata_pos_2_missing_1",	/* aviata_pos_2_missing_1 */
-	"aviata_pos_3_missing_1",	/* aviata_pos_3_missing_1 */
-	"aviata_pos_4_missing_1",	/* aviata_pos_4_missing_1 */
-	"aviata_pos_5_missing_1",	/* aviata_pos_5_missing_1 */
-	"aviata_pos_6_missing_1",	/* aviata_pos_6_missing_1 */
-	"aviata_pos_7_missing_1",	/* aviata_pos_7_missing_1 */
-	"aviata_pos_0_missing_2",	/* aviata_pos_0_missing_2 */
-	"aviata_pos_1_missing_2",	/* aviata_pos_1_missing_2 */
-	"aviata_pos_3_missing_2",	/* aviata_pos_3_missing_2 */
-	"aviata_pos_4_missing_2",	/* aviata_pos_4_missing_2 */
-	"aviata_pos_5_missing_2",	/* aviata_pos_5_missing_2 */
-	"aviata_pos_6_missing_2",	/* aviata_pos_6_missing_2 */
-	"aviata_pos_7_missing_2",	/* aviata_pos_7_missing_2 */
-	"aviata_pos_0_missing_3",	/* aviata_pos_0_missing_3 */
-	"aviata_pos_1_missing_3",	/* aviata_pos_1_missing_3 */
-	"aviata_pos_2_missing_3",	/* aviata_pos_2_missing_3 */
-	"aviata_pos_4_missing_3",	/* aviata_pos_4_missing_3 */
-	"aviata_pos_5_missing_3",	/* aviata_pos_5_missing_3 */
-	"aviata_pos_6_missing_3",	/* aviata_pos_6_missing_3 */
-	"aviata_pos_7_missing_3",	/* aviata_pos_7_missing_3 */
-	"aviata_pos_0_missing_4",	/* aviata_pos_0_missing_4 */
-	"aviata_pos_1_missing_4",	/* aviata_pos_1_missing_4 */
-	"aviata_pos_2_missing_4",	/* aviata_pos_2_missing_4 */
-	"aviata_pos_3_missing_4",	/* aviata_pos_3_missing_4 */
-	"aviata_pos_5_missing_4",	/* aviata_pos_5_missing_4 */
-	"aviata_pos_6_missing_4",	/* aviata_pos_6_missing_4 */
-	"aviata_pos_7_missing_4",	/* aviata_pos_7_missing_4 */
-	"aviata_pos_0_missing_5",	/* aviata_pos_0_missing_5 */
-	"aviata_pos_1_missing_5",	/* aviata_pos_1_missing_5 */
-	"aviata_pos_2_missing_5",	/* aviata_pos_2_missing_5 */
-	"aviata_pos_3_missing_5",	/* aviata_pos_3_missing_5 */
-	"aviata_pos_4_missing_5",	/* aviata_pos_4_missing_5 */
-	"aviata_pos_6_missing_5",	/* aviata_pos_6_missing_5 */
-	"aviata_pos_7_missing_5",	/* aviata_pos_7_missing_5 */
-	"aviata_pos_0_missing_6",	/* aviata_pos_0_missing_6 */
-	"aviata_pos_1_missing_6",	/* aviata_pos_1_missing_6 */
-	"aviata_pos_2_missing_6",	/* aviata_pos_2_missing_6 */
-	"aviata_pos_3_missing_6",	/* aviata_pos_3_missing_6 */
-	"aviata_pos_4_missing_6",	/* aviata_pos_4_missing_6 */
-	"aviata_pos_5_missing_6",	/* aviata_pos_5_missing_6 */
-	"aviata_pos_7_missing_6",	/* aviata_pos_7_missing_6 */
-	"aviata_pos_0_missing_7",	/* aviata_pos_0_missing_7 */
-	"aviata_pos_1_missing_7",	/* aviata_pos_1_missing_7 */
-	"aviata_pos_2_missing_7",	/* aviata_pos_2_missing_7 */
-	"aviata_pos_3_missing_7",	/* aviata_pos_3_missing_7 */
-	"aviata_pos_4_missing_7",	/* aviata_pos_4_missing_7 */
-	"aviata_pos_5_missing_7",	/* aviata_pos_5_missing_7 */
-	"aviata_pos_6_missing_7",	/* aviata_pos_6_missing_7 */
-	"aviata_pos_2_missing_0_1",	/* aviata_pos_2_missing_0_1 */
-	"aviata_pos_3_missing_0_1",	/* aviata_pos_3_missing_0_1 */
-	"aviata_pos_4_missing_0_1",	/* aviata_pos_4_missing_0_1 */
-	"aviata_pos_5_missing_0_1",	/* aviata_pos_5_missing_0_1 */
-	"aviata_pos_6_missing_0_1",	/* aviata_pos_6_missing_0_1 */
-	"aviata_pos_7_missing_0_1",	/* aviata_pos_7_missing_0_1 */
-	"aviata_pos_1_missing_0_2",	/* aviata_pos_1_missing_0_2 */
-	"aviata_pos_3_missing_0_2",	/* aviata_pos_3_missing_0_2 */
-	"aviata_pos_4_missing_0_2",	/* aviata_pos_4_missing_0_2 */
-	"aviata_pos_5_missing_0_2",	/* aviata_pos_5_missing_0_2 */
-	"aviata_pos_6_missing_0_2",	/* aviata_pos_6_missing_0_2 */
-	"aviata_pos_7_missing_0_2",	/* aviata_pos_7_missing_0_2 */
-	"aviata_pos_1_missing_0_3",	/* aviata_pos_1_missing_0_3 */
-	"aviata_pos_2_missing_0_3",	/* aviata_pos_2_missing_0_3 */
-	"aviata_pos_4_missing_0_3",	/* aviata_pos_4_missing_0_3 */
-	"aviata_pos_5_missing_0_3",	/* aviata_pos_5_missing_0_3 */
-	"aviata_pos_6_missing_0_3",	/* aviata_pos_6_missing_0_3 */
-	"aviata_pos_7_missing_0_3",	/* aviata_pos_7_missing_0_3 */
-	"aviata_pos_1_missing_0_4",	/* aviata_pos_1_missing_0_4 */
-	"aviata_pos_2_missing_0_4",	/* aviata_pos_2_missing_0_4 */
-	"aviata_pos_3_missing_0_4",	/* aviata_pos_3_missing_0_4 */
-	"aviata_pos_5_missing_0_4",	/* aviata_pos_5_missing_0_4 */
-	"aviata_pos_6_missing_0_4",	/* aviata_pos_6_missing_0_4 */
-	"aviata_pos_7_missing_0_4",	/* aviata_pos_7_missing_0_4 */
-	"aviata_pos_1_missing_0_5",	/* aviata_pos_1_missing_0_5 */
-	"aviata_pos_2_missing_0_5",	/* aviata_pos_2_missing_0_5 */
-	"aviata_pos_3_missing_0_5",	/* aviata_pos_3_missing_0_5 */
-	"aviata_pos_4_missing_0_5",	/* aviata_pos_4_missing_0_5 */
-	"aviata_pos_6_missing_0_5",	/* aviata_pos_6_missing_0_5 */
-	"aviata_pos_7_missing_0_5",	/* aviata_pos_7_missing_0_5 */
-	"aviata_pos_1_missing_0_6",	/* aviata_pos_1_missing_0_6 */
-	"aviata_pos_2_missing_0_6",	/* aviata_pos_2_missing_0_6 */
-	"aviata_pos_3_missing_0_6",	/* aviata_pos_3_missing_0_6 */
-	"aviata_pos_4_missing_0_6",	/* aviata_pos_4_missing_0_6 */
-	"aviata_pos_5_missing_0_6",	/* aviata_pos_5_missing_0_6 */
-	"aviata_pos_7_missing_0_6",	/* aviata_pos_7_missing_0_6 */
-	"aviata_pos_1_missing_0_7",	/* aviata_pos_1_missing_0_7 */
-	"aviata_pos_2_missing_0_7",	/* aviata_pos_2_missing_0_7 */
-	"aviata_pos_3_missing_0_7",	/* aviata_pos_3_missing_0_7 */
-	"aviata_pos_4_missing_0_7",	/* aviata_pos_4_missing_0_7 */
-	"aviata_pos_5_missing_0_7",	/* aviata_pos_5_missing_0_7 */
-	"aviata_pos_6_missing_0_7",	/* aviata_pos_6_missing_0_7 */
-	"aviata_pos_0_missing_1_2",	/* aviata_pos_0_missing_1_2 */
-	"aviata_pos_3_missing_1_2",	/* aviata_pos_3_missing_1_2 */
-	"aviata_pos_4_missing_1_2",	/* aviata_pos_4_missing_1_2 */
-	"aviata_pos_5_missing_1_2",	/* aviata_pos_5_missing_1_2 */
-	"aviata_pos_6_missing_1_2",	/* aviata_pos_6_missing_1_2 */
-	"aviata_pos_7_missing_1_2",	/* aviata_pos_7_missing_1_2 */
-	"aviata_pos_0_missing_1_3",	/* aviata_pos_0_missing_1_3 */
-	"aviata_pos_2_missing_1_3",	/* aviata_pos_2_missing_1_3 */
-	"aviata_pos_4_missing_1_3",	/* aviata_pos_4_missing_1_3 */
-	"aviata_pos_5_missing_1_3",	/* aviata_pos_5_missing_1_3 */
-	"aviata_pos_6_missing_1_3",	/* aviata_pos_6_missing_1_3 */
-	"aviata_pos_7_missing_1_3",	/* aviata_pos_7_missing_1_3 */
-	"aviata_pos_0_missing_1_4",	/* aviata_pos_0_missing_1_4 */
-	"aviata_pos_2_missing_1_4",	/* aviata_pos_2_missing_1_4 */
-	"aviata_pos_3_missing_1_4",	/* aviata_pos_3_missing_1_4 */
-	"aviata_pos_5_missing_1_4",	/* aviata_pos_5_missing_1_4 */
-	"aviata_pos_6_missing_1_4",	/* aviata_pos_6_missing_1_4 */
-	"aviata_pos_7_missing_1_4",	/* aviata_pos_7_missing_1_4 */
-	"aviata_pos_0_missing_1_5",	/* aviata_pos_0_missing_1_5 */
-	"aviata_pos_2_missing_1_5",	/* aviata_pos_2_missing_1_5 */
-	"aviata_pos_3_missing_1_5",	/* aviata_pos_3_missing_1_5 */
-	"aviata_pos_4_missing_1_5",	/* aviata_pos_4_missing_1_5 */
-	"aviata_pos_6_missing_1_5",	/* aviata_pos_6_missing_1_5 */
-	"aviata_pos_7_missing_1_5",	/* aviata_pos_7_missing_1_5 */
-	"aviata_pos_0_missing_1_6",	/* aviata_pos_0_missing_1_6 */
-	"aviata_pos_2_missing_1_6",	/* aviata_pos_2_missing_1_6 */
-	"aviata_pos_3_missing_1_6",	/* aviata_pos_3_missing_1_6 */
-	"aviata_pos_4_missing_1_6",	/* aviata_pos_4_missing_1_6 */
-	"aviata_pos_5_missing_1_6",	/* aviata_pos_5_missing_1_6 */
-	"aviata_pos_7_missing_1_6",	/* aviata_pos_7_missing_1_6 */
-	"aviata_pos_0_missing_1_7",	/* aviata_pos_0_missing_1_7 */
-	"aviata_pos_2_missing_1_7",	/* aviata_pos_2_missing_1_7 */
-	"aviata_pos_3_missing_1_7",	/* aviata_pos_3_missing_1_7 */
-	"aviata_pos_4_missing_1_7",	/* aviata_pos_4_missing_1_7 */
-	"aviata_pos_5_missing_1_7",	/* aviata_pos_5_missing_1_7 */
-	"aviata_pos_6_missing_1_7",	/* aviata_pos_6_missing_1_7 */
-	"aviata_pos_0_missing_2_3",	/* aviata_pos_0_missing_2_3 */
-	"aviata_pos_1_missing_2_3",	/* aviata_pos_1_missing_2_3 */
-	"aviata_pos_4_missing_2_3",	/* aviata_pos_4_missing_2_3 */
-	"aviata_pos_5_missing_2_3",	/* aviata_pos_5_missing_2_3 */
-	"aviata_pos_6_missing_2_3",	/* aviata_pos_6_missing_2_3 */
-	"aviata_pos_7_missing_2_3",	/* aviata_pos_7_missing_2_3 */
-	"aviata_pos_0_missing_2_4",	/* aviata_pos_0_missing_2_4 */
-	"aviata_pos_1_missing_2_4",	/* aviata_pos_1_missing_2_4 */
-	"aviata_pos_3_missing_2_4",	/* aviata_pos_3_missing_2_4 */
-	"aviata_pos_5_missing_2_4",	/* aviata_pos_5_missing_2_4 */
-	"aviata_pos_6_missing_2_4",	/* aviata_pos_6_missing_2_4 */
-	"aviata_pos_7_missing_2_4",	/* aviata_pos_7_missing_2_4 */
-	"aviata_pos_0_missing_2_5",	/* aviata_pos_0_missing_2_5 */
-	"aviata_pos_1_missing_2_5",	/* aviata_pos_1_missing_2_5 */
-	"aviata_pos_3_missing_2_5",	/* aviata_pos_3_missing_2_5 */
-	"aviata_pos_4_missing_2_5",	/* aviata_pos_4_missing_2_5 */
-	"aviata_pos_6_missing_2_5",	/* aviata_pos_6_missing_2_5 */
-	"aviata_pos_7_missing_2_5",	/* aviata_pos_7_missing_2_5 */
-	"aviata_pos_0_missing_2_6",	/* aviata_pos_0_missing_2_6 */
-	"aviata_pos_1_missing_2_6",	/* aviata_pos_1_missing_2_6 */
-	"aviata_pos_3_missing_2_6",	/* aviata_pos_3_missing_2_6 */
-	"aviata_pos_4_missing_2_6",	/* aviata_pos_4_missing_2_6 */
-	"aviata_pos_5_missing_2_6",	/* aviata_pos_5_missing_2_6 */
-	"aviata_pos_7_missing_2_6",	/* aviata_pos_7_missing_2_6 */
-	"aviata_pos_0_missing_2_7",	/* aviata_pos_0_missing_2_7 */
-	"aviata_pos_1_missing_2_7",	/* aviata_pos_1_missing_2_7 */
-	"aviata_pos_3_missing_2_7",	/* aviata_pos_3_missing_2_7 */
-	"aviata_pos_4_missing_2_7",	/* aviata_pos_4_missing_2_7 */
-	"aviata_pos_5_missing_2_7",	/* aviata_pos_5_missing_2_7 */
-	"aviata_pos_6_missing_2_7",	/* aviata_pos_6_missing_2_7 */
-	"aviata_pos_0_missing_3_4",	/* aviata_pos_0_missing_3_4 */
-	"aviata_pos_1_missing_3_4",	/* aviata_pos_1_missing_3_4 */
-	"aviata_pos_2_missing_3_4",	/* aviata_pos_2_missing_3_4 */
-	"aviata_pos_5_missing_3_4",	/* aviata_pos_5_missing_3_4 */
-	"aviata_pos_6_missing_3_4",	/* aviata_pos_6_missing_3_4 */
-	"aviata_pos_7_missing_3_4",	/* aviata_pos_7_missing_3_4 */
-	"aviata_pos_0_missing_3_5",	/* aviata_pos_0_missing_3_5 */
-	"aviata_pos_1_missing_3_5",	/* aviata_pos_1_missing_3_5 */
-	"aviata_pos_2_missing_3_5",	/* aviata_pos_2_missing_3_5 */
-	"aviata_pos_4_missing_3_5",	/* aviata_pos_4_missing_3_5 */
-	"aviata_pos_6_missing_3_5",	/* aviata_pos_6_missing_3_5 */
-	"aviata_pos_7_missing_3_5",	/* aviata_pos_7_missing_3_5 */
-	"aviata_pos_0_missing_3_6",	/* aviata_pos_0_missing_3_6 */
-	"aviata_pos_1_missing_3_6",	/* aviata_pos_1_missing_3_6 */
-	"aviata_pos_2_missing_3_6",	/* aviata_pos_2_missing_3_6 */
-	"aviata_pos_4_missing_3_6",	/* aviata_pos_4_missing_3_6 */
-	"aviata_pos_5_missing_3_6",	/* aviata_pos_5_missing_3_6 */
-	"aviata_pos_7_missing_3_6",	/* aviata_pos_7_missing_3_6 */
-	"aviata_pos_0_missing_3_7",	/* aviata_pos_0_missing_3_7 */
-	"aviata_pos_1_missing_3_7",	/* aviata_pos_1_missing_3_7 */
-	"aviata_pos_2_missing_3_7",	/* aviata_pos_2_missing_3_7 */
-	"aviata_pos_4_missing_3_7",	/* aviata_pos_4_missing_3_7 */
-	"aviata_pos_5_missing_3_7",	/* aviata_pos_5_missing_3_7 */
-	"aviata_pos_6_missing_3_7",	/* aviata_pos_6_missing_3_7 */
-	"aviata_pos_0_missing_4_5",	/* aviata_pos_0_missing_4_5 */
-	"aviata_pos_1_missing_4_5",	/* aviata_pos_1_missing_4_5 */
-	"aviata_pos_2_missing_4_5",	/* aviata_pos_2_missing_4_5 */
-	"aviata_pos_3_missing_4_5",	/* aviata_pos_3_missing_4_5 */
-	"aviata_pos_6_missing_4_5",	/* aviata_pos_6_missing_4_5 */
-	"aviata_pos_7_missing_4_5",	/* aviata_pos_7_missing_4_5 */
-	"aviata_pos_0_missing_4_6",	/* aviata_pos_0_missing_4_6 */
-	"aviata_pos_1_missing_4_6",	/* aviata_pos_1_missing_4_6 */
-	"aviata_pos_2_missing_4_6",	/* aviata_pos_2_missing_4_6 */
-	"aviata_pos_3_missing_4_6",	/* aviata_pos_3_missing_4_6 */
-	"aviata_pos_5_missing_4_6",	/* aviata_pos_5_missing_4_6 */
-	"aviata_pos_7_missing_4_6",	/* aviata_pos_7_missing_4_6 */
-	"aviata_pos_0_missing_4_7",	/* aviata_pos_0_missing_4_7 */
-	"aviata_pos_1_missing_4_7",	/* aviata_pos_1_missing_4_7 */
-	"aviata_pos_2_missing_4_7",	/* aviata_pos_2_missing_4_7 */
-	"aviata_pos_3_missing_4_7",	/* aviata_pos_3_missing_4_7 */
-	"aviata_pos_5_missing_4_7",	/* aviata_pos_5_missing_4_7 */
-	"aviata_pos_6_missing_4_7",	/* aviata_pos_6_missing_4_7 */
-	"aviata_pos_0_missing_5_6",	/* aviata_pos_0_missing_5_6 */
-	"aviata_pos_1_missing_5_6",	/* aviata_pos_1_missing_5_6 */
-	"aviata_pos_2_missing_5_6",	/* aviata_pos_2_missing_5_6 */
-	"aviata_pos_3_missing_5_6",	/* aviata_pos_3_missing_5_6 */
-	"aviata_pos_4_missing_5_6",	/* aviata_pos_4_missing_5_6 */
-	"aviata_pos_7_missing_5_6",	/* aviata_pos_7_missing_5_6 */
-	"aviata_pos_0_missing_5_7",	/* aviata_pos_0_missing_5_7 */
-	"aviata_pos_1_missing_5_7",	/* aviata_pos_1_missing_5_7 */
-	"aviata_pos_2_missing_5_7",	/* aviata_pos_2_missing_5_7 */
-	"aviata_pos_3_missing_5_7",	/* aviata_pos_3_missing_5_7 */
-	"aviata_pos_4_missing_5_7",	/* aviata_pos_4_missing_5_7 */
-	"aviata_pos_6_missing_5_7",	/* aviata_pos_6_missing_5_7 */
-	"aviata_pos_0_missing_6_7",	/* aviata_pos_0_missing_6_7 */
-	"aviata_pos_1_missing_6_7",	/* aviata_pos_1_missing_6_7 */
-	"aviata_pos_2_missing_6_7",	/* aviata_pos_2_missing_6_7 */
-	"aviata_pos_3_missing_6_7",	/* aviata_pos_3_missing_6_7 */
-	"aviata_pos_4_missing_6_7",	/* aviata_pos_4_missing_6_7 */
-	"aviata_pos_5_missing_6_7",	/* aviata_pos_5_missing_6_7 */
-	"aviata_pos_3_missing_0_1_2",	/* aviata_pos_3_missing_0_1_2 */
-	"aviata_pos_4_missing_0_1_2",	/* aviata_pos_4_missing_0_1_2 */
-	"aviata_pos_5_missing_0_1_2",	/* aviata_pos_5_missing_0_1_2 */
-	"aviata_pos_6_missing_0_1_2",	/* aviata_pos_6_missing_0_1_2 */
-	"aviata_pos_7_missing_0_1_2",	/* aviata_pos_7_missing_0_1_2 */
-	"aviata_pos_2_missing_0_1_3",	/* aviata_pos_2_missing_0_1_3 */
-	"aviata_pos_4_missing_0_1_3",	/* aviata_pos_4_missing_0_1_3 */
-	"aviata_pos_5_missing_0_1_3",	/* aviata_pos_5_missing_0_1_3 */
-	"aviata_pos_6_missing_0_1_3",	/* aviata_pos_6_missing_0_1_3 */
-	"aviata_pos_7_missing_0_1_3",	/* aviata_pos_7_missing_0_1_3 */
-	"aviata_pos_2_missing_0_1_4",	/* aviata_pos_2_missing_0_1_4 */
-	"aviata_pos_3_missing_0_1_4",	/* aviata_pos_3_missing_0_1_4 */
-	"aviata_pos_5_missing_0_1_4",	/* aviata_pos_5_missing_0_1_4 */
-	"aviata_pos_6_missing_0_1_4",	/* aviata_pos_6_missing_0_1_4 */
-	"aviata_pos_7_missing_0_1_4",	/* aviata_pos_7_missing_0_1_4 */
-	"aviata_pos_2_missing_0_1_5",	/* aviata_pos_2_missing_0_1_5 */
-	"aviata_pos_3_missing_0_1_5",	/* aviata_pos_3_missing_0_1_5 */
-	"aviata_pos_4_missing_0_1_5",	/* aviata_pos_4_missing_0_1_5 */
-	"aviata_pos_6_missing_0_1_5",	/* aviata_pos_6_missing_0_1_5 */
-	"aviata_pos_7_missing_0_1_5",	/* aviata_pos_7_missing_0_1_5 */
-	"aviata_pos_2_missing_0_1_6",	/* aviata_pos_2_missing_0_1_6 */
-	"aviata_pos_3_missing_0_1_6",	/* aviata_pos_3_missing_0_1_6 */
-	"aviata_pos_4_missing_0_1_6",	/* aviata_pos_4_missing_0_1_6 */
-	"aviata_pos_5_missing_0_1_6",	/* aviata_pos_5_missing_0_1_6 */
-	"aviata_pos_7_missing_0_1_6",	/* aviata_pos_7_missing_0_1_6 */
-	"aviata_pos_2_missing_0_1_7",	/* aviata_pos_2_missing_0_1_7 */
-	"aviata_pos_3_missing_0_1_7",	/* aviata_pos_3_missing_0_1_7 */
-	"aviata_pos_4_missing_0_1_7",	/* aviata_pos_4_missing_0_1_7 */
-	"aviata_pos_5_missing_0_1_7",	/* aviata_pos_5_missing_0_1_7 */
-	"aviata_pos_6_missing_0_1_7",	/* aviata_pos_6_missing_0_1_7 */
-	"aviata_pos_1_missing_0_2_3",	/* aviata_pos_1_missing_0_2_3 */
-	"aviata_pos_4_missing_0_2_3",	/* aviata_pos_4_missing_0_2_3 */
-	"aviata_pos_5_missing_0_2_3",	/* aviata_pos_5_missing_0_2_3 */
-	"aviata_pos_6_missing_0_2_3",	/* aviata_pos_6_missing_0_2_3 */
-	"aviata_pos_7_missing_0_2_3",	/* aviata_pos_7_missing_0_2_3 */
-	"aviata_pos_1_missing_0_2_4",	/* aviata_pos_1_missing_0_2_4 */
-	"aviata_pos_3_missing_0_2_4",	/* aviata_pos_3_missing_0_2_4 */
-	"aviata_pos_5_missing_0_2_4",	/* aviata_pos_5_missing_0_2_4 */
-	"aviata_pos_6_missing_0_2_4",	/* aviata_pos_6_missing_0_2_4 */
-	"aviata_pos_7_missing_0_2_4",	/* aviata_pos_7_missing_0_2_4 */
-	"aviata_pos_1_missing_0_2_5",	/* aviata_pos_1_missing_0_2_5 */
-	"aviata_pos_3_missing_0_2_5",	/* aviata_pos_3_missing_0_2_5 */
-	"aviata_pos_4_missing_0_2_5",	/* aviata_pos_4_missing_0_2_5 */
-	"aviata_pos_6_missing_0_2_5",	/* aviata_pos_6_missing_0_2_5 */
-	"aviata_pos_7_missing_0_2_5",	/* aviata_pos_7_missing_0_2_5 */
-	"aviata_pos_1_missing_0_2_6",	/* aviata_pos_1_missing_0_2_6 */
-	"aviata_pos_3_missing_0_2_6",	/* aviata_pos_3_missing_0_2_6 */
-	"aviata_pos_4_missing_0_2_6",	/* aviata_pos_4_missing_0_2_6 */
-	"aviata_pos_5_missing_0_2_6",	/* aviata_pos_5_missing_0_2_6 */
-	"aviata_pos_7_missing_0_2_6",	/* aviata_pos_7_missing_0_2_6 */
-	"aviata_pos_1_missing_0_2_7",	/* aviata_pos_1_missing_0_2_7 */
-	"aviata_pos_3_missing_0_2_7",	/* aviata_pos_3_missing_0_2_7 */
-	"aviata_pos_4_missing_0_2_7",	/* aviata_pos_4_missing_0_2_7 */
-	"aviata_pos_5_missing_0_2_7",	/* aviata_pos_5_missing_0_2_7 */
-	"aviata_pos_6_missing_0_2_7",	/* aviata_pos_6_missing_0_2_7 */
-	"aviata_pos_1_missing_0_3_4",	/* aviata_pos_1_missing_0_3_4 */
-	"aviata_pos_2_missing_0_3_4",	/* aviata_pos_2_missing_0_3_4 */
-	"aviata_pos_5_missing_0_3_4",	/* aviata_pos_5_missing_0_3_4 */
-	"aviata_pos_6_missing_0_3_4",	/* aviata_pos_6_missing_0_3_4 */
-	"aviata_pos_7_missing_0_3_4",	/* aviata_pos_7_missing_0_3_4 */
-	"aviata_pos_1_missing_0_3_5",	/* aviata_pos_1_missing_0_3_5 */
-	"aviata_pos_2_missing_0_3_5",	/* aviata_pos_2_missing_0_3_5 */
-	"aviata_pos_4_missing_0_3_5",	/* aviata_pos_4_missing_0_3_5 */
-	"aviata_pos_6_missing_0_3_5",	/* aviata_pos_6_missing_0_3_5 */
-	"aviata_pos_7_missing_0_3_5",	/* aviata_pos_7_missing_0_3_5 */
-	"aviata_pos_1_missing_0_3_6",	/* aviata_pos_1_missing_0_3_6 */
-	"aviata_pos_2_missing_0_3_6",	/* aviata_pos_2_missing_0_3_6 */
-	"aviata_pos_4_missing_0_3_6",	/* aviata_pos_4_missing_0_3_6 */
-	"aviata_pos_5_missing_0_3_6",	/* aviata_pos_5_missing_0_3_6 */
-	"aviata_pos_7_missing_0_3_6",	/* aviata_pos_7_missing_0_3_6 */
-	"aviata_pos_1_missing_0_3_7",	/* aviata_pos_1_missing_0_3_7 */
-	"aviata_pos_2_missing_0_3_7",	/* aviata_pos_2_missing_0_3_7 */
-	"aviata_pos_4_missing_0_3_7",	/* aviata_pos_4_missing_0_3_7 */
-	"aviata_pos_5_missing_0_3_7",	/* aviata_pos_5_missing_0_3_7 */
-	"aviata_pos_6_missing_0_3_7",	/* aviata_pos_6_missing_0_3_7 */
-	"aviata_pos_1_missing_0_4_5",	/* aviata_pos_1_missing_0_4_5 */
-	"aviata_pos_2_missing_0_4_5",	/* aviata_pos_2_missing_0_4_5 */
-	"aviata_pos_3_missing_0_4_5",	/* aviata_pos_3_missing_0_4_5 */
-	"aviata_pos_6_missing_0_4_5",	/* aviata_pos_6_missing_0_4_5 */
-	"aviata_pos_7_missing_0_4_5",	/* aviata_pos_7_missing_0_4_5 */
-	"aviata_pos_1_missing_0_4_6",	/* aviata_pos_1_missing_0_4_6 */
-	"aviata_pos_2_missing_0_4_6",	/* aviata_pos_2_missing_0_4_6 */
-	"aviata_pos_3_missing_0_4_6",	/* aviata_pos_3_missing_0_4_6 */
-	"aviata_pos_5_missing_0_4_6",	/* aviata_pos_5_missing_0_4_6 */
-	"aviata_pos_7_missing_0_4_6",	/* aviata_pos_7_missing_0_4_6 */
-	"aviata_pos_1_missing_0_4_7",	/* aviata_pos_1_missing_0_4_7 */
-	"aviata_pos_2_missing_0_4_7",	/* aviata_pos_2_missing_0_4_7 */
-	"aviata_pos_3_missing_0_4_7",	/* aviata_pos_3_missing_0_4_7 */
-	"aviata_pos_5_missing_0_4_7",	/* aviata_pos_5_missing_0_4_7 */
-	"aviata_pos_6_missing_0_4_7",	/* aviata_pos_6_missing_0_4_7 */
-	"aviata_pos_1_missing_0_5_6",	/* aviata_pos_1_missing_0_5_6 */
-	"aviata_pos_2_missing_0_5_6",	/* aviata_pos_2_missing_0_5_6 */
-	"aviata_pos_3_missing_0_5_6",	/* aviata_pos_3_missing_0_5_6 */
-	"aviata_pos_4_missing_0_5_6",	/* aviata_pos_4_missing_0_5_6 */
-	"aviata_pos_7_missing_0_5_6",	/* aviata_pos_7_missing_0_5_6 */
-	"aviata_pos_1_missing_0_5_7",	/* aviata_pos_1_missing_0_5_7 */
-	"aviata_pos_2_missing_0_5_7",	/* aviata_pos_2_missing_0_5_7 */
-	"aviata_pos_3_missing_0_5_7",	/* aviata_pos_3_missing_0_5_7 */
-	"aviata_pos_4_missing_0_5_7",	/* aviata_pos_4_missing_0_5_7 */
-	"aviata_pos_6_missing_0_5_7",	/* aviata_pos_6_missing_0_5_7 */
-	"aviata_pos_1_missing_0_6_7",	/* aviata_pos_1_missing_0_6_7 */
-	"aviata_pos_2_missing_0_6_7",	/* aviata_pos_2_missing_0_6_7 */
-	"aviata_pos_3_missing_0_6_7",	/* aviata_pos_3_missing_0_6_7 */
-	"aviata_pos_4_missing_0_6_7",	/* aviata_pos_4_missing_0_6_7 */
-	"aviata_pos_5_missing_0_6_7",	/* aviata_pos_5_missing_0_6_7 */
-	"aviata_pos_0_missing_1_2_3",	/* aviata_pos_0_missing_1_2_3 */
-	"aviata_pos_4_missing_1_2_3",	/* aviata_pos_4_missing_1_2_3 */
-	"aviata_pos_5_missing_1_2_3",	/* aviata_pos_5_missing_1_2_3 */
-	"aviata_pos_6_missing_1_2_3",	/* aviata_pos_6_missing_1_2_3 */
-	"aviata_pos_7_missing_1_2_3",	/* aviata_pos_7_missing_1_2_3 */
-	"aviata_pos_0_missing_1_2_4",	/* aviata_pos_0_missing_1_2_4 */
-	"aviata_pos_3_missing_1_2_4",	/* aviata_pos_3_missing_1_2_4 */
-	"aviata_pos_5_missing_1_2_4",	/* aviata_pos_5_missing_1_2_4 */
-	"aviata_pos_6_missing_1_2_4",	/* aviata_pos_6_missing_1_2_4 */
-	"aviata_pos_7_missing_1_2_4",	/* aviata_pos_7_missing_1_2_4 */
-	"aviata_pos_0_missing_1_2_5",	/* aviata_pos_0_missing_1_2_5 */
-	"aviata_pos_3_missing_1_2_5",	/* aviata_pos_3_missing_1_2_5 */
-	"aviata_pos_4_missing_1_2_5",	/* aviata_pos_4_missing_1_2_5 */
-	"aviata_pos_6_missing_1_2_5",	/* aviata_pos_6_missing_1_2_5 */
-	"aviata_pos_7_missing_1_2_5",	/* aviata_pos_7_missing_1_2_5 */
-	"aviata_pos_0_missing_1_2_6",	/* aviata_pos_0_missing_1_2_6 */
-	"aviata_pos_3_missing_1_2_6",	/* aviata_pos_3_missing_1_2_6 */
-	"aviata_pos_4_missing_1_2_6",	/* aviata_pos_4_missing_1_2_6 */
-	"aviata_pos_5_missing_1_2_6",	/* aviata_pos_5_missing_1_2_6 */
-	"aviata_pos_7_missing_1_2_6",	/* aviata_pos_7_missing_1_2_6 */
-	"aviata_pos_0_missing_1_2_7",	/* aviata_pos_0_missing_1_2_7 */
-	"aviata_pos_3_missing_1_2_7",	/* aviata_pos_3_missing_1_2_7 */
-	"aviata_pos_4_missing_1_2_7",	/* aviata_pos_4_missing_1_2_7 */
-	"aviata_pos_5_missing_1_2_7",	/* aviata_pos_5_missing_1_2_7 */
-	"aviata_pos_6_missing_1_2_7",	/* aviata_pos_6_missing_1_2_7 */
-	"aviata_pos_0_missing_1_3_4",	/* aviata_pos_0_missing_1_3_4 */
-	"aviata_pos_2_missing_1_3_4",	/* aviata_pos_2_missing_1_3_4 */
-	"aviata_pos_5_missing_1_3_4",	/* aviata_pos_5_missing_1_3_4 */
-	"aviata_pos_6_missing_1_3_4",	/* aviata_pos_6_missing_1_3_4 */
-	"aviata_pos_7_missing_1_3_4",	/* aviata_pos_7_missing_1_3_4 */
-	"aviata_pos_0_missing_1_3_5",	/* aviata_pos_0_missing_1_3_5 */
-	"aviata_pos_2_missing_1_3_5",	/* aviata_pos_2_missing_1_3_5 */
-	"aviata_pos_4_missing_1_3_5",	/* aviata_pos_4_missing_1_3_5 */
-	"aviata_pos_6_missing_1_3_5",	/* aviata_pos_6_missing_1_3_5 */
-	"aviata_pos_7_missing_1_3_5",	/* aviata_pos_7_missing_1_3_5 */
-	"aviata_pos_0_missing_1_3_6",	/* aviata_pos_0_missing_1_3_6 */
-	"aviata_pos_2_missing_1_3_6",	/* aviata_pos_2_missing_1_3_6 */
-	"aviata_pos_4_missing_1_3_6",	/* aviata_pos_4_missing_1_3_6 */
-	"aviata_pos_5_missing_1_3_6",	/* aviata_pos_5_missing_1_3_6 */
-	"aviata_pos_7_missing_1_3_6",	/* aviata_pos_7_missing_1_3_6 */
-	"aviata_pos_0_missing_1_3_7",	/* aviata_pos_0_missing_1_3_7 */
-	"aviata_pos_2_missing_1_3_7",	/* aviata_pos_2_missing_1_3_7 */
-	"aviata_pos_4_missing_1_3_7",	/* aviata_pos_4_missing_1_3_7 */
-	"aviata_pos_5_missing_1_3_7",	/* aviata_pos_5_missing_1_3_7 */
-	"aviata_pos_6_missing_1_3_7",	/* aviata_pos_6_missing_1_3_7 */
-	"aviata_pos_0_missing_1_4_5",	/* aviata_pos_0_missing_1_4_5 */
-	"aviata_pos_2_missing_1_4_5",	/* aviata_pos_2_missing_1_4_5 */
-	"aviata_pos_3_missing_1_4_5",	/* aviata_pos_3_missing_1_4_5 */
-	"aviata_pos_6_missing_1_4_5",	/* aviata_pos_6_missing_1_4_5 */
-	"aviata_pos_7_missing_1_4_5",	/* aviata_pos_7_missing_1_4_5 */
-	"aviata_pos_0_missing_1_4_6",	/* aviata_pos_0_missing_1_4_6 */
-	"aviata_pos_2_missing_1_4_6",	/* aviata_pos_2_missing_1_4_6 */
-	"aviata_pos_3_missing_1_4_6",	/* aviata_pos_3_missing_1_4_6 */
-	"aviata_pos_5_missing_1_4_6",	/* aviata_pos_5_missing_1_4_6 */
-	"aviata_pos_7_missing_1_4_6",	/* aviata_pos_7_missing_1_4_6 */
-	"aviata_pos_0_missing_1_4_7",	/* aviata_pos_0_missing_1_4_7 */
-	"aviata_pos_2_missing_1_4_7",	/* aviata_pos_2_missing_1_4_7 */
-	"aviata_pos_3_missing_1_4_7",	/* aviata_pos_3_missing_1_4_7 */
-	"aviata_pos_5_missing_1_4_7",	/* aviata_pos_5_missing_1_4_7 */
-	"aviata_pos_6_missing_1_4_7",	/* aviata_pos_6_missing_1_4_7 */
-	"aviata_pos_0_missing_1_5_6",	/* aviata_pos_0_missing_1_5_6 */
-	"aviata_pos_2_missing_1_5_6",	/* aviata_pos_2_missing_1_5_6 */
-	"aviata_pos_3_missing_1_5_6",	/* aviata_pos_3_missing_1_5_6 */
-	"aviata_pos_4_missing_1_5_6",	/* aviata_pos_4_missing_1_5_6 */
-	"aviata_pos_7_missing_1_5_6",	/* aviata_pos_7_missing_1_5_6 */
-	"aviata_pos_0_missing_1_5_7",	/* aviata_pos_0_missing_1_5_7 */
-	"aviata_pos_2_missing_1_5_7",	/* aviata_pos_2_missing_1_5_7 */
-	"aviata_pos_3_missing_1_5_7",	/* aviata_pos_3_missing_1_5_7 */
-	"aviata_pos_4_missing_1_5_7",	/* aviata_pos_4_missing_1_5_7 */
-	"aviata_pos_6_missing_1_5_7",	/* aviata_pos_6_missing_1_5_7 */
-	"aviata_pos_0_missing_1_6_7",	/* aviata_pos_0_missing_1_6_7 */
-	"aviata_pos_2_missing_1_6_7",	/* aviata_pos_2_missing_1_6_7 */
-	"aviata_pos_3_missing_1_6_7",	/* aviata_pos_3_missing_1_6_7 */
-	"aviata_pos_4_missing_1_6_7",	/* aviata_pos_4_missing_1_6_7 */
-	"aviata_pos_5_missing_1_6_7",	/* aviata_pos_5_missing_1_6_7 */
-	"aviata_pos_0_missing_2_3_4",	/* aviata_pos_0_missing_2_3_4 */
-	"aviata_pos_1_missing_2_3_4",	/* aviata_pos_1_missing_2_3_4 */
-	"aviata_pos_5_missing_2_3_4",	/* aviata_pos_5_missing_2_3_4 */
-	"aviata_pos_6_missing_2_3_4",	/* aviata_pos_6_missing_2_3_4 */
-	"aviata_pos_7_missing_2_3_4",	/* aviata_pos_7_missing_2_3_4 */
-	"aviata_pos_0_missing_2_3_5",	/* aviata_pos_0_missing_2_3_5 */
-	"aviata_pos_1_missing_2_3_5",	/* aviata_pos_1_missing_2_3_5 */
-	"aviata_pos_4_missing_2_3_5",	/* aviata_pos_4_missing_2_3_5 */
-	"aviata_pos_6_missing_2_3_5",	/* aviata_pos_6_missing_2_3_5 */
-	"aviata_pos_7_missing_2_3_5",	/* aviata_pos_7_missing_2_3_5 */
-	"aviata_pos_0_missing_2_3_6",	/* aviata_pos_0_missing_2_3_6 */
-	"aviata_pos_1_missing_2_3_6",	/* aviata_pos_1_missing_2_3_6 */
-	"aviata_pos_4_missing_2_3_6",	/* aviata_pos_4_missing_2_3_6 */
-	"aviata_pos_5_missing_2_3_6",	/* aviata_pos_5_missing_2_3_6 */
-	"aviata_pos_7_missing_2_3_6",	/* aviata_pos_7_missing_2_3_6 */
-	"aviata_pos_0_missing_2_3_7",	/* aviata_pos_0_missing_2_3_7 */
-	"aviata_pos_1_missing_2_3_7",	/* aviata_pos_1_missing_2_3_7 */
-	"aviata_pos_4_missing_2_3_7",	/* aviata_pos_4_missing_2_3_7 */
-	"aviata_pos_5_missing_2_3_7",	/* aviata_pos_5_missing_2_3_7 */
-	"aviata_pos_6_missing_2_3_7",	/* aviata_pos_6_missing_2_3_7 */
-	"aviata_pos_0_missing_2_4_5",	/* aviata_pos_0_missing_2_4_5 */
-	"aviata_pos_1_missing_2_4_5",	/* aviata_pos_1_missing_2_4_5 */
-	"aviata_pos_3_missing_2_4_5",	/* aviata_pos_3_missing_2_4_5 */
-	"aviata_pos_6_missing_2_4_5",	/* aviata_pos_6_missing_2_4_5 */
-	"aviata_pos_7_missing_2_4_5",	/* aviata_pos_7_missing_2_4_5 */
-	"aviata_pos_0_missing_2_4_6",	/* aviata_pos_0_missing_2_4_6 */
-	"aviata_pos_1_missing_2_4_6",	/* aviata_pos_1_missing_2_4_6 */
-	"aviata_pos_3_missing_2_4_6",	/* aviata_pos_3_missing_2_4_6 */
-	"aviata_pos_5_missing_2_4_6",	/* aviata_pos_5_missing_2_4_6 */
-	"aviata_pos_7_missing_2_4_6",	/* aviata_pos_7_missing_2_4_6 */
-	"aviata_pos_0_missing_2_4_7",	/* aviata_pos_0_missing_2_4_7 */
-	"aviata_pos_1_missing_2_4_7",	/* aviata_pos_1_missing_2_4_7 */
-	"aviata_pos_3_missing_2_4_7",	/* aviata_pos_3_missing_2_4_7 */
-	"aviata_pos_5_missing_2_4_7",	/* aviata_pos_5_missing_2_4_7 */
-	"aviata_pos_6_missing_2_4_7",	/* aviata_pos_6_missing_2_4_7 */
-	"aviata_pos_0_missing_2_5_6",	/* aviata_pos_0_missing_2_5_6 */
-	"aviata_pos_1_missing_2_5_6",	/* aviata_pos_1_missing_2_5_6 */
-	"aviata_pos_3_missing_2_5_6",	/* aviata_pos_3_missing_2_5_6 */
-	"aviata_pos_4_missing_2_5_6",	/* aviata_pos_4_missing_2_5_6 */
-	"aviata_pos_7_missing_2_5_6",	/* aviata_pos_7_missing_2_5_6 */
-	"aviata_pos_0_missing_2_5_7",	/* aviata_pos_0_missing_2_5_7 */
-	"aviata_pos_1_missing_2_5_7",	/* aviata_pos_1_missing_2_5_7 */
-	"aviata_pos_3_missing_2_5_7",	/* aviata_pos_3_missing_2_5_7 */
-	"aviata_pos_4_missing_2_5_7",	/* aviata_pos_4_missing_2_5_7 */
-	"aviata_pos_6_missing_2_5_7",	/* aviata_pos_6_missing_2_5_7 */
-	"aviata_pos_0_missing_2_6_7",	/* aviata_pos_0_missing_2_6_7 */
-	"aviata_pos_1_missing_2_6_7",	/* aviata_pos_1_missing_2_6_7 */
-	"aviata_pos_3_missing_2_6_7",	/* aviata_pos_3_missing_2_6_7 */
-	"aviata_pos_4_missing_2_6_7",	/* aviata_pos_4_missing_2_6_7 */
-	"aviata_pos_5_missing_2_6_7",	/* aviata_pos_5_missing_2_6_7 */
-	"aviata_pos_0_missing_3_4_5",	/* aviata_pos_0_missing_3_4_5 */
-	"aviata_pos_1_missing_3_4_5",	/* aviata_pos_1_missing_3_4_5 */
-	"aviata_pos_2_missing_3_4_5",	/* aviata_pos_2_missing_3_4_5 */
-	"aviata_pos_6_missing_3_4_5",	/* aviata_pos_6_missing_3_4_5 */
-	"aviata_pos_7_missing_3_4_5",	/* aviata_pos_7_missing_3_4_5 */
-	"aviata_pos_0_missing_3_4_6",	/* aviata_pos_0_missing_3_4_6 */
-	"aviata_pos_1_missing_3_4_6",	/* aviata_pos_1_missing_3_4_6 */
-	"aviata_pos_2_missing_3_4_6",	/* aviata_pos_2_missing_3_4_6 */
-	"aviata_pos_5_missing_3_4_6",	/* aviata_pos_5_missing_3_4_6 */
-	"aviata_pos_7_missing_3_4_6",	/* aviata_pos_7_missing_3_4_6 */
-	"aviata_pos_0_missing_3_4_7",	/* aviata_pos_0_missing_3_4_7 */
-	"aviata_pos_1_missing_3_4_7",	/* aviata_pos_1_missing_3_4_7 */
-	"aviata_pos_2_missing_3_4_7",	/* aviata_pos_2_missing_3_4_7 */
-	"aviata_pos_5_missing_3_4_7",	/* aviata_pos_5_missing_3_4_7 */
-	"aviata_pos_6_missing_3_4_7",	/* aviata_pos_6_missing_3_4_7 */
-	"aviata_pos_0_missing_3_5_6",	/* aviata_pos_0_missing_3_5_6 */
-	"aviata_pos_1_missing_3_5_6",	/* aviata_pos_1_missing_3_5_6 */
-	"aviata_pos_2_missing_3_5_6",	/* aviata_pos_2_missing_3_5_6 */
-	"aviata_pos_4_missing_3_5_6",	/* aviata_pos_4_missing_3_5_6 */
-	"aviata_pos_7_missing_3_5_6",	/* aviata_pos_7_missing_3_5_6 */
-	"aviata_pos_0_missing_3_5_7",	/* aviata_pos_0_missing_3_5_7 */
-	"aviata_pos_1_missing_3_5_7",	/* aviata_pos_1_missing_3_5_7 */
-	"aviata_pos_2_missing_3_5_7",	/* aviata_pos_2_missing_3_5_7 */
-	"aviata_pos_4_missing_3_5_7",	/* aviata_pos_4_missing_3_5_7 */
-	"aviata_pos_6_missing_3_5_7",	/* aviata_pos_6_missing_3_5_7 */
-	"aviata_pos_0_missing_3_6_7",	/* aviata_pos_0_missing_3_6_7 */
-	"aviata_pos_1_missing_3_6_7",	/* aviata_pos_1_missing_3_6_7 */
-	"aviata_pos_2_missing_3_6_7",	/* aviata_pos_2_missing_3_6_7 */
-	"aviata_pos_4_missing_3_6_7",	/* aviata_pos_4_missing_3_6_7 */
-	"aviata_pos_5_missing_3_6_7",	/* aviata_pos_5_missing_3_6_7 */
-	"aviata_pos_0_missing_4_5_6",	/* aviata_pos_0_missing_4_5_6 */
-	"aviata_pos_1_missing_4_5_6",	/* aviata_pos_1_missing_4_5_6 */
-	"aviata_pos_2_missing_4_5_6",	/* aviata_pos_2_missing_4_5_6 */
-	"aviata_pos_3_missing_4_5_6",	/* aviata_pos_3_missing_4_5_6 */
-	"aviata_pos_7_missing_4_5_6",	/* aviata_pos_7_missing_4_5_6 */
-	"aviata_pos_0_missing_4_5_7",	/* aviata_pos_0_missing_4_5_7 */
-	"aviata_pos_1_missing_4_5_7",	/* aviata_pos_1_missing_4_5_7 */
-	"aviata_pos_2_missing_4_5_7",	/* aviata_pos_2_missing_4_5_7 */
-	"aviata_pos_3_missing_4_5_7",	/* aviata_pos_3_missing_4_5_7 */
-	"aviata_pos_6_missing_4_5_7",	/* aviata_pos_6_missing_4_5_7 */
-	"aviata_pos_0_missing_4_6_7",	/* aviata_pos_0_missing_4_6_7 */
-	"aviata_pos_1_missing_4_6_7",	/* aviata_pos_1_missing_4_6_7 */
-	"aviata_pos_2_missing_4_6_7",	/* aviata_pos_2_missing_4_6_7 */
-	"aviata_pos_3_missing_4_6_7",	/* aviata_pos_3_missing_4_6_7 */
-	"aviata_pos_5_missing_4_6_7",	/* aviata_pos_5_missing_4_6_7 */
-	"aviata_pos_0_missing_5_6_7",	/* aviata_pos_0_missing_5_6_7 */
-	"aviata_pos_1_missing_5_6_7",	/* aviata_pos_1_missing_5_6_7 */
-	"aviata_pos_2_missing_5_6_7",	/* aviata_pos_2_missing_5_6_7 */
-	"aviata_pos_3_missing_5_6_7",	/* aviata_pos_3_missing_5_6_7 */
-	"aviata_pos_4_missing_5_6_7",	/* aviata_pos_4_missing_5_6_7 */
+	"aviata_missing_",	/* aviata_missing_ */
+	"aviata_missing_0",	/* aviata_missing_0 */
+	"aviata_missing_1",	/* aviata_missing_1 */
+	"aviata_missing_2",	/* aviata_missing_2 */
+	"aviata_missing_3",	/* aviata_missing_3 */
+	"aviata_missing_4",	/* aviata_missing_4 */
+	"aviata_missing_5",	/* aviata_missing_5 */
+	"aviata_missing_6",	/* aviata_missing_6 */
+	"aviata_missing_7",	/* aviata_missing_7 */
+	"aviata_missing_0_1",	/* aviata_missing_0_1 */
+	"aviata_missing_0_2",	/* aviata_missing_0_2 */
+	"aviata_missing_0_3",	/* aviata_missing_0_3 */
+	"aviata_missing_0_4",	/* aviata_missing_0_4 */
+	"aviata_missing_0_5",	/* aviata_missing_0_5 */
+	"aviata_missing_0_6",	/* aviata_missing_0_6 */
+	"aviata_missing_0_7",	/* aviata_missing_0_7 */
+	"aviata_missing_1_2",	/* aviata_missing_1_2 */
+	"aviata_missing_1_3",	/* aviata_missing_1_3 */
+	"aviata_missing_1_4",	/* aviata_missing_1_4 */
+	"aviata_missing_1_5",	/* aviata_missing_1_5 */
+	"aviata_missing_1_6",	/* aviata_missing_1_6 */
+	"aviata_missing_1_7",	/* aviata_missing_1_7 */
+	"aviata_missing_2_3",	/* aviata_missing_2_3 */
+	"aviata_missing_2_4",	/* aviata_missing_2_4 */
+	"aviata_missing_2_5",	/* aviata_missing_2_5 */
+	"aviata_missing_2_6",	/* aviata_missing_2_6 */
+	"aviata_missing_2_7",	/* aviata_missing_2_7 */
+	"aviata_missing_3_4",	/* aviata_missing_3_4 */
+	"aviata_missing_3_5",	/* aviata_missing_3_5 */
+	"aviata_missing_3_6",	/* aviata_missing_3_6 */
+	"aviata_missing_3_7",	/* aviata_missing_3_7 */
+	"aviata_missing_4_5",	/* aviata_missing_4_5 */
+	"aviata_missing_4_6",	/* aviata_missing_4_6 */
+	"aviata_missing_4_7",	/* aviata_missing_4_7 */
+	"aviata_missing_5_6",	/* aviata_missing_5_6 */
+	"aviata_missing_5_7",	/* aviata_missing_5_7 */
+	"aviata_missing_6_7",	/* aviata_missing_6_7 */
+	"aviata_missing_0_1_2",	/* aviata_missing_0_1_2 */
+	"aviata_missing_0_1_3",	/* aviata_missing_0_1_3 */
+	"aviata_missing_0_1_4",	/* aviata_missing_0_1_4 */
+	"aviata_missing_0_1_5",	/* aviata_missing_0_1_5 */
+	"aviata_missing_0_1_6",	/* aviata_missing_0_1_6 */
+	"aviata_missing_0_1_7",	/* aviata_missing_0_1_7 */
+	"aviata_missing_0_2_3",	/* aviata_missing_0_2_3 */
+	"aviata_missing_0_2_4",	/* aviata_missing_0_2_4 */
+	"aviata_missing_0_2_5",	/* aviata_missing_0_2_5 */
+	"aviata_missing_0_2_6",	/* aviata_missing_0_2_6 */
+	"aviata_missing_0_2_7",	/* aviata_missing_0_2_7 */
+	"aviata_missing_0_3_4",	/* aviata_missing_0_3_4 */
+	"aviata_missing_0_3_5",	/* aviata_missing_0_3_5 */
+	"aviata_missing_0_3_6",	/* aviata_missing_0_3_6 */
+	"aviata_missing_0_3_7",	/* aviata_missing_0_3_7 */
+	"aviata_missing_0_4_5",	/* aviata_missing_0_4_5 */
+	"aviata_missing_0_4_6",	/* aviata_missing_0_4_6 */
+	"aviata_missing_0_4_7",	/* aviata_missing_0_4_7 */
+	"aviata_missing_0_5_6",	/* aviata_missing_0_5_6 */
+	"aviata_missing_0_5_7",	/* aviata_missing_0_5_7 */
+	"aviata_missing_0_6_7",	/* aviata_missing_0_6_7 */
+	"aviata_missing_1_2_3",	/* aviata_missing_1_2_3 */
+	"aviata_missing_1_2_4",	/* aviata_missing_1_2_4 */
+	"aviata_missing_1_2_5",	/* aviata_missing_1_2_5 */
+	"aviata_missing_1_2_6",	/* aviata_missing_1_2_6 */
+	"aviata_missing_1_2_7",	/* aviata_missing_1_2_7 */
+	"aviata_missing_1_3_4",	/* aviata_missing_1_3_4 */
+	"aviata_missing_1_3_5",	/* aviata_missing_1_3_5 */
+	"aviata_missing_1_3_6",	/* aviata_missing_1_3_6 */
+	"aviata_missing_1_3_7",	/* aviata_missing_1_3_7 */
+	"aviata_missing_1_4_5",	/* aviata_missing_1_4_5 */
+	"aviata_missing_1_4_6",	/* aviata_missing_1_4_6 */
+	"aviata_missing_1_4_7",	/* aviata_missing_1_4_7 */
+	"aviata_missing_1_5_6",	/* aviata_missing_1_5_6 */
+	"aviata_missing_1_5_7",	/* aviata_missing_1_5_7 */
+	"aviata_missing_1_6_7",	/* aviata_missing_1_6_7 */
+	"aviata_missing_2_3_4",	/* aviata_missing_2_3_4 */
+	"aviata_missing_2_3_5",	/* aviata_missing_2_3_5 */
+	"aviata_missing_2_3_6",	/* aviata_missing_2_3_6 */
+	"aviata_missing_2_3_7",	/* aviata_missing_2_3_7 */
+	"aviata_missing_2_4_5",	/* aviata_missing_2_4_5 */
+	"aviata_missing_2_4_6",	/* aviata_missing_2_4_6 */
+	"aviata_missing_2_4_7",	/* aviata_missing_2_4_7 */
+	"aviata_missing_2_5_6",	/* aviata_missing_2_5_6 */
+	"aviata_missing_2_5_7",	/* aviata_missing_2_5_7 */
+	"aviata_missing_2_6_7",	/* aviata_missing_2_6_7 */
+	"aviata_missing_3_4_5",	/* aviata_missing_3_4_5 */
+	"aviata_missing_3_4_6",	/* aviata_missing_3_4_6 */
+	"aviata_missing_3_4_7",	/* aviata_missing_3_4_7 */
+	"aviata_missing_3_5_6",	/* aviata_missing_3_5_6 */
+	"aviata_missing_3_5_7",	/* aviata_missing_3_5_7 */
+	"aviata_missing_3_6_7",	/* aviata_missing_3_6_7 */
+	"aviata_missing_4_5_6",	/* aviata_missing_4_5_6 */
+	"aviata_missing_4_5_7",	/* aviata_missing_4_5_7 */
+	"aviata_missing_4_6_7",	/* aviata_missing_4_6_7 */
+	"aviata_missing_5_6_7",	/* aviata_missing_5_6_7 */
+	"aviata_missing_0_1_2_3",	/* aviata_missing_0_1_2_3 */
+	"aviata_missing_0_1_2_4",	/* aviata_missing_0_1_2_4 */
+	"aviata_missing_0_1_2_5",	/* aviata_missing_0_1_2_5 */
+	"aviata_missing_0_1_2_6",	/* aviata_missing_0_1_2_6 */
+	"aviata_missing_0_1_2_7",	/* aviata_missing_0_1_2_7 */
+	"aviata_missing_0_1_3_4",	/* aviata_missing_0_1_3_4 */
+	"aviata_missing_0_1_3_5",	/* aviata_missing_0_1_3_5 */
+	"aviata_missing_0_1_3_6",	/* aviata_missing_0_1_3_6 */
+	"aviata_missing_0_1_3_7",	/* aviata_missing_0_1_3_7 */
+	"aviata_missing_0_1_4_5",	/* aviata_missing_0_1_4_5 */
+	"aviata_missing_0_1_4_6",	/* aviata_missing_0_1_4_6 */
+	"aviata_missing_0_1_4_7",	/* aviata_missing_0_1_4_7 */
+	"aviata_missing_0_1_5_6",	/* aviata_missing_0_1_5_6 */
+	"aviata_missing_0_1_5_7",	/* aviata_missing_0_1_5_7 */
+	"aviata_missing_0_1_6_7",	/* aviata_missing_0_1_6_7 */
+	"aviata_missing_0_2_3_4",	/* aviata_missing_0_2_3_4 */
+	"aviata_missing_0_2_3_5",	/* aviata_missing_0_2_3_5 */
+	"aviata_missing_0_2_3_6",	/* aviata_missing_0_2_3_6 */
+	"aviata_missing_0_2_3_7",	/* aviata_missing_0_2_3_7 */
+	"aviata_missing_0_2_4_5",	/* aviata_missing_0_2_4_5 */
+	"aviata_missing_0_2_4_6",	/* aviata_missing_0_2_4_6 */
+	"aviata_missing_0_2_4_7",	/* aviata_missing_0_2_4_7 */
+	"aviata_missing_0_2_5_6",	/* aviata_missing_0_2_5_6 */
+	"aviata_missing_0_2_5_7",	/* aviata_missing_0_2_5_7 */
+	"aviata_missing_0_2_6_7",	/* aviata_missing_0_2_6_7 */
+	"aviata_missing_0_3_4_5",	/* aviata_missing_0_3_4_5 */
+	"aviata_missing_0_3_4_6",	/* aviata_missing_0_3_4_6 */
+	"aviata_missing_0_3_4_7",	/* aviata_missing_0_3_4_7 */
+	"aviata_missing_0_3_5_6",	/* aviata_missing_0_3_5_6 */
+	"aviata_missing_0_3_5_7",	/* aviata_missing_0_3_5_7 */
+	"aviata_missing_0_3_6_7",	/* aviata_missing_0_3_6_7 */
+	"aviata_missing_0_4_5_6",	/* aviata_missing_0_4_5_6 */
+	"aviata_missing_0_4_5_7",	/* aviata_missing_0_4_5_7 */
+	"aviata_missing_0_4_6_7",	/* aviata_missing_0_4_6_7 */
+	"aviata_missing_0_5_6_7",	/* aviata_missing_0_5_6_7 */
+	"aviata_missing_1_2_3_4",	/* aviata_missing_1_2_3_4 */
+	"aviata_missing_1_2_3_5",	/* aviata_missing_1_2_3_5 */
+	"aviata_missing_1_2_3_6",	/* aviata_missing_1_2_3_6 */
+	"aviata_missing_1_2_3_7",	/* aviata_missing_1_2_3_7 */
+	"aviata_missing_1_2_4_5",	/* aviata_missing_1_2_4_5 */
+	"aviata_missing_1_2_4_6",	/* aviata_missing_1_2_4_6 */
+	"aviata_missing_1_2_4_7",	/* aviata_missing_1_2_4_7 */
+	"aviata_missing_1_2_5_6",	/* aviata_missing_1_2_5_6 */
+	"aviata_missing_1_2_5_7",	/* aviata_missing_1_2_5_7 */
+	"aviata_missing_1_2_6_7",	/* aviata_missing_1_2_6_7 */
+	"aviata_missing_1_3_4_5",	/* aviata_missing_1_3_4_5 */
+	"aviata_missing_1_3_4_6",	/* aviata_missing_1_3_4_6 */
+	"aviata_missing_1_3_4_7",	/* aviata_missing_1_3_4_7 */
+	"aviata_missing_1_3_5_6",	/* aviata_missing_1_3_5_6 */
+	"aviata_missing_1_3_5_7",	/* aviata_missing_1_3_5_7 */
+	"aviata_missing_1_3_6_7",	/* aviata_missing_1_3_6_7 */
+	"aviata_missing_1_4_5_6",	/* aviata_missing_1_4_5_6 */
+	"aviata_missing_1_4_5_7",	/* aviata_missing_1_4_5_7 */
+	"aviata_missing_1_4_6_7",	/* aviata_missing_1_4_6_7 */
+	"aviata_missing_1_5_6_7",	/* aviata_missing_1_5_6_7 */
+	"aviata_missing_2_3_4_5",	/* aviata_missing_2_3_4_5 */
+	"aviata_missing_2_3_4_6",	/* aviata_missing_2_3_4_6 */
+	"aviata_missing_2_3_4_7",	/* aviata_missing_2_3_4_7 */
+	"aviata_missing_2_3_5_6",	/* aviata_missing_2_3_5_6 */
+	"aviata_missing_2_3_5_7",	/* aviata_missing_2_3_5_7 */
+	"aviata_missing_2_3_6_7",	/* aviata_missing_2_3_6_7 */
+	"aviata_missing_2_4_5_6",	/* aviata_missing_2_4_5_6 */
+	"aviata_missing_2_4_5_7",	/* aviata_missing_2_4_5_7 */
+	"aviata_missing_2_4_6_7",	/* aviata_missing_2_4_6_7 */
+	"aviata_missing_2_5_6_7",	/* aviata_missing_2_5_6_7 */
+	"aviata_missing_3_4_5_6",	/* aviata_missing_3_4_5_6 */
+	"aviata_missing_3_4_5_7",	/* aviata_missing_3_4_5_7 */
+	"aviata_missing_3_4_6_7",	/* aviata_missing_3_4_6_7 */
+	"aviata_missing_3_5_6_7",	/* aviata_missing_3_5_6_7 */
+	"aviata_missing_4_5_6_7",	/* aviata_missing_4_5_6_7 */
 };
 
 } // anonymous namespace

@@ -160,8 +160,9 @@ def main(loopFunc=lambda g: None, loop_period=1000, keyPressedFunc=lambda k,x,y:
         target_time += loop_period
         delay = target_time - glutGet(GLUT_ELAPSED_TIME)
         if delay < 0:
-            print("Warning: trouble keeping up with loop_period")
             delay = 0
+            if delay < -loop_period*2: # print warning if we're two loop_periods behind
+                print("Warning: trouble keeping up with loop_period")
         glutTimerFunc(delay, loopWrapperFunc, 0)
 
     def initLoop(value):

@@ -6,7 +6,7 @@ import px4_mixer_multirotor
 import generate_matrices
 from pid import PID
 
-combined_geometries, drone_geometries, drone_geometries_list = generate_matrices.generate_aviata_permutations(max_missing_drones=3)
+combined_geometries, combined_geometries_list = generate_matrices.generate_aviata_permutations(max_missing_drones=4)
 
 
 def constrain(val, min, max):
@@ -17,6 +17,23 @@ def limit_norm(val, max_norm):
     if norm > max_norm:
         return (val / norm) * max_norm
     return val
+
+
+# Avoid some redundant calculations in order to run faster
+forces_setpoint_cache = np.matrix([0.0, 0.0, 0.0, 0.0]).T
+mixer_cache = None
+u_cache = None
+u_final_cache = None
+def px4_normal_mode(forces_setpoint, mixer):
+    global forces_setpoint_cache
+    global mixer_cache
+    global u_cache
+    global u_final_cache
+    if not (np.array_equal(forces_setpoint, forces_setpoint_cache) and mixer is mixer_cache):
+        u_cache, u_final_cache = px4_mixer_multirotor.normal_mode(forces_setpoint, mixer, 0.0, 1.0)
+        forces_setpoint_cache = forces_setpoint
+        mixer_cache = mixer
+    return u_cache, u_final_cache
 
 
 @dataclass
@@ -38,6 +55,8 @@ class Drone:
         self.control_mode = CONTROL_MODE_FORCES
         self.mixer = None
         self.hover_thrust = 0
+        self.rotor_start_index = 0
+        self.rotor_end_index = 0
         self.sensors = DroneSensors()
         self.forces_setpoint = np.matrix([0.0, 0.0, 0.0, 0.0]).T
         self.att_setpoint = None
@@ -56,9 +75,11 @@ class Drone:
 
     def configure_mixer(self, missing_drones):
         if self.drone_pos is not None:
-            mixer_name = generate_matrices.mixer_name(self.drone_pos, missing_drones)
-            self.mixer = drone_geometries[mixer_name]['mix']['B_px_4dof']
-            self.hover_thrust = drone_geometries[mixer_name]['thr_hover']
+            geometry_name = generate_matrices.geometry_name(missing_drones)
+            self.mixer = combined_geometries[geometry_name]['mix']['B_px_4dof']
+            self.hover_thrust = combined_geometries[geometry_name]['thr_hover']
+            self.rotor_start_index = self.drone_pos * constants.num_rotors
+            self.rotor_end_index = self.rotor_start_index + constants.num_rotors
 
     def set_sensors(self, sensors):
         self.sensors = sensors
@@ -136,8 +157,8 @@ class Drone:
                 self.forces_setpoint[:3,0] = torque_sp[:, np.newaxis]
                 self.forces_setpoint[3,0] = self.thrust_setpoint
 
-            u, u_final = px4_mixer_multirotor.normal_mode(self.forces_setpoint, self.mixer, 0.0, 1.0)
-            self.motor_inputs = u_final
+            u, u_final = px4_normal_mode(self.forces_setpoint, self.mixer)
+            self.motor_inputs = u_final[self.rotor_start_index:self.rotor_end_index]
 
 
 class Network:

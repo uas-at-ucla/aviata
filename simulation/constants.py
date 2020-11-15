@@ -10,7 +10,7 @@ r = 0.550 / 2 # Distance of each rotor from the center the drone (meters)
 R = 1.25 # Distance between the center of a drone and the center of the structure (meters) # TODO
 num_drones = 8 # Maximum number of drones on the structure
 
-M_drone = 1.769 # mass of a single drone in kg
+M_drone = 1.769 # mass of a single drone in kg TODO: drones will probably be a little heavier
 M_structure = 4.1771 # mass of the structure in kg
 M_payload = 2.26796 # mass of the payload in kg (5lb payload)
 M_structure_payload = M_structure + M_payload
