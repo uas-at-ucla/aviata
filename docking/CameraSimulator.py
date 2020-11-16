@@ -85,13 +85,13 @@ class CameraSimulator:
         # Sets translation of AprilTag
         # Converts cartesian translation to polar coordinates
         translationDist = math.sqrt(relativeLat**2+relativeLon**2)
-        translationAngle = math.degrees(np.arctan2(relativeLat, relativeLon))
+        translationAngle = math.degrees(np.arctan2(absLon, absLat))
         # Adjusts for relative rotation then converts to pixel offset
         offsetx = self.scale_constant*translationDist * \
-            math.cos(math.radians(translationAngle-relativeYaw)) / \
+            math.cos(math.radians(translationAngle-absYaw)) / \
             2.0/relativeAlt
         offsety = self.scale_constant*translationDist * \
-            math.sin(math.radians(translationAngle-relativeYaw)) / \
+            math.sin(math.radians(translationAngle-absYaw)) / \
             2.0/relativeAlt
 
         # Rotates AprilTag without clipping
