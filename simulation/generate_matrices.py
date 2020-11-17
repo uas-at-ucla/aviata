@@ -87,6 +87,7 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
 
     geometry = {'rotors': structure_rotors}
     A, B = px4_generate_mixer.geometry_to_mix(geometry) #TODO Work on the inverse step in this function
+    B[abs(B) < 0.000001] = 0.0
     A_4dof = np.delete(A, [3,4], 0)
     if len(missing_drones) == 0:
         B_px, B_norm = px4_generate_mixer.normalize_mix_px4(B)

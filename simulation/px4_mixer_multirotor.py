@@ -145,7 +145,6 @@ def airmode_rpy(m_sp, P, u_min, u_max):
     return (u, u_prime_yaw)
 
 
-# TODO: It may be possible to modify this to better guarantee stability
 def normal_mode(m_sp, P, u_min, u_max):
     """
     Mix roll, pitch, yaw and thrust.
