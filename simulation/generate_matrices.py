@@ -33,12 +33,14 @@ def parallel_axis_theorem(I, m, R):
 
 
 def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
-    drone_rotors = []
+    drone_rotors_sequential = []
     CW = False
     angle = (TWO_PI/constants.num_rotors) / 2
+    if constants.drones_face_inward:
+        angle -= math.pi
     for i in range(constants.num_rotors):
         rotor_pos = constants.r * np.exp(1j * angle)
-        drone_rotors.append({
+        drone_rotors_sequential.append({
             'position': np.array([np.real(rotor_pos) + constants.R, np.imag(rotor_pos), 0]),
             'direction': 'CW' if CW else 'CCW',
             'axis': np.array([0.0, 0.0, -1.0]),
@@ -48,13 +50,33 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
         CW = (not CW)
         angle += (TWO_PI/constants.num_rotors)
 
+    # Reorder rotors to conform to PX4 convention: https://docs.px4.io/v1.11/en/airframes/airframe_reference.html#hexarotor-x 
+    drone_rotors = [None] * constants.num_rotors
+    drone_rotors[4] = drone_rotors_sequential[0]
+    drone_rotors[0] = drone_rotors_sequential[1]
+    drone_rotors[3] = drone_rotors_sequential[2]
+    drone_rotors[5] = drone_rotors_sequential[3]
+    drone_rotors[1] = drone_rotors_sequential[4]
+    drone_rotors[2] = drone_rotors_sequential[5]
+
     structpayload_pos = np.array([0.0, 0.0, constants.structpayload_drone_height + constants.drone_prop_height])
     M = constants.M_structure_payload
     COM = constants.M_structure_payload * structpayload_pos
 
+    if len(missing_drones) == 0: # establish drone flight controller angles for initial geometry
+        drone_angles = []
+        drone_angle_offset = 0
+        if constants.drones_face_inward:
+            drone_angle_offset = -math.pi
+
     structure_rotors = []
     angle = (TWO_PI/constants.num_drones) / 2
     for i in range(constants.num_drones):
+        if len(missing_drones) == 0:
+            drone_angle = angle + drone_angle_offset
+            if drone_angle > math.pi:
+                drone_angle -= TWO_PI
+            drone_angles.append(np.degrees(drone_angle))
         rotation = Rotation.from_rotvec(np.array([0, 0, angle]))
         if i not in missing_drones:
             M += constants.M_drone
@@ -80,7 +102,7 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
         if i not in missing_drones:
             rotation = Rotation.from_rotvec(np.array([0, 0, angle]))
             drone_pos = rotation.apply(np.array([constants.R, 0, constants.drone_prop_height]))
-            I += parallel_axis_theorem(constants.I_drone, constants.M_drone, drone_pos - COM)
+            I += parallel_axis_theorem(constants.I_drone, constants.M_drone, drone_pos - COM) # Currently assumes that drone moment of inertia is symmetric
         angle += (TWO_PI/constants.num_drones)
 
     inertia = np.array([I[0,0], I[1,1], I[2,2], M, M, M]) # mass & moment of inertia values used to match acceleration scale between configurations
@@ -110,6 +132,9 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
     geometry['thr_hover'] = (M * constants.g) * B_norm[5]
     geometry['I'] = I
     geometry['Iinv'] = np.linalg.inv(I)
+
+    if len(missing_drones) == 0:
+        geometry['drone_angles'] = drone_angles
 
     # break up into a mixer for each individual drone
     # geometries = []
@@ -165,7 +190,8 @@ if __name__ == '__main__':
 
     header = px4_generate_mixer.generate_mixer_multirotor_header(combined_geometries_list,
                                                                  use_normalized_mix=True,
-                                                                 use_6dof=False)
+                                                                 use_6dof=False,
+                                                                 constants=constants)
     print(header)
 
     key = geometry_name(missing_drones=[])

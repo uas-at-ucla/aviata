@@ -9,6 +9,7 @@ num_rotors = 6 # Number of rotors on a single drone
 r = 0.550 / 2 # Distance of each rotor from the center the drone (meters)
 R = 1.25 # Distance between the center of a drone and the center of the structure (meters) # TODO
 num_drones = 8 # Maximum number of drones on the structure
+drones_face_inward = False # True if the front of each drone faces inward when docked, False if they face outward
 
 M_drone = 1.769 # mass of a single drone in kg TODO: drones will probably be a little heavier
 M_structure = 4.1771 # mass of the structure in kg
