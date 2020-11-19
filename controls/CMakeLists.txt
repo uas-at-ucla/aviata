@@ -13,6 +13,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+set(FastRTPS_INCLUDE_DIR /opt/ros/foxy/include) 
+set(FastRTPS_LIBRARY_RELEASE /opt/ros/foxy/lib/libfastrtps.so)
+
 find_package(ament_cmake)
 IF( ament_cmake_FOUND )
   find_package(rclcpp REQUIRED)
