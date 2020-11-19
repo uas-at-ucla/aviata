@@ -101,16 +101,16 @@ class CameraSimulator:
         april_tag.save(self.output_tag_name)
         white = (255, 255, 255)
         self.display.fill(white)
-        self.display.blit(pygame.image.load(self.output_tag_name), (self.display.get_width()*0.50+offsetx -
-                                           scale/2.0, self.display.get_height()*0.50-offsety+scale/2.0))
+        self.display.blit(pygame.image.load(self.output_tag_name), (self.display.get_width()*0.50-offsetx -
+                                           scale/2.0, self.display.get_height()*0.50+offsety+scale/2.0))
 
         # Converts image to OpenCV format and returns it
         background = Image.open(self.background_image_name)
         img = Image.open(self.output_tag_name)
         background = background.resize(
             (self.display.get_width(), self.display.get_height()), Image.ANTIALIAS)
-        background.paste(img, (int(self.display.get_width()*0.50+offsetx -
-                                   scale/2.0), int(self.display.get_height()*0.50-offsety+scale/2.0)))
+        background.paste(img, (int(self.display.get_width()*0.50-offsetx -
+                                   scale/2.0), int(self.display.get_height()*0.50+offsety+scale/2.0)))
         opencvImage = cv2.cvtColor(np.array(background), cv2.COLOR_RGB2BGR)
         pygame.display.update()
         return opencvImage
@@ -121,4 +121,4 @@ if __name__ == "__main__":
     cs = CameraSimulator()
 
     while True:
-        cs.updateCurrentImage(10, -9, 5, 0)
+    #    cs.updateCurrentImage(10, -9, 5, 0)
