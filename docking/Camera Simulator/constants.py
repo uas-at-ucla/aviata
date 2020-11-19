@@ -1,7 +1,7 @@
 #Relative position and rotation of drone
 #Measured in meters, East and North are positive
-RELATIVE_LAT=0.0
-RELATIVE_LON=0.0
+RELATIVE_LAT=0.25
+RELATIVE_LON=-1.5
 RELATIVE_ALT=22.5
 #Measured degrees counterclockwise from North
 RELATIVE_YAW=45.0
