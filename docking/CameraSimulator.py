@@ -45,7 +45,7 @@ class CameraSimulator:
         self.target_lat=targetx
         self.target_lon=targety
         self.target_alt=targetalt
-        self.target_yaw=0        # Declares display factor constant (determines size of image relative to camera field of view)
+        self.target_yaw=targetyaw        # Declares display factor constant (determines size of image relative to camera field of view)
         DISPLAY_SCALE = 1750
 
         # Initializes display and image
@@ -61,7 +61,7 @@ class CameraSimulator:
     def getViewScaleConstant(self, TARGET_SIZE, DISPLAY_SCALE_CONSTANT):
         return DISPLAY_SCALE_CONSTANT*TARGET_SIZE/2.0/100.0
 
-    def updateCurrentImage(self, absLon, absLat, absAlt, absYaw):
+    def updateCurrentImage(self, absLat, absLon, absAlt, absYaw):
         """
         Target faces north; yaw is degrees from north counterclockwise (<- v -> ^)
         """
@@ -85,7 +85,7 @@ class CameraSimulator:
         # Sets translation of AprilTag
         # Converts cartesian translation to polar coordinates
         translationDist = math.sqrt(relativeLat**2+relativeLon**2)
-        translationAngle = math.degrees(np.arctan2(absLon, absLat))
+        translationAngle = math.degrees(np.arctan2(relativeLon, relativeLat))
         # Adjusts for relative rotation then converts to pixel offset
         offsetx = self.scale_constant*translationDist * \
             math.cos(math.radians(translationAngle-absYaw)) / \
@@ -95,14 +95,14 @@ class CameraSimulator:
             2.0/relativeAlt
 
         # Rotates AprilTag without clipping
-        april_tag = april_tag.rotate(-1*relativeYaw, expand=True, fillcolor="#ffffff")
+        april_tag = april_tag.rotate(-1*self.target_yaw, expand=True, fillcolor="#ffffff")
 
         # Displays image for debug
         april_tag.save(self.output_tag_name)
         white = (255, 255, 255)
         self.display.fill(white)
         self.display.blit(pygame.image.load(self.output_tag_name), (self.display.get_width()*0.50-offsetx -
-                                           scale/2.0, self.display.get_height()*0.50+offsety+scale/2.0))
+                                           scale/2.0, self.display.get_height()*0.50+offsety-scale/2.0))
 
         # Converts image to OpenCV format and returns it
         background = Image.open(self.background_image_name)
@@ -110,7 +110,7 @@ class CameraSimulator:
         background = background.resize(
             (self.display.get_width(), self.display.get_height()), Image.ANTIALIAS)
         background.paste(img, (int(self.display.get_width()*0.50-offsetx -
-                                   scale/2.0), int(self.display.get_height()*0.50+offsety+scale/2.0)))
+                                   scale/2.0), int(self.display.get_height()*0.50+offsety-scale/2.0)))
         opencvImage = cv2.cvtColor(np.array(background), cv2.COLOR_RGB2BGR)
         pygame.display.update()
         return opencvImage
@@ -118,7 +118,7 @@ class CameraSimulator:
 
 
 if __name__ == "__main__":
-    cs = CameraSimulator()
+    cs = CameraSimulator(2, -2, 5, 45)
 
     while True:
-    #    cs.updateCurrentImage(10, -9, 5, 0)
+       cs.updateCurrentImage(1, 1, 8, 0)

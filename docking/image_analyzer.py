@@ -60,7 +60,35 @@ def getErrors(img):
             alt_err = 0.50 / math.tan(math.radians(CAMERA_HORIZ_FOV * 0.50)) * width * tag_pixel_ratio
 
             # Finds difference in rotation
-            rot_err=math.atan2(0.50*(rect[2][0][0]+rect[3][0][1]-rect[0][0][1]-rect[1][0][1]),0.50*(rect[2][0][0]-rect[3][0][0]+rect[1][0][0]-rect[0][0][0]))
+            # rot_err=math.atan2(0.50*(rect[2][0][1]+rect[3][0][1]-rect[0][0][1]-rect[1][0][1]),0.50*(rect[2][0][0]-rect[3][0][0]+rect[1][0][0]-rect[0][0][0]))
+            y3 = rect[3][0][1]
+            y0 = rect[0][0][1]
+            x3 = rect[3][0][0]
+            x0 = rect[0][0][0]
+
+            # account for small errors
+            if abs(y3 - y0) < 3:
+                y3 = y0
+            if abs(x3 - x0) < 3:
+                x3 = x0
+
+            print(rect)
+            if x3 - x0 != 0:
+                incline_angle = math.degrees(math.atan2(y3 - y0, x3 - x0))
+            else:
+                incline_angle = 0
+            
+            rot_err = 0
+            if y3 <= y0 and x3 > x0: # y's are flipped since pixel coordinates has origin at top left corner instead of bottom left
+                rot_err = 90 - incline_angle
+            elif y3 > y0 and x3 >= x0:
+                rot_err = 180 - incline_angle
+            elif y3 >= y0 and x3 < x0:
+                rot_err = 270 - incline_angle
+            else: # y3 < y0 and x3 <= x0:
+                rot_err = 360 - incline_angle
+            
+            print(rot_err)
 
             # Absolute horizontal difference (meters)
             x_offset = det_center[0] - img_center[0] # offset east from center
@@ -78,7 +106,7 @@ def getErrors(img):
 
 if __name__ == "__main__":
     # img = cv2.imread("apriltag_screen2.jpg")
-    img = cv2.imread("sample-apriltag.jpg")
+    img = cv2.imread("updatedTag.png")
 
     scale_percent = 30 # percent of original size
     width = int(img.shape[1] * scale_percent / 100)
@@ -87,5 +115,5 @@ if __name__ == "__main__":
     # resize image
     resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
 
-    x_err, y_err = getErrors(resized)
-    print(x_err, y_err)
+    x_err, y_err, z_err, rot_err = getErrors(resized)
+    print(x_err, y_err, z_err, rot_err)
