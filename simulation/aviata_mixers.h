@@ -7,6 +7,7 @@
 
 #define AVIATA_NUM_DRONES 8
 #define AVIATA_NUM_ROTORS 6
+#define AVIATA_MAX_MISSING_DRONES 4
 
 static constexpr float _config_aviata_drone_angle[] {
 	22.500000,
@@ -9002,5 +9003,4 @@ const char* _config_aviata_key[] {
 } // anonymous namespace
 
 #endif /* _AVIATA_MIXER_MULTI_TABLES */
-
 

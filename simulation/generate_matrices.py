@@ -186,12 +186,14 @@ def generate_aviata_permutations(max_missing_drones):
 
 
 if __name__ == '__main__':
-    combined_geometries, combined_geometries_list = generate_aviata_permutations(max_missing_drones=4)
+    max_missing_drones = 4
+    combined_geometries, combined_geometries_list = generate_aviata_permutations(max_missing_drones)
 
     header = px4_generate_mixer.generate_mixer_multirotor_header(combined_geometries_list,
                                                                  use_normalized_mix=True,
                                                                  use_6dof=False,
-                                                                 constants=constants)
+                                                                 constants=constants,
+                                                                 max_missing_drones=max_missing_drones)
     print(header)
 
     key = geometry_name(missing_drones=[])
