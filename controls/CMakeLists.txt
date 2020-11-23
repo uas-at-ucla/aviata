@@ -34,9 +34,10 @@ IF( ament_cmake_FOUND )
 ENDIF()
 
 target_link_libraries(aviata
+    MAVSDK::mavsdk
     MAVSDK::mavsdk_telemetry
     MAVSDK::mavsdk_action
-    MAVSDK::mavsdk
+    MAVSDK::mavsdk_mavlink_passthrough
 )
 
 IF( ament_cmake_FOUND )

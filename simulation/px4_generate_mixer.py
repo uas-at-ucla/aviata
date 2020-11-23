@@ -226,7 +226,7 @@ def normalize_mix_px4(B):
 
     return B_px, B_norm
 
-def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, use_6dof=False, constants=None):
+def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, use_6dof=False, constants=None, max_missing_drones=0):
     '''
     Generate C header file with same format as multi_tables.py
     TODO: rewrite using templates (see generation of uORB headers)
@@ -245,7 +245,8 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
     if constants:
         buf.write(u"#define AVIATA_NUM_DRONES {}\n".format(constants.num_drones))
         buf.write(u"#define AVIATA_NUM_ROTORS {}\n".format(constants.num_rotors))
-        buf.write(u"\n")
+    buf.write(u"#define AVIATA_MAX_MISSING_DRONES {}\n".format(max_missing_drones))
+    buf.write(u"\n")
 
     buf.write(u"static constexpr float _config_aviata_drone_angle[] {\n")
     for drone_angle in geometries_list[0]['drone_angles']:

@@ -4,6 +4,10 @@
 #define TELEMETRY_CONSOLE_TEXT "\033[34m" // Turn text on console blue
 #define NORMAL_CONSOLE_TEXT "\033[0m" // Restore normal console colour
 
+#define MAV_CMD_AVIATA_FINALIZE_DOCKING 43001
+#define MAV_CMD_AVIATA_SET_CONFIGURATION 43002
+#define MAV_CMD_AVIATA_SET_STANDALONE 43003
+
 int takeoff_and_land_test(int argc, char** argv);
 
 int connect_to_pixhawk(std::string connection_url);

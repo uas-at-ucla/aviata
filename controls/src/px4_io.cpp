@@ -9,6 +9,7 @@
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/action/action.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
+#include <mavsdk/plugins/mavlink_passthrough/mavlink_passthrough.h>
 #include <iostream>
 #include <thread>
 
@@ -75,6 +76,9 @@ int takeoff_and_land_test(int argc, char** argv)
 
     auto system = mavsdk.systems().at(0);
 
+    MavlinkPassthrough mavlink_passthrough(system);
+    MavlinkPassthrough::CommandLong cmd;
+
     // Register a callback so we get told when components (camera, gimbal) etc
     // are found.
     system->register_component_discovered_callback(component_discovered);
@@ -114,6 +118,19 @@ int takeoff_and_land_test(int argc, char** argv)
         return 1;
     }
 
+    // AVIATA Test - Finalize docking in position 0, with drone 1 missing
+    cmd.target_sysid = system->get_system_id();
+    cmd.target_compid = 0;
+    cmd.command = MAV_CMD_AVIATA_FINALIZE_DOCKING;
+    cmd.param1 = 0; // docking slot
+    cmd.param2 = 1; // missing_drones[0]
+    cmd.param3 = NAN;
+    cmd.param4 = NAN;
+    cmd.param5 = NAN;
+    cmd.param6 = NAN;
+    cmd.param7 = NAN;
+    mavlink_passthrough.send_command_long(cmd);
+
     // Take off
     std::cout << "Taking off..." << std::endl;
     const Action::Result takeoff_result = action->takeoff();
@@ -125,6 +142,18 @@ int takeoff_and_land_test(int argc, char** argv)
 
     // Let it hover for a bit before landing again.
     sleep_for(seconds(10));
+
+    // AVIATA Test - Update configuration to be drones 1 and 2 missing
+    cmd.target_sysid = system->get_system_id();
+    cmd.target_compid = 0;
+    cmd.command = MAV_CMD_AVIATA_SET_CONFIGURATION;
+    cmd.param2 = 1; // missing_drones[0]
+    cmd.param3 = 2; // missing_drones[1]
+    cmd.param4 = NAN;
+    cmd.param5 = NAN;
+    cmd.param6 = NAN;
+    cmd.param7 = NAN;
+    mavlink_passthrough.send_command_long(cmd);
 
     std::cout << "Landing..." << std::endl;
     const Action::Result land_result = action->land();
@@ -140,6 +169,12 @@ int takeoff_and_land_test(int argc, char** argv)
         sleep_for(seconds(1));
     }
     std::cout << "Landed!" << std::endl;
+
+    // AVIATA Test - Set to undocked
+    cmd.target_sysid = system->get_system_id();
+    cmd.target_compid = 0;
+    cmd.command = MAV_CMD_AVIATA_SET_STANDALONE;
+    mavlink_passthrough.send_command_long(cmd);
 
     // We are relying on auto-disarming but let's keep watching the telemetry for a bit longer.
     sleep_for(seconds(3));
