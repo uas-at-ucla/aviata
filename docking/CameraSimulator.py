@@ -95,7 +95,7 @@ class CameraSimulator:
             2.0/relativeAlt
 
         # Rotates AprilTag without clipping
-        april_tag = april_tag.rotate(-1*self.target_yaw, expand=True, fillcolor="#ffffff")
+        april_tag = april_tag.rotate(-1*relativeYaw, expand=True, fillcolor="#ffffff")
 
         # Displays image for debug
         april_tag.save(self.output_tag_name)
