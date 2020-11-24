@@ -7,7 +7,7 @@ import cv2
 import CameraSimulator
 
 #Declares display factor constant (determines size of image relative to camera field of view)
-DISPLAY_SCALE=1750
+DISPLAY_SCALE=1050
 
 #Initializes display and image
 pygame.init()

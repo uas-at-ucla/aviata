@@ -32,11 +32,20 @@ class CameraSimulator:
     output_tag_name = 'updatedTag.png'
     april_tag = Image.open('Camera Simulator/tag_36h11.png')
 
-    def __init__(self):
+    #Updates target location dynamically
+    def updateTargetLocation(self, targetx,targety,targetalt,targetyaw):
+        self.target_lat=targetx
+        self.target_lon=targety
+        self.target_alt=targetalt
+        self.target_yaw=0
+
+    def __init__(self,targetx,targety,targetalt,targetyaw):
         self.scale_constant = self.getViewScaleConstant(TARGET_SIZE, 1750)
         self.display_scale = 1750
-
-        # Declares display factor constant (determines size of image relative to camera field of view)
+        self.target_lat=targetx
+        self.target_lon=targety
+        self.target_alt=targetalt
+        self.target_yaw=targetyaw        # Declares display factor constant (determines size of image relative to camera field of view)
         DISPLAY_SCALE = 1750
 
         # Initializes display and image
@@ -52,20 +61,21 @@ class CameraSimulator:
     def getViewScaleConstant(self, TARGET_SIZE, DISPLAY_SCALE_CONSTANT):
         return DISPLAY_SCALE_CONSTANT*TARGET_SIZE/2.0/100.0
 
-    def updateCurrentImage(self, relativeLon, relativeLat, relativeAlt, relativeYaw):
+    def updateCurrentImage(self, absLat, absLon, absAlt, absYaw):
         """
-        Target is centered at (0, 0) and longitude and latitude are the drone's position relative to this location
-        TODO: Should maybe make these coordinates concrete so we can place the target somewhere the drone isn't
-
-        Target is at 0 altitude; drone must be above it
         Target faces north; yaw is degrees from north counterclockwise (<- v -> ^)
         """
+        #Converts from absolute to relative coordinates
+        relativeLat=absLat-self.target_lat
+        relativeLon=absLon-self.target_lon
+        relativeAlt=absAlt-self.target_alt
+        relativeYaw=absYaw-self.target_yaw
 
         # Protects against invalid altitude
-        if(RELATIVE_ALT <= 0):
+        if(relativeAlt <= 0):
             print("Altitude too low")
-            return cv2.imread(self.background_image_name, 0)
             pygame.quit()
+            return cv2.imread(self.background_image_name, 0)
             quit()
 
         # Resizes Image given the altitude and precomputed scale factor (scale precomputed for efficiency)
@@ -75,13 +85,13 @@ class CameraSimulator:
         # Sets translation of AprilTag
         # Converts cartesian translation to polar coordinates
         translationDist = math.sqrt(relativeLat**2+relativeLon**2)
-        translationAngle = math.degrees(np.arctan2(relativeLat, relativeLon))
+        translationAngle = math.degrees(np.arctan2(relativeLon, relativeLat))
         # Adjusts for relative rotation then converts to pixel offset
         offsetx = self.scale_constant*translationDist * \
-            math.cos(math.radians(translationAngle-relativeYaw)) / \
+            math.cos(math.radians(translationAngle-absYaw)) / \
             2.0/relativeAlt
         offsety = self.scale_constant*translationDist * \
-            math.sin(math.radians(translationAngle-relativeYaw)) / \
+            math.sin(math.radians(translationAngle-absYaw)) / \
             2.0/relativeAlt
 
         # Rotates AprilTag without clipping
@@ -108,7 +118,7 @@ class CameraSimulator:
 
 
 if __name__ == "__main__":
-    cs = CameraSimulator()
+    cs = CameraSimulator(2, -2, 5, 45)
 
     while True:
-        cs.updateCurrentImage(10, -9, 5, 0)
+       cs.updateCurrentImage(1, 1, 8, 0)

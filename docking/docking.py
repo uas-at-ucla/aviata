@@ -42,8 +42,8 @@ async def dock():
         print(f"Using specified image {image_filename}")
 
     # Start the camera simulator
-    camera_simulator = CameraSimulator() # position of target
-
+    camera_simulator = CameraSimulator(2, -2,0,45) # position of target
+    
     # connect to the drone
     drone = System()
     await drone.connect(system_address="udp://:14540")
@@ -108,14 +108,14 @@ async def dock():
         x_err, y_err, alt_err, rot_err = errs
 
         # 3. move according to errors
-        north_velocity = y_err * 4 # no I or D yet
-        east_velocity = x_err * 4 # no I or D yet
-        down_velocity = alt_err * .2
-        rot_velocity = rot_err * -1.0
+        north_velocity = y_err * 4 / 5 # no I or D yet
+        east_velocity = x_err * 4 / 5 # no I or D yet
+        down_velocity = alt_err * .2 / 5
+        rot_angle = rot_err # yaw is in degrees, not degrees per second. must be set absolutely
         print(f"Setting velocities to: {north_velocity} north, {east_velocity} east, {down_velocity} down")
 
         await drone.offboard.set_velocity_ned(
-            VelocityNedYaw(north_velocity, east_velocity, down_velocity, rot_velocity)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
+            VelocityNedYaw(north_velocity, east_velocity, down_velocity, rot_angle)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
 
         # if y_err < .10 and x_err < .10:
         #     print("Close enough to target, landing")

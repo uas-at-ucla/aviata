@@ -24,7 +24,7 @@ def updateCurrentImage(aprilTag, scaleConstant, display, relativeAlt,relativeLat
     #Sets translation of AprilTag
     #Converts cartesian translation to polar coordinates
     translationDist=math.sqrt(relativeLat**2+relativeLon**2)
-    translationAngle=math.degrees(np.arctan2(relativeLat,relativeLon))
+    translationAngle = math.degrees(np.arctan2(relativeLon, relativeLat))
     #Adjusts for relative rotation then converts to pixel offset
     offsetx=display_scale*translationDist*math.cos(math.radians(translationAngle-relativeYaw))/2.0/relativeAlt
     offsety=display_scale*translationDist*math.sin(math.radians(translationAngle-relativeYaw))/2.0/relativeAlt
@@ -37,13 +37,13 @@ def updateCurrentImage(aprilTag, scaleConstant, display, relativeAlt,relativeLat
     aprilTag=pygame.image.load("updatedTag.png")
     white=(255,255,255)
     display.fill(white)
-    display.blit(aprilTag, (display.get_width()*0.50-offsetx-scale/2.0,display.get_height()*0.50+offsety-scale/2.0))
+    display.blit(aprilTag, (display.get_width()*0.50-offsetx-scale/2.0,display.get_height()*0.50+offsety+scale/2.0))
     
     #Converts image to OpenCV format and returns it
     background=Image.open("BACKGROUND.jpg")
     img=Image.open("updatedTag.png")
     background=background.resize((display.get_width(),display.get_height()),Image.ANTIALIAS)
-    background.paste(img,(int(display.get_width()*0.50-offsetx-scale/2.0),int(display.get_height()*0.50+offsety-scale/2.0)))
+    background.paste(img,(int(display.get_width()*0.50-offsetx-scale/2.0),int(display.get_height()*0.50+offsety+scale/2.0)))
     opencvImage=cv2.cvtColor(np.array(background),cv2.COLOR_RGB2BGR)
     pygame.display.update()
     return opencvImage
