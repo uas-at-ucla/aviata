@@ -42,7 +42,7 @@ async def dock():
         print(f"Using specified image {image_filename}")
 
     # Start the camera simulator
-    camera_simulator = CameraSimulator(2, -2,0,45) # position of target
+    camera_simulator = CameraSimulator(1, 2,0,225) # position of target
     
     # connect to the drone
     drone = System()
@@ -84,13 +84,8 @@ async def dock():
         return
 
     await drone.offboard.set_velocity_ned(
-        VelocityNedYaw(0.0, 0.0, 0.0, -160.0))
+        VelocityNedYaw(0.0, 0.0, 0.0, 0))
     await asyncio.sleep(2)
-    print("Rotating")
-    # await drone.offboard.set_velocity_ned(
-    #     VelocityNedYaw(0.0, -0.5, 0.0, 0.0))
-    # print("Flying away for a bit")
-    # await asyncio.sleep(5)
 
 
     # Get telemetry periodically from the drone
@@ -99,7 +94,7 @@ async def dock():
 
     while True:
         # 1. get image from camera
-        img = camera_simulator.updateCurrentImage(east, north, down * -1.0, yaw * -1.0)
+        img = camera_simulator.updateCurrentImage(east, north, down * -1.0, yaw)
 
         # 2. process image to get errors for center/height/rotation
         errs = getErrors(img)
@@ -111,8 +106,7 @@ async def dock():
         north_velocity = y_err * 4 / 5 # no I or D yet
         east_velocity = x_err * 4 / 5 # no I or D yet
         down_velocity = alt_err * .2 / 5
-        rot_angle = rot_err # yaw is in degrees, not degrees per second. must be set absolutely
-        print(f"Setting velocities to: {north_velocity} north, {east_velocity} east, {down_velocity} down")
+        rot_angle = yaw + rot_err # yaw is in degrees, not degrees per second. must be set absolutely
 
         await drone.offboard.set_velocity_ned(
             VelocityNedYaw(north_velocity, east_velocity, down_velocity, rot_angle)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
@@ -139,7 +133,7 @@ async def get_telemetry_rotation(drone):
 
     await drone.telemetry.set_rate_attitude(20) # set update rate, hertz 
     async for angles in drone.telemetry.attitude_euler():
-        yaw = angles.yaw_deg
+        yaw = angles.yaw_deg # 0 degrees is north, positive cw, negative ccw, between -180 and +180
 
 
 async def get_telemetry_position(drone):
@@ -149,12 +143,10 @@ async def get_telemetry_position(drone):
 
     await drone.telemetry.set_rate_position_velocity_ned(20) # set update rate, hertz 
     async for position in drone.telemetry.position_velocity_ned():
-        # print(position.position)
         p = position.position
         north = p.north_m
         east = p.east_m
         down = p.down_m
-        print(east, " ", north, " ", down, " ", 0)
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

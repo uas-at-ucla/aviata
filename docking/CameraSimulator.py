@@ -3,6 +3,7 @@ import numpy as np
 import math
 import cv2
 from PIL import Image
+from image_analyzer import getErrors
 
 #################
 ## Copy of Camera\ Simulator/CameraSimulator.py to get around weird import errors
@@ -37,7 +38,7 @@ class CameraSimulator:
         self.target_lat=targetx
         self.target_lon=targety
         self.target_alt=targetalt
-        self.target_yaw=0
+        self.target_yaw=targetyaw
 
     def __init__(self,targetx,targety,targetalt,targetyaw):
         self.scale_constant = self.getViewScaleConstant(TARGET_SIZE, 1750)
@@ -63,13 +64,18 @@ class CameraSimulator:
 
     def updateCurrentImage(self, absLat, absLon, absAlt, absYaw):
         """
-        Target faces north; yaw is degrees from north counterclockwise (<- v -> ^)
+        Target faces north
+        absLat -- drone's latitude in meters north
+        absLon -- drone's longitude in meters east
+        absAlt -- drone's altitude in meters up
+        absYaw -- drone's yaw in degrees from north; positive is clockwise, negative is counterclockwise
+                  -180 < absYaw < 180 (where 0 is true north and +/-180 is true south)
         """
         #Converts from absolute to relative coordinates
         relativeLat=absLat-self.target_lat
         relativeLon=absLon-self.target_lon
         relativeAlt=absAlt-self.target_alt
-        relativeYaw=absYaw-self.target_yaw
+        relativeYaw=absYaw-self.target_yaw # degrees from north clockwise
 
         # Protects against invalid altitude
         if(relativeAlt <= 0):
@@ -88,10 +94,10 @@ class CameraSimulator:
         translationAngle = math.degrees(np.arctan2(relativeLon, relativeLat))
         # Adjusts for relative rotation then converts to pixel offset
         offsetx = self.scale_constant*translationDist * \
-            math.cos(math.radians(translationAngle-absYaw)) / \
+            math.cos(math.radians(translationAngle)) / \
             2.0/relativeAlt
         offsety = self.scale_constant*translationDist * \
-            math.sin(math.radians(translationAngle-absYaw)) / \
+            math.sin(math.radians(translationAngle)) / \
             2.0/relativeAlt
 
         # Rotates AprilTag without clipping
@@ -118,7 +124,11 @@ class CameraSimulator:
 
 
 if __name__ == "__main__":
-    cs = CameraSimulator(2, -2, 5, 45)
+    cs = CameraSimulator(0, 0, 5, 0)
 
+    angle = 0
     while True:
-       cs.updateCurrentImage(1, 1, 8, 0)
+       image = cs.updateCurrentImage(0, 0, 8, angle)
+       angle = angle + 1
+       errors = getErrors(image)
+       print(errors)

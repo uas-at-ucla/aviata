@@ -48,7 +48,6 @@ def getErrors(img):
             for i in range (0,4):
                 for j in range (i+1,4):
                     sidelist.append(math.sqrt((rect[i][0][0] - rect[j][0][0]) ** 2 + (rect[i][0][1] - rect[j][0][1]) ** 2))
-                    # print(sidelist)
             sidelist.sort()
             sideAvg = 0
             for i in range(4):
@@ -60,35 +59,27 @@ def getErrors(img):
             alt_err = 0.50 / math.tan(math.radians(CAMERA_HORIZ_FOV * 0.50)) * width * tag_pixel_ratio
 
             # Finds difference in rotation
-            # rot_err=math.atan2(0.50*(rect[2][0][1]+rect[3][0][1]-rect[0][0][1]-rect[1][0][1]),0.50*(rect[2][0][0]-rect[3][0][0]+rect[1][0][0]-rect[0][0][0]))
             y3 = rect[3][0][1]
             y0 = rect[0][0][1]
             x3 = rect[3][0][0]
             x0 = rect[0][0][0]
 
-            # account for small errors
-            if abs(y3 - y0) < 3:
-                y3 = y0
-            if abs(x3 - x0) < 3:
-                x3 = x0
-
-            print(rect)
             if x3 - x0 != 0:
+                # Look at bottom left corner and top left corner to determine angle from y-axis
                 incline_angle = math.degrees(math.atan2(y3 - y0, x3 - x0))
+
+                # Convert angle so that 0 degrees is north, positive angles are clockwise, negative angles are ccw
+                # -180 < incline_angle < 180
+                incline_angle = incline_angle * -1 + 90
+                if incline_angle > 0:
+                    incline_angle = incline_angle - 180
+                else:
+                    incline_angle = incline_angle + 180
+            elif y3 > y0:
+                incline_angle = -180
             else:
                 incline_angle = 0
-            
-            rot_err = 0
-            if y3 <= y0 and x3 > x0: # y's are flipped since pixel coordinates has origin at top left corner instead of bottom left
-                rot_err = 90 - incline_angle
-            elif y3 > y0 and x3 >= x0:
-                rot_err = 180 - incline_angle
-            elif y3 >= y0 and x3 < x0:
-                rot_err = 270 - incline_angle
-            else: # y3 < y0 and x3 <= x0:
-                rot_err = 360 - incline_angle
-            
-            print(rot_err)
+            rot_err = incline_angle
 
             # Absolute horizontal difference (meters)
             x_offset = det_center[0] - img_center[0] # offset east from center
@@ -96,7 +87,6 @@ def getErrors(img):
             x_err = x_offset * tag_pixel_ratio
             y_err = y_offset * tag_pixel_ratio
 
-            print("Errors: ", x_err, " ", y_err, " ", alt_err, " ", rot_err)
             return float(x_err), float(y_err), float(alt_err), float(rot_err)
 
             break
@@ -116,4 +106,3 @@ if __name__ == "__main__":
     resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
 
     x_err, y_err, z_err, rot_err = getErrors(resized)
-    print(x_err, y_err, z_err, rot_err)
