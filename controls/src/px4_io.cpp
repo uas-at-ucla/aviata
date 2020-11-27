@@ -25,7 +25,6 @@ System* connect_to_pixhawk(std::string connection_url)
 {
     ConnectionResult connection_result;
     connection_result = mav.add_any_connection(connection_url);
-
     // connect
     if (connection_result != ConnectionResult::Success) {
         std::cout << ERROR_CONSOLE_TEXT << "Connection failed: " << connection_result
@@ -43,11 +42,9 @@ System* connect_to_pixhawk(std::string connection_url)
         new_system_promise.set_value(mav.systems().at(0));
         mav.subscribe_on_new_system(nullptr);
     });
-
     auto sys = new_system_future.get();
     return sys;
 }
-
 
 
 ////////////////////////////////////////////

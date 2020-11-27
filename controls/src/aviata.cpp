@@ -4,7 +4,7 @@
 
 //enum DroneState now in drone.hpp
 
-drone SWARM[8];
+drone SWARM[10]; // eventually switch to dynamic size?
 
 int main(int argc, char** argv) {
     takeoff_and_land_test(argc, argv);
