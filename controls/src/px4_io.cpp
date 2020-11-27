@@ -17,6 +17,43 @@ using namespace mavsdk;
 using namespace std::this_thread;
 using namespace std::chrono;
 
+Mavsdk mav; // name change to avoid namespace conflict
+
+System* connect_to_pixhawk(std::string connection_url)
+//returns System pointer if connected, nullptr otherwise
+//Discovering systems (the new way): https://mavsdk.mavlink.io/develop/en/cpp/api_changes.html
+{
+    ConnectionResult connection_result;
+    connection_result = mav.add_any_connection(connection_url);
+
+    // connect
+    if (connection_result != ConnectionResult::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << "Connection failed: " << connection_result
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return nullptr;
+    }
+
+    std::cout << "Waiting to discover system..." << std::endl;
+    // discover system and return 
+    // method copy/pasted from link above
+    auto new_system_promise = std::promise<std::shared_ptr<System>>{};
+    auto new_system_future = new_system_promise.get_future();
+    mav.subscribe_on_new_system([&mav, &new_system_promise]() {
+        std::cout << "Discovered system" << std::endl;
+        new_system_promise.set_value(mav.systems().at(0));
+        mav.subscribe_on_new_system(nullptr);
+    });
+
+    auto sys = new_system_future.get();
+    return sys;
+}
+
+
+
+////////////////////////////////////////////
+// example code below
+////////////////////////////////////////////
+
 void usage(std::string bin_name)
 {
     std::cout << NORMAL_CONSOLE_TEXT << "Usage : " << bin_name << " <connection_url>" << std::endl
@@ -35,14 +72,14 @@ void component_discovered(ComponentType component_type)
 
 int takeoff_and_land_test(int argc, char** argv)
 {
-    Mavsdk mavsdk;
+    //Mavsdk mavsdk;
     std::string connection_url;
     ConnectionResult connection_result;
 
     bool discovered_system = false;
     if (argc == 2) {
         connection_url = argv[1];
-        connection_result = mavsdk.add_any_connection(connection_url);
+        connection_result = mav.add_any_connection(connection_url);
     } else {
         usage(argv[0]);
         return 1;
@@ -55,8 +92,8 @@ int takeoff_and_land_test(int argc, char** argv)
     }
 
     std::cout << "Waiting to discover system..." << std::endl;
-    mavsdk.subscribe_on_new_system([&mavsdk, &discovered_system]() {
-        const auto system = mavsdk.systems().at(0);
+    mav.subscribe_on_new_system([&mav, &discovered_system]() {
+        const auto system = mav.systems().at(0);
 
         if (system->is_connected()) {
             std::cout << "Discovered system" << std::endl;
@@ -74,7 +111,7 @@ int takeoff_and_land_test(int argc, char** argv)
         return 1;
     }
 
-    auto system = mavsdk.systems().at(0);
+    auto system = mav.systems().at(0);
 
     MavlinkPassthrough mavlink_passthrough(system);
     MavlinkPassthrough::CommandLong cmd;

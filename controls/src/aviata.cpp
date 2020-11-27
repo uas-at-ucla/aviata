@@ -1,16 +1,10 @@
 #include "px4_io.hpp"
 #include "network.hpp"
+#include "drone.hpp"
 
-enum DroneState {
-    STANDBY,
-    ARRIVING,
-    DOCKING,
-    DOCKED_FOLLOWER,
-    DOCKED_LEADER,
-    UNDOCKING,
-    DEPARTING,
-    NEEDS_SERVICE
-};
+//enum DroneState now in drone.hpp
+
+drone SWARM[8];
 
 int main(int argc, char** argv) {
     takeoff_and_land_test(argc, argv);

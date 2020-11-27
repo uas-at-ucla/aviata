@@ -10,7 +10,7 @@
 
 int takeoff_and_land_test(int argc, char** argv);
 
-int connect_to_pixhawk(std::string connection_url);
+System* connect_to_pixhawk(std::string connection_url);
 
 void arm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
 
