@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 
 #define ERROR_CONSOLE_TEXT "\033[31m" // Turn text on console red
 #define TELEMETRY_CONSOLE_TEXT "\033[34m" // Turn text on console blue
@@ -10,26 +11,22 @@
 
 int takeoff_and_land_test(int argc, char** argv);
 
-int connect_to_pixhawk(std::string connection_url);
+System* connect_to_pixhawk(std::string connection_url);
 
-void arm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
+void arm_system(mavsdk::System* sys);
+void arm_system(vector<mavsdk::System*> sys); //arm multiple drones
 
-void arm_frame(); // for DOCKED_LEADER (send arm_drone() to followers)
+void disarm_system(mavsdk::System* sys);
+void disarm_system(vector<mavsdk::System*> sys); //disarm multiple drones
 
-void disarm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
+void takeoff_system(mavsdk::System* sys, bool is_leader = false);
+void takeoff_system(vector<mavsdk::System*> sys);
 
-void disarm_frame(); // for DOCKED_LEADER (send disarm_drone() to followers)
+void land_system(mavsdk::System* sys, bool is_leader = false);
+void land_system(vector<mavsdk::System*> sys);
 
-void takeoff_drone(); // for drones in STANDBY
+void goto_gps_position(mavsdk::System* sys, float lat, float lon); // for DOCKED_LEADER (send attitude and thrust to followers)
 
-void takeoff_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
+void get_attitude_and_thrust(mavsdk::System* sys, float q[4], float* thrust);
 
-void land_drone(); // for any undocked drone
-
-void land_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
-
-void goto_gps_position(float lat, float lon); // for DOCKED_LEADER (send attitude and thrust to followers)
-
-void get_attitude_and_thrust(float q[4], float* thrust);
-
-void set_attitude_and_thrust(float q[4], float thrust);
+void set_attitude_and_thrust(mavsdk::System* sys, float q[4], float thrust);
