@@ -11,6 +11,7 @@
 #include <mavsdk/plugins/telemetry/telemetry.h>
 #include <mavsdk/plugins/mavlink_passthrough/mavlink_passthrough.h>
 #include <iostream>
+#include <future>
 #include <thread>
 
 using namespace mavsdk;
@@ -19,7 +20,7 @@ using namespace std::chrono;
 
 Mavsdk mav; // name change to avoid namespace conflict
 
-System* connect_to_pixhawk(std::string connection_url)
+std::shared_ptr<System> connect_to_pixhawk(std::string connection_url)
 //returns System pointer if connected, nullptr otherwise
 //Discovering systems (the new way): https://mavsdk.mavlink.io/develop/en/cpp/api_changes.html
 {
@@ -37,7 +38,7 @@ System* connect_to_pixhawk(std::string connection_url)
     // method copy/pasted from link above
     auto new_system_promise = std::promise<std::shared_ptr<System>>{};
     auto new_system_future = new_system_promise.get_future();
-    mav.subscribe_on_new_system([&mav, &new_system_promise]() {
+    mav.subscribe_on_new_system([&new_system_promise]() {
         std::cout << "Discovered system" << std::endl;
         new_system_promise.set_value(mav.systems().at(0));
         mav.subscribe_on_new_system(nullptr);
@@ -89,7 +90,7 @@ int takeoff_and_land_test(int argc, char** argv)
     }
 
     std::cout << "Waiting to discover system..." << std::endl;
-    mav.subscribe_on_new_system([&mav, &discovered_system]() {
+    mav.subscribe_on_new_system([&discovered_system]() {
         const auto system = mav.systems().at(0);
 
         if (system->is_connected()) {

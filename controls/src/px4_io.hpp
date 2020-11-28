@@ -1,5 +1,9 @@
 #include <string>
 #include <vector>
+#include <mavsdk/mavsdk.h>
+
+using namespace mavsdk;
+using namespace std;
 
 #define ERROR_CONSOLE_TEXT "\033[31m" // Turn text on console red
 #define TELEMETRY_CONSOLE_TEXT "\033[34m" // Turn text on console blue
@@ -11,7 +15,7 @@
 
 int takeoff_and_land_test(int argc, char** argv);
 
-System* connect_to_pixhawk(std::string connection_url);
+std::shared_ptr<System> connect_to_pixhawk(std::string connection_url);
 
 void arm_system(mavsdk::System* sys);
 void arm_system(vector<mavsdk::System*> sys); //arm multiple drones
