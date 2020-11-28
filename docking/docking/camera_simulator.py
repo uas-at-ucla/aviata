@@ -3,7 +3,6 @@ import numpy as np
 import math
 import cv2
 from PIL import Image
-from image_analyzer import getErrors
 
 #################
 ## Copy of Camera\ Simulator/CameraSimulator.py to get around weird import errors
@@ -123,12 +122,9 @@ class CameraSimulator:
 
 
 
-if __name__ == "__main__":
-    cs = CameraSimulator(0, 0, 5, 0)
+# if __name__ == "__main__":
+#     cs = CameraSimulator(0, 0, 5, 0)
 
-    angle = 0
-    while True:
-       image = cs.updateCurrentImage(0, 0, 8, angle)
-       angle = angle + 1
-       errors = getErrors(image)
-       print(errors)
+#     angle = 0
+#     while True:
+#        image = cs.updateCurrentImage(0, 0, 8, angle)
