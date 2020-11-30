@@ -1,4 +1,4 @@
-// #define USE_ROS // Uncomment to enable ROS2 code
+#define USE_ROS // Comment to disable ROS2 code
 
 #include "network.hpp"
 #include <chrono>
@@ -9,8 +9,6 @@
 using namespace std::chrono_literals;
 
 #ifdef USE_ROS
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
 
 // ROS2 example code
 class MinimalPublisher : public rclcpp::Node
@@ -44,28 +42,25 @@ void ros2_test() {
     rclcpp::shutdown();
 }
 
-//TODO
-void send_message() {
-
-}
-
-//TODO
-void subscribe_to_message() {
-
-}
-
-
 #else
 // Dummy code when testing w/o ROS
-
 void ros2_test() {}
-
-void send_message() {
-
-}
-
-void subscribe_to_message() {
-    
-}
-
 #endif
+
+Network::Network() : Node("drone_id_goes_here") {
+
+}
+
+void Network::subscribe_to_status(void (*callback)(DroneStatus)) { // TODO double check correct function pointer format
+    // call ROS2 functions to subscribe to the "status" ROS topic
+    // ROS callback:
+    // {
+    //     DroneStatus status = // convert ROS msg to DroneStatus;
+    //     callback();
+    // }
+}
+
+void Network::send_status(DroneStatus status) {
+    // convert status to a ROS message
+    // status_publisher->publish(message);
+}

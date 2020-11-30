@@ -25,20 +25,25 @@ ENDIF()
 find_package(MAVSDK REQUIRED)
 
 file(GLOB_RECURSE SOURCES
-    src/*.hpp
-    src/*.cpp
+    src/lib/*.hpp
+    src/lib/*.cpp
 )
-add_executable(aviata ${SOURCES})
+add_library(aviata_lib ${SOURCES})
 IF( ament_cmake_FOUND )
-  ament_target_dependencies(aviata rclcpp std_msgs)
+  ament_target_dependencies(aviata_lib rclcpp std_msgs)
 ENDIF()
 
-target_link_libraries(aviata
+target_link_libraries(aviata_lib
     MAVSDK::mavsdk
     MAVSDK::mavsdk_telemetry
     MAVSDK::mavsdk_action
     MAVSDK::mavsdk_mavlink_passthrough
 )
+
+add_executable(aviata src/aviata.cpp)
+add_executable(ground src/ground.cpp)
+target_link_libraries(aviata aviata_lib)
+target_link_libraries(ground aviata_lib)
 
 IF( ament_cmake_FOUND )
   ament_package()

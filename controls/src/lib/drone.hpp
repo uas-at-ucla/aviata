@@ -1,3 +1,5 @@
+#ifndef DRONE_HPP
+#define DRONE_HPP
 
 #include <string>
 #include <mavsdk/mavsdk.h>
@@ -13,11 +15,18 @@ enum DroneState {
     NEEDS_SERVICE
 };
 
-class drone
+struct DroneStatus {
+    std::string id;
+    DroneState state;
+    uint8_t docking_slot;
+    // add telemetry
+};
+
+class Drone
 {
 	public:
-    drone();
-    drone(std::string connection_url);
+    Drone();
+    Drone(std::string connection_url);
 
 	// AVIATA 
 	std::string drone_name;
@@ -46,3 +55,4 @@ class drone
     private:
 };
 
+#endif

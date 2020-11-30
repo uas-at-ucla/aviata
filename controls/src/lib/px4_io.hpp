@@ -1,3 +1,6 @@
+#ifndef PX4_IO_HPP
+#define PX4_IO_HPP
+
 #include <string>
 #include <vector>
 #include <mavsdk/mavsdk.h>
@@ -31,3 +34,5 @@ void goto_gps_position(std::shared_ptr<mavsdk::System> sys, float lat, float lon
 void get_attitude_and_thrust(std::shared_ptr<mavsdk::System> sys, float q[4], float* thrust);
 
 void set_attitude_and_thrust(std::shared_ptr<mavsdk::System> sys, float q[4], float thrust);
+
+#endif
