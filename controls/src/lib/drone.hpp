@@ -2,7 +2,9 @@
 #define DRONE_HPP
 
 #include <string>
+#include <iostream>
 #include <mavsdk/mavsdk.h>
+#include <mavsdk/plugins/telemetry/telemetry.h>
 
 enum DroneState {
     STANDBY,
@@ -15,11 +17,6 @@ enum DroneState {
     NEEDS_SERVICE
 };
 
-// same types from mavsdk so it can directly pass in data from px4
-struct GpsPosition { double latitude_deg; double longitude_deg; float absolute_altitude_m; float relative_altitude_m; }; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_position.html
-struct AttQuatternion { float w; float x; float y; float z; }; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_quaternion.html
-struct Battery { float voltage_v; float remaining_percent; }; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_battery.html
-
 // reference values (copy of values within Drone)
 struct DroneStatus {
     std::string drone_id;
@@ -27,14 +24,23 @@ struct DroneStatus {
     uint8_t docking_slot;
 
     float battery_percent; 
-    GpsPosition gps_position;
+    mavsdk::Telemetry::Position gps_position;
     float yaw;
+};
+
+class Telemetry
+{
+    public:
+        mavsdk::Telemetry::Position position; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_position.html
+        mavsdk::Telemetry::Battery battery; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_quaternion.html
+        mavsdk::Telemetry::Quaternion quarternion; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_battery.html
 };
 
 class Drone
 {
 	public:
     Drone();
+    ~Drone();
     Drone(std::string drone_id, std::string connection_url);
 
 	// AVIATA 
@@ -47,14 +53,12 @@ class Drone
 	//MAVSDK
 	std::string connection_url;
 	std::shared_ptr<mavsdk::System> system;
-    std::shared_ptr<mavsdk::Telemetry> telem;
+    mavsdk::Telemetry telem = mavsdk::Telemetry(system);
 
     //TELEMETRY
-    GpsPosition gps_position;
-    AttQuatternion att_quaternion;
-    Battery batt;
+    Telemetry* telemValues; // pointer to Telemetry object
 
-    void init_telem();
+    void init_telem(); // initializes telemetry values
 
     void update_drone_status(); // call before sending data
 

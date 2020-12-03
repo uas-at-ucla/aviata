@@ -10,41 +10,42 @@ Drone::Drone()
 Drone::Drone(std::string drone_id, std::string connection_url)
 {
     system = connect_to_pixhawk(connection_url);
-    this.drone_id = drone_id;
+    this->drone_id = drone_id;
+    telemValues = new Telemetry();
     init_telem();
     drone_state = STANDBY;
 
-    drone_status.drone_id = this.drone_id;
-    drone_status.drone_state = drone_state;
-    drone_status.docking_slot = docking_slot;
+    drone_status.drone_id = this->drone_id;
+    drone_status.drone_state = this->drone_state;
+    drone_status.docking_slot = this->docking_slot;
+}
+
+Drone::~Drone()
+{
+    delete telemValues;
 }
 
 void Drone::init_telem()
 {
-    telem = std::make_shared<mavsdk::Telemetry>(system);
-
-    telemetry->subscribe_position([&gps_position](mavsdk::Telemetry::Position position) {
-        gps_position = position;
-    }); 
-
-    telemetry->subscribe_attitude_quaternion([&att_quaternion](mavsdk::Telemetry::AttitudeQuaternionCallback quaternion ){
-        att_quaternion = quaternion;
+    telem.subscribe_position([&](mavsdk::Telemetry::Position position) {
+        telemValues->position = position;
     });
-
-    telemetry->subscribe_battery([&batt](mavsdk::Telemetry::BatteryCallback battery){
-        batt = battery;
+    telem.subscribe_attitude_quaternion([&](mavsdk::Telemetry::Quaternion quaternion){
+        telemValues->quarternion = quaternion;
     });
-
-    // more telemetry
+    telem.subscribe_battery([&](mavsdk::Telemetry::Battery battery){
+        telemValues->battery = battery;
+    });
 }
+    
 
-void update_drone_status()
+void Drone::update_drone_status()
 {
     drone_status.drone_state = drone_state;
     drone_status.docking_slot = docking_slot;
-    drone_status.gps_position = gps_position;
-    drone_status.yaw = att_quaternion.z; //TODO: verify 
-    drone_status.battery_percent = batt.remaining_percent;
+    drone_status.gps_position = telemValues->position;
+    drone_status.yaw = telemValues->quarternion.z; //TODO: verify 
+    drone_status.battery_percent = telemValues->battery.remaining_percent;
 }
 
 void Drone::arm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
