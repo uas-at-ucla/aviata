@@ -93,7 +93,7 @@ class Drone:
         while True:
             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
             
-            errs = self.image_analyzer.process_image(img)
+            errs = self.image_analyzer.process_image(img,0)
             if errs is None:
                 continue
             x_err, y_err, alt_err, rot_err = errs
