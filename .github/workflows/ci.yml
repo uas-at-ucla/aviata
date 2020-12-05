@@ -1,0 +1,40 @@
+name: CI-master
+
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  # Build code, run tests, and upload Docker images.
+  build_test_push:
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+#       - name: Force-build Docker container from scratch. Only required prior to first image upload.
+#         run: docker-compose build dev
+
+      - name: Start Docker container
+        run: docker-compose up --build -d dev
+
+      - name: Build code
+        run: docker-compose exec -T dev /bin/bash -c "source ~/.bashrc && ./build.sh"
+
+      - name: Run tests
+        run: docker-compose exec -T dev echo "Running imaginary tests"
+
+      - name: Stop Docker container
+        run: docker-compose down
+
+      - name: Push Docker images
+        if: github.event_name == 'push'
+        run: ./docker_push.sh
