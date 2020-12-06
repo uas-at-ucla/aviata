@@ -3,6 +3,9 @@
 
 #include <string>
 #include <iostream>
+
+#include "telemetry.hpp"
+
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
 
@@ -28,14 +31,6 @@ struct DroneStatus {
     float yaw;
 };
 
-class Telemetry
-{
-    public:
-        mavsdk::Telemetry::Position position; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_position.html
-        mavsdk::Telemetry::Battery battery; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_quaternion.html
-        mavsdk::Telemetry::Quaternion quarternion; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_battery.html
-};
-
 class Drone
 {
 	public:
@@ -50,15 +45,8 @@ class Drone
     DroneStatus drone_status;
     uint8_t docking_slot = -1;
 
-	//MAVSDK
-	std::string connection_url;
-	std::shared_ptr<mavsdk::System> system;
-    mavsdk::Telemetry telem = mavsdk::Telemetry(system);
-
     //TELEMETRY
-    Telemetry* telemValues; // pointer to Telemetry object
-
-    void init_telem(); // initializes telemetry values
+    DroneTelemetry* telemValues; // pointer to DroneTelemetry object
 
     void update_drone_status(); // call before sending data
 
