@@ -36,7 +36,7 @@ class Drone
 	public:
     Drone();
     ~Drone();
-    Drone(std::string drone_id, std::string connection_url);
+    Drone(std::string drone_id);
 
 	// AVIATA 
 	//std::string drone_name;

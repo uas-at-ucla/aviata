@@ -7,7 +7,7 @@ Drone::Drone()
     std::cout<<"\n\n\nbonkers.\n\n\n"<<std::endl;
 }
 
-Drone::Drone(std::string drone_id, std::string connection_url)
+Drone::Drone(std::string drone_id)
 {
     this->drone_id = drone_id;
     telemValues = new DroneTelemetry();
