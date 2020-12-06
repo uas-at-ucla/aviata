@@ -7,10 +7,11 @@ Drone::Drone()
     std::cout<<"\n\n\nbonkers.\n\n\n"<<std::endl;
 }
 
-Drone::Drone(std::string drone_id)
+Drone::Drone(std::string drone_id, std::string connection_url)
 {
     this->drone_id = drone_id;
-    telemValues = new DroneTelemetry();
+    system = connect_to_pixhawk(drone_id,connection_url);
+    telemValues = new DroneTelemetry(system);
     telemValues->init_telem();
     drone_state = STANDBY;
 
@@ -35,8 +36,8 @@ void Drone::update_drone_status()
 
 void Drone::arm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
 {
-    //if(drone_state == STANDBY || drone_state == DOCKED_FOLLOWER)
-    //    arm_system(system);
+    if(drone_state == STANDBY || drone_state == DOCKED_FOLLOWER)
+        arm_system();
 }   
 
 void Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
@@ -46,8 +47,8 @@ void Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
 
 void Drone::disarm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
 {
-    //if(drone_state == STANDBY || drone_state == DOCKED_FOLLOWER)
-    //    disarm_system(system);
+    if(drone_state == STANDBY || drone_state == DOCKED_FOLLOWER)
+        disarm_system();
 }    
 
 void Drone::disarm_frame() // for DOCKED_LEADER (send disarm_drone() to followers)
@@ -57,8 +58,8 @@ void Drone::disarm_frame() // for DOCKED_LEADER (send disarm_drone() to follower
     
 void Drone::takeoff_drone() // for drones in STANDBY
 {
-    //if(drone_state == STANDBY)
-    //    takeoff_system(system);   
+    if(drone_state == STANDBY)
+        takeoff_system();   
 }    
     
 void Drone::takeoff_frame() // for DOCKED_LEADER (send attitude and thrust to followers)
@@ -68,8 +69,8 @@ void Drone::takeoff_frame() // for DOCKED_LEADER (send attitude and thrust to fo
     
 void Drone::land_drone() // for any undocked drone
 {
-    //if(drone_state == STANDBY || drone_state == NEEDS_SERVICE)
-    //    land_system(system);  
+    if(drone_state == STANDBY || drone_state == NEEDS_SERVICE)
+        land_system();  
 }
     
 void Drone::land_frame() // for DOCKED_LEADER (send attitude and thrust to followers)

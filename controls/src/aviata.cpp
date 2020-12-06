@@ -3,15 +3,23 @@
 #include "lib/drone.hpp"
 #include <map>
 
-//enum DroneState now in drone.hpp
-
-// Drone SWARM[10]; // eventually switch to dynamic size?
-
 std::map<std::string, DroneStatus> SWARM; // map by ID
 
 int main(int argc, char** argv) {
-    takeoff_and_land_test(argc, argv);
+
+    //takeoff_and_land_test(argc, argv);
     ros2_test();
+
+    // Test Drone object
+    Drone* test1 = new Drone("droneTest1", argv[1]);
+
+    test1->arm_drone();
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    test1->takeoff_drone();
+    std::this_thread::sleep_for(std::chrono::seconds(9));
+    test1->land_drone();
+    //test1->disarm_drone(); //disarm when landed
+
 
     // Example control loop
     // int i = 0;

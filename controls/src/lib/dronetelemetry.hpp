@@ -2,7 +2,6 @@
 #define TELEMETRY_HPP
 
 #include <string>
-#include <iostream>
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
 
@@ -15,10 +14,10 @@ class DroneTelemetry
         
         // MAVSDK
         std::string connection_url;
-	    std::shared_ptr<mavsdk::System> system;
-        mavsdk::Telemetry telem = mavsdk::Telemetry(system); // mavsdk Telemetry object
+        mavsdk::Telemetry* telem; // mavsdk Telemetry object
         
-        DroneTelemetry();   
+        DroneTelemetry(std::shared_ptr<mavsdk::System> system);
+        ~DroneTelemetry();
         void init_telem(); // initializes telemetry values
 };
 

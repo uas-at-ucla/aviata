@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-#include "telemetry.hpp"
+#include "dronetelemetry.hpp"
 
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
@@ -36,14 +36,17 @@ class Drone
 	public:
     Drone();
     ~Drone();
-    Drone(std::string drone_id);
-
+    Drone(std::string drone_id, std::string connection_url);
+    
 	// AVIATA 
 	//std::string drone_name;
     std::string drone_id;
     DroneState drone_state;
     DroneStatus drone_status;
     uint8_t docking_slot = -1;
+
+    //MAVSDK
+    std::shared_ptr<mavsdk::System> system;
 
     //TELEMETRY
     DroneTelemetry* telemValues; // pointer to DroneTelemetry object

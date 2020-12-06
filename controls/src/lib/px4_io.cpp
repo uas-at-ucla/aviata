@@ -19,32 +19,137 @@ using namespace std::this_thread;
 using namespace std::chrono;
 
 Mavsdk mav; // name change to avoid namespace conflict
+std::shared_ptr<mavsdk::Telemetry> telemetry;
+std::shared_ptr<mavsdk::Action> action;
+std::string drone_id;
 
-std::shared_ptr<System> connect_to_pixhawk(std::string connection_url)
+std::shared_ptr<System> connect_to_pixhawk(std::string drone_ID, std::string connection_url)
 //returns System pointer if connected, nullptr otherwise
 //Discovering systems (the new way): https://mavsdk.mavlink.io/develop/en/cpp/api_changes.html
 {
+    drone_id = drone_ID;    
     ConnectionResult connection_result;
     connection_result = mav.add_any_connection(connection_url);
     // connect
     if (connection_result != ConnectionResult::Success) {
-        std::cout << ERROR_CONSOLE_TEXT << "Connection failed: " << connection_result
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to connect: " << connection_result
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return nullptr;
     }
 
     std::cout << "Waiting to discover system..." << std::endl;
-    // discover system and return 
-    // method copy/pasted from link above
+    // discover system and return - method sourced from link above
     auto new_system_promise = std::promise<std::shared_ptr<System>>{};
     auto new_system_future = new_system_promise.get_future();
-    mav.subscribe_on_new_system([&new_system_promise]() {
-        std::cout << "Discovered system" << std::endl;
+    mav.subscribe_on_new_system([&]() {
+        std::cout << "Discovered system " << drone_id << std::endl;
         new_system_promise.set_value(mav.systems().at(0));
         mav.subscribe_on_new_system(nullptr);
     });
+
+    // We usually receive heartbeats at 1Hz, therefore we should find a system after around 2 seconds.
+    sleep_for(seconds(2));
+
     auto sys = new_system_future.get();
+    if (sys == nullptr) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " was not found, exiting." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return nullptr;
+    }
+    telemetry = std::make_shared<Telemetry>(sys);
+    action = std::make_shared<Action>(sys);
     return sys;
+}
+
+int arm_system()
+//return 0 if fail, 1 if successs
+{
+    while (telemetry->health_all_ok() != true) {
+        std::cout << drone_id << " is getting ready to arm." << std::endl;
+        sleep_for(seconds(1));
+    }
+
+    // Arm vehicle
+    std::cout << "Arming " << drone_id << "..." << std::endl;
+    const Action::Result arm_result = action->arm();
+    if (arm_result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to arm: " << arm_result << NORMAL_CONSOLE_TEXT
+                  << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+int disarm_system()
+{
+    // Verify drone is on ground and is already armed first
+    while (telemetry->armed() != true || telemetry->in_air() != true) {
+        std::cout << "Verifying " << drone_id << " is armed and not in air..." << std::endl;
+        sleep_for(seconds(1));
+    }
+
+    // Disarm vehicle
+    std::cout << "Disarming " << drone_id << "..." << std::endl;
+    const Action::Result disarm_result = action->disarm();
+    if (disarm_result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to disarm: " << disarm_result << NORMAL_CONSOLE_TEXT
+                  << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+int takeoff_system()
+{
+    if (telemetry->armed() != true){
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " is not armed. Arm first before takeoff." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+
+    std::cout << drone_id << " taking off..." << std::endl;
+    const Action::Result takeoff_result = action->takeoff();
+    if (takeoff_result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to takeoff:" << takeoff_result
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+int land_system()
+{
+    std::cout << drone_id << " landing..." << std::endl;
+    const Action::Result land_result = action->land();
+    if (land_result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to land:" << land_result 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+
+    // Check if vehicle is still in air
+    while (telemetry->in_air()) {
+        std::cout << drone_id << " is landing..." << std::endl;
+        sleep_for(seconds(1));
+    }
+    std::cout << drone_id << " landed!" << std::endl;
+    return 1;
+}
+
+void goto_gps_position(float lat, float lon)
+// for DOCKED_LEADER (send attitude and thrust to followers)
+{
+    
+}
+
+void get_attitude_and_thrust(float q[4], float* thrust)
+{
+    
+}
+
+void set_attitude_and_thrust(float q[4], float thrust)
+{
+    
 }
 
 

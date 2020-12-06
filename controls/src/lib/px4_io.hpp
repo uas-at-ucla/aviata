@@ -15,24 +15,20 @@
 
 int takeoff_and_land_test(int argc, char** argv);
 
-std::shared_ptr<mavsdk::System> connect_to_pixhawk(std::string connection_url);
+std::shared_ptr<mavsdk::System> connect_to_pixhawk(std::string drone_id, std::string connection_url);
 
-void arm_system(std::shared_ptr<mavsdk::System> sys);
-void arm_system(std::vector<std::shared_ptr<mavsdk::System>> sys); //arm multiple drones
+int arm_system();
 
-void disarm_system(std::shared_ptr<mavsdk::System> sys);
-void disarm_system(std::vector<std::shared_ptr<mavsdk::System>> sys); //disarm multiple drones
+int disarm_system();
 
-void takeoff_system(std::shared_ptr<mavsdk::System> sys);
-void takeoff_system(std::vector<std::shared_ptr<mavsdk::System>> sys);
+int takeoff_system();
 
-void land_system(std::shared_ptr<mavsdk::System> sys);
-void land_system(std::vector<std::shared_ptr<mavsdk::System>> sys);
+int land_system();
 
-void goto_gps_position(std::shared_ptr<mavsdk::System> sys, float lat, float lon); // for DOCKED_LEADER (send attitude and thrust to followers)
+void goto_gps_position(float lat, float lon); // for DOCKED_LEADER (send attitude and thrust to followers)
 
-void get_attitude_and_thrust(std::shared_ptr<mavsdk::System> sys, float q[4], float* thrust);
+void get_attitude_and_thrust(float q[4], float* thrust);
 
-void set_attitude_and_thrust(std::shared_ptr<mavsdk::System> sys, float q[4], float thrust);
+void set_attitude_and_thrust(float q[4], float thrust);
 
 #endif
