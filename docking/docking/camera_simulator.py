@@ -24,13 +24,13 @@ CAMERA_FOV_HORIZONTAL=62.2
 
 #Target information
 #Measured in centimeters
-TARGET_SIZE=28.5
+TARGET_SIZE=234
 
 class CameraSimulator:
 
     background_image_name = 'Camera Simulator/BACKGROUND.jpg'
     output_tag_name = 'updatedTag.png'
-    april_tag = Image.open('Camera Simulator/tag_36h11.png')
+    april_tag = Image.open('Camera Simulator/3_stage_tags.png')
 
     #Updates target location dynamically
     def updateTargetLocation(self, targetx,targety,targetalt,targetyaw):
