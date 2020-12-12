@@ -8,11 +8,12 @@ from mavsdk.offboard import (OffboardError, VelocityNedYaw)
 # aviata modules
 from camera_simulator import CameraSimulator
 from image_analyzer import ImageAnalyzer
+from debug_window import DebugWindow
 
 class Drone:
 
     def __init__(self):
-        self.camera_simulator = CameraSimulator(1, 2, 0, 90) # later, use camera here
+        self.camera_simulator = CameraSimulator(0, 0, 0, 90) # later, use camera here
         self.image_analyzer = ImageAnalyzer()
         self.north = 0
         self.east = 0
@@ -89,14 +90,16 @@ class Drone:
         (unfinished)
         """
         print("Docking stage 1")
-
+        debug_window=DebugWindow(1,1,2,0,90)
         while True:
             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-            
+
             errs = self.image_analyzer.process_image(img,0)
             if errs is None:
                 continue
-            x_err, y_err, alt_err, rot_err = errs
+            x_err, y_err, alt_err, rot_err,tags_detected = errs
+
+            debug_window.updateWindow(self.east,self.north,self.down*-1.0,self.yaw,tags_detected)
 
             north_velocity = y_err * 4 / 5 # no I or D yet
             east_velocity = x_err * 4 / 5 # no I or D yet

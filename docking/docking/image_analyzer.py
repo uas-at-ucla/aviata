@@ -36,6 +36,10 @@ class ImageAnalyzer:
         height, width, _ = img.shape
         img_center = (int(width / 2), int(height / 2))
 
+        tags_detected=""
+        for det in dets:
+            tags_detected+=str(det["id"])+" "
+
         for det in dets:
             if det["id"]==ind:
                 if det["margin"] >= MIN_MARGIN:
@@ -92,7 +96,7 @@ class ImageAnalyzer:
                     x_err = x_offset * tag_pixel_ratio
                     y_err = y_offset * tag_pixel_ratio
 
-                    return float(x_err), float(y_err), float(alt_err), float(rot_err)
+                    return float(x_err), float(y_err), float(alt_err), float(rot_err),tags_detected
 
                     break
 
