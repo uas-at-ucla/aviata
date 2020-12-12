@@ -38,7 +38,8 @@ class ImageAnalyzer:
 
         tags_detected=""
         for det in dets:
-            tags_detected+=str(det["id"])+" "
+            if(det["margin"]>=MIN_MARGIN):
+                tags_detected+=str(det["id"])+" "
 
         for det in dets:
             if det["id"]==ind:
