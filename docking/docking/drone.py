@@ -17,7 +17,7 @@ class Drone:
         self.image_analyzer = ImageAnalyzer()
         self.north = 0
         self.east = 0
-        self.down = -5
+        self.down = -7
         self.yaw = 0
         self.target_number = target_number
 
@@ -111,36 +111,53 @@ class Drone:
                 await asyncio.sleep(.1)
                 continue
 
-            debug_window.updateWindow(self.east,self.north,self.down*-1.0,self.yaw, 0) # 0 tags detected for now, change later
             frames_elapsed = 0
-            x_err, y_err, alt_err, rot_err = errs # errors all in meters
+            x_err, y_err, alt_err, rot_err, tags_detected = errs # errors all in meters
             alt_err = alt_err - 4 # so it's centered around 4 instead of 0
 
-            ku_nv = 2.0
+            debug_window.updateWindow(self.east,self.north,self.down*-1.0,self.yaw, tags_detected)
+
+            ku_nv = 2.15
             ku_ev = 2.15
             ku_dv = 3
 
-            tu_nv = 0.8
-            tu_ev = 0.8
+            tu_nv = 1.3
+            tu_ev = 1.3
             tu_dv = 0.8
 
             kp_nv = 0.6 * ku_nv
-            kp_ev = 0.6 * ku_ev
-            kp_dv = 0.2 * ku_dv
+            kp_ev = .2 * ku_ev
+            kp_dv = .2 * ku_dv # .2
 
             kd_nv = 0.075 * ku_nv * tu_nv
-            kd_ev = 0.075 * ku_ev * tu_ev
-            kd_dv = 0.066666 * ku_dv * tu_dv
+            kd_ev = .06666 * ku_ev * tu_ev
+            kd_dv = .1 * ku_dv * tu_dv # .06666
 
             ki_nv = 1.2 * ku_nv / tu_nv
-            ki_ev = 1.2 * ku_ev / tu_ev
-            ki_dv = .4 * ku_dv / tu_dv
+            ki_ev = .4 * ku_ev / tu_ev
+            ki_dv = .2 * ku_dv / tu_dv # .4
 
-            east_velocity = 0 # x_err * kp_ev + (x_err - prev_errs[0]) * kd_ev # + sum_errs[0] * ki_ev
-            north_velocity = 0 # y_err * kp_nv + (y_err - prev_errs[1]) * kd_nv # + sum_errs[1] * ki_nv
+            east_velocity = 0#x_err * kp_ev + (x_err - prev_errs[0]) / dt * kd_ev + sum_errs[0] * dt * ki_ev
+            north_velocity = 0 # y_err * kp_ev + (y_err - prev_errs[1]) * kd_ev / dt + sum_errs[1] * dt * ki_nv
             down_velocity = alt_err * kp_dv + (alt_err - prev_errs[2]) / dt * kd_dv + sum_errs[2] * dt * ki_dv
             print(alt_err)
             rot_angle = self.yaw + rot_err # yaw is in degrees, not degrees per second. must be set absolutely
+
+            # Set maximum speed
+            if east_velocity > 0.5: 
+                east_velocity = 0.5
+            elif east_velocity < -0.5:
+                east_velocity = -0.5
+            
+            if north_velocity > 0.5:
+                north_velocity = 0.5
+            elif north_velocity < -0.5:
+                north_velocity = -0.5
+            
+            if down_velocity > 0.5:
+                down_velocity = 0.5
+            elif down_velocity < -0.5:
+                down_velocity = -0.5
 
             prev_errs = (x_err, y_err, alt_err)
             sum_errs = (sum_errs[0] + x_err, sum_errs[1] + y_err, sum_errs[2] + alt_err)
