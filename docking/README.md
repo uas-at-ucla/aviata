@@ -27,3 +27,15 @@ $ make px4_sitl gazebo
 ```
 $ python3 docking/docking.py
 ```
+
+## Extra Python libraries needed
+mavsdk
+```
+$ pip3 install mavsdk
+```
+tkinter
+```
+$ sudo apt-get install python3-tk
+```
+
+Install any other missing libraries using `pip`.

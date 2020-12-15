@@ -8,6 +8,7 @@ from mavsdk.offboard import (OffboardError, VelocityNedYaw)
 # aviata modules
 from camera_simulator import CameraSimulator
 from image_analyzer import ImageAnalyzer
+from debug_window import DebugWindow
 
 class Drone:
 
@@ -89,6 +90,8 @@ class Drone:
         """
         print("Docking stage 1")
 
+        debug_window=DebugWindow(1,1,2,0,90)
+
         frames_elapsed = 0
         total_time_elapsed = 0
         prev_errs = (0, 0, 0)
@@ -107,6 +110,8 @@ class Drone:
 
                 await asyncio.sleep(.1)
                 continue
+
+            debug_window.updateWindow(self.east,self.north,self.down*-1.0,self.yaw, 0) # 0 tags detected for now, change later
             frames_elapsed = 0
             x_err, y_err, alt_err, rot_err = errs # errors all in meters
             alt_err = alt_err - 4 # so it's centered around 4 instead of 0
