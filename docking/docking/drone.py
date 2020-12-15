@@ -11,13 +11,14 @@ from image_analyzer import ImageAnalyzer
 
 class Drone:
 
-    def __init__(self):
-        self.camera_simulator = CameraSimulator(1, 2, 0, 90) # later, use camera here
+    def __init__(self, target_number):
+        self.camera_simulator = CameraSimulator(0, 0, 0, 0) # later, use camera here
         self.image_analyzer = ImageAnalyzer()
         self.north = 0
         self.east = 0
         self.down = -5
         self.yaw = 0
+        self.target_number = target_number
 
     async def connect_gazebo(self):
         """
@@ -77,8 +78,6 @@ class Drone:
         rotation_task = asyncio.create_task(self.get_telemetry_rotation())
 
         await self.stage1()
-        await self.stage2()
-        await self.stage3()
 
         telemetry_task.cancel()
         rotation_task.cancel()
@@ -90,23 +89,62 @@ class Drone:
         """
         print("Docking stage 1")
 
+        frames_elapsed = 0
+        total_time_elapsed = 0
+        prev_errs = (0, 0, 0)
+        sum_errs = (0, 0, 0)
+        dt = 0.1 # delta t
         while True:
             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
             
-            errs = self.image_analyzer.process_image(img,0)
+            errs = self.image_analyzer.process_image(img, 0)
             if errs is None:
-                continue
-            x_err, y_err, alt_err, rot_err = errs
+                frames_elapsed = frames_elapsed + 1
 
-            north_velocity = y_err * 4 / 5 # no I or D yet
-            east_velocity = x_err * 4 / 5 # no I or D yet
-            down_velocity = alt_err * .2 / 5
+                if frames_elapsed > 10: # haven't detected target in 1 second
+                    await self.drone.offboard.set_velocity_ned(
+                        VelocityNedYaw(0, 0, -0.2, self.yaw)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
+
+                await asyncio.sleep(.1)
+                continue
+            frames_elapsed = 0
+            x_err, y_err, alt_err, rot_err = errs # errors all in meters
+            alt_err = alt_err - 4 # so it's centered around 4 instead of 0
+
+            ku_nv = 2.0
+            ku_ev = 2.15
+            ku_dv = 3
+
+            tu_nv = 0.8
+            tu_ev = 0.8
+            tu_dv = 0.8
+
+            kp_nv = 0.6 * ku_nv
+            kp_ev = 0.6 * ku_ev
+            kp_dv = 0.2 * ku_dv
+
+            kd_nv = 0.075 * ku_nv * tu_nv
+            kd_ev = 0.075 * ku_ev * tu_ev
+            kd_dv = 0.066666 * ku_dv * tu_dv
+
+            ki_nv = 1.2 * ku_nv / tu_nv
+            ki_ev = 1.2 * ku_ev / tu_ev
+            ki_dv = .4 * ku_dv / tu_dv
+
+            east_velocity = 0 # x_err * kp_ev + (x_err - prev_errs[0]) * kd_ev # + sum_errs[0] * ki_ev
+            north_velocity = 0 # y_err * kp_nv + (y_err - prev_errs[1]) * kd_nv # + sum_errs[1] * ki_nv
+            down_velocity = alt_err * kp_dv + (alt_err - prev_errs[2]) / dt * kd_dv + sum_errs[2] * dt * ki_dv
+            print(alt_err)
             rot_angle = self.yaw + rot_err # yaw is in degrees, not degrees per second. must be set absolutely
+
+            prev_errs = (x_err, y_err, alt_err)
+            sum_errs = (sum_errs[0] + x_err, sum_errs[1] + y_err, sum_errs[2] + alt_err)
 
             await self.drone.offboard.set_velocity_ned(
                 VelocityNedYaw(north_velocity, east_velocity, down_velocity, rot_angle)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
 
-            await asyncio.sleep(.1) # update drone at 10Hz
+            total_time_elapsed = total_time_elapsed + dt
+            await asyncio.sleep(dt) # 10Hz
 
     async def stage2(self):
         """Fly from the central target to the peripheral target"""

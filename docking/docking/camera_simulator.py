@@ -26,11 +26,13 @@ CAMERA_FOV_HORIZONTAL=62.2
 #Measured in centimeters
 TARGET_SIZE=234
 
+IMAGE_FOLDER = 'res/'
+
 class CameraSimulator:
 
-    background_image_name = 'Camera Simulator/BACKGROUND.jpg'
+    background_image_name = IMAGE_FOLDER + 'BACKGROUND.jpg'
+    april_tag = Image.open(IMAGE_FOLDER + '3_stage_tags.png')
     output_tag_name = 'updatedTag.png'
-    april_tag = Image.open('Camera Simulator/3_stage_tags.png')
 
     #Updates target location dynamically
     def updateTargetLocation(self, targetx,targety,targetalt,targetyaw):
@@ -53,7 +55,7 @@ class CameraSimulator:
         display_width = DISPLAY_SCALE * math.tan(math.radians(CAMERA_FOV_HORIZONTAL/2.0))
         display_height = DISPLAY_SCALE * math.tan(math.radians(CAMERA_FOV_VERTICAL/2.0))
         white = (255, 255, 255)
-        aprilTag = Image.open('Camera Simulator/tag_36h11.png')
+        aprilTag = Image.open(IMAGE_FOLDER + 'tag_36h11.png')
         self.display = pygame.display.set_mode((int(display_width), int(display_height)))
         self.display.fill(white)
 

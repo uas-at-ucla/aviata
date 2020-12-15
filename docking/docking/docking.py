@@ -3,7 +3,7 @@ import asyncio
 from drone import Drone
 
 async def dock():
-    drone = Drone()
+    drone = Drone(3)
     await drone.connect_gazebo()
     await drone.takeoff()
     await drone.initiate_docking()

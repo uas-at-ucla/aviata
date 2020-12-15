@@ -25,11 +25,13 @@ class ImageAnalyzer:
         # detect
         greys = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         dets = detector.detect(greys)
-        if len(dets) == 0:
-            print("No apriltag detected, aborting")
-            return
-        elif len(dets) > 1:
-            print("WARNING: More than 1 apriltag detected, will use the first one")
+        # if len(dets) == 0:
+        #     print("No apriltag detected, aborting")
+        #     return
+        # elif len(dets) > 1:
+        #     print("WARNING: More than 1 apriltag detected, will use the first one")
+        # else:
+        #     print("Looking for errors")
         
 
         # get image dimensions
@@ -96,8 +98,11 @@ class ImageAnalyzer:
 
                     break
 
-        cv2.imshow("TITLE", img)
-        cv2.waitKey()
+        print("Desired apriltag not found, aborting")
+        return
+
+        # cv2.imshow("TITLE", img)
+        # cv2.waitKey()
 
 # if __name__ == "__main__":
 #     img = cv2.imread("updatedTag.png")
