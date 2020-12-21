@@ -23,3 +23,4 @@ controls/build
 .vs/aviata/v16/.suo
 .vs/slnx.sqlite
 .vs/VSWorkspaceState.json
+*.json

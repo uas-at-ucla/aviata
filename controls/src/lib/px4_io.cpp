@@ -76,6 +76,7 @@ std::shared_ptr<System> connect_to_pixhawk(std::string drone_ID, std::string con
     return sys;
 }
 
+// @return 1 if successful, 0 otherwise
 int arm_system()
 //return 0 if fail, 1 if successs
 {
@@ -95,6 +96,7 @@ int arm_system()
     return 1;
 }
 
+// @return 1 if successful, 0 otherwise
 int disarm_system()
 {
     // Verify drone is on ground
@@ -114,6 +116,7 @@ int disarm_system()
     return 1;
 }
 
+// @return 1 if successful, 0 otherwise
 int takeoff_system()
 {
     if (telemetry->armed() != true){
@@ -132,6 +135,7 @@ int takeoff_system()
     return 1;
 }
 
+// @return 1 if successful, 0 otherwise
 int land_system()
 {
     std::cout << drone_id << " landing..." << std::endl;
@@ -151,10 +155,17 @@ int land_system()
     return 1;
 }
 
-void goto_gps_position(float lat, float lon)
+// @return 1 if successful, 0 otherwise
+int goto_gps_position(double lat, double lon, float alt, float yaw)
 // for DOCKED_LEADER (send attitude and thrust to followers)
 {
-    
+    const Action::Result goto_result = action->goto_location(lat, lon, alt, yaw);
+    if (goto_result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to go to:" << lat << " " << lon
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;
 }
 
 void subscribe_attitude_and_thrust(float q[4], float* thrust)
@@ -166,24 +177,57 @@ void subscribe_attitude_and_thrust(float q[4], float* thrust)
         });
 }
 
+void subscribe_attitude_and_thrust(mavlink_attitude_target_t *att_target_struct)
+{
+    mavlink_passthrough->subscribe_message_async(ATTITUDE_TARGET_ID, [&](const mavlink_message_t &attitude_target_message){
+        mavlink_msg_attitude_target_decode(&attitude_target_message, att_target_struct);
+        });
+}
+
 void unsubscribe_attitude_and_thrust()
 {
     mavlink_passthrough->subscribe_message_async(ATTITUDE_TARGET_ID, nullptr);
 }
 
+// @brief Ignores the attitude rates
+// @return 1 if successful, 0 otherwise
 int set_attitude_and_thrust(float q[4], float* thrust)
 {
     mavlink_set_attitude_target_t set_att_struct;
     std::copy(q, q + 4, set_att_struct.q);
     set_att_struct.thrust = *thrust;
-    set_att_struct.body_roll_rate = att_struct.body_roll_rate;
-    set_att_struct.body_pitch_rate = att_struct.body_pitch_rate;
-    set_att_struct.body_yaw_rate = att_struct.body_yaw_rate;
+    set_att_struct.type_mask =  ATTITUDE_TARGET_TYPEMASK_BODY_ROLL_RATE_IGNORE & 
+                                ATTITUDE_TARGET_TYPEMASK_BODY_PITCH_RATE_IGNORE &
+                                ATTITUDE_TARGET_TYPEMASK_BODY_YAW_RATE_IGNORE;
 
     mavlink_message_t set_attitude_target_message;
     uint16_t encode_result; //encode function returns a uint16_t, not sure what it represents
     encode_result = mavlink_msg_set_attitude_target_encode(target_system, target_component, &set_attitude_target_message, &set_att_struct);
+    
+    MavlinkPassthrough::Result set_att_result = mavlink_passthrough->send_message(set_attitude_target_message);
+    if ( set_att_result != MavlinkPassthrough::Result::Success){
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to set attitude and thrust." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;    
+}
 
+// @brief Copies the attitude rates
+// @return 1 if successful, 0 otherwise
+int set_attitude_and_thrust(mavlink_attitude_target_t *att_target_struct)
+{
+    mavlink_set_attitude_target_t set_att_struct;
+    std::copy(att_target_struct->q, att_target_struct->q + 4, set_att_struct.q);
+    set_att_struct.thrust = att_target_struct->thrust;
+    set_att_struct.body_roll_rate = att_target_struct->body_roll_rate;
+    set_att_struct.body_pitch_rate = att_target_struct->body_pitch_rate;
+    set_att_struct.body_yaw_rate = att_target_struct->body_yaw_rate;
+    set_att_struct.type_mask = att_target_struct->type_mask;
+
+    mavlink_message_t set_attitude_target_message;
+    uint16_t encode_result; //encode function returns a uint16_t, not sure what it represents
+    encode_result = mavlink_msg_set_attitude_target_encode(target_system, target_component, &set_attitude_target_message, &set_att_struct);
 
     MavlinkPassthrough::Result set_att_result = mavlink_passthrough->send_message(set_attitude_target_message);
     if ( set_att_result != MavlinkPassthrough::Result::Success){
@@ -193,6 +237,8 @@ int set_attitude_and_thrust(float q[4], float* thrust)
     }
     return 1;    
 }
+
+
 
 ////////////////////////////////////////////
 // example code below

@@ -35,12 +35,16 @@ int takeoff_system();
 
 int land_system();
 
-void goto_gps_position(float lat, float lon); // for DOCKED_LEADER (send attitude and thrust to followers)
+// void goto_gps_position(double lat, double lon); // for DOCKED_LEADER (send attitude and thrust to followers)
+
+int goto_gps_position(double lat, double lon, float alt, float yaw);
 
 void subscribe_attitude_and_thrust(float q[4], float* thrust); //async
+void subscribe_attitude_and_thrust(mavlink_attitude_target_t *att_target_struct);
 
 void unsubscribe_attitude_and_thrust();
 
 int set_attitude_and_thrust(float q[4], float* thrust);
+int set_attitude_and_thrust(mavlink_attitude_target_t *att_target_struct);
 
 #endif
