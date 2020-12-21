@@ -37,7 +37,9 @@ int land_system();
 
 void goto_gps_position(float lat, float lon); // for DOCKED_LEADER (send attitude and thrust to followers)
 
-void init_get_attitude_and_thrust(float q[4], float* thrust); //init since is async
+void subscribe_attitude_and_thrust(float q[4], float* thrust); //async
+
+void unsubscribe_attitude_and_thrust();
 
 int set_attitude_and_thrust(float q[4], float* thrust);
 

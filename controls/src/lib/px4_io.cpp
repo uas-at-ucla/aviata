@@ -157,14 +157,18 @@ void goto_gps_position(float lat, float lon)
     
 }
 
-void init_get_attitude_and_thrust(float q[4], float* thrust)
+void subscribe_attitude_and_thrust(float q[4], float* thrust)
 {
     mavlink_passthrough->subscribe_message_async(ATTITUDE_TARGET_ID, [&](const mavlink_message_t &attitude_target_message){
         mavlink_msg_attitude_target_decode(&attitude_target_message, &att_struct);
         q = att_struct.q;
         thrust = &att_struct.thrust;
         });
+}
 
+void unsubscribe_attitude_and_thrust()
+{
+    mavlink_passthrough->subscribe_message_async(ATTITUDE_TARGET_ID, nullptr);
 }
 
 int set_attitude_and_thrust(float q[4], float* thrust)
