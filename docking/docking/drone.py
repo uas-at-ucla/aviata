@@ -94,8 +94,11 @@ class Drone:
         debug_window=DebugWindow(1,1,2,0,90)
 
         frames_elapsed = 0
+        tolerance=0.1 #Tolerance for alignment
+        successful_frames=0 #Number of frames within tolerance 
         dt = 0.05 # delta t, 20hz
         pid_controller = PIDController(dt)
+
         while True:
             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
             errs = self.image_analyzer.process_image(img, 0)
@@ -118,6 +121,16 @@ class Drone:
 
             east_velocity, north_velocity, down_velocity = pid_controller.get_velocities(x_err, y_err, alt_err)
             rot_angle = self.yaw + rot_err # yaw is in degrees, not degrees per second. must be set absolutely
+            
+            #Checks if drone is aligned with central target
+            if alt_err<tolerance and alt_err>-1*tolerance and rot_err<-2.0 and rot_err>-2.0 and x_err >-1*tolerance and x_err<1*tolerance and y_err > -1*tolerance and y_err<tolerance:
+                successful_frames+=1
+            else:
+                successful_frames=0
+
+            #Ends loop if aligned for 1 second
+            if successful_frames==1 / dt:
+                break
 
             await self.drone.offboard.set_velocity_ned(
                 VelocityNedYaw(north_velocity, east_velocity, down_velocity, rot_angle)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
