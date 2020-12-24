@@ -80,6 +80,7 @@ class Drone:
         rotation_task = asyncio.create_task(self.get_telemetry_rotation())
 
         await self.stage1()
+        await self.stage2()
 
         telemetry_task.cancel()
         rotation_task.cancel()
@@ -140,6 +141,11 @@ class Drone:
     async def stage2(self):
         """Fly from the central target to the peripheral target"""
         print("Docking stage 2")
+
+        debug_window=DebugWindow(1,1,2,0,90)
+        debug_window.updateWindow(self.east, self.north, self.down * -1.0, self.yaw, tags_detected)
+
+        await asyncio.sleep(3) #This line is just to test the transition from stage 1 to stage 2, remove when stage 2 implemented 
     
     async def stage3(self):
         """Position the drone above the peripheral target and descend"""
