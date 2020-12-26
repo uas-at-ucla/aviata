@@ -73,7 +73,7 @@ class Drone:
 
         return True
 
-    async def initiate_docking(self):
+    async def initiate_docking(self,id):
 
         # Get telemetry periodically from the drone
         telemetry_task = asyncio.create_task(self.get_telemetry_position())
@@ -81,6 +81,7 @@ class Drone:
 
         await self.stage1()
         await self.stage2()
+        await self.stage3(id)
 
         telemetry_task.cancel()
         rotation_task.cancel()
@@ -143,12 +144,25 @@ class Drone:
         print("Docking stage 2")
 
         debug_window=DebugWindow(1,1,2,0,90)
-        debug_window.updateWindow(self.east, self.north, self.down * -1.0, self.yaw, tags_detected)
+        debug_window.updateWindow(self.east, self.north, self.down * -1.0, self.yaw, "Testing") #For testing only, replace with actual line when implemented
 
         await asyncio.sleep(3) #This line is just to test the transition from stage 1 to stage 2, remove when stage 2 implemented 
     
-    async def stage3(self):
+    async def stage3(self,id):
         """Position the drone above the peripheral target and descend"""
+        
+        #Verifies preconditions for stage 3 of docking (detect target within 1 second)
+        img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
+        errs = self.image_analyzer.process_image(img, id)
+        checked_frames=0
+        dt=0.05
+        while errs is None:
+            checked_frames+=1
+            if(checked_frames>1 / dt):
+                print("Error: target not detected")
+                #TODO:Error correction if target is not detected within 1 second
+            asyncio.sleep(dt)
+
         print("Docking stage 3")
     
     async def get_telemetry_rotation(self):
