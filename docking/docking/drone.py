@@ -138,6 +138,8 @@ class Drone:
                 VelocityNedYaw(north_velocity, east_velocity, down_velocity, rot_angle)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
 
             await asyncio.sleep(dt)
+        
+        debug_window.destroyWindow()
 
     async def stage2(self):
         """Fly from the central target to the peripheral target"""
@@ -148,6 +150,8 @@ class Drone:
 
         await asyncio.sleep(3) #This line is just to test the transition from stage 1 to stage 2, remove when stage 2 implemented 
     
+        debug_window.destroyWindow()
+        
     async def stage3(self,id):
         """Position the drone above the peripheral target and descend"""
         
