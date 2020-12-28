@@ -22,6 +22,7 @@ IF( ament_cmake_FOUND )
   find_package(std_msgs REQUIRED)
 ENDIF()
 
+find_package(interfaces REQUIRED)
 find_package(MAVSDK REQUIRED)
 
 file(GLOB_RECURSE SOURCES
@@ -41,9 +42,14 @@ target_link_libraries(aviata_lib
 )
 
 add_executable(aviata src/aviata.cpp)
+ament_target_dependencies(aviata_lib rclcpp interfaces)
 add_executable(ground src/ground.cpp)
 target_link_libraries(aviata aviata_lib)
 target_link_libraries(ground aviata_lib)
+
+install(TARGETS 
+  aviata
+  DESTINATION lib/${PROJECT_NAME})
 
 IF( ament_cmake_FOUND )
   ament_package()
