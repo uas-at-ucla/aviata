@@ -29,7 +29,7 @@ class PIDController:
         # manual tuning
         ki_nv = 0 
         ki_ev = 0.16 
-        ki_dv = 3.60
+        ki_dv = 9.3
 
         east_velocity = x_err * kp_ev + (x_err - self.prev_errs[0]) / self.dt * kd_ev + self.sum_errs[0] * self.dt * ki_ev
         north_velocity = y_err * kp_nv + (y_err - self.prev_errs[1]) / self.dt * kd_nv + self.sum_errs[1] * self.dt * ki_nv

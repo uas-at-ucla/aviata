@@ -35,19 +35,19 @@ class CameraSimulator:
     april_tag = Image.open('res/3_stage_tags.png')
 
     #Updates target location dynamically
-    def updateTargetLocation(self, targetx,targety,targetalt,targetyaw):
-        self.target_lat=targetx
-        self.target_lon=targety
-        self.target_alt=targetalt
-        self.target_yaw=targetyaw
+    def updateTargetLocation(self, target):
+        self.target_lat=target.getLat()
+        self.target_lon=target.getLon()
+        self.target_alt=target.getAlt()
+        self.target_yaw=target.getYaw()
 
-    def __init__(self,targetx,targety,targetalt,targetyaw):
+    def __init__(self,target):
         self.scale_constant = self.getViewScaleConstant(TARGET_SIZE, 1750)
         self.display_scale = 1750
-        self.target_lat=targetx
-        self.target_lon=targety
-        self.target_alt=targetalt
-        self.target_yaw=targetyaw        # Declares display factor constant (determines size of image relative to camera field of view)
+        self.target_lat=target.getLat()
+        self.target_lon=target.getLon()
+        self.target_alt=target.getAlt()
+        self.target_yaw=target.getYaw()       # Declares display factor constant (determines size of image relative to camera field of view)
         DISPLAY_SCALE = 1750
 
         # Initializes display and image
