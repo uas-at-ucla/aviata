@@ -14,7 +14,7 @@ from pid_controller import PIDController
 class Drone:
 
     def __init__(self, target_number):
-        self.camera_simulator = CameraSimulator(0, 0, 0, 0) # later, use camera here
+        self.camera_simulator = CameraSimulator(1, 1, 0, 0) # later, use camera here
         self.image_analyzer = ImageAnalyzer()
         self.north = 0
         self.east = 0
@@ -112,7 +112,7 @@ class Drone:
 
             frames_elapsed = 0
             x_err, y_err, alt_err, rot_err, tags_detected = errs
-            alt_err = alt_err - 3 # so we stay 4 meters above the target
+            alt_err = alt_err - 3 # so we stay 3 meters above the target
 
             debug_window.updateWindow(self.east, self.north, self.down * -1.0, self.yaw, tags_detected)
 
