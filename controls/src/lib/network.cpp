@@ -5,7 +5,7 @@
 #include <functional>
 #include <memory>
 #include <string>
-#include "interfaces/msg/drone_status.hpp"
+#include "aviata/msg/drone_status.hpp"
 
 using namespace std::chrono_literals;
 
@@ -18,7 +18,7 @@ class MinimalPublisher : public rclcpp::Node
     MinimalPublisher()
     : Node("minimal_publisher"), count_(0)
     {
-      publisher_ = this->create_publisher<interfaces::msg::DroneStatus>("topic", 10);
+      publisher_ = this->create_publisher<aviata::msg::DroneStatus>("topic", 10);
       timer_ = this->create_wall_timer(
       500ms, std::bind(&MinimalPublisher::timer_callback, this));
     }
@@ -26,13 +26,13 @@ class MinimalPublisher : public rclcpp::Node
   private:
     void timer_callback()
     {
-      auto message = interfaces::msg::DroneStatus();
+      auto message = aviata::msg::DroneStatus();
       message.drone_id = "Drone ID: " + std::to_string(this->count_++);
       RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.drone_id.c_str());
       publisher_->publish(message);
     }
     rclcpp::TimerBase::SharedPtr timer_;
-    rclcpp::Publisher<interfaces::msg::DroneStatus>::SharedPtr publisher_;
+    rclcpp::Publisher<aviata::msg::DroneStatus>::SharedPtr publisher_;
     size_t count_;
 };
 

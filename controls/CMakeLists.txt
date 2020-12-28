@@ -20,9 +20,9 @@ find_package(ament_cmake)
 IF( ament_cmake_FOUND )
   find_package(rclcpp REQUIRED)
   find_package(std_msgs REQUIRED)
+  find_package(rosidl_default_generators REQUIRED)
 ENDIF()
 
-find_package(interfaces REQUIRED)
 find_package(MAVSDK REQUIRED)
 
 file(GLOB_RECURSE SOURCES
@@ -32,6 +32,10 @@ file(GLOB_RECURSE SOURCES
 add_library(aviata_lib ${SOURCES})
 IF( ament_cmake_FOUND )
   ament_target_dependencies(aviata_lib rclcpp std_msgs)
+  rosidl_generate_interfaces(${PROJECT_NAME}
+    "src/msg/DroneStatus.msg"
+  )
+  rosidl_target_interfaces(aviata_lib ${PROJECT_NAME} "rosidl_typesupport_cpp")
 ENDIF()
 
 target_link_libraries(aviata_lib
@@ -41,15 +45,14 @@ target_link_libraries(aviata_lib
     MAVSDK::mavsdk_mavlink_passthrough
 )
 
-add_executable(aviata src/aviata.cpp)
-ament_target_dependencies(aviata_lib rclcpp interfaces)
+add_executable(drone src/aviata.cpp)
 add_executable(ground src/ground.cpp)
-target_link_libraries(aviata aviata_lib)
+target_link_libraries(drone aviata_lib)
 target_link_libraries(ground aviata_lib)
 
-install(TARGETS 
-  aviata
-  DESTINATION lib/${PROJECT_NAME})
+# install(TARGETS 
+#   aviata
+#   DESTINATION lib/${PROJECT_NAME})
 
 IF( ament_cmake_FOUND )
   ament_package()
