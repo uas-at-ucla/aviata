@@ -151,7 +151,7 @@ class Drone:
         await asyncio.sleep(3) #This line is just to test the transition from stage 1 to stage 2, remove when stage 2 implemented 
     
         debug_window.destroyWindow()
-        
+
     async def stage3(self,id):
         """Position the drone above the peripheral target and descend"""
         
@@ -160,11 +160,37 @@ class Drone:
         errs = self.image_analyzer.process_image(img, id)
         checked_frames=0
         dt=0.05
+        docking_attempts=0
+        MAX_ATTEMPTS=3 #Number of unsuccessful attempts before aborting docking
+        MAX_HEIGHT=25 #Max height above central target before failure
+        TARGET_ALTITUDE=0 #TODO: Make target height a global constant
+
+        #Waits for one second to detect target tag, ascends to find central target if fails
         while errs is None:
             checked_frames+=1
-            if(checked_frames>1 / dt):
-                print("Error: target not detected")
-                #TODO:Error correction if target is not detected within 1 second
+            if checked_frames>1 / dt:
+                docking_attempts+=1
+                if docking_attempts>MAX_ATTEMPTS:
+                    print("Docking failed")
+                    #TODO: Final failure if docking fails after given attempts
+
+                img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
+                errs=self.image_analyzer.process_image(img,0)
+                
+                #Ascends until maximum height or until central target detected
+                while errs is None and self.down*-1.0 - TARGET_ALTITUDE<MAX_HEIGHT:
+                    await self.drone.offboard.set_velocity_ned(VelocityNedYaw(0, 0, -0.2, self.yaw))
+                    img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
+                    errs=self.image_analyzer.process_image(img,0)
+                
+                # Re-attempts stage 1 and stage 2 docking if central target found
+                if not errs is None:
+                    await self.stage1()
+                    await self.stage2()
+                    img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
+                    errs = self.image_analyzer.process_image(img, id)
+                    checked_frames=0
+
             asyncio.sleep(dt)
 
         print("Docking stage 3")
