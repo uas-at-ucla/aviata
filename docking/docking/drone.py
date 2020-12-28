@@ -13,14 +13,15 @@ from pid_controller import PIDController
 
 class Drone:
 
-    def __init__(self, target_number):
-        self.camera_simulator = CameraSimulator(0, 0, 0, 0) # later, use camera here
+    def __init__(self, target_number,target):
+        self.camera_simulator = CameraSimulator(target) # later, use camera here
         self.image_analyzer = ImageAnalyzer()
         self.north = 0
         self.east = 0
         self.down = -8
         self.yaw = 0
         self.target_number = target_number
+        self.target=target
 
     async def connect_gazebo(self):
         """
@@ -93,7 +94,7 @@ class Drone:
         """
         print("Docking stage 1")
 
-        debug_window=DebugWindow(1,1,2,0,90)
+        debug_window=DebugWindow(1,self.target)
 
         frames_elapsed = 0
         tolerance=0.1 #Tolerance for alignment
@@ -145,7 +146,7 @@ class Drone:
         """Fly from the central target to the peripheral target"""
         print("Docking stage 2")
 
-        debug_window=DebugWindow(1,1,2,0,90)
+        debug_window=DebugWindow(2,self.target)
         debug_window.updateWindow(self.east, self.north, self.down * -1.0, self.yaw, "Testing") #For testing only, replace with actual line when implemented
 
         await asyncio.sleep(3) #This line is just to test the transition from stage 1 to stage 2, remove when stage 2 implemented 
@@ -163,7 +164,6 @@ class Drone:
         docking_attempts=0
         MAX_ATTEMPTS=3 #Number of unsuccessful attempts before aborting docking
         MAX_HEIGHT=25 #Max height above central target before failure
-        TARGET_ALTITUDE=0 #TODO: Make target height a global constant
 
         #Waits for one second to detect target tag, ascends to find central target if fails
         while errs is None:
@@ -178,7 +178,7 @@ class Drone:
                 errs=self.image_analyzer.process_image(img,0)
                 
                 #Ascends until maximum height or until central target detected
-                while errs is None and self.down*-1.0 - TARGET_ALTITUDE<MAX_HEIGHT:
+                while errs is None and self.down*-1.0 - self.target.getAlt()<MAX_HEIGHT:
                     await self.drone.offboard.set_velocity_ned(VelocityNedYaw(0, 0, -0.2, self.yaw))
                     img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
                     errs=self.image_analyzer.process_image(img,0)
@@ -190,6 +190,8 @@ class Drone:
                     img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
                     errs = self.image_analyzer.process_image(img, id)
                     checked_frames=0
+                else:
+                    #TODO: Implement logic if drone cannot find target after ascending
 
             asyncio.sleep(dt)
 
