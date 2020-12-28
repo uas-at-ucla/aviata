@@ -170,7 +170,7 @@ int goto_gps_position(double lat, double lon, float alt, float yaw)
 
 void subscribe_attitude_and_thrust(float q[4], float* thrust)
 {
-    mavlink_passthrough->subscribe_message_async(ATTITUDE_TARGET_ID, [&](const mavlink_message_t &attitude_target_message){
+    mavlink_passthrough->subscribe_message_async(MAVLINK_MSG_ID_ATTITUDE_TARGET, [&](const mavlink_message_t &attitude_target_message){
         mavlink_msg_attitude_target_decode(&attitude_target_message, &att_struct);
         q = att_struct.q;
         thrust = &att_struct.thrust;
@@ -179,14 +179,14 @@ void subscribe_attitude_and_thrust(float q[4], float* thrust)
 
 void subscribe_attitude_and_thrust(mavlink_attitude_target_t *att_target_struct)
 {
-    mavlink_passthrough->subscribe_message_async(ATTITUDE_TARGET_ID, [&](const mavlink_message_t &attitude_target_message){
+    mavlink_passthrough->subscribe_message_async(MAVLINK_MSG_ID_ATTITUDE_TARGET, [&](const mavlink_message_t &attitude_target_message){
         mavlink_msg_attitude_target_decode(&attitude_target_message, att_target_struct);
         });
 }
 
 void unsubscribe_attitude_and_thrust()
 {
-    mavlink_passthrough->subscribe_message_async(ATTITUDE_TARGET_ID, nullptr);
+    mavlink_passthrough->subscribe_message_async(MAVLINK_MSG_ID_ATTITUDE_TARGET, nullptr);
 }
 
 // @brief Ignores the attitude rates

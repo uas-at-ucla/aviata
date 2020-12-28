@@ -5,7 +5,7 @@
 #include <vector>
 #include <mavsdk/mavsdk.h>
 
-#include "../mavlink lib/common/mavlink.h"
+#include "../mavlink/v2.0/common/mavlink.h"
 
 #include "dronetelemetry.hpp"
 
@@ -13,15 +13,10 @@
 #define TELEMETRY_CONSOLE_TEXT "\033[34m" // Turn text on console blue
 #define NORMAL_CONSOLE_TEXT "\033[0m" // Restore normal console colour
 
-#define MAV_CMD_AVIATA_FINALIZE_DOCKING 43001
-#define MAV_CMD_AVIATA_SET_CONFIGURATION 43002
-#define MAV_CMD_AVIATA_SET_STANDALONE 43003
-
 // mavlink message ID for attitude targets
 // mavlink message id's https://github.com/mavlink/mavlink/blob/master/message_definitions/v1.0/common.xml
 // mavlink message typedefs https://github.com/mavlink/c_library_v2/tree/master/common
-#define SET_ATTITUDE_TARGET_ID 82
-#define ATTITUDE_TARGET_ID 83
+// AVIATA mavlink fork: https://github.com/uas-at-ucla-dependencies/mavlink
 
 int takeoff_and_land_test(int argc, char** argv);
 
