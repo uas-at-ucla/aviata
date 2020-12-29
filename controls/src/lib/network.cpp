@@ -23,6 +23,10 @@ class MinimalPublisher : public rclcpp::Node
       500ms, std::bind(&MinimalPublisher::timer_callback, this));
     }
 
+    size_t get_count() {
+      return count_;
+    }
+
   private:
     void timer_callback()
     {
@@ -39,7 +43,10 @@ class MinimalPublisher : public rclcpp::Node
 void ros2_test() {
     std::cout << "Starting ROS2 test" << std::endl;
     rclcpp::init(0, nullptr);
-    rclcpp::spin(std::make_shared<MinimalPublisher>());
+    std::shared_ptr<MinimalPublisher> node = std::make_shared<MinimalPublisher>();
+    while (node->get_count() < 10) {
+      rclcpp::spin_some(node);
+    }
     rclcpp::shutdown();
 }
 

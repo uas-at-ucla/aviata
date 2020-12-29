@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(aviata)
 
+# On MacOS, need to run `export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:"."` to get project to execute
+
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99)
 endif()
@@ -45,10 +47,12 @@ target_link_libraries(aviata_lib
     MAVSDK::mavsdk_mavlink_passthrough
 )
 
-add_executable(drone src/aviata.cpp)
+add_executable(drone src/aviata_drone.cpp)
 add_executable(ground src/ground.cpp)
+add_executable(aviata_test src/test.cpp)
 target_link_libraries(drone aviata_lib)
 target_link_libraries(ground aviata_lib)
+target_link_libraries(aviata_test aviata_lib)
 
 # install(TARGETS 
 #   aviata
