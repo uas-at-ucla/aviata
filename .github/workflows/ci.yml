@@ -30,7 +30,7 @@ jobs:
         run: docker-compose exec -T dev /bin/bash -c "source ~/.bashrc && ./build.sh"
 
       - name: Run tests
-        run: docker-compose exec -T dev cd controls/build && ./test
+        run: docker-compose exec -T dev /bin/bash -c "cd controls/build && ./test"
 
       - name: Stop Docker container
         run: docker-compose down
