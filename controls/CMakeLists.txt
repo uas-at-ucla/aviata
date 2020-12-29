@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(aviata)
 
-# On MacOS, need to run `export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:"."` to get project to execute
+# On Linux, need to run `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"."` to get project to execute
+# On MacOS, use DYLD_LIBRARY_PATH instead
 
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99)
