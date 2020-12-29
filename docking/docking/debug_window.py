@@ -21,9 +21,9 @@ class DebugWindow:
         self.target_yaw=target.getYaw() 
 
     def updateWindow(self,droneX,droneY,droneAlt,droneYaw,tagsDetected):
-        self.output_str.set("Docking stage "+str(self.stage)+":\nDrone X: "+str(droneX)+", Drone Y: "+str(droneY)+", Drone Alt: "+
-        str(droneAlt)+", Drone Yaw: "+str(droneYaw)+"\nTarget X: "+str(self.target_lat)+", Target Y: "+str(self.target_lon)+
-        ", Target Alt: "+str(self.target_alt)+", Target Yaw: "+str(self.target_yaw)+"\nTags Detected: "+str(tagsDetected))
+        self.output_str.set("Docking stage "+str(self.stage)+":\nDrone X: "+str(format(droneX,'0.2f'))+", Drone Y: "+str(format(droneY,'0.2f'))+", Drone Alt: "+
+        str(format(droneAlt,'0.2f'))+", Drone Yaw: "+str(format(droneYaw,'0.2f'))+"\nTarget X: "+str(format(self.target_lat,'0.2f'))+", Target Y: "+str(format(self.target_lon,'0.2f'))+
+        ", Target Alt: "+str(format(self.target_alt,'0.2f'))+", Target Yaw: "+str(format(self.target_yaw,'0.2f'))+"\nTags Detected: "+str(tagsDetected))
         self.window.update()
 
     def destroyWindow(self):

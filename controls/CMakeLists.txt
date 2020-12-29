@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 project(aviata)
 
+# On Linux, need to run `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"."` to get project to execute
+# On MacOS, use DYLD_LIBRARY_PATH instead
+
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99)
 endif()
@@ -20,6 +23,7 @@ find_package(ament_cmake)
 IF( ament_cmake_FOUND )
   find_package(rclcpp REQUIRED)
   find_package(std_msgs REQUIRED)
+  find_package(rosidl_default_generators REQUIRED)
 ENDIF()
 
 find_package(MAVSDK REQUIRED)
@@ -31,6 +35,10 @@ file(GLOB_RECURSE SOURCES
 add_library(aviata_lib ${SOURCES})
 IF( ament_cmake_FOUND )
   ament_target_dependencies(aviata_lib rclcpp std_msgs)
+  rosidl_generate_interfaces(${PROJECT_NAME}
+    "src/msg/DroneStatus.msg"
+  )
+  rosidl_target_interfaces(aviata_lib ${PROJECT_NAME} "rosidl_typesupport_cpp")
 ENDIF()
 
 target_link_libraries(aviata_lib
@@ -40,10 +48,16 @@ target_link_libraries(aviata_lib
     MAVSDK::mavsdk_mavlink_passthrough
 )
 
-add_executable(aviata src/aviata.cpp)
+add_executable(drone src/aviata_drone.cpp)
 add_executable(ground src/ground.cpp)
-target_link_libraries(aviata aviata_lib)
+add_executable(aviata_test src/test.cpp)
+target_link_libraries(drone aviata_lib)
 target_link_libraries(ground aviata_lib)
+target_link_libraries(aviata_test aviata_lib)
+
+# install(TARGETS 
+#   aviata
+#   DESTINATION lib/${PROJECT_NAME})
 
 IF( ament_cmake_FOUND )
   ament_package()

@@ -4,12 +4,14 @@
  */
 
 #include "px4_io.hpp"
-#include <chrono>
-#include <cstdint>
+
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/action/action.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
 #include <mavsdk/plugins/mavlink_passthrough/mavlink_passthrough.h>
+
+#include <chrono>
+#include <cstdint>
 #include <iostream>
 #include <future>
 #include <thread>
@@ -18,10 +20,19 @@ using namespace mavsdk;
 using namespace std::this_thread;
 using namespace std::chrono;
 
+// mavsdk
 Mavsdk mav; // name change to avoid namespace conflict
-std::shared_ptr<mavsdk::Telemetry> telemetry;
-std::shared_ptr<mavsdk::Action> action;
+std::shared_ptr<Telemetry> telemetry;
+std::shared_ptr<Action> action;
+std::shared_ptr<MavlinkPassthrough> mavlink_passthrough;
 std::string drone_id;
+
+// mavlink
+mavlink_attitude_target_t  att_struct;
+uint8_t target_system;
+uint8_t target_component;
+
+
 
 std::shared_ptr<System> connect_to_pixhawk(std::string drone_ID, std::string connection_url)
 //returns System pointer if connected, nullptr otherwise
@@ -58,9 +69,14 @@ std::shared_ptr<System> connect_to_pixhawk(std::string drone_ID, std::string con
     }
     telemetry = std::make_shared<Telemetry>(sys);
     action = std::make_shared<Action>(sys);
+    mavlink_passthrough = std::make_shared<MavlinkPassthrough>(sys);
+    target_system = mavlink_passthrough->get_target_sysid();
+    target_component = mavlink_passthrough->get_target_compid();
+
     return sys;
 }
 
+// @return 1 if successful, 0 otherwise
 int arm_system()
 //return 0 if fail, 1 if successs
 {
@@ -80,11 +96,12 @@ int arm_system()
     return 1;
 }
 
+// @return 1 if successful, 0 otherwise
 int disarm_system()
 {
-    // Verify drone is on ground and is already armed first
-    while (telemetry->armed() != true || telemetry->in_air() != true) {
-        std::cout << "Verifying " << drone_id << " is armed and not in air..." << std::endl;
+    // Verify drone is on ground
+    while (telemetry->in_air() != true) {
+        std::cout << "Verifying " << drone_id << " is not in the air..." << std::endl;
         sleep_for(seconds(1));
     }
 
@@ -99,6 +116,7 @@ int disarm_system()
     return 1;
 }
 
+// @return 1 if successful, 0 otherwise
 int takeoff_system()
 {
     if (telemetry->armed() != true){
@@ -117,6 +135,7 @@ int takeoff_system()
     return 1;
 }
 
+// @return 1 if successful, 0 otherwise
 int land_system()
 {
     std::cout << drone_id << " landing..." << std::endl;
@@ -136,21 +155,89 @@ int land_system()
     return 1;
 }
 
-void goto_gps_position(float lat, float lon)
+// @return 1 if successful, 0 otherwise
+int goto_gps_position(double lat, double lon, float alt, float yaw)
 // for DOCKED_LEADER (send attitude and thrust to followers)
 {
-    
+    const Action::Result goto_result = action->goto_location(lat, lon, alt, yaw);
+    if (goto_result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to go to:" << lat << " " << lon
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;
 }
 
-void get_attitude_and_thrust(float q[4], float* thrust)
+void subscribe_attitude_and_thrust(float q[4], float* thrust)
 {
-    
+    mavlink_passthrough->subscribe_message_async(MAVLINK_MSG_ID_ATTITUDE_TARGET, [&](const mavlink_message_t &attitude_target_message){
+        mavlink_msg_attitude_target_decode(&attitude_target_message, &att_struct);
+        q = att_struct.q;
+        thrust = &att_struct.thrust;
+        });
 }
 
-void set_attitude_and_thrust(float q[4], float thrust)
+void subscribe_attitude_and_thrust(mavlink_attitude_target_t *att_target_struct)
 {
-    
+    mavlink_passthrough->subscribe_message_async(MAVLINK_MSG_ID_ATTITUDE_TARGET, [&](const mavlink_message_t &attitude_target_message){
+        mavlink_msg_attitude_target_decode(&attitude_target_message, att_target_struct);
+        });
 }
+
+void unsubscribe_attitude_and_thrust()
+{
+    mavlink_passthrough->subscribe_message_async(MAVLINK_MSG_ID_ATTITUDE_TARGET, nullptr);
+}
+
+// @brief Ignores the attitude rates
+// @return 1 if successful, 0 otherwise
+int set_attitude_and_thrust(float q[4], float* thrust)
+{
+    mavlink_set_attitude_target_t set_att_struct;
+    std::copy(q, q + 4, set_att_struct.q);
+    set_att_struct.thrust = *thrust;
+    set_att_struct.type_mask =  ATTITUDE_TARGET_TYPEMASK_BODY_ROLL_RATE_IGNORE & 
+                                ATTITUDE_TARGET_TYPEMASK_BODY_PITCH_RATE_IGNORE &
+                                ATTITUDE_TARGET_TYPEMASK_BODY_YAW_RATE_IGNORE;
+
+    mavlink_message_t set_attitude_target_message;
+    uint16_t encode_result; //encode function returns a uint16_t, not sure what it represents
+    encode_result = mavlink_msg_set_attitude_target_encode(target_system, target_component, &set_attitude_target_message, &set_att_struct);
+    
+    MavlinkPassthrough::Result set_att_result = mavlink_passthrough->send_message(set_attitude_target_message);
+    if ( set_att_result != MavlinkPassthrough::Result::Success){
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to set attitude and thrust." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;    
+}
+
+// @brief Copies the attitude rates
+// @return 1 if successful, 0 otherwise
+int set_attitude_and_thrust(mavlink_attitude_target_t *att_target_struct)
+{
+    mavlink_set_attitude_target_t set_att_struct;
+    std::copy(att_target_struct->q, att_target_struct->q + 4, set_att_struct.q);
+    set_att_struct.thrust = att_target_struct->thrust;
+    set_att_struct.body_roll_rate = att_target_struct->body_roll_rate;
+    set_att_struct.body_pitch_rate = att_target_struct->body_pitch_rate;
+    set_att_struct.body_yaw_rate = att_target_struct->body_yaw_rate;
+    set_att_struct.type_mask = att_target_struct->type_mask;
+
+    mavlink_message_t set_attitude_target_message;
+    uint16_t encode_result; //encode function returns a uint16_t, not sure what it represents
+    encode_result = mavlink_msg_set_attitude_target_encode(target_system, target_component, &set_attitude_target_message, &set_att_struct);
+
+    MavlinkPassthrough::Result set_att_result = mavlink_passthrough->send_message(set_attitude_target_message);
+    if ( set_att_result != MavlinkPassthrough::Result::Success){
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to set attitude and thrust." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;    
+}
+
 
 
 ////////////////////////////////////////////
