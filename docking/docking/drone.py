@@ -126,7 +126,7 @@ class Drone:
             rot_angle = self.yaw + rot_err # yaw is in degrees, not degrees per second. must be set absolutely
             
             #Checks if drone is aligned with central target
-            if alt_err<tolerance and alt_err>-1*tolerance and rot_err<-2.0 and rot_err>-2.0 and x_err >-1*tolerance and x_err<1*tolerance and y_err > -1*tolerance and y_err<tolerance:
+            if alt_err<tolerance and alt_err>-1*tolerance and rot_err<2.0 and rot_err>-2.0 and x_err >-1*tolerance and x_err<1*tolerance and y_err > -1*tolerance and y_err<tolerance:
                 successful_frames+=1
             else:
                 successful_frames=0
