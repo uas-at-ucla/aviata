@@ -48,11 +48,11 @@ target_link_libraries(aviata_lib
     MAVSDK::mavsdk_mavlink_passthrough
 )
 
-add_executable(drone src/aviata_drone.cpp)
-add_executable(ground src/ground.cpp)
-add_executable(aviata_test src/test.cpp)
-target_link_libraries(drone aviata_lib)
-target_link_libraries(ground aviata_lib)
+add_executable(aviata_drone src/aviata_drone.cpp)
+add_executable(aviata_ground src/aviata_ground.cpp)
+add_executable(aviata_test src/aviata_test.cpp)
+target_link_libraries(aviata_drone aviata_lib)
+target_link_libraries(aviata_ground aviata_lib)
 target_link_libraries(aviata_test aviata_lib)
 
 # install(TARGETS 
