@@ -1,7 +1,12 @@
 #include "drone.hpp"
-#include "px4_io.hpp"
 
-Drone::Drone(std::string drone_id, PX4IO& px4_io): drone_id(drone_id), telemValues(px4_io), px4_io(px4_io)
+using namespace std::chrono;
+
+void Drone::init() {
+    Network::init();
+}
+
+Drone::Drone(std::string drone_id): drone_id(drone_id), network(), px4_io(drone_id), telemValues(px4_io)
 {
     telemValues.init_telem();
     drone_state = STANDBY;
@@ -9,6 +14,38 @@ Drone::Drone(std::string drone_id, PX4IO& px4_io): drone_id(drone_id), telemValu
     drone_status.drone_id = drone_id;
     drone_status.drone_state = drone_state;
     drone_status.docking_slot = docking_slot;
+}
+
+int Drone::run(std::string connection_url) {
+    // Do all the things
+}
+
+int Drone::test_get_att_target(std::string connection_url) {
+    if (px4_io.connect_to_pixhawk(connection_url, 5) == false) {
+        return 1;
+    }
+
+    px4_io.subscribe_attitude_target([](const mavlink_attitude_target_t& attitude_target) {
+        std::cout << "thrust: " << attitude_target.thrust << std::endl;
+    });
+
+    px4_io.arm_system();
+
+    bool began_descent = false;
+    std::cout << "Taking off!" << std::endl;
+    int64_t takeoff_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    px4_io.takeoff_system();
+    
+    while (true) {
+        if (!began_descent && duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - takeoff_time >= 10000) {
+            std::cout << "Landing!" << std::endl;
+            px4_io.land_system();
+            began_descent = true;
+        }
+        px4_io.call_queued_mavsdk_callbacks();
+    }
+
+    return 0;
 }
 
 void Drone::update_drone_status()

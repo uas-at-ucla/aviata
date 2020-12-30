@@ -4,11 +4,13 @@
 #include <string>
 #include <iostream>
 
+#include "../mavlink/v2.0/common/mavlink.h"
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
 
 #include "dronetelemetry.hpp"
 #include "px4_io.hpp"
+#include "network.hpp"
 
 enum DroneState {
     STANDBY,
@@ -34,18 +36,27 @@ struct DroneStatus {
 
 class Drone
 {
-	public:
-    Drone(std::string drone_id, PX4IO& px4_io);
+public:
+    static void init();
+
+    Drone(std::string drone_id);
+
+    int run(std::string connection_url);
+    int test_get_att_target(std::string connection_url);
     
-	// AVIATA 
-	//std::string drone_name;
-    std::string drone_id;
+private:
+    const std::string drone_id;
+
+    // APIs
+    Network network;
+    PX4IO px4_io;
+    DroneTelemetry telemValues;
+
+    // State
     DroneState drone_state;
     DroneStatus drone_status;
-    uint8_t docking_slot = -1;
-
-    //TELEMETRY
-    DroneTelemetry telemValues; // DroneTelemetry object
+    uint8_t docking_slot = 0;
+    std::map<std::string, DroneStatus> swarm; // map by ID
 
     void update_drone_status(); // call before sending data
 
@@ -76,9 +87,6 @@ class Drone
     void get_leader_setpoint(float q[4], float* thrust);
 
     void set_follower_setpoint(float q[4], float* thrust);
-    
-private:
-    PX4IO& px4_io;
 };
 
 #endif

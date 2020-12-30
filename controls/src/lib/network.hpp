@@ -1,9 +1,10 @@
 #ifndef NETWORK_HPP
 #define NETWORK_HPP
 
-#include "drone.hpp"
+#include <functional>
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "aviata/msg/drone_status.hpp"
 
 enum Message {
     REQUEST_SWAP,
@@ -30,15 +31,17 @@ enum Message {
 class Network: public rclcpp::Node
 {
 public:
+    static void init();
+
     Network();
     
-    void subscribe_to_status(void (*callback)(DroneStatus));
+    void subscribe_to_status(std::function<void(aviata::msg::DroneStatus)> callback);
 
     void subscribe_to_dock_command();
 
     void subscribe_to_undock_command();
 
-    void send_status(DroneStatus status);
+    void send_status(aviata::msg::DroneStatus status);
 
 private:
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr status_publisher = this->create_publisher<std_msgs::msg::String>("STATUS", 10);
