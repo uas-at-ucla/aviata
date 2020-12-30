@@ -172,7 +172,8 @@ class Drone:
                 docking_attempts+=1
                 if docking_attempts>MAX_ATTEMPTS:
                     print("Docking failed")
-                    #TODO: Final failure if docking fails after given attempts
+                    await self.safe_land()
+                    return
 
                 img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
                 errs=self.image_analyzer.process_image(img,0)
@@ -192,12 +193,22 @@ class Drone:
                     checked_frames=0
                 else:
                     pass
-                    #TODO: Implement logic if drone cannot find target after ascending
+                    #TODO: Implement logic if drone cannot find target after ascending (maybe make a fly to position method?)
 
             await asyncio.sleep(dt)
 
         print("Docking stage 3")
     
+    #Moves drone up and away from current location, then ends offboard control and lands
+    async def safe_land(self):
+        dt=0.05
+        for i in range (5/0.05): #Drone flies away up and to the north for 5 seconds 
+            await self.drone.offboard.set_velocity_ned(
+                        VelocityNedYaw(0.4, 0, -0.4, self.yaw)) #These numbers can be changed to get out of GPS error margin
+            asyncio.sleep(dt)
+        
+        await self.land()
+
     async def get_telemetry_rotation(self):
         """Poll to obtain the drone's yaw"""
         await self.drone.telemetry.set_rate_attitude(20) # update at 20Hz 

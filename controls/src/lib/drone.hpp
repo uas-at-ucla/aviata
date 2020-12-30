@@ -65,6 +65,18 @@ class Drone
     
     void land_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
 
+    void undock();
+
+    void dock(int n); 
+
+    void become_leader();
+
+    void become_follower(); //for successful sender of request_new_leader
+
+    void get_leader_setpoint(float q[4], float* thrust);
+
+    void set_follower_setpoint(float q[4], float* thrust);
+    
 private:
     PX4IO& px4_io;
 };

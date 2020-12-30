@@ -14,6 +14,10 @@ public:
     mavsdk::Telemetry::Battery droneBattery; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_quaternion.html
     mavsdk::Telemetry::Quaternion droneQuarternion; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_battery.html
     
+    //attitude targets
+    float q_target[4];
+    float thrust_target;
+    
     DroneTelemetry(PX4IO& px4_io);
     ~DroneTelemetry();
     void init_telem(); // initializes telemetry values
