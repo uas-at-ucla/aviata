@@ -207,8 +207,7 @@ class Drone:
                         VelocityNedYaw(0.4, 0, -0.4, self.yaw)) #These numbers can be changed to get out of GPS error margin
             asyncio.sleep(dt)
         
-        await self.drone.offboard.stop() #Stops offboard control, drone will hover in place
-        await drone.action.land()
+        await self.land()
 
     async def get_telemetry_rotation(self):
         """Poll to obtain the drone's yaw"""
