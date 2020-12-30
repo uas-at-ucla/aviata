@@ -1,7 +1,7 @@
 #include "drone.hpp"
 #include "px4_io.hpp"
 
-Drone::Drone(std::string drone_id, PX4IO& px4_io): drone_id(drone_id), px4_io(px4_io), telemValues(px4_io)
+Drone::Drone(std::string drone_id, PX4IO& px4_io): drone_id(drone_id), telemValues(px4_io), px4_io(px4_io)
 {
     telemValues.init_telem();
     drone_state = STANDBY;
