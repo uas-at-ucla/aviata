@@ -2,7 +2,7 @@
 #define NETWORK_HPP
 
 #include "drone.hpp"
-#include "rclcpp/rclcpp.hpp" // TODO make including ROS optional if people still need that
+#include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 
 enum Message {
@@ -26,8 +26,6 @@ enum Message {
     INITIALIZE_STATE,
     DRONE_STATUS
 };
-
-void ros2_test();
 
 class Network: public rclcpp::Node
 {
