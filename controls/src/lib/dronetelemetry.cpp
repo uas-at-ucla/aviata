@@ -1,28 +1,25 @@
 #include "dronetelemetry.hpp"
 
-DroneTelemetry::DroneTelemetry(std::shared_ptr<mavsdk::System> system)
-{
-    telem = new mavsdk::Telemetry(system);
-}
+DroneTelemetry::DroneTelemetry(PX4IO& px4_io): px4_io(px4_io) {}
 
 DroneTelemetry::~DroneTelemetry()
 {
     // cancel telem subscriptions
-    telem->subscribe_position(nullptr);
-    telem->subscribe_attitude_quaternion(nullptr);
-    telem->subscribe_battery(nullptr);
-    delete telem;
+    // px4_io.subscribe_position(nullptr);
+    // px4_io.subscribe_attitude_quaternion(nullptr);
+    // px4_io.subscribe_battery(nullptr);
 }
 
 void DroneTelemetry::init_telem()
 {
-    telem->subscribe_position([&](mavsdk::Telemetry::Position position) {
-        dronePosition = position;
-    });
-    telem->subscribe_attitude_quaternion([&](mavsdk::Telemetry::Quaternion quaternion){
-        droneQuarternion = quaternion;
-    });
-    telem->subscribe_battery([&](mavsdk::Telemetry::Battery battery){
-        droneBattery = battery;
-    });
+    // TODO add these subscription functions to px4_io
+    // px4_io.subscribe_position([&](mavsdk::Telemetry::Position position) {
+    //     dronePosition = position;
+    // });
+    // px4_io.subscribe_attitude_quaternion([&](mavsdk::Telemetry::Quaternion quaternion){
+    //     droneQuarternion = quaternion;
+    // });
+    // px4_io.subscribe_battery([&](mavsdk::Telemetry::Battery battery){
+    //     droneBattery = battery;
+    // });
 }

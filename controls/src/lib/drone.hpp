@@ -4,10 +4,11 @@
 #include <string>
 #include <iostream>
 
-#include "dronetelemetry.hpp"
-
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
+
+#include "dronetelemetry.hpp"
+#include "px4_io.hpp"
 
 enum DroneState {
     STANDBY,
@@ -34,9 +35,7 @@ struct DroneStatus {
 class Drone
 {
 	public:
-    Drone();
-    ~Drone();
-    Drone(std::string drone_id, std::string connection_url);
+    Drone(std::string drone_id, PX4IO& px4_io);
     
 	// AVIATA 
 	//std::string drone_name;
@@ -45,11 +44,8 @@ class Drone
     DroneStatus drone_status;
     uint8_t docking_slot = -1;
 
-    //MAVSDK
-    std::shared_ptr<mavsdk::System> system;
-
     //TELEMETRY
-    DroneTelemetry* telemValues; // pointer to DroneTelemetry object
+    DroneTelemetry telemValues; // DroneTelemetry object
 
     void update_drone_status(); // call before sending data
 
@@ -69,7 +65,8 @@ class Drone
     
     void land_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
 
-    private:
+private:
+    PX4IO& px4_io;
 };
 
 #endif
