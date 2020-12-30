@@ -8,6 +8,7 @@ DroneTelemetry::~DroneTelemetry()
     // px4_io.subscribe_position(nullptr);
     // px4_io.subscribe_attitude_quaternion(nullptr);
     // px4_io.subscribe_battery(nullptr);
+    // px4_io.unsubscribe_attitude_target();
 }
 
 void DroneTelemetry::init_telem()
@@ -21,5 +22,11 @@ void DroneTelemetry::init_telem()
     // });
     // px4_io.subscribe_battery([&](mavsdk::Telemetry::Battery battery){
     //     droneBattery = battery;
+    // });
+
+    //drone always subscribing to its own target setpoint
+    // px4_io.subscribe_attitude_target([](const mavlink_attitude_target_t& attitude_target) {
+    //      std::copy(attitude_target.q, attitude_target.q + 4, q_target);
+    //      thrust_target = attitude_target.thrust;
     // });
 }

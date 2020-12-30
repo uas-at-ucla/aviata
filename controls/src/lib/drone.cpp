@@ -63,3 +63,51 @@ void Drone::land_frame() // for DOCKED_LEADER (send attitude and thrust to follo
 {
 
 }
+
+void Drone::undock()
+{
+    if (drone_state == DOCKED_FOLLOWER)
+        drone_state = UNDOCKING;
+    // TODO implment control
+}
+
+// @param n frame position
+void Drone::dock(int n)
+{
+    // TODO possibly integrate controls stuff through ROS here?
+}
+
+void Drone::become_leader()
+{
+    if (drone_state == DOCKED_FOLLOWER)
+    {
+        drone_state = DOCKED_LEADER;
+        // TODO implement controls
+    }
+}
+
+void Drone::become_follower() //for successful sender of request_new_leader
+{
+    if (drone_state == DOCKED_LEADER)
+    {
+        drone_state = DOCKED_FOLLOWER;
+    }
+
+    if (1) //undock request
+    {
+        drone_state = UNDOCKING;
+    }
+}
+
+void Drone::get_leader_setpoint(float q[4], float *thrust)
+{
+    q = telemValues.q_target;
+    thrust = &(telemValues.thrust_target);
+}
+
+void Drone::set_follower_setpoint(float q[4], float *thrust)
+{
+    if (drone_state == DOCKED_FOLLOWER) //is this check necessary?
+        // offset calculations
+        px4_io.set_attitude_and_thrust(q, thrust);
+}
