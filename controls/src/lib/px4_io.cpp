@@ -66,6 +66,8 @@ bool PX4IO::connect_to_pixhawk(std::string connection_url, int timeout_seconds)
     mavlink_passthrough = std::make_shared<MavlinkPassthrough>(sys);
     target_system = mavlink_passthrough->get_target_sysid();
     target_component = mavlink_passthrough->get_target_compid();
+    our_system_id = mavlink_passthrough->get_our_sysid();
+    our_component_id = mavlink_passthrough->get_our_compid();
 
     return true;
 }
@@ -116,6 +118,18 @@ int PX4IO::disarm_system()
                   << std::endl;
         return 0;
     }
+    return 1;
+}
+
+// @return 1 if successful, 0 otherwise
+int PX4IO::set_offboard_mode() {
+    MavlinkPassthrough::CommandLong offboard_command;
+    offboard_command.target_sysid = target_system;
+    offboard_command.target_compid = target_component;
+    offboard_command.command = MAV_CMD_DO_SET_MODE;
+    offboard_command.param1 = VEHICLE_MODE_FLAG_CUSTOM_MODE_ENABLED;
+    offboard_command.param2 = PX4_CUSTOM_MAIN_MODE_OFFBOARD;
+    mavlink_passthrough->send_command_long(offboard_command); // TODO check success
     return 1;
 }
 
@@ -178,9 +192,9 @@ void PX4IO::subscribe_attitude_target(std::function<void(const mavlink_attitude_
             mavlink_passthrough->subscribe_message_async(MAVLINK_MSG_ID_ATTITUDE_TARGET, callback);
         },
         [user_callback](const mavlink_message_t& attitude_target_message) {
-            mavlink_attitude_target_t att_struct;
-            mavlink_msg_attitude_target_decode(&attitude_target_message, &att_struct);
-            user_callback(att_struct);
+            mavlink_attitude_target_t att_target_struct;
+            mavlink_msg_attitude_target_decode(&attitude_target_message, &att_target_struct);
+            user_callback(att_target_struct);
         }
     );
 }
@@ -192,43 +206,44 @@ void PX4IO::unsubscribe_attitude_target()
 
 // @brief Ignores the attitude rates
 // @return 1 if successful, 0 otherwise
-int PX4IO::set_attitude_and_thrust(float q[4], float* thrust)
-{
-    mavlink_set_attitude_target_t set_att_struct;
-    std::copy(q, q + 4, set_att_struct.q);
-    set_att_struct.thrust = *thrust;
-    set_att_struct.type_mask =  ATTITUDE_TARGET_TYPEMASK_BODY_ROLL_RATE_IGNORE & 
-                                ATTITUDE_TARGET_TYPEMASK_BODY_PITCH_RATE_IGNORE &
-                                ATTITUDE_TARGET_TYPEMASK_BODY_YAW_RATE_IGNORE;
+// int PX4IO::set_attitude_and_thrust(float q[4], float* thrust)
+// {
+//     mavlink_set_attitude_target_t set_att_struct;
+//     std::copy(q, q + 4, set_att_struct.q);
+//     set_att_struct.thrust = *thrust;
+//     set_att_struct.type_mask =  ATTITUDE_TARGET_TYPEMASK_BODY_ROLL_RATE_IGNORE |
+//                                 ATTITUDE_TARGET_TYPEMASK_BODY_PITCH_RATE_IGNORE |
+//                                 ATTITUDE_TARGET_TYPEMASK_BODY_YAW_RATE_IGNORE;
 
-    mavlink_message_t set_attitude_target_message;
-    uint16_t encode_result; //encode function returns a uint16_t, not sure what it represents
-    encode_result = mavlink_msg_set_attitude_target_encode(target_system, target_component, &set_attitude_target_message, &set_att_struct);
+//     mavlink_message_t set_attitude_target_message;
+//     uint16_t encode_result; //encode function returns a uint16_t, not sure what it represents
+//     encode_result = mavlink_msg_set_attitude_target_encode(our_system_id, our_component_id, &set_attitude_target_message, &set_att_struct);
     
-    MavlinkPassthrough::Result set_att_result = mavlink_passthrough->send_message(set_attitude_target_message);
-    if ( set_att_result != MavlinkPassthrough::Result::Success){
-        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to set attitude and thrust." 
-                  << NORMAL_CONSOLE_TEXT << std::endl;
-        return 0;
-    }
-    return 1;    
-}
+//     MavlinkPassthrough::Result set_att_result = mavlink_passthrough->send_message(set_attitude_target_message);
+//     if ( set_att_result != MavlinkPassthrough::Result::Success){
+//         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to set attitude and thrust." 
+//                   << NORMAL_CONSOLE_TEXT << std::endl;
+//         return 0;
+//     }
+//     return 1;    
+// }
 
 // @brief Copies the attitude rates
 // @return 1 if successful, 0 otherwise
-int PX4IO::set_attitude_and_thrust(mavlink_attitude_target_t *att_target_struct)
+int PX4IO::set_attitude_target(mavlink_set_attitude_target_t& att_target_struct)
 {
-    mavlink_set_attitude_target_t set_att_struct;
-    std::copy(att_target_struct->q, att_target_struct->q + 4, set_att_struct.q);
-    set_att_struct.thrust = att_target_struct->thrust;
-    set_att_struct.body_roll_rate = att_target_struct->body_roll_rate;
-    set_att_struct.body_pitch_rate = att_target_struct->body_pitch_rate;
-    set_att_struct.body_yaw_rate = att_target_struct->body_yaw_rate;
-    set_att_struct.type_mask = att_target_struct->type_mask;
+    att_target_struct.body_roll_rate = 0;
+    att_target_struct.body_pitch_rate = 0;
+    att_target_struct.body_yaw_rate = 0;
+    att_target_struct.type_mask = ATTITUDE_TARGET_TYPEMASK_BODY_ROLL_RATE_IGNORE | 
+                                  ATTITUDE_TARGET_TYPEMASK_BODY_PITCH_RATE_IGNORE |
+                                  ATTITUDE_TARGET_TYPEMASK_BODY_YAW_RATE_IGNORE;
+    att_target_struct.target_system = target_system;
+    att_target_struct.target_component = target_component;
 
     mavlink_message_t set_attitude_target_message;
     uint16_t encode_result; //encode function returns a uint16_t, not sure what it represents
-    encode_result = mavlink_msg_set_attitude_target_encode(target_system, target_component, &set_attitude_target_message, &set_att_struct);
+    encode_result = mavlink_msg_set_attitude_target_encode(our_system_id, our_component_id, &set_attitude_target_message, &att_target_struct);
 
     MavlinkPassthrough::Result set_att_result = mavlink_passthrough->send_message(set_attitude_target_message);
     if ( set_att_result != MavlinkPassthrough::Result::Success){

@@ -37,18 +37,18 @@ struct DroneStatus {
 class Drone
 {
 public:
-    static void init();
-
     Drone(std::string drone_id);
+    ~Drone();
 
     int run(std::string connection_url);
-    int test_get_att_target(std::string connection_url);
+    int test_lead_att_target(std::string connection_url);
+    int test_follow_att_target(std::string connection_url);
     
 private:
     const std::string drone_id;
 
     // APIs
-    Network network;
+    std::shared_ptr<Network> network;
     PX4IO px4_io;
     DroneTelemetry telemValues;
 

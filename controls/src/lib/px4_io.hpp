@@ -16,6 +16,10 @@
 #define TELEMETRY_CONSOLE_TEXT "\033[34m" // Turn text on console blue
 #define NORMAL_CONSOLE_TEXT "\033[0m" // Restore normal console colour
 
+// Copied from PX4 source code
+#define VEHICLE_MODE_FLAG_CUSTOM_MODE_ENABLED 1
+#define PX4_CUSTOM_MAIN_MODE_OFFBOARD 6
+
 using namespace mavsdk;
 
 // mavlink message id's https://github.com/mavlink/mavlink/blob/master/message_definitions/v1.0/common.xml
@@ -35,6 +39,8 @@ public:
 
     int disarm_system();
 
+    int set_offboard_mode();
+
     int takeoff_system();
 
     int land_system();
@@ -44,24 +50,23 @@ public:
     int goto_gps_position(double lat, double lon, float alt, float yaw);
 
     void subscribe_attitude_target(std::function<void(const mavlink_attitude_target_t&)> user_callback);
-
     void unsubscribe_attitude_target();
-
-    int set_attitude_and_thrust(float q[4], float* thrust);
-    int set_attitude_and_thrust(mavlink_attitude_target_t *att_target_struct);
+    int set_attitude_target(mavlink_set_attitude_target_t& att_target_struct);
 
     int takeoff_and_land_test(int argc, char** argv);
 
 private:
-    std::string drone_id;
+    const std::string drone_id;
 
     Mavsdk mav;
     std::shared_ptr<System> sys;
-    uint8_t target_system;
-    uint8_t target_component;
     std::shared_ptr<Telemetry> telemetry;
     std::shared_ptr<Action> action;
     std::shared_ptr<MavlinkPassthrough> mavlink_passthrough;
+    uint8_t target_system;
+    uint8_t target_component;
+    uint8_t our_system_id;
+    uint8_t our_component_id;
 
     MavsdkCallbackManager mavsdk_callback_manager;
 

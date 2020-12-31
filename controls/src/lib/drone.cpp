@@ -1,13 +1,13 @@
 #include "drone.hpp"
+#include "aviata/msg/follower_setpoint.hpp"
 
 using namespace std::chrono;
 
-void Drone::init() {
-    Network::init();
-}
-
-Drone::Drone(std::string drone_id): drone_id(drone_id), network(), px4_io(drone_id), telemValues(px4_io)
+Drone::Drone(std::string drone_id): drone_id(drone_id), px4_io(drone_id), telemValues(px4_io)
 {
+    Network::init();
+    network = std::make_shared<Network>(drone_id);
+
     telemValues.init_telem();
     drone_state = STANDBY;
 
@@ -16,20 +16,31 @@ Drone::Drone(std::string drone_id): drone_id(drone_id), network(), px4_io(drone_
     drone_status.docking_slot = docking_slot;
 }
 
-int Drone::run(std::string connection_url) {
-    // Do all the things
+Drone::~Drone() {
+    Network::shutdown();
 }
 
-int Drone::test_get_att_target(std::string connection_url) {
+int Drone::run(std::string connection_url) {
+    // Do all the things
+    return 0;
+}
+
+int Drone::test_lead_att_target(std::string connection_url) {
     if (px4_io.connect_to_pixhawk(connection_url, 5) == false) {
         return 1;
     }
 
-    px4_io.subscribe_attitude_target([](const mavlink_attitude_target_t& attitude_target) {
-        std::cout << "thrust: " << attitude_target.thrust << std::endl;
-    });
-
     px4_io.arm_system();
+
+    network->init_follower_setpoint_publisher();
+
+    px4_io.subscribe_attitude_target([this](const mavlink_attitude_target_t& attitude_target) {
+        aviata::msg::FollowerSetpoint follower_setpoint;
+        std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(follower_setpoint.q));
+        follower_setpoint.thrust = attitude_target.thrust;
+        network->publish_follower_setpoint(follower_setpoint);
+        std::cout << "attitude_target thrust: " << attitude_target.thrust << std::endl;
+    });
 
     bool began_descent = false;
     std::cout << "Taking off!" << std::endl;
@@ -37,12 +48,52 @@ int Drone::test_get_att_target(std::string connection_url) {
     px4_io.takeoff_system();
     
     while (true) {
-        if (!began_descent && duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - takeoff_time >= 10000) {
+        if (!began_descent && duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - takeoff_time >= 20000) {
             std::cout << "Landing!" << std::endl;
             px4_io.land_system();
             began_descent = true;
         }
         px4_io.call_queued_mavsdk_callbacks();
+        Network::spin_some(network);
+    }
+
+    return 0;
+}
+
+int Drone::test_follow_att_target(std::string connection_url) {
+    if (px4_io.connect_to_pixhawk(connection_url, 5) == false) {
+        return 1;
+    }
+
+    px4_io.arm_system(); // TODO manage auto disarm for follower drones
+
+    mavlink_set_attitude_target_t initial_attitude_target;
+    initial_attitude_target.q[0] = 1;
+    initial_attitude_target.q[1] = 0;
+    initial_attitude_target.q[2] = 0;
+    initial_attitude_target.q[3] = 0;
+    initial_attitude_target.thrust = 0;
+
+    // Fulfill PX4 requirement to "already be receiving a stream of target setpoints (>2Hz)" before offboard mode can be engaged
+    // TODO the optimal way to do this will be to to attempt entering offboard mode each time until it works.
+    for (int i = 0; i < 50; i++) {
+        px4_io.set_attitude_target(initial_attitude_target);
+        std::this_thread::sleep_for(milliseconds(50));
+    }
+
+    px4_io.set_offboard_mode();
+
+    network->subscribe_follower_setpoint([this](const aviata::msg::FollowerSetpoint::SharedPtr follower_setpoint) {
+        mavlink_set_attitude_target_t attitude_target;
+        std::copy(std::begin(follower_setpoint->q), std::end(follower_setpoint->q), std::begin(attitude_target.q));
+        attitude_target.thrust = follower_setpoint->thrust;
+        px4_io.set_attitude_target(attitude_target);
+        std::cout << "follower_setpoint thrust: " << follower_setpoint->thrust << std::endl;
+    });
+    
+    while (true) {
+        px4_io.call_queued_mavsdk_callbacks();
+        Network::spin_some(network);
     }
 
     return 0;
@@ -144,7 +195,7 @@ void Drone::get_leader_setpoint(float q[4], float *thrust)
 
 void Drone::set_follower_setpoint(float q[4], float *thrust)
 {
-    if (drone_state == DOCKED_FOLLOWER) //is this check necessary?
-        // offset calculations
-        px4_io.set_attitude_and_thrust(q, thrust);
+    // if (drone_state == DOCKED_FOLLOWER) //is this check necessary?
+    //     // offset calculations
+    //     px4_io.set_attitude_and_thrust(q, thrust); // TODO update function call
 }
