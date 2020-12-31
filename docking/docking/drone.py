@@ -80,16 +80,16 @@ class Drone:
         telemetry_task = asyncio.create_task(self.get_telemetry_position())
         rotation_task = asyncio.create_task(self.get_telemetry_rotation())
 
-        await self.stage1()
-        await self.stage2()
-        await self.stage3(id)
+        if await self.stage1():
+            await self.stage2()
+            await self.stage3(id)
 
         telemetry_task.cancel()
         rotation_task.cancel()
 
     async def stage1(self):
         """
-        Position the drone above the large central target
+        Position the drone above the large central target, returns true if successful
         (unfinished)
         """
         print("Docking stage 1")
@@ -101,6 +101,7 @@ class Drone:
         successful_frames=0 #Number of frames within tolerance 
         dt = 0.05 # delta t, 20hz
         pid_controller = PIDController(dt)
+        MAX_HEIGHT=25
 
         while True:
             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
@@ -108,6 +109,11 @@ class Drone:
             
             if errs is None:
                 frames_elapsed = frames_elapsed + 1
+
+                if self.down*-1.0 - self.target.getAlt()>MAX_HEIGHT: #Drone moves above max height, docking fails
+                    print("Docking failed: Max height exceeded")
+                    await self.safe_land()
+                    return False
 
                 if frames_elapsed > 1 / dt: # haven't detected target in 1 second
                     await self.drone.offboard.set_velocity_ned(
@@ -141,6 +147,7 @@ class Drone:
             await asyncio.sleep(dt)
         
         debug_window.destroyWindow()
+        return True
 
     async def stage2(self):
         """Fly from the central target to the peripheral target"""
