@@ -82,23 +82,24 @@ class Drone:
         telemetry_task = asyncio.create_task(self.get_telemetry_position())
         rotation_task = asyncio.create_task(self.get_telemetry_rotation())
 
-        await self.stage1()
-        await self.stage2(id)
-        await self.stage3(id)
+        if await self.stage1():
+            await self.stage2(id)
+            await self.stage3(id)
 
         telemetry_task.cancel()
         rotation_task.cancel()
 
     async def stage1(self):
-        """Position the drone above the large central target"""
+        """Position the drone above the large central target, returns true if successful"""
         print("Docking stage 1")
 
         debug_window=DebugWindow(1,self.target)
 
         frames_elapsed = 0
-        tolerance = 0.2 # tolerance for alignment, 20cm
-        successful_frames = 0 # number of frames within tolerance
+        tolerance=0.2 #Tolerance for alignment
+        successful_frames=0 #Number of frames within tolerance 
         pid_controller = PIDController(self.dt)
+        MAX_HEIGHT=25
 
         while True:
             start_millis = int(round(time.time() * 1000))
@@ -107,6 +108,11 @@ class Drone:
             
             if errs is None:
                 frames_elapsed = frames_elapsed + 1
+
+                if self.down*-1.0 - self.target.getAlt()>MAX_HEIGHT: #Drone moves above max height, docking fails
+                    print("Docking failed: Max height exceeded")
+                    await self.safe_land()
+                    return False
 
                 if frames_elapsed > 1 / self.dt: # haven't detected target in 1 second
                     await self.drone.offboard.set_velocity_ned(
@@ -143,6 +149,7 @@ class Drone:
                 await asyncio.sleep(self.dt - (current_millis - start_millis))
         
         debug_window.destroyWindow()
+        return True
 
     async def stage2(self, id):
         """Fly from the central target to the peripheral target"""
@@ -198,48 +205,51 @@ class Drone:
     async def stage3(self, id):
         """Position the drone above the peripheral target and descend"""
         print("Docking stage 3")
-        
+
+        debug_window=DebugWindow(3,self.target)
         pid_controller = PIDController(self.dt)
-        debug_window = DebugWindow(1, self.target)
         while True:
+        
+            #Verifies preconditions for stage 3 of docking (detect target within 1 second)
             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
             errs = self.image_analyzer.process_image(img, id)
-
-            # Verifies preconditions for stage 3 of docking (detect target within 1 second)
-            # Waits for one second to detect target tag, ascends to find central target if fails
             checked_frames=0
+            dt=0.05
             docking_attempts=0
             MAX_ATTEMPTS=3 #Number of unsuccessful attempts before aborting docking
             MAX_HEIGHT=25 #Max height above central target before failure
-            # while errs is None:
-            #     checked_frames+=1
-            #     if checked_frames>1 / self.dt:
-            #         docking_attempts+=1
-            #         if docking_attempts>MAX_ATTEMPTS:
-            #             print("Docking failed")
-            #             #TODO: Final failure if docking fails after given attempts
 
-            #         img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-            #         errs=self.image_analyzer.process_image(img,0)
-                    
-            #         #Ascends until maximum height or until central target detected
-            #         while errs is None and self.down*-1.0 - self.target.getAlt()<MAX_HEIGHT:
-            #             await self.drone.offboard.set_velocity_ned(VelocityNedYaw(0, 0, -0.2, self.yaw))
-            #             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-            #             errs=self.image_analyzer.process_image(img,0)
-                    
-            #         # Re-attempts stage 1 and stage 2 docking if central target found
-            #         if not errs is None:
-            #             await self.stage1()
-            #             await self.stage2(id)
-            #             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-            #             errs = self.image_analyzer.process_image(img, id)
-            #             checked_frames=0
-            #         else:
-            #             pass
-            #             #TODO: Implement logic if drone cannot find target after ascending
+            #Waits for one second to detect target tag, ascends to find central target if fails
+            while errs is None:
+                checked_frames+=1
+                if checked_frames>1 / dt:
+                    docking_attempts+=1
+                    if docking_attempts>MAX_ATTEMPTS:
+                        print("Docking failed")
+                        await self.safe_land()
+                        return
 
-            #     await asyncio.sleep(self.dt)
+                    img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
+                    errs=self.image_analyzer.process_image(img,0)
+                    
+                    #Ascends until maximum height or until central target detected
+                    while errs is None and self.down*-1.0 - self.target.getAlt()<MAX_HEIGHT:
+                        await self.drone.offboard.set_velocity_ned(VelocityNedYaw(0, 0, -0.2, self.yaw))
+                        img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
+                        errs=self.image_analyzer.process_image(img,0)
+                    
+                    # Re-attempts stage 1 and stage 2 docking if central target found
+                    if not errs is None:
+                        await self.stage1()
+                        await self.stage2(id)
+                        img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
+                        errs = self.image_analyzer.process_image(img, id)
+                        checked_frames=0
+                    else:
+                        pass
+                        #TODO: Implement logic if drone cannot find target after ascending (maybe make a fly to position method?)
+
+                await asyncio.sleep(dt)
 
             x_err, y_err, alt_err, rot_err, tags_detected = errs
             alt_err = alt_err - .5
@@ -253,6 +263,16 @@ class Drone:
                 VelocityNedYaw(north_velocity, east_velocity, down_velocity, rot_angle)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
             
             await asyncio.sleep(self.dt)
+    
+    #Moves drone up and away from current location, then ends offboard control and lands
+    async def safe_land(self):
+        dt=0.05
+        for i in range (5/0.05): #Drone flies away up and to the north for 5 seconds 
+            await self.drone.offboard.set_velocity_ned(
+                        VelocityNedYaw(0.4, 0, -0.4, self.yaw)) #These numbers can be changed to get out of GPS error margin
+            asyncio.sleep(dt)
+        
+        await self.land()
 
     async def get_telemetry_rotation(self):
         """Poll to obtain the drone's yaw"""

@@ -9,13 +9,16 @@ Structure:
 * `mesh/` - mesh networking between drones
 * `ground/` - everything related to the ground station, including communication with drones and coordination/monitoring for swapping
 
-# Building Controls Code
+# Controls Code
+## Building Controls Code
 Installation Requirements:
 * cmake
 * https://mavsdk.mavlink.io/develop/en/getting_started/installation.html
+* ROS2
 
 Build:
 ```bash
+# source your ROS2 setup script
 cd controls
 mkdir build
 cd build
@@ -23,4 +26,28 @@ cmake ..
 make
 ```
 
-Run with PX4 simulator: `./aviata udp://:14540`
+## Running Controls Code
+### Single Drone PX4 Simulation
+Run in the PX4-Autopilot folder:
+```bash
+make px4_sitl gazebo_typhoon_h480
+```
+
+### Multi-Vehicle PX4 Simulation
+Run in the PX4-Autopilot folder:
+```bash
+Tools/gazebo_sitl_multiple_run.sh -m typhoon_h480 -n 2
+```
+
+### Run AVIATA Controls Code (temporary)
+First, run this:
+* On Linux: `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"."`
+* On MacOS: `export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:"."`
+
+Next, run the `aviata_drone` executable from within the controls/build folder. For example, you can run these two commands in separate terminals if you are using multi-vehicle simulation:
+```bash
+./aviata_drone follower follow udp://:14541
+```
+```bash
+./aviata_drone leader lead udp://:14540
+```

@@ -4,10 +4,13 @@
 #include <string>
 #include <iostream>
 
-#include "dronetelemetry.hpp"
-
+#include "../mavlink/v2.0/common/mavlink.h"
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
+
+#include "dronetelemetry.hpp"
+#include "px4_io.hpp"
+#include "network.hpp"
 
 enum DroneState {
     STANDBY,
@@ -33,23 +36,27 @@ struct DroneStatus {
 
 class Drone
 {
-	public:
-    Drone();
+public:
+    Drone(std::string drone_id);
     ~Drone();
-    Drone(std::string drone_id, std::string connection_url);
+
+    int run(std::string connection_url);
+    int test_lead_att_target(std::string connection_url);
+    int test_follow_att_target(std::string connection_url);
     
-	// AVIATA 
-	//std::string drone_name;
-    std::string drone_id;
+private:
+    const std::string drone_id;
+
+    // APIs
+    std::shared_ptr<Network> network;
+    PX4IO px4_io;
+    DroneTelemetry telemValues;
+
+    // State
     DroneState drone_state;
     DroneStatus drone_status;
-    uint8_t docking_slot = -1;
-
-    //MAVSDK
-    std::shared_ptr<mavsdk::System> system;
-
-    //TELEMETRY
-    DroneTelemetry* telemValues; // pointer to DroneTelemetry object
+    uint8_t docking_slot = 0;
+    std::map<std::string, DroneStatus> swarm; // map by ID
 
     void update_drone_status(); // call before sending data
 
@@ -69,7 +76,17 @@ class Drone
     
     void land_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
 
-    private:
+    void undock();
+
+    void dock(int n); 
+
+    void become_leader();
+
+    void become_follower(); //for successful sender of request_new_leader
+
+    void get_leader_setpoint(float q[4], float* thrust);
+
+    void set_follower_setpoint(float q[4], float* thrust);
 };
 
 #endif

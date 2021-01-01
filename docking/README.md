@@ -23,7 +23,8 @@ This subsystem focuses on the docking portion of AVIATA - from the time a drone 
 ```
 $ make px4_sitl gazebo
 ```
-2. Run the startup script (from this directory)
+2. Wait for PX4 to finish initializing - you'll see a log message in the terminal that states `INFO home_set`. This should take roughly 10 seconds from the moment the Gazebo window shows up. Otherwise, you may get strange errors such as the drone not taking off when it says it has.
+3. Run the startup script (from this directory)
 ```
 $ python3 docking/docking.py
 ```

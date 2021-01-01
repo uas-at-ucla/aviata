@@ -4,23 +4,26 @@
 #include <string>
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
+#include "px4_io.hpp"
 
 class DroneTelemetry
 {
-    public:
+public:
+    //dronestatus fields
+    mavsdk::Telemetry::Position dronePosition; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_position.html
+    mavsdk::Telemetry::Battery droneBattery; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_quaternion.html
+    mavsdk::Telemetry::Quaternion droneQuarternion; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_battery.html
+    
+    //attitude targets
+    float q_target[4];
+    float thrust_target;
+    
+    DroneTelemetry(PX4IO& px4_io);
+    ~DroneTelemetry();
+    void init_telem(); // initializes telemetry values
 
-        //dronestatus fields
-        mavsdk::Telemetry::Position dronePosition; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_position.html
-        mavsdk::Telemetry::Battery droneBattery; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_quaternion.html
-        mavsdk::Telemetry::Quaternion droneQuarternion; //https://mavsdk.mavlink.io/develop/en/api_reference/structmavsdk_1_1_telemetry_1_1_battery.html
-
-        // MAVSDK
-        std::string connection_url;
-        mavsdk::Telemetry* telem; // mavsdk Telemetry object
-        
-        DroneTelemetry(std::shared_ptr<mavsdk::System> system);
-        ~DroneTelemetry();
-        void init_telem(); // initializes telemetry values
+private:
+    PX4IO& px4_io;
 };
 
 #endif

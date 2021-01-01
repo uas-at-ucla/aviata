@@ -1,74 +1,45 @@
-#define USE_ROS // Comment to disable ROS2 code
-
 #include "network.hpp"
-#include <chrono>
-#include <functional>
-#include <memory>
-#include <string>
-#include "aviata/msg/drone_status.hpp"
 
-using namespace std::chrono_literals;
-
-#ifdef USE_ROS
-
-// ROS2 example code
-class MinimalPublisher : public rclcpp::Node
-{
-  public:
-    MinimalPublisher()
-    : Node("minimal_publisher"), count_(0)
-    {
-      publisher_ = this->create_publisher<aviata::msg::DroneStatus>("topic", 10);
-      timer_ = this->create_wall_timer(
-      500ms, std::bind(&MinimalPublisher::timer_callback, this));
-    }
-
-    size_t get_count() {
-      return count_;
-    }
-
-  private:
-    void timer_callback()
-    {
-      auto message = aviata::msg::DroneStatus();
-      message.drone_id = "Drone ID: " + std::to_string(this->count_++);
-      RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.drone_id.c_str());
-      publisher_->publish(message);
-    }
-    rclcpp::TimerBase::SharedPtr timer_;
-    rclcpp::Publisher<aviata::msg::DroneStatus>::SharedPtr publisher_;
-    size_t count_;
-};
-
-void ros2_test() {
-    std::cout << "Starting ROS2 test" << std::endl;
+void Network::init() {
     rclcpp::init(0, nullptr);
-    std::shared_ptr<MinimalPublisher> node = std::make_shared<MinimalPublisher>();
-    while (node->get_count() < 10) {
-      rclcpp::spin_some(node);
-    }
+}
+
+void Network::spin_some(rclcpp::Node::SharedPtr node_ptr) {
+    rclcpp::spin_some(node_ptr);
+}
+
+void Network::shutdown() {
     rclcpp::shutdown();
 }
 
-#else
-// Dummy code when testing w/o ROS
-void ros2_test() {}
-#endif
+Network::Network(std::string drone_id) : Node(drone_id), drone_id(drone_id) {}
 
-Network::Network() : Node("drone_id_goes_here") {
-
+void Network::init_follower_setpoint_publisher() {
+    follower_setpoint_publisher = this->create_publisher<aviata::msg::FollowerSetpoint>(FOLLOWER_SETPOINT, sensor_data_qos);
 }
 
-void Network::subscribe_to_status(void (*callback)(DroneStatus)) { // TODO double check correct function pointer format
-    // call ROS2 functions to subscribe to the "status" ROS topic
-    // ROS callback:
-    // {
-    //     DroneStatus status = // convert ROS msg to DroneStatus;
-    //     callback();
-    // }
+void Network::deinit_follower_setpoint_publisher() {
+    follower_setpoint_publisher = nullptr;
 }
 
-void Network::send_status(DroneStatus status) {
-    // convert status to a ROS message
-    // status_publisher->publish(message);
+void Network::publish_follower_setpoint(const aviata::msg::FollowerSetpoint& follower_setpoint) {
+    if (follower_setpoint_publisher != nullptr) {
+        follower_setpoint_publisher->publish(follower_setpoint);
+    }
+}
+
+void Network::subscribe_follower_setpoint(std::function<void(const aviata::msg::FollowerSetpoint::SharedPtr)> callback) {
+    follower_setpoint_subscription = this->create_subscription<aviata::msg::FollowerSetpoint>(FOLLOWER_SETPOINT, sensor_data_qos, callback);
+}
+
+void Network::unsubscribe_follower_setpoint() {
+    follower_setpoint_subscription = nullptr;
+}
+
+void Network::subscribe_to_status(std::function<void(aviata::msg::DroneStatus)> callback) {
+    // call ROS2 functions to subscribe to the "status" ROS topic and register the callback
+}
+
+void Network::send_status(aviata::msg::DroneStatus status) {
+    // status_publisher->publish(status);
 }

@@ -1,36 +1,37 @@
-#include "lib/px4_io.hpp"
-#include "lib/network.hpp"
 #include "lib/drone.hpp"
-#include <map>
-
-std::map<std::string, DroneStatus> SWARM; // map by ID
 
 int main(int argc, char** argv) {
+    if (argc < 3) {
+        std::cout << "Usage: ./aviata_drone <drone_id> <program> [connection_url]" << std::endl;
+        std::cout << "programs: lead, follow" << std::endl;
+        return 1;
+    }
+    std::string connection_url = "udp://:14540";
+    if (argc >= 4) {
+        connection_url = argv[3];
+    }
 
-    //takeoff_and_land_test(argc, argv);
-    ros2_test();
+    Drone drone(argv[1]);
+    if (strcmp(argv[2], "lead") == 0) {
+        drone.test_lead_att_target(connection_url);
+    } else if (strcmp(argv[2], "follow") == 0) {
+        drone.test_follow_att_target(connection_url);
+    } else {
+        std::cout << "Unkown program: " << argv[2] << std::endl;
+    }
 
-    // Test Drone object
-    Drone* test1 = new Drone("droneTest1", argv[1]);
+    // takeoff_and_land_test(argc, argv);
+    // ros2_test();
 
-    test1->arm_drone();
-    std::this_thread::sleep_for(std::chrono::seconds(3));
-    test1->takeoff_drone();
-    std::this_thread::sleep_for(std::chrono::seconds(9));
-    test1->land_drone();
-    //test1->disarm_drone(); //disarm when landed
+    // // Test Drone object
+    // Drone* test1 = new Drone("droneTest1", argv[1]);
 
-
-    // Example control loop
-    // int i = 0;
-    // while (true) {
-    //     // loop 10Hz
-    //     if (i == 10) {
-    //         send_message("STATUS", status);
-    //         i = 0;
-    //     }
-    //     i++;
-    // }
+    // test1->arm_drone();
+    // std::this_thread::sleep_for(std::chrono::seconds(3));
+    // test1->takeoff_drone();
+    // std::this_thread::sleep_for(std::chrono::seconds(9));
+    // test1->land_drone();
+    // test1->disarm_drone(); //disarm when landed
 }
 
 // Notes on subscribing to STATUS topics with different rates:
