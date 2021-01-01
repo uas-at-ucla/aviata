@@ -7,7 +7,7 @@ class PIDController:
         self.ki_ev_start = False
         self.ki_nv_start = False
 
-    def get_velocities(self, x_err, y_err, alt_err):
+    def get_velocities(self, x_err, y_err, alt_err, max):
         ku_nv = 2.6
         ku_ev = 2.15
         ku_dv = 3.5
@@ -28,17 +28,17 @@ class PIDController:
 
         # manual tuning
         ki_nv = 0 
-        ki_ev = 0.16 
-        ki_dv = 9.3
+        ki_ev = 0 #0.16 
+        ki_dv = 0 #9.3
 
         east_velocity = x_err * kp_ev + (x_err - self.prev_errs[0]) / self.dt * kd_ev + self.sum_errs[0] * self.dt * ki_ev
         north_velocity = y_err * kp_nv + (y_err - self.prev_errs[1]) / self.dt * kd_nv + self.sum_errs[1] * self.dt * ki_nv
         down_velocity = alt_err * kp_dv + (alt_err - self.prev_errs[2]) / self.dt * kd_dv + self.sum_errs[2] * self.dt * ki_dv
 
         # Set maximum speed
-        east_velocity = self.abs_minmax(east_velocity, 0.5)
-        north_velocity = self.abs_minmax(north_velocity, 0.5)
-        down_velocity = self.abs_minmax(down_velocity, 0.5)
+        east_velocity = self.abs_minmax(east_velocity, max)
+        north_velocity = self.abs_minmax(north_velocity, max)
+        down_velocity = self.abs_minmax(down_velocity, max)
 
         if alt_err < 0.5:
             self.ki_dv_start = True

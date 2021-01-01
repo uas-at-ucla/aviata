@@ -4,8 +4,8 @@ from drone import Drone
 from target import Target
 
 async def dock():
-    target=Target (0,0,0,0)
-    drone = Drone(3,target)
+    target = Target(0, 0, 0, 0)
+    drone = Drone(3, target)
     await drone.connect_gazebo()
     await drone.takeoff()
     await drone.initiate_docking(1)
