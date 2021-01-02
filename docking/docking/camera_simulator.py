@@ -1,4 +1,3 @@
-import pygame
 import numpy as np
 import math
 import cv2
@@ -71,47 +70,52 @@ class CameraSimulator:
         # Protects against invalid altitude
         if(relativeAlt <= 0):
             print("Altitude too low")
-            pygame.quit()
             return cv2.imread(self.background_image_name, 0)
             quit()
 
-        # Resizes Image given the altitude and precomputed scale factor (scale precomputed for efficiency)
+        # Scale factor for AprilTags given current altitude
         scale = abs(int(self.scale_constant / relativeAlt))
-        april_tag = cv2.resize(self.april_tag, (scale, scale))
 
-        # Sets translation of AprilTag
-        # Converts cartesian translation to polar coordinates
+        # Sets translation of AprilTag (polar coordinates)
         translationDist = math.sqrt(relativeLat**2 + relativeLon**2)
         translationAngle = np.arctan2(relativeLon, relativeLat)
-
-        # Adjusts for relative rotation then converts to pixel offset
-        common_ops = self.scale_constant * translationDist / 2.0 / relativeAlt
+        common_ops = self.scale_constant * translationDist / 2.0 / relativeAlt # convert to pixel offset
         offsetx = math.cos(translationAngle) * common_ops
         offsety = math.sin(translationAngle) * common_ops
 
-        # Rotates AprilTag without clipping
-        april_tag = self.rotate_image(april_tag, -1 * relativeYaw)
-        m1 = int(round(time.time() * 1000))
-
-        # Puts AprilTags on white canvas background, clipping edges if necessary
+        # White canvas background for AprilTags
         background = cv2.imread(self.background_image_name)
         background = cv2.resize(background, (self.display_width, self.display_height))
-        img = april_tag
 
+        # Top left corner of upscaled AprilTag image
         x = int(self.display_width * 0.50 - offsetx - scale / 2.0)
         y = int(self.display_height * 0.50 + offsety - scale / 2.0)
+
+        # As we descend, we need to upscale the AprilTag more and more. The edges are eventually going to overflow out
+        # of our plain white background, so here we calculate the pixel offsets to crop
+        x_min = y_min = 0
+        x_max = y_max = scale
         if y < 0: # crop top
-            img = img[-y:img.shape[0], 0:img.shape[1]]
+            y_min = -y
             y = 0
         if x < 0: # crop left
-            img = img[0:img.shape[0], -x:img.shape[1]]
+            x_min = -x
             x = 0
-        if img.shape[0] + y > background.shape[0]: # crop bottom
-            img = img[0:background.shape[0] - y, 0:img.shape[1]]
-        if img.shape[1] + x > background.shape[1]: # crop right
-            img = img[0:img.shape[0], 0:background.shape[1] - x]
+        if scale + y > background.shape[0]: # crop bottom
+            y_max = background.shape[0] - y + y_min
+        if scale + x > background.shape[1]: # crop right
+            x_max = background.shape[1] - x + x_min
 
-        background[y : y + img.shape[0], x : x + img.shape[1]] = img # paste tags on background
+        # At very low altitudes, we upscale the AprilTags so much we run out of memory. This solves the problem by cropping the
+        # original AprilTag before upscaling it, so we only upscale the area of the image we need
+        sls = 4668 / scale
+        at = self.april_tag[int(y_min * sls):int(y_max * sls), int(x_min * sls):int(x_max * sls)] # TODO: this turns the FOV into a square, losing our extended horizontal FOV
+        at = cv2.resize(at, (0, 0), fx=(scale / 4668), fy=(scale / 4668))
+        at = self.rotate_image(at, -1 * relativeYaw)
+        m1 = int(round(time.time() * 1000))
+
+        at = at[0:background.shape[1]-1, 0:background.shape[0]-1] # clip the edges in case of integer rounding resulting in excess pixels
+        background[y:y+at.shape[0], x:x+at.shape[1]] = at # paste tags on background
         cv2.imshow("Drone camera", background)
         cv2.waitKey(1)
 

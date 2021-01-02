@@ -62,7 +62,7 @@ class Drone:
         # start offboard mode (requires setting initial setpoint)
         print("-- Setting initial setpoint")
         await self.drone.offboard.set_velocity_ned(
-            VelocityNedYaw(0.0, 0.0, 0.0, 0.0))
+            VelocityNedYaw(0.0, 0.0, 0.0, 90.0))
 
         print("-- Starting offboard")
         try:
