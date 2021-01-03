@@ -28,14 +28,11 @@ class ImageAnalyzer:
         height, width, _ = img.shape
         img_center = (int(width / 2), int(height / 2))
 
-        
-        m1 = int(round(time.time() * 1000))
+        # rotate to due north, so we can use north/east/down (ned) coordinates instead of body coordinates
         image_center = tuple(np.array(img.shape[1::-1]) / 2)
         rot_mat = cv2.getRotationMatrix2D(image_center, yaw * -1, 1.0)
         result = cv2.warpAffine(img, rot_mat, img.shape[1::-1], flags=cv2.INTER_LINEAR, borderValue=(255, 255, 255))
 
-        m2 = int(round(time.time() * 1000))
-        print(m2-m1)
         # detect
         greys = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         dets = detector.detect(greys)
