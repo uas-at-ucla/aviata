@@ -214,7 +214,7 @@ class Drone:
         while True:
         
             #Verifies preconditions for stage 3 of docking (detect target within 1 second)
-            img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
+            img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw,id)
             errs = self.image_analyzer.process_image(img, id)
             checked_frames=0
             docking_attempts=0
@@ -232,7 +232,7 @@ class Drone:
                         await self.safe_land()
                         return
 
-                    img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
+                    img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw,id)
                     errs=self.image_analyzer.process_image(img,0)
                     
                     #Ascends until maximum height or until central target detected
@@ -255,7 +255,7 @@ class Drone:
                         
 
                 await asyncio.sleep(self.dt)
-                img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
+                img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw,id)
                 errs = self.image_analyzer.process_image(img, id)
 
             x_err, y_err, alt_err, rot_err, tags_detected = errs
