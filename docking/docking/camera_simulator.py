@@ -45,6 +45,7 @@ class CameraSimulator:
         DISPLAY_SCALE = 1750 # Declares display factor constant (determines size of image relative to camera field of view)
         self.display_width = int(DISPLAY_SCALE * math.tan(math.radians(CAMERA_FOV_HORIZONTAL/2.0)))
         self.display_height = int(DISPLAY_SCALE * math.tan(math.radians(CAMERA_FOV_VERTICAL/2.0)))
+        self.aspect_ratio = self.display_width / self.display_height
 
     # Calculates commonly used scale constant (to reduce runtime cost)
     def getViewScaleConstant(self, TARGET_SIZE, DISPLAY_SCALE_CONSTANT):
@@ -95,26 +96,36 @@ class CameraSimulator:
         # of our plain white background, so here we calculate the pixel offsets to crop
         x_min = y_min = 0
         x_max = y_max = scale
+        sls = 4668 / scale # side length scale
         if y < 0: # crop top
             y_min = -y
             y = 0
         if x < 0: # crop left
             x_min = -x
             x = 0
-        if scale + y > background.shape[0]: # crop bottom
-            y_max = background.shape[0] - y + y_min
-        if scale + x > background.shape[1]: # crop right
-            x_max = background.shape[1] - x + x_min
+        if scale + y > background.shape[1]: # crop bottom
+            y_max = background.shape[1] - y + y_min
+        if scale + x > background.shape[0]: # crop right
+            x_max = background.shape[0] - x + x_min
+
+        y_min = int(y_min * sls)
+        x_min = int(x_min* sls)
+        y_max = int(y_max * sls)
+        x_max = int(x_max * sls)
 
         # At very low altitudes, we upscale the AprilTags so much we run out of memory. This solves the problem by cropping the
         # original AprilTag before upscaling it, so we only upscale the area of the image we need
-        sls = 4668 / scale
-        at = self.april_tag[int(y_min * sls):int(y_max * sls), int(x_min * sls):int(x_max * sls)] # TODO: this turns the FOV into a square, losing our extended horizontal FOV
+        at = self.april_tag[y_min:y_max, x_min:x_max] # TODO: this turns the FOV into a square, losing our extended horizontal FOV
+
         at = cv2.resize(at, (0, 0), fx=(scale / 4668), fy=(scale / 4668))
         at = self.rotate_image(at, -1 * relativeYaw)
         m1 = int(round(time.time() * 1000))
 
-        at = at[0:background.shape[1]-1, 0:background.shape[0]-1] # clip the edges in case of integer rounding resulting in excess pixels
+        # Trim the edges in case of integer rounding error causing a few pixels of offset when scaling up
+        if x + at.shape[1] > background.shape[1]: # at.shape[0] - (x + at.shape[0] - background.shape[0])
+            at = at[0:at.shape[0], 0:background.shape[1]-x]
+        if y + at.shape[0] > background.shape[0]:
+            at = at[0:background.shape[0]-y, 0:at.shape[1]]
         background[y:y+at.shape[0], x:x+at.shape[1]] = at # paste tags on background
         cv2.imshow("Drone camera", background)
         cv2.waitKey(1)

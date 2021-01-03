@@ -8,7 +8,7 @@ async def dock():
     drone = Drone(3, target)
     await drone.connect_gazebo()
     await drone.takeoff()
-    await drone.initiate_docking(1)
+    await drone.initiate_docking(4)
     
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

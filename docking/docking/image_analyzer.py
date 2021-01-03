@@ -1,5 +1,7 @@
 import cv2
 import math
+import time
+import numpy as np
 from apriltag import apriltag
 
 TAG16               = "tag16h5" # tag family 
@@ -15,13 +17,25 @@ CAMERA_FOCUS_Y      = 0.034
 
 class ImageAnalyzer:
 
-    def process_image(self, img, ind):
+    def process_image(self, img, ind, yaw):
         """
         Process an image to determine how far off the drone is
         Return the x, y, and z offset in meters, yaw offset in degrees clockwise
         ind tells simulator which tag to target (0 for center, 1-8 counterclockwise from North for perimeter)
         """
 
+        # get image dimensions
+        height, width, _ = img.shape
+        img_center = (int(width / 2), int(height / 2))
+
+        
+        m1 = int(round(time.time() * 1000))
+        image_center = tuple(np.array(img.shape[1::-1]) / 2)
+        rot_mat = cv2.getRotationMatrix2D(image_center, yaw * -1, 1.0)
+        result = cv2.warpAffine(img, rot_mat, img.shape[1::-1], flags=cv2.INTER_LINEAR, borderValue=(255, 255, 255))
+
+        m2 = int(round(time.time() * 1000))
+        print(m2-m1)
         # detect
         greys = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         dets = detector.detect(greys)
@@ -33,11 +47,6 @@ class ImageAnalyzer:
         # else:
         #     print("Looking for errors")
         
-
-        # get image dimensions
-        height, width, _ = img.shape
-        img_center = (int(width / 2), int(height / 2))
-
         tags_detected=""
         for det in dets:
             if(det["margin"]>=MIN_MARGIN):

@@ -4,7 +4,7 @@ import time
 
 # mavsdk
 from mavsdk import System
-from mavsdk.offboard import (OffboardError, VelocityNedYaw)
+from mavsdk.offboard import (OffboardError, VelocityBodyYawspeed, VelocityNedYaw)
 
 # aviata modules
 from camera_simulator import CameraSimulator
@@ -66,7 +66,7 @@ class Drone:
         # start offboard mode (requires setting initial setpoint)
         print("-- Setting initial setpoint")
         await self.drone.offboard.set_velocity_ned(
-            VelocityNedYaw(0.0, 0.0, 0.0, 90.0))
+            VelocityNedYaw(0.0, 0.0, 0.0, 0))
 
         print("-- Starting offboard")
         try:
@@ -103,10 +103,13 @@ class Drone:
         successful_frames=0 #Number of frames within tolerance 
         pid_controller = PIDController(self.dt)
 
+        # await self.drone.offboard.set_velocity_ned(
+        #     VelocityNedYaw(0.5, 0.5, 0.0, 90))
+        # await asyncio.sleep(0.5)
         while True:
             start_millis = int(round(time.time() * 1000))
             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-            errs = self.image_analyzer.process_image(img, 0)
+            errs = self.image_analyzer.process_image(img, 0, self.yaw)
             
             if errs is None:
                 frames_elapsed = frames_elapsed + 1
@@ -117,8 +120,8 @@ class Drone:
                     return False
 
                 if frames_elapsed > 1 / self.dt: # haven't detected target in 1 second
-                    await self.drone.offboard.set_velocity_ned(
-                        VelocityNedYaw(0, 0, -0.2, self.yaw)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
+                    await self.drone.offboard.set_velocity_body(
+                        VelocityBodyYawspeed(0, 0, -0.2, 0)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
 
                 await asyncio.sleep(self.dt)
                 continue
@@ -159,39 +162,38 @@ class Drone:
         debug_window=DebugWindow(2,self.target)
 
         if id == 1:
-            north_velocity = 0.5
-            east_velocity = 0
-        elif id == 2:
-            north_velocity = 0.35
-            east_velocity = 0.35
-        elif id == 3:
-            north_velocity = 0
-            east_velocity = 0.5
-        elif id == 4:
-            north_velocity = -0.35
-            east_velocity = 0.35
-        elif id == 5:
-            north_velocity = -0.5
-            east_velocity = 0
-        elif id == 6:
-            north_velocity = -0.35
-            east_velocity = -0.35
-        elif id == 7:
-            north_velocity = 0
-            east_velocity = -0.5
+            forward_velocity = 0.5
+            right_velocity = 0
         elif id == 8:
-            north_velocity = 0.35
-            east_velocity = -0.35
+            forward_velocity = 0.35
+            right_velocity = 0.35
+        elif id == 7:
+            forward_velocity = 0
+            right_velocity = 0.5
+        elif id == 6:
+            forward_velocity = -0.35
+            right_velocity = 0.35
+        elif id == 5:
+            forward_velocity = -0.5
+            right_velocity = 0
+        elif id == 4:
+            forward_velocity = -0.35
+            right_velocity = -0.35
+        elif id == 3:
+            forward_velocity = 0
+            right_velocity = -0.5
+        elif id == 2:
+            forward_velocity = 0.35
+            right_velocity = -0.35
 
         time_elapsed = 0
         while time_elapsed < 2000:
             debug_window.updateWindow(self.east, self.north, self.down * -1.0, self.yaw, "N/A")
             start_millis = int(round(time.time() * 1000))
-            # print("updating", self.east, self.north, self.down * -1.0, self.yaw)
             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
 
-            await self.drone.offboard.set_velocity_ned(
-                VelocityNedYaw(north_velocity, east_velocity, .5, 0)) # TODO need to get yaw from stage 1
+            await self.drone.offboard.set_velocity_body(
+                VelocityBodyYawspeed(forward_velocity, right_velocity, .5, 0)) # TODO need to get yaw from stage 1
 
             current_millis = int(round(time.time() * 1000))
             if current_millis - start_millis < self.dt:
@@ -199,8 +201,8 @@ class Drone:
             
             time_elapsed += current_millis - start_millis
 
-        await self.drone.offboard.set_velocity_ned(
-            VelocityNedYaw(0, 0, 0, 0)) # TODO need to get yaw from stage 1
+        await self.drone.offboard.set_velocity_body(
+            VelocityBodyYawspeed(0, 0, 0, 0)) # TODO need to get yaw from stage 1
 
         debug_window.destroyWindow()
 
@@ -215,7 +217,7 @@ class Drone:
         
             #Verifies preconditions for stage 3 of docking (detect target within 1 second)
             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-            errs = self.image_analyzer.process_image(img, id)
+            errs = self.image_analyzer.process_image(img, id, self.yaw)
             checked_frames=0
             docking_attempts=0
 
@@ -223,7 +225,7 @@ class Drone:
             while errs is None:
                 checked_frames+=1
 
-                await self.drone.offboard.set_velocity_ned(0.0,0.0,-0.1,0.0)
+                await self.drone.offboard.set_velocity_body(VelocityBodyYawspeed(0, 0, -0.1, 0))
 
                 if checked_frames>1 / self.dt:
                     docking_attempts+=1
@@ -233,20 +235,20 @@ class Drone:
                         return
 
                     img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-                    errs=self.image_analyzer.process_image(img,0)
+                    errs=self.image_analyzer.process_image(img,0, self.yaw)
                     
                     #Ascends until maximum height or until central target detected
                     while errs is None and self.down*-1.0 - self.target.getAlt()<self.MAX_HEIGHT:
-                        await self.drone.offboard.set_velocity_ned(VelocityNedYaw(0, 0, -0.2, self.yaw))
+                        await self.drone.offboard.set_velocity_body(VelocityBodyYawspeed(0, 0, -0.2, 0))
                         img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-                        errs=self.image_analyzer.process_image(img,0)
+                        errs=self.image_analyzer.process_image(img,0, self.yaw)
                     
                     # Re-attempts stage 1 and stage 2 docking if central target found
                     if not errs is None:
                         await self.stage1()
                         await self.stage2(id)
                         img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-                        errs = self.image_analyzer.process_image(img, id)
+                        errs = self.image_analyzer.process_image(img, id, self.yaw)
                         checked_frames=0
                     else:
                         pass
@@ -254,7 +256,7 @@ class Drone:
 
                 await asyncio.sleep(self.dt)
                 img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-                errs = self.image_analyzer.process_image(img, id)
+                errs = self.image_analyzer.process_image(img, id, self.yaw)
 
             x_err, y_err, alt_err, rot_err, tags_detected = errs
             alt_err = alt_err - .5 #Should this line be alt_err=alt_err-0.05?
@@ -271,7 +273,7 @@ class Drone:
 
             debug_window.updateWindow(self.east, self.north, self.down * -1.0, self.yaw, tags_detected)
 
-            east_velocity, north_velocity, down_velocity = pid_controller.get_velocities(x_err, y_err, alt_err, 0.2)
+            east_velocity, north_velocity, down_velocity = pid_controller.get_velocities(x_err, y_err, alt_err, 0.1)
             rot_angle = self.yaw + rot_err # yaw is in degrees, not degrees per second. must be set absolutely
 
             await self.drone.offboard.set_velocity_ned(
