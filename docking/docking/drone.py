@@ -216,7 +216,7 @@ class Drone:
         while True:
         
             #Verifies preconditions for stage 3 of docking (detect target within 1 second)
-            img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
+            img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw,id)
             errs = self.image_analyzer.process_image(img, id, self.yaw)
             checked_frames=0
             docking_attempts=0
@@ -234,8 +234,8 @@ class Drone:
                         await self.safe_land()
                         return
 
-                    img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-                    errs=self.image_analyzer.process_image(img,0, self.yaw)
+                    img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw,id)
+                    errs=self.image_analyzer.process_image(img,0,self.yaw)
                     
                     #Ascends until maximum height or until central target detected
                     while errs is None and self.down*-1.0 - self.target.getAlt()<self.MAX_HEIGHT:
@@ -250,13 +250,15 @@ class Drone:
                         img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
                         errs = self.image_analyzer.process_image(img, id, self.yaw)
                         checked_frames=0
-                    else:
-                        pass
-                        #TODO: Implement logic if drone cannot find target after ascending (maybe make a fly to position method?)
+                    else: #If the central target cannot be found at maximum height (maybe could have re-attempt stage 1 again, not sure)
+                        print("Docking failed")
+                        await self.safe_land()
+                        return 
+                        
 
                 await asyncio.sleep(self.dt)
-                img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-                errs = self.image_analyzer.process_image(img, id, self.yaw)
+                img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw,id)
+                errs = self.image_analyzer.process_image(img, id,self.yaw)
 
             x_err, y_err, alt_err, rot_err, tags_detected = errs
             alt_err = alt_err - .5 #Should this line be alt_err=alt_err-0.05?
