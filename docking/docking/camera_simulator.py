@@ -72,8 +72,8 @@ class CameraSimulator:
         relativeAlt = absAlt - self.target_alt
         relativeYaw = absYaw - self.target_yaw # degrees from north clockwise
         if target!=0: #Adjusts for offset peripheral targets
-            relativeLat+=-1*DRONE_RADIUS*math.cos((target-1)*math.pi/4) #If there's any issues, switch this line with the one below
-            relativeLon+=DRONE_RADIUS*math.sin((target-1)*math.pi/4)
+            relativeLat+=DRONE_RADIUS*math.sin((target-1)*math.pi/4)
+            relativeLon+=-1*DRONE_RADIUS*math.cos((target-1)*math.pi/4)
             relativeYaw+=-1*360/8*(target-1)
         
         # Protects against invalid altitude
