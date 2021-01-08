@@ -273,10 +273,10 @@ class Drone:
             #Adjusts errors for distance to target to prevent overshoot
             #Adjusted errors asymptote to 1 as alt_err increases, goes to 0 as alt_err decreases
             OVERSHOOT_CONSTANT=1 #Use to adjust speed of descent, higher constant means faster, lower means less overshooting
-            x_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err)
-            y_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err)
-            rot_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err)
-            alt_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err)
+            x_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
+            y_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
+            rot_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
+            alt_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
 
             # Ends loop if aligned for 1 second
             if successful_frames == 1 / self.dt:
