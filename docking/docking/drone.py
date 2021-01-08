@@ -1,6 +1,7 @@
 # standard python library imports
 import asyncio
 import time
+import numpy as np
 
 # mavsdk
 from mavsdk import System
@@ -261,13 +262,21 @@ class Drone:
                 errs = self.image_analyzer.process_image(img, id,self.yaw)
 
             x_err, y_err, alt_err, rot_err, tags_detected = errs
-            alt_err = alt_err - .5 #Should this line be alt_err=alt_err-0.05?
+            alt_err = alt_err - .05 
 
             # Checks if drone is aligned with docking
             if alt_err < self.STAGE_3_TOLERANCE and alt_err > -1 * self.STAGE_3_TOLERANCE and rot_err < 2.0 and rot_err > -2.0 and x_err > -1 * self.STAGE_3_TOLERANCE and x_err < 1 * self.STAGE_3_TOLERANCE and y_err > -1 * self.STAGE_3_TOLERANCE and y_err<self.STAGE_3_TOLERANCE:
                 successful_frames += 1
             else:
                 successful_frames = 0
+
+            #Adjusts errors for distance to target to prevent overshoot
+            #Adjusted errors asymptote to 1 as alt_err increases, goes to 0 as alt_err decreases
+            OVERSHOOT_CONSTANT=1 #Use to adjust speed of descent, higher constant means faster, lower means less overshooting
+            x_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err)
+            y_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err)
+            rot_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err)
+            alt_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err)
 
             # Ends loop if aligned for 1 second
             if successful_frames == 1 / self.dt:
