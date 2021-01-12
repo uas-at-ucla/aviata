@@ -1,4 +1,3 @@
-import pygame
 import numpy as np
 import math
 import cv2
@@ -64,7 +63,6 @@ class CameraSimulator:
                   -180 < absYaw < 180 (where 0 is true north and +/-180 is true south)
         target is id of docking target (0 for center, 1-8 counterclockwise for peripheral)
         """
-        startm = int(round(time.time() * 1000))
 
         # Converts from absolute to relative coordinates
         relativeLat = absLat - self.target_lat
@@ -79,7 +77,6 @@ class CameraSimulator:
         # Protects against invalid altitude
         if(relativeAlt <= 0):
             print("Altitude too low")
-            pygame.quit()
             return cv2.imread(self.background_image_name, 0)
             quit()
 
@@ -105,7 +102,6 @@ class CameraSimulator:
 
         # Rotates AprilTag without clipping
         april_tag = self.rotate_image(april_tag, -1 * relativeYaw)
-        m1 = int(round(time.time() * 1000))
 
         # Puts AprilTags on white canvas background, clipping edges if necessary
         background = cv2.imread(self.background_image_name)
@@ -114,12 +110,6 @@ class CameraSimulator:
 
         x = int(self.display_width * 0.50 - offsetx - scale / 2.0)
         y = int(self.display_height * 0.50 + offsety - scale / 2.0)
-
-        # As we descend, we need to upscale the AprilTag more and more. The edges are eventually going to overflow out
-        # of our plain white background, so here we calculate the pixel offsets to crop
-        # x_min = y_min = 0
-        # x_max = y_max = scale
-        # sls = 4668 / scale # side length scale
 
         if y < 0: # crop top
             img = img[-y:img.shape[0], 0:img.shape[1]]
@@ -132,12 +122,12 @@ class CameraSimulator:
         if img.shape[1] + x > background.shape[1]: # crop right
             img = img[0:img.shape[0], 0:background.shape[1] - x]
 
-        background[y : y + img.shape[0], x : x + img.shape[1]] = img # paste tags on background
+        if x < background.shape[1] and y < background.shape[0]:
+            background[y : y + img.shape[0], x : x + img.shape[1]] = img # paste tags on background
         cv2.imshow("Drone camera", background)
         cv2.waitKey(1)
 
         m2 = int(round(time.time() * 1000))
-        # print("Calc time: ", m1 - startm, " render time: ", m2 - m1)
         return background
 
 

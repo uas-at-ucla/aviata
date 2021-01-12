@@ -6,6 +6,7 @@ import numpy as np
 # mavsdk
 from mavsdk import System
 from mavsdk.offboard import (OffboardError, VelocityBodyYawspeed, VelocityNedYaw)
+from mavsdk.mission import MissionItem
 
 # aviata modules
 from camera_simulator import CameraSimulator
@@ -20,15 +21,16 @@ class Drone:
         self.image_analyzer = ImageAnalyzer()
         self.north = 0
         self.east = 0
-        self.down = -8
+        self.down = -8 # initial altitude
         self.yaw = 0
         self.target_number = target_number
         self.target = target 
         self.dt = 0.05 # delta t update frequency, 20hz
-        self.MAX_ATTEMPTS=3 #Number of unsuccessful attempts before aborting docking
-        self.MAX_HEIGHT=25 #Max height above central target before failure
-        self.STAGE_1_TOLERANCE=0.2 
-        self.STAGE_3_TOLERANCE=0.01
+        self.MAX_ATTEMPTS = 3 # number of unsuccessful attempts before aborting docking
+        self.MAX_HEIGHT = 10 # max height above central target before failure
+        self.MAX_HEIGHT_STAGE_3 = 2
+        self.STAGE_1_TOLERANCE = 0.2 
+        self.STAGE_3_TOLERANCE = 0.05
 
     async def connect_gazebo(self):
         """
@@ -211,38 +213,46 @@ class Drone:
         """Position the drone above the peripheral target and descend"""
         print("Docking stage 3")
 
-        debug_window=DebugWindow(3,self.target)
+        debug_window = DebugWindow(3,self.target)
         pid_controller = PIDController(self.dt)
-        successful_frames =0 #Number of frames within tolerance
+        successful_frames = 0
         while True:
         
-            #Verifies preconditions for stage 3 of docking (detect target within 1 second)
             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw,id)
             errs = self.image_analyzer.process_image(img, id, self.yaw)
-            checked_frames=0
-            docking_attempts=0
+            checked_frames = 0
+            docking_attempts = 0
 
-            #Waits for one second to detect target tag, ascends to find central target if fails
+            # Waits for one second to detect target tag, ascends to find central target if fails
             while errs is None:
-                checked_frames+=1
+                checked_frames += 1
 
                 await self.drone.offboard.set_velocity_body(VelocityBodyYawspeed(0, 0, -0.1, 0))
 
-                if checked_frames>1 / self.dt:
-                    docking_attempts+=1
-                    if docking_attempts>self.MAX_ATTEMPTS:
+                if checked_frames > 1 / self.dt:
+                    docking_attempts += 1
+                    if docking_attempts > self.MAX_ATTEMPTS:
                         print("Docking failed")
                         await self.safe_land()
                         return
 
                     img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw,id)
-                    errs=self.image_analyzer.process_image(img,0,self.yaw)
+                    errs = self.image_analyzer.process_image(img,0,self.yaw)
                     
-                    #Ascends until maximum height or until central target detected
-                    while errs is None and self.down*-1.0 - self.target.getAlt()<self.MAX_HEIGHT:
+                    # Ascends until maximum height or until peripheral target detected
+                    while errs is None and self.down * -1.0 - self.target.getAlt() < self.MAX_HEIGHT_STAGE_3:
+                        await self.drone.offboard.set_velocity_body(VelocityBodyYawspeed(0, 0, -0.2, 0))
+                        img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw, id)
+                        errs = self.image_analyzer.process_image(img, id, self.yaw)
+
+                    if not errs is None:
+                        break
+
+                    # If peripheral tag not found, ascends until maximum height or until central target detected
+                    while errs is None and self.down * -1.0 - self.target.getAlt() < self.MAX_HEIGHT:
                         await self.drone.offboard.set_velocity_body(VelocityBodyYawspeed(0, 0, -0.2, 0))
                         img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-                        errs=self.image_analyzer.process_image(img,0, self.yaw)
+                        errs = self.image_analyzer.process_image(img,0, self.yaw)
                     
                     # Re-attempts stage 1 and stage 2 docking if central target found
                     if not errs is None:
@@ -250,8 +260,8 @@ class Drone:
                         await self.stage2(id)
                         img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
                         errs = self.image_analyzer.process_image(img, id, self.yaw)
-                        checked_frames=0
-                    else: #If the central target cannot be found at maximum height (maybe could have re-attempt stage 1 again, not sure)
+                        checked_frames = 0
+                    else: # If the central target cannot be found at maximum height (maybe could have re-attempt stage 1 again, not sure)
                         print("Docking failed")
                         await self.safe_land()
                         return 
@@ -265,14 +275,14 @@ class Drone:
             alt_err = alt_err - .05 
 
             # Checks if drone is aligned with docking
-            if alt_err < self.STAGE_3_TOLERANCE and alt_err > -1 * self.STAGE_3_TOLERANCE and rot_err < 2.0 and rot_err > -2.0 and x_err > -1 * self.STAGE_3_TOLERANCE and x_err < 1 * self.STAGE_3_TOLERANCE and y_err > -1 * self.STAGE_3_TOLERANCE and y_err<self.STAGE_3_TOLERANCE:
+            if alt_err < self.STAGE_3_TOLERANCE * 2 and alt_err > -1 * self.STAGE_3_TOLERANCE and rot_err < 2.0 and rot_err > -2.0 and x_err > -1 * self.STAGE_3_TOLERANCE and x_err < 1 * self.STAGE_3_TOLERANCE and y_err > -1 * self.STAGE_3_TOLERANCE and y_err<self.STAGE_3_TOLERANCE:
                 successful_frames += 1
             else:
                 successful_frames = 0
 
-            #Adjusts errors for distance to target to prevent overshoot
-            #Adjusted errors asymptote to 1 as alt_err increases, goes to 0 as alt_err decreases
-            OVERSHOOT_CONSTANT=1 #Use to adjust speed of descent, higher constant means faster, lower means less overshooting
+            # Adjusts errors for distance to target to prevent overshoot
+            # Adjusted errors asymptote to 1 as alt_err increases, goes to 0 as alt_err decreases
+            OVERSHOOT_CONSTANT=1 # use to adjust speed of descent, higher constant means faster, lower means less overshooting
             x_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
             y_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
             rot_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
@@ -292,7 +302,7 @@ class Drone:
             
             await asyncio.sleep(self.dt)
     
-    #Moves drone up and away from current location, then ends offboard control and lands
+    # Moves drone up and away from current location, then ends offboard control and lands
     async def safe_land(self):
         dt=0.05
         for i in range (5/0.05): #Drone flies away up and to the north for 5 seconds 
