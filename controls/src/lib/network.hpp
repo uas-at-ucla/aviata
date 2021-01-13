@@ -8,24 +8,34 @@
 #include "aviata/msg/follower_setpoint.hpp"
 
 // TODO define all message types as string constants (to use as ROS topics)
+
+// Inputs to Ground Station
 // REQUEST_SWAP
 // REQUEST_UNDOCK
 // REQUEST_DOCK
+// TERMINATE_FLIGHT
+
+// From Ground Station to a Drone
 // UNDOCK
 // DOCK
-// BECOME_LEADER
-// REQUEST_NEW_LEADER
+// CANCEL_DOCKING
+
+// From Ground Station to Leader Drone
 // LEADER_SETPOINT
-#define FOLLOWER_SETPOINT "FOLLOWER_SETPOINT"
 // FRAME_ARM
-// FOLLOWER_ARM
 // FRAME_DISARM
-// FOLLOWER_DISARM
 // FRAME_TAKEOFF
 // FRAME_LAND
-// CANCEL_DOCKING
-// TERMINATE_FLIGHT
+
 // INITIALIZE_STATE
+
+// Drone to Drone
+// BECOME_LEADER
+// REQUEST_NEW_LEADER
+#define FOLLOWER_SETPOINT "FOLLOWER_SETPOINT"
+// FOLLOWER_ARM
+// FOLLOWER_DISARM
+
 // DRONE_STATUS
 
 class Network: public rclcpp::Node
