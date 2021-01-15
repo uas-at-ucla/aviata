@@ -28,9 +28,9 @@ class Drone:
         self.dt = 0.05 # delta t update frequency, 20hz
         self.MAX_ATTEMPTS = 3 # number of unsuccessful attempts before aborting docking
         self.MAX_HEIGHT = 10 # max height above central target before failure
-        self.MAX_HEIGHT_STAGE_3 = 2
+        self.MAX_HEIGHT_STAGE_2 = 2
         self.STAGE_1_TOLERANCE = 0.2 
-        self.STAGE_3_TOLERANCE = 0.05
+        self.STAGE_2_TOLERANCE = 0.05
 
     async def connect_gazebo(self):
         """
@@ -91,7 +91,6 @@ class Drone:
 
         if await self.stage1():
             await self.stage2(id)
-            await self.stage3(id)
 
         telemetry_task.cancel()
         rotation_task.cancel()
@@ -160,60 +159,10 @@ class Drone:
         return True
 
     async def stage2(self, id):
-        """Fly from the central target to the peripheral target"""
-
-        debug_window=DebugWindow(2,self.target)
-
-        if id == 1:
-            forward_velocity = 0.5
-            right_velocity = 0
-        elif id == 8:
-            forward_velocity = 0.35
-            right_velocity = 0.35
-        elif id == 7:
-            forward_velocity = 0
-            right_velocity = 0.5
-        elif id == 6:
-            forward_velocity = -0.35
-            right_velocity = 0.35
-        elif id == 5:
-            forward_velocity = -0.5
-            right_velocity = 0
-        elif id == 4:
-            forward_velocity = -0.35
-            right_velocity = -0.35
-        elif id == 3:
-            forward_velocity = 0
-            right_velocity = -0.5
-        elif id == 2:
-            forward_velocity = 0.35
-            right_velocity = -0.35
-
-        time_elapsed = 0
-        while time_elapsed < 2000:
-            debug_window.updateWindow(self.east, self.north, self.down * -1.0, self.yaw, "N/A")
-            start_millis = int(round(time.time() * 1000))
-            img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
-
-            await self.drone.offboard.set_velocity_body(
-                VelocityBodyYawspeed(forward_velocity, right_velocity, .5, 0)) # TODO need to get yaw from stage 1
-
-            current_millis = int(round(time.time() * 1000))
-            if current_millis - start_millis < self.dt:
-                await asyncio.sleep(self.dt - (current_millis - start_millis))
-            
-            time_elapsed += current_millis - start_millis
-
-        await self.drone.offboard.set_velocity_body(
-            VelocityBodyYawspeed(0, 0, 0, 0)) # TODO need to get yaw from stage 1
-
-        debug_window.destroyWindow()
-
-    async def stage3(self, id):
         """Position the drone above the peripheral target and descend"""
-        print("Docking stage 3")
+        print("Docking stage 2")
 
-        debug_window = DebugWindow(3,self.target)
+        debug_window = DebugWindow(2,self.target)
         pid_controller = PIDController(self.dt)
         successful_frames = 0
         while True:
@@ -240,7 +189,7 @@ class Drone:
                     errs = self.image_analyzer.process_image(img,0,self.yaw)
                     
                     # Ascends until maximum height or until peripheral target detected
-                    while errs is None and self.down * -1.0 - self.target.getAlt() < self.MAX_HEIGHT_STAGE_3:
+                    while errs is None and self.down * -1.0 - self.target.getAlt() < self.MAX_HEIGHT_STAGE_2:
                         await self.drone.offboard.set_velocity_body(VelocityBodyYawspeed(0, 0, -0.2, 0))
                         img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw, id)
                         errs = self.image_analyzer.process_image(img, id, self.yaw)
@@ -254,10 +203,9 @@ class Drone:
                         img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
                         errs = self.image_analyzer.process_image(img,0, self.yaw)
                     
-                    # Re-attempts stage 1 and stage 2 docking if central target found
+                    # Re-attempts stage 1
                     if not errs is None:
                         await self.stage1()
-                        await self.stage2(id)
                         img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
                         errs = self.image_analyzer.process_image(img, id, self.yaw)
                         checked_frames = 0
@@ -275,7 +223,7 @@ class Drone:
             alt_err = alt_err - .05 
 
             # Checks if drone is aligned with docking
-            if alt_err < self.STAGE_3_TOLERANCE * 2 and alt_err > -1 * self.STAGE_3_TOLERANCE and rot_err < 2.0 and rot_err > -2.0 and x_err > -1 * self.STAGE_3_TOLERANCE and x_err < 1 * self.STAGE_3_TOLERANCE and y_err > -1 * self.STAGE_3_TOLERANCE and y_err<self.STAGE_3_TOLERANCE:
+            if alt_err < self.STAGE_2_TOLERANCE * 2 and alt_err > -1 * self.STAGE_2_TOLERANCE and rot_err < 2.0 and rot_err > -2.0 and x_err > -1 * self.STAGE_2_TOLERANCE and x_err < 1 * self.STAGE_3_TOLERANCE and y_err > -1 * self.STAGE_2_TOLERANCE and y_err<self.STAGE_2_TOLERANCE:
                 successful_frames += 1
             else:
                 successful_frames = 0
