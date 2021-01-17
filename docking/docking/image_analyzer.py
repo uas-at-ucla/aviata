@@ -7,13 +7,11 @@ from apriltag import apriltag
 TAG16               = "tag16h5" # tag family 
 TAG36               = "tag36h11"
 MIN_MARGIN          = 10 # Filter value for tag detection
-RED                 = 0, 0, 255 # Colour of ident & frame (BGR)
 detector            = apriltag(TAG36)
 CAMERA_HORIZ_FOV    = 62.2
 CAMERA_VERTICAL_FOV = 48.8
-TAG_SIZE            = 0.285 # size of one side of tag in m
-CAMERA_FOCUS_X      = 0.034
-CAMERA_FOCUS_Y      = 0.034
+CENTRAL_TAG_SIZE    = 0.227 # size of one side of tag in m
+PERIPHERAL_TAG_SIZE = 0.045
 
 class ImageAnalyzer:
 
@@ -22,6 +20,7 @@ class ImageAnalyzer:
         Process an image to determine how far off the drone is
         Return the x, y, and z offset in meters, yaw offset in degrees clockwise
         ind tells simulator which tag to target (0 for center, 1-8 counterclockwise from North for perimeter)
+        yaw is the drone's current rotation, used for rectifying the rotation back to north before processing
         """
 
         # get image dimensions
@@ -36,32 +35,21 @@ class ImageAnalyzer:
         # detect
         greys = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         dets = detector.detect(greys)
-        # if len(dets) == 0:
-        #     print("No apriltag detected, aborting")
-        #     return
-        # elif len(dets) > 1:
-        #     print("WARNING: More than 1 apriltag detected, will use the first one")
-        # else:
-        #     print("Looking for errors")
         
         tags_detected=""
         for det in dets:
-            if(det["margin"]>=MIN_MARGIN):
-                tags_detected+=str(det["id"])+" "
+            if(det["margin"] >= MIN_MARGIN):
+                tags_detected += str(det["id"]) + " "
 
         for det in dets:
-            if det["id"]==ind:
+            if det["id"] == ind:
                 if det["margin"] >= MIN_MARGIN:
                     det_center = det["center"].astype(int)
 
-                    # Draws corners and rectangle
+                    # Extract apriltag bounding box
                     rect = det["lb-rb-rt-lt"].astype(int).reshape((-1,1,2))
-                    # cv2.polylines(img, [rect], True, RED, 2)
-                    # pos = det_center + (-10,10)
-                    # cv2.putText(img, "x", tuple(pos), cv2.FONT_HERSHEY_SIMPLEX, 1, RED, 2)
-                    # cv2.putText(img, "c", img_center, cv2.FONT_HERSHEY_SIMPLEX, 1, RED, 2)
 
-                    # Calculates average side length 
+                    # Calculates average side length in pixels
                     sidelist = list()
                     for i in range (0,4):
                         for j in range (i+1,4):
@@ -71,7 +59,7 @@ class ImageAnalyzer:
                     for i in range(4):
                         sideAvg = sideAvg+sidelist[i]
                     sideAvg = sideAvg/4.0
-                    tag_pixel_ratio = TAG_SIZE / sideAvg
+                    tag_pixel_ratio = (CENTRAL_TAG_SIZE if ind == 0 else PERIPHERAL_TAG_SIZE) / sideAvg # ratio of meters to pixels
 
                     # Absolute difference in height (meters)
                     alt_err = 0.50 / math.tan(math.radians(CAMERA_HORIZ_FOV * 0.50)) * width * tag_pixel_ratio
@@ -105,7 +93,7 @@ class ImageAnalyzer:
                     x_err = x_offset * tag_pixel_ratio
                     y_err = y_offset * tag_pixel_ratio
 
-                    return float(x_err), float(y_err), float(alt_err), float(rot_err),tags_detected
+                    return float(x_err), float(y_err), float(alt_err), float(rot_err), tags_detected
 
                     break
 

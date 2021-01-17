@@ -1,6 +1,7 @@
 # standard python library imports
 import asyncio
 import time
+import math
 import numpy as np
 
 # mavsdk
@@ -14,22 +15,27 @@ from image_analyzer import ImageAnalyzer
 from debug_window import DebugWindow
 from pid_controller import PIDController
 
+boom_length = 1 # meter
+fov = 48.8
+odd_target_disp = boom_length / 2
+even_target_disp = boom_length / 2 * math.sin(math.radians(45))
+altitude_disp = boom_length / 2 / math.tan(math.radians(fov / 2)) * 2 # add 100% tolerance
+
 class Drone:
 
-    def __init__(self, target_number,target):
+    def __init__(self, target):
         self.camera_simulator = CameraSimulator(target) # later, use camera here
         self.image_analyzer = ImageAnalyzer()
         self.north = 0
         self.east = 0
         self.down = -8 # initial altitude
         self.yaw = 0
-        self.target_number = target_number
         self.target = target 
         self.dt = 0.05 # delta t update frequency, 20hz
         self.MAX_ATTEMPTS = 3 # number of unsuccessful attempts before aborting docking
         self.MAX_HEIGHT = 10 # max height above central target before failure
         self.MAX_HEIGHT_STAGE_2 = 2
-        self.STAGE_1_TOLERANCE = 0.2 
+        self.STAGE_1_TOLERANCE = 0.1 
         self.STAGE_2_TOLERANCE = 0.05
 
     async def connect_gazebo(self):
@@ -89,25 +95,25 @@ class Drone:
         telemetry_task = asyncio.create_task(self.get_telemetry_position())
         rotation_task = asyncio.create_task(self.get_telemetry_rotation())
 
-        if await self.stage1():
+        if await self.stage1(id):
             await self.stage2(id)
+        else:
+            print("Docking failed: Max height exceeded")
+            await self.safe_land()
 
         telemetry_task.cancel()
         rotation_task.cancel()
 
-    async def stage1(self):
+    async def stage1(self, id):
         """Position the drone above the large central target, returns true if successful"""
         print("Docking stage 1")
 
         debug_window=DebugWindow(1,self.target)
 
         frames_elapsed = 0
-        successful_frames=0 #Number of frames within tolerance 
+        successful_frames=0 # Number of frames within tolerance 
         pid_controller = PIDController(self.dt)
 
-        # await self.drone.offboard.set_velocity_ned(
-        #     VelocityNedYaw(0.5, 0.5, 0.0, 90))
-        # await asyncio.sleep(0.5)
         while True:
             start_millis = int(round(time.time() * 1000))
             img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
@@ -116,21 +122,19 @@ class Drone:
             if errs is None:
                 frames_elapsed = frames_elapsed + 1
 
-                if self.down*-1.0 - self.target.getAlt()>self.MAX_HEIGHT: #Drone moves above max height, docking fails
-                    print("Docking failed: Max height exceeded")
-                    await self.safe_land()
+                if self.down * -1.0 - self.target.getAlt() > self.MAX_HEIGHT: # drone moves above max height, docking fails
                     return False
 
                 if frames_elapsed > 1 / self.dt: # haven't detected target in 1 second
                     await self.drone.offboard.set_velocity_body(
-                        VelocityBodyYawspeed(0, 0, -0.2, 0)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
+                        VelocityBodyYawspeed(0, 0, -0.2, 0))
 
                 await asyncio.sleep(self.dt)
                 continue
 
             frames_elapsed = 0
             x_err, y_err, alt_err, rot_err, tags_detected = errs
-            alt_err = alt_err - 3 # so we stay 3 meters above the target
+            x_err, y_err, alt_err = self.offset_errors(x_err, y_err, alt_err, id)
 
             debug_window.updateWindow(self.east, self.north, self.down * -1.0, self.yaw, tags_detected)
 
@@ -150,7 +154,6 @@ class Drone:
             await self.drone.offboard.set_velocity_ned(
                 VelocityNedYaw(north_velocity, east_velocity, down_velocity, rot_angle)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
 
-            # print(current_millis - start_millis)
             current_millis = int(round(time.time() * 1000))
             if current_millis - start_millis < self.dt:
                 await asyncio.sleep(self.dt - (current_millis - start_millis))
@@ -230,10 +233,10 @@ class Drone:
 
             # Adjusts errors for distance to target to prevent overshoot
             # Adjusted errors asymptote to 1 as alt_err increases, goes to 0 as alt_err decreases
-            OVERSHOOT_CONSTANT=1 # use to adjust speed of descent, higher constant means faster, lower means less overshooting
+            OVERSHOOT_CONSTANT=.6 # use to adjust speed of descent, higher constant means faster, lower means less overshooting
             x_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
             y_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
-            rot_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
+            # rot_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
             alt_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
 
             # Ends loop if aligned for 1 second
@@ -249,6 +252,40 @@ class Drone:
                 VelocityNedYaw(north_velocity, east_velocity, down_velocity, rot_angle)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
             
             await asyncio.sleep(self.dt)
+
+    def offset_errors(self, x, y, alt, target):
+        rot = 0
+        if target == 1:
+            y = y + odd_target_disp
+            rot = 90
+        elif target == 2:
+            x = x + even_target_disp
+            y = y + even_target_disp
+            rot = 45
+        elif target == 3:
+            x = x + odd_target_disp
+            rot = 0
+        elif target == 4:
+            x = x + even_target_disp
+            y = y - even_target_disp
+            rot = 45
+        elif target == 5:
+            y = y - odd_target_disp
+            rot = 90
+        elif target == 6:
+            x = x - even_target_disp
+            y = x - even_target_disp
+            rot = 45
+        elif target == 7:
+            x = x - odd_target_disp
+            rot = 0
+        elif target == 8:
+            x = x - even_target_disp
+            y = y + even_target_disp
+            rot = 45
+        
+        alt = alt - altitude_disp
+        return x, y, alt
     
     # Moves drone up and away from current location, then ends offboard control and lands
     async def safe_land(self):
