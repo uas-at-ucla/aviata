@@ -14,6 +14,7 @@ from camera_simulator import CameraSimulator
 from image_analyzer import ImageAnalyzer
 from debug_window import DebugWindow
 from pid_controller import PIDController
+from log import Log
 
 boom_length = 1 # meter
 fov = 48.8
@@ -37,6 +38,8 @@ class Drone:
         self.MAX_HEIGHT_STAGE_2 = 2
         self.STAGE_1_TOLERANCE = 0.1 
         self.STAGE_2_TOLERANCE = 0.05
+        self.log=Log()
+        self.logging=True
 
     async def connect_gazebo(self):
         """
@@ -107,6 +110,7 @@ class Drone:
     async def stage1(self, id):
         """Position the drone above the large central target, returns true if successful"""
         print("Docking stage 1")
+        self.log.writeLiteral("Docking stage 1")
 
         debug_window=DebugWindow(1,self.target)
 
@@ -120,6 +124,7 @@ class Drone:
             errs = self.image_analyzer.process_image(img, 0, self.yaw)
             
             if errs is None:
+                self.log.writeLiteral("No Errors")
                 frames_elapsed = frames_elapsed + 1
 
                 if self.down * -1.0 - self.target.getAlt() > self.MAX_HEIGHT: # drone moves above max height, docking fails
@@ -137,6 +142,8 @@ class Drone:
             x_err, y_err, alt_err = self.offset_errors(x_err, y_err, alt_err, id)
 
             debug_window.updateWindow(self.east, self.north, self.down * -1.0, self.yaw, tags_detected)
+            if self.logging:
+                self.log.write(self.east, self.north, self.down * -1.0, self.yaw, tags_detected,successful_frames,x_err,y_err,alt_err,rot_err)
 
             east_velocity, north_velocity, down_velocity = pid_controller.get_velocities(x_err, y_err, alt_err, 0.5)
             rot_angle = self.yaw + rot_err # yaw is in degrees, not degrees per second. must be set absolutely
@@ -164,6 +171,7 @@ class Drone:
     async def stage2(self, id):
         """Position the drone above the peripheral target and descend"""
         print("Docking stage 2")
+        self.log.writeLiteral("Docking stage 2")
 
         debug_window = DebugWindow(2,self.target)
         pid_controller = PIDController(self.dt)
@@ -178,13 +186,14 @@ class Drone:
             # Waits for one second to detect target tag, ascends to find central target if fails
             while errs is None:
                 checked_frames += 1
-
+                self.log.writeLiteral("No errors, checked frames: "+checked_frames)
                 await self.drone.offboard.set_velocity_body(VelocityBodyYawspeed(0, 0, -0.1, 0))
 
                 if checked_frames > 1 / self.dt:
                     docking_attempts += 1
                     if docking_attempts > self.MAX_ATTEMPTS:
                         print("Docking failed")
+                        self.log.writeLiteral("Docking failed")
                         await self.safe_land()
                         return
 
@@ -224,6 +233,8 @@ class Drone:
 
             x_err, y_err, alt_err, rot_err, tags_detected = errs
             alt_err = alt_err - .05 
+            if self.logging:
+                self.log.write(self.east, self.north, self.down * -1.0, self.yaw, tags_detected,successful_frames,x_err,y_err,alt_err,rot_err)
 
             # Checks if drone is aligned with docking
             if alt_err < self.STAGE_2_TOLERANCE * 2 and alt_err > -1 * self.STAGE_2_TOLERANCE and rot_err < 2.0 and rot_err > -2.0 and x_err > -1 * self.STAGE_2_TOLERANCE and x_err < 1 * self.STAGE_3_TOLERANCE and y_err > -1 * self.STAGE_2_TOLERANCE and y_err<self.STAGE_2_TOLERANCE:
