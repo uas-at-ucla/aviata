@@ -186,7 +186,7 @@ class Drone:
             # Waits for one second to detect target tag, ascends to find central target if fails
             while errs is None:
                 checked_frames += 1
-                self.log.writeLiteral("No errors, checked frames: "+checked_frames)
+                self.log.writeLiteral("No errors, checked frames: "+str(checked_frames))
                 await self.drone.offboard.set_velocity_body(VelocityBodyYawspeed(0, 0, -0.1, 0))
 
                 if checked_frames > 1 / self.dt:
