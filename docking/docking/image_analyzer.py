@@ -31,6 +31,7 @@ class ImageAnalyzer:
         image_center = tuple(np.array(img.shape[1::-1]) / 2)
         rot_mat = cv2.getRotationMatrix2D(image_center, yaw * -1, 1.0)
         result = cv2.warpAffine(img, rot_mat, img.shape[1::-1], flags=cv2.INTER_LINEAR, borderValue=(255, 255, 255))
+        img = result
 
         # detect
         greys = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -85,13 +86,17 @@ class ImageAnalyzer:
                         incline_angle = -180
                     else:
                         incline_angle = 0
-                    rot_err = incline_angle
+                    rot_err = incline_angle * -1 # to make this cw
 
                     # Absolute horizontal difference (meters)
                     x_offset = det_center[0] - img_center[0] # offset east from center
                     y_offset = img_center[1] - det_center[1] # offset north from center
                     x_err = x_offset * tag_pixel_ratio
                     y_err = y_offset * tag_pixel_ratio
+
+                    # cv2.polylines(img, [rect], True, (0, 0, 255), 2)
+                    # cv2.imshow("image analyzed", img)
+                    # cv2.waitKey(1)
 
                     return float(x_err), float(y_err), float(alt_err), float(rot_err), tags_detected
 

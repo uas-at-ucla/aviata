@@ -22,7 +22,7 @@ CAMERA_FOV_HORIZONTAL=62.2
 # Measured in centimeters
 TARGET_SIZE=234
 PERIPHERAL_TARGET_SIZE=4.50
-DRONE_RADIUS=1.15 #Measured in meters
+DRONE_RADIUS=1.1135 # Measured in meters, 1m boom + half the central tag side length (possibly slightly off for corners but good enough)
 
 class CameraSimulator:
 
@@ -53,7 +53,7 @@ class CameraSimulator:
     def getViewScaleConstant(self, TARGET_SIZE, DISPLAY_SCALE_CONSTANT):
         return DISPLAY_SCALE_CONSTANT * TARGET_SIZE / 2.0 / 100.0, DISPLAY_SCALE_CONSTANT * PERIPHERAL_TARGET_SIZE / 2.0 / 100.0
 
-    def updateCurrentImage(self, absLat, absLon, absAlt, absYaw,target=0):
+    def updateCurrentImage(self, absLon, absLat, absAlt, absYaw,target=0):
         """
         Target faces north
         absLat -- drone's latitude in meters north
@@ -63,16 +63,23 @@ class CameraSimulator:
                   -180 < absYaw < 180 (where 0 is true north and +/-180 is true south)
         target is id of docking target (0 for center, 1-8 counterclockwise for peripheral)
         """
+        m1 = int(round(time.time() * 1000))
 
         # Converts from absolute to relative coordinates
-        relativeLat = absLat - self.target_lat
-        relativeLon = absLon - self.target_lon
-        relativeAlt = absAlt - self.target_alt
-        relativeYaw = absYaw - self.target_yaw # degrees from north clockwise
-        if target!=0: #Adjusts for offset peripheral targets
-            relativeLat+=DRONE_RADIUS*math.sin((target-1)*math.pi/4)
-            relativeLon+=-1*DRONE_RADIUS*math.cos((target-1)*math.pi/4)
-            relativeYaw+=-1*360/8*(target-1)
+        target_lat = self.target_lat
+        target_lon = self.target_lon
+        target_alt = self.target_alt
+        target_yaw = self.target_yaw
+        if target != 0: # Adjusts for offset peripheral targets
+            target_offset = abs(target - 3) * 45 if target <= 3 else (11 - target) * 45
+            target_lat += DRONE_RADIUS * math.sin(math.radians(target_offset - target_yaw))
+            target_lon += DRONE_RADIUS * math.cos(math.radians(target_offset - target_yaw))
+            target_yaw += -1 * 360 / 8 * (target - 1)
+
+        relativeLat = absLat - target_lat
+        relativeLon = absLon - target_lon
+        relativeAlt = absAlt - target_alt
+        relativeYaw = absYaw - target_yaw # degrees from north clockwise
         
         # Protects against invalid altitude
         if(relativeAlt <= 0):
@@ -93,7 +100,7 @@ class CameraSimulator:
         # Sets translation of AprilTag
         # Converts cartesian translation to polar coordinates
         translationDist = math.sqrt(relativeLat**2 + relativeLon**2)
-        translationAngle = np.arctan2(relativeLon, relativeLat)
+        translationAngle = np.arctan2(relativeLat, relativeLon) + math.radians(absYaw)
 
         # Adjusts for relative rotation then converts to pixel offset
         common_ops = self.scale_constant * translationDist / 2.0 / relativeAlt
@@ -101,7 +108,9 @@ class CameraSimulator:
         offsety = math.sin(translationAngle) * common_ops
 
         # Rotates AprilTag without clipping
-        april_tag = self.rotate_image(april_tag, -1 * relativeYaw)
+        # NOTE: opencv treats positive as ccw, but mavsdk treats positive as cw (which is what we use)
+        # however, since the drone is rotating and not the image, the image must rotate in the opposite direction (so ccw)
+        april_tag = self.rotate_image(april_tag, relativeYaw) 
 
         # Puts AprilTags on white canvas background, clipping edges if necessary
         background = cv2.imread(self.background_image_name)

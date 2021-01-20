@@ -7,9 +7,9 @@ import numpy as np
 # mavsdk
 from mavsdk import System
 from mavsdk.offboard import (OffboardError, VelocityBodyYawspeed, VelocityNedYaw)
-from mavsdk.mission import MissionItem
 
 # aviata modules
+import util
 from camera_simulator import CameraSimulator
 from image_analyzer import ImageAnalyzer
 from debug_window import DebugWindow
@@ -18,8 +18,6 @@ from log import Log
 
 boom_length = 1 # meter
 fov = 48.8
-odd_target_disp = boom_length / 2
-even_target_disp = boom_length / 2 * math.sin(math.radians(45))
 altitude_disp = boom_length / 2 / math.tan(math.radians(fov / 2)) * 2 # add 100% tolerance
 
 class Drone:
@@ -78,7 +76,7 @@ class Drone:
         # start offboard mode (requires setting initial setpoint)
         print("-- Setting initial setpoint")
         await self.drone.offboard.set_velocity_ned(
-            VelocityNedYaw(0.0, 0.0, 0.0, 0))
+            VelocityNedYaw(0.0, 0.0, 0.0, 135))
 
         print("-- Starting offboard")
         try:
@@ -100,6 +98,7 @@ class Drone:
 
         if await self.stage1(id):
             await self.stage2(id)
+            await self.land()
         else:
             print("Docking failed: Max height exceeded")
             await self.safe_land()
@@ -114,8 +113,8 @@ class Drone:
 
         debug_window=DebugWindow(1,self.target)
 
-        frames_elapsed = 0
-        successful_frames=0 # Number of frames within tolerance 
+        failed_frames = 0 # Number of frames since we detected the target
+        successful_frames = 0 # Number of frames within tolerance 
         pid_controller = PIDController(self.dt)
 
         while True:
@@ -125,31 +124,30 @@ class Drone:
             
             if errs is None:
                 self.log.writeLiteral("No Errors")
-                frames_elapsed = frames_elapsed + 1
+                failed_frames = failed_frames + 1
 
                 if self.down * -1.0 - self.target.getAlt() > self.MAX_HEIGHT: # drone moves above max height, docking fails
                     return False
 
-                if frames_elapsed > 1 / self.dt: # haven't detected target in 1 second
+                if failed_frames > 1 / self.dt: # haven't detected target in 1 second
                     await self.drone.offboard.set_velocity_body(
                         VelocityBodyYawspeed(0, 0, -0.2, 0))
 
                 await asyncio.sleep(self.dt)
                 continue
 
-            frames_elapsed = 0
+            failed_frames = 0
             x_err, y_err, alt_err, rot_err, tags_detected = errs
-            x_err, y_err, alt_err = self.offset_errors(x_err, y_err, alt_err, id)
 
             debug_window.updateWindow(self.east, self.north, self.down * -1.0, self.yaw, tags_detected)
             if self.logging:
                 self.log.write(self.east, self.north, self.down * -1.0, self.yaw, tags_detected,successful_frames,x_err,y_err,alt_err,rot_err)
 
-            east_velocity, north_velocity, down_velocity = pid_controller.get_velocities(x_err, y_err, alt_err, 0.5)
-            rot_angle = self.yaw + rot_err # yaw is in degrees, not degrees per second. must be set absolutely
+            x_err, y_err, alt_err = self.offset_errors(x_err, y_err, alt_err, rot_err, id)
+            east_velocity, north_velocity, down_velocity = pid_controller.get_velocities(x_err, y_err, alt_err, 0.4)
             
             # Checks if drone is aligned with central target
-            if alt_err < self.STAGE_1_TOLERANCE and alt_err > -1 * self.STAGE_1_TOLERANCE and rot_err < 2.0 and rot_err > -2.0 and x_err > -1 * self.STAGE_1_TOLERANCE and x_err < 1 * self.STAGE_1_TOLERANCE and y_err > -1 * self.STAGE_1_TOLERANCE and y_err<self.STAGE_1_TOLERANCE:
+            if util.is_between_symm(alt_err, self.STAGE_1_TOLERANCE) and util.is_between_symm(x_err, self.STAGE_1_TOLERANCE) and util.is_between_symm(y_err, self.STAGE_1_TOLERANCE):
                 successful_frames += 1
             else:
                 successful_frames = 0
@@ -159,7 +157,7 @@ class Drone:
                 break
 
             await self.drone.offboard.set_velocity_ned(
-                VelocityNedYaw(north_velocity, east_velocity, down_velocity, rot_angle)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
+                VelocityNedYaw(north_m_s=north_velocity, east_m_s=east_velocity, down_m_s=down_velocity, yaw_deg=rot_err)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
 
             current_millis = int(round(time.time() * 1000))
             if current_millis - start_millis < self.dt:
@@ -217,7 +215,7 @@ class Drone:
                     
                     # Re-attempts stage 1
                     if not errs is None:
-                        await self.stage1()
+                        await self.stage1(id)
                         img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
                         errs = self.image_analyzer.process_image(img, id, self.yaw)
                         checked_frames = 0
@@ -237,7 +235,7 @@ class Drone:
                 self.log.write(self.east, self.north, self.down * -1.0, self.yaw, tags_detected,successful_frames,x_err,y_err,alt_err,rot_err)
 
             # Checks if drone is aligned with docking
-            if alt_err < self.STAGE_2_TOLERANCE * 2 and alt_err > -1 * self.STAGE_2_TOLERANCE and rot_err < 2.0 and rot_err > -2.0 and x_err > -1 * self.STAGE_2_TOLERANCE and x_err < 1 * self.STAGE_3_TOLERANCE and y_err > -1 * self.STAGE_2_TOLERANCE and y_err<self.STAGE_2_TOLERANCE:
+            if alt_err < self.STAGE_2_TOLERANCE * 2 and alt_err > -1 * self.STAGE_2_TOLERANCE and rot_err < 2.0 and rot_err > -2.0 and x_err > -1 * self.STAGE_2_TOLERANCE and x_err < 1 * self.STAGE_2_TOLERANCE and y_err > -1 * self.STAGE_2_TOLERANCE and y_err<self.STAGE_2_TOLERANCE:
                 successful_frames += 1
             else:
                 successful_frames = 0
@@ -245,10 +243,10 @@ class Drone:
             # Adjusts errors for distance to target to prevent overshoot
             # Adjusted errors asymptote to 1 as alt_err increases, goes to 0 as alt_err decreases
             OVERSHOOT_CONSTANT=.6 # use to adjust speed of descent, higher constant means faster, lower means less overshooting
-            x_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
-            y_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
+            # x_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
+            # y_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
             # rot_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
-            alt_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
+            # alt_err*=np.tanh(OVERSHOOT_CONSTANT*alt_err*alt_err)
 
             # Ends loop if aligned for 1 second
             if successful_frames == 1 / self.dt:
@@ -257,43 +255,19 @@ class Drone:
             debug_window.updateWindow(self.east, self.north, self.down * -1.0, self.yaw, tags_detected)
 
             east_velocity, north_velocity, down_velocity = pid_controller.get_velocities(x_err, y_err, alt_err, 0.1)
-            rot_angle = self.yaw + rot_err # yaw is in degrees, not degrees per second. must be set absolutely
 
             await self.drone.offboard.set_velocity_ned(
-                VelocityNedYaw(north_velocity, east_velocity, down_velocity, rot_angle)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
+                VelocityNedYaw(north_m_s=north_velocity, east_m_s=east_velocity, down_m_s=down_velocity, yaw_deg=rot_err)) # north, east, down (all m/s), yaw (degrees, north is 0, positive for clockwise)
             
             await asyncio.sleep(self.dt)
 
-    def offset_errors(self, x, y, alt, target):
-        rot = 0
-        if target == 1:
-            y = y + odd_target_disp
-            rot = 90
-        elif target == 2:
-            x = x + even_target_disp
-            y = y + even_target_disp
-            rot = 45
-        elif target == 3:
-            x = x + odd_target_disp
-            rot = 0
-        elif target == 4:
-            x = x + even_target_disp
-            y = y - even_target_disp
-            rot = 45
-        elif target == 5:
-            y = y - odd_target_disp
-            rot = 90
-        elif target == 6:
-            x = x - even_target_disp
-            y = x - even_target_disp
-            rot = 45
-        elif target == 7:
-            x = x - odd_target_disp
-            rot = 0
-        elif target == 8:
-            x = x - even_target_disp
-            y = y + even_target_disp
-            rot = 45
+    def offset_errors(self, x, y, alt, rot, target):
+        # maps target 3 to 0 degrees, target 2 to 45 degrees, 1 to 90, 8 to 135, 7 to 180, ... , 4 to 315
+        # note that peripheral targets are numbered so that the north one is 1, then increasing clockwise
+        target_offset = abs(target - 3) * 45 if target <= 3 else (11 - target) * 45
+
+        x = x + boom_length / 2 * math.cos(math.radians(target_offset - rot))
+        y = y + boom_length / 2 * math.sin(math.radians(target_offset - rot))
         
         alt = alt - altitude_disp
         return x, y, alt
