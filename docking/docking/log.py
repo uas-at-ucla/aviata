@@ -1,7 +1,7 @@
 import datetime
 class Log:
     def __init__(self):
-        self.filename='logs/'+str(datetime.datetime.now().time())+'txt'
+        self.filename='logs/'+str(datetime.datetime.now().time()).replace(":", ".")+'txt'
         self.file=open(self.filename,'a')
 
     def writeLiteral(self, literal):
