@@ -39,6 +39,8 @@ tkinter
 $ sudo apt-get install python3-tk
 ```
 
+Install any other missing libraries using `pip`.
+
 # C++ Version
 
 ### Basic info:
@@ -86,6 +88,5 @@ $ ./docking # run the code
   * For some reason, I didn't have to do this step - I think it's because I already had it from installing OpenCV for the Python version of docking,
   and CMake was able to find it. I think it should build without you messing with OpenCV, but if that fails, instructions here: https://docs.opencv.org/4.5.1/d0/d3d/tutorial_general_install.html
   * FYI I have v4.2 installed
+  * Check if you have it: `ls /usr/include | grep opencv`
 * AprilTag not yet implemented, so no library setup necessary (yet)
-
-Install any other missing libraries using `pip`.
