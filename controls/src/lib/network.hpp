@@ -39,6 +39,8 @@
 
 // DRONE_STATUS
 
+#define DRONE_STATUS "DRONE_STATUS"
+
 class Network: public rclcpp::Node
 {
 public:
@@ -51,17 +53,20 @@ public:
     void init_follower_setpoint_publisher();
     void deinit_follower_setpoint_publisher();
     void publish_follower_setpoint(const aviata::msg::FollowerSetpoint& follower_setpoint);
-
     void subscribe_follower_setpoint(std::function<void(const aviata::msg::FollowerSetpoint::SharedPtr)> callback);
     void unsubscribe_follower_setpoint();
 
-    void subscribe_to_status(std::function<void(aviata::msg::DroneStatus)> callback);
+    void init_drone_status_publisher();
+    void deinit_drone_status_publisher();
+    void publish_drone_status(const aviata::msg::DroneStatus& drone_status);
+    void subscribe_drone_status(std::function<void(aviata::msg::DroneStatus)> callback);
+    void unsubscribe_drone_status();
+    void send_status(aviata::msg::DroneStatus status); //old
 
     void subscribe_to_dock_command();
 
     void subscribe_to_undock_command();
 
-    void send_status(aviata::msg::DroneStatus status);
 
 private:
     const std::string drone_id;
@@ -70,6 +75,9 @@ private:
 
     rclcpp::Publisher<aviata::msg::FollowerSetpoint>::SharedPtr follower_setpoint_publisher;
     rclcpp::Subscription<aviata::msg::FollowerSetpoint>::SharedPtr follower_setpoint_subscription;
+
+    rclcpp::Publisher<aviata::msg::DroneStatus>::SharedPtr drone_status_publisher;
+    rclcpp::Subscription<aviata::msg::DroneStatus>::SharedPtr drone_status_subscription;
 };
 
 #endif
