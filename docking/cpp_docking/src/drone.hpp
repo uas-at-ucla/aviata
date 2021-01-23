@@ -8,7 +8,7 @@
 #define STAGE_2_TOLERANCE 0.05
 
 #include "camera_simulator.hpp"
-
+#include "image_analyzer.hpp"
 #include <mavsdk/mavsdk.h>
 
 using namespace mavsdk;
@@ -17,16 +17,14 @@ class Drone {
 
 public: 
     Drone(Target t);
-
     bool connect_gazebo();
     bool takeoff();
     void initiate_docking(int target_id);
 
 private:
     Mavsdk mavsdk;
-
     CameraSimulator camera_simulator;
-    // ImageAnalyzer image_analyzer; // not yet implemented
+    ImageAnalyzer image_analyzer; 
     float m_north;
     float m_east;
     float m_down;
