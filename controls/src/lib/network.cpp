@@ -67,7 +67,7 @@ void Network::publish_drone_status(const aviata::msg::DroneStatus &drone_status)
     }
 }
 
-void Network::subscribe_drone_status(std::function<void(aviata::msg::DroneStatus)> callback)
+void Network::subscribe_drone_status(std::function<void(aviata::msg::DroneStatus::SharedPtr)> callback)
 {
     drone_status_subscription = this->create_subscription<aviata::msg::DroneStatus>(DRONE_STATUS, sensor_data_qos, callback);
 }
