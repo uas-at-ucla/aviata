@@ -7,34 +7,35 @@
 #include "aviata/msg/drone_status.hpp"
 #include "aviata/msg/follower_setpoint.hpp"
 
-// TODO define all message types as string constants (to use as ROS topics)
+// define all message types as string constants (to use as ROS topics)
 
 // Inputs to Ground Station
-// REQUEST_SWAP
-// REQUEST_UNDOCK
-// REQUEST_DOCK
-// TERMINATE_FLIGHT
+#define REQUEST_SWAP "REQUEST_SWAP"
+#define REQUEST_UNDOCK "REQUEST_UNDOCK"
+#define REQUEST_DOCK "REQUEST_DOCK"
+#define TERMINATE_FLIGHT "TERMINATE_FLIGHT"
 
 // From Ground Station to a Drone
-// UNDOCK
-// DOCK
-// CANCEL_DOCKING
+#define UNDOCK "UNDOCK"
+#define DOCK "DOCK"
+#define CANCEL_DOCKING "CANCEL_DOCKING"
 
 // From Ground Station to Leader Drone
-// LEADER_SETPOINT
-// FRAME_ARM
-// FRAME_DISARM
-// FRAME_TAKEOFF
-// FRAME_LAND
+#define LEADER_SETPOINT "LEADER_SETPOINT"
+#define FRAME_ARM "FRAME_ARM"
+#define FRAME_DISARM "FRAME_DISARM"
+#define FRAME_TAKEOFF "FRAME_TAKEOFF"
+#define FRAME_LAND "FRAME_LAND"
 
 // INITIALIZE_STATE
 
 // Drone to Drone
-// BECOME_LEADER
-// REQUEST_NEW_LEADER
+#define BECOME_LEADER "BECOME_LEADER"
+#define REQUEST_NEW_LEADER "REQUEST_NEW_LEADER"
+#define FOLLOWER_ARM "FOLLOWER_ARM"
+#define FOLLOWER_DISARM "FOLLOWER_DISARM"
+
 #define FOLLOWER_SETPOINT "FOLLOWER_SETPOINT"
-// FOLLOWER_ARM
-// FOLLOWER_DISARM
 
 // DRONE_STATUS
 
