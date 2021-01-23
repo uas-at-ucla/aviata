@@ -7,36 +7,39 @@
 #include "aviata/msg/drone_status.hpp"
 #include "aviata/msg/follower_setpoint.hpp"
 
-// TODO define all message types as string constants (to use as ROS topics)
+// define all message types as string constants (to use as ROS topics)
 
 // Inputs to Ground Station
-// REQUEST_SWAP
-// REQUEST_UNDOCK
-// REQUEST_DOCK
-// TERMINATE_FLIGHT
+#define REQUEST_SWAP "REQUEST_SWAP"
+#define REQUEST_UNDOCK "REQUEST_UNDOCK"
+#define REQUEST_DOCK "REQUEST_DOCK"
+#define TERMINATE_FLIGHT "TERMINATE_FLIGHT"
 
 // From Ground Station to a Drone
-// UNDOCK
-// DOCK
-// CANCEL_DOCKING
+#define UNDOCK "UNDOCK"
+#define DOCK "DOCK"
+#define CANCEL_DOCKING "CANCEL_DOCKING"
 
 // From Ground Station to Leader Drone
-// LEADER_SETPOINT
-// FRAME_ARM
-// FRAME_DISARM
-// FRAME_TAKEOFF
-// FRAME_LAND
+#define LEADER_SETPOINT "LEADER_SETPOINT"
+#define FRAME_ARM "FRAME_ARM"
+#define FRAME_DISARM "FRAME_DISARM"
+#define FRAME_TAKEOFF "FRAME_TAKEOFF"
+#define FRAME_LAND "FRAME_LAND"
 
 // INITIALIZE_STATE
 
 // Drone to Drone
-// BECOME_LEADER
-// REQUEST_NEW_LEADER
+#define BECOME_LEADER "BECOME_LEADER"
+#define REQUEST_NEW_LEADER "REQUEST_NEW_LEADER"
+#define FOLLOWER_ARM "FOLLOWER_ARM"
+#define FOLLOWER_DISARM "FOLLOWER_DISARM"
+
 #define FOLLOWER_SETPOINT "FOLLOWER_SETPOINT"
-// FOLLOWER_ARM
-// FOLLOWER_DISARM
 
 // DRONE_STATUS
+
+#define DRONE_STATUS "DRONE_STATUS"
 
 class Network: public rclcpp::Node
 {
@@ -50,17 +53,20 @@ public:
     void init_follower_setpoint_publisher();
     void deinit_follower_setpoint_publisher();
     void publish_follower_setpoint(const aviata::msg::FollowerSetpoint& follower_setpoint);
-
     void subscribe_follower_setpoint(std::function<void(const aviata::msg::FollowerSetpoint::SharedPtr)> callback);
     void unsubscribe_follower_setpoint();
 
-    void subscribe_to_status(std::function<void(aviata::msg::DroneStatus)> callback);
+    void init_drone_status_publisher();
+    void deinit_drone_status_publisher();
+    void publish_drone_status(const aviata::msg::DroneStatus& drone_status);
+    void subscribe_drone_status(std::function<void(aviata::msg::DroneStatus::SharedPtr)> callback);
+    void unsubscribe_drone_status();
+    void send_status(aviata::msg::DroneStatus status); //old
 
     void subscribe_to_dock_command();
 
     void subscribe_to_undock_command();
 
-    void send_status(aviata::msg::DroneStatus status);
 
 private:
     const std::string drone_id;
@@ -69,6 +75,9 @@ private:
 
     rclcpp::Publisher<aviata::msg::FollowerSetpoint>::SharedPtr follower_setpoint_publisher;
     rclcpp::Subscription<aviata::msg::FollowerSetpoint>::SharedPtr follower_setpoint_subscription;
+
+    rclcpp::Publisher<aviata::msg::DroneStatus>::SharedPtr drone_status_publisher;
+    rclcpp::Subscription<aviata::msg::DroneStatus>::SharedPtr drone_status_subscription;
 };
 
 #endif
