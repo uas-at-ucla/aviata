@@ -59,7 +59,7 @@ public:
     void init_drone_status_publisher();
     void deinit_drone_status_publisher();
     void publish_drone_status(const aviata::msg::DroneStatus& drone_status);
-    void subscribe_drone_status(std::function<void(aviata::msg::DroneStatus)> callback);
+    void subscribe_drone_status(std::function<void(aviata::msg::DroneStatus::SharedPtr)> callback);
     void unsubscribe_drone_status();
     void send_status(aviata::msg::DroneStatus status); //old
 
