@@ -3,5 +3,6 @@ int8 dock -1    # used for docking requests (default -1)
 
 # Unused:
 # string drone_id 
+# setpoint # expand to leader needs
 ---
 uint8 ack       # acknowledgment
