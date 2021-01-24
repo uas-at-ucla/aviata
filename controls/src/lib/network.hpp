@@ -75,14 +75,13 @@ public:
     // void subscribe_to_undock_command();
 
 // https://index.ros.org/doc/ros2/Tutorials/Custom-ROS2-Interfaces/#test-the-new-interfaces
-    void init_drone_command_service(const std::string service_name = drone_id + "_SERVICE", 
-                                    std::function<void(aviata::srv::DroneCommand::Request::SharedPtr, 
-                                                       aviata::srv::DroneCommand::Response::SharedPtr)> callback);
+    void init_drone_command_service(std::function<void(aviata::srv::DroneCommand::Request::SharedPtr, 
+                                    aviata::srv::DroneCommand::Response::SharedPtr)> callback);
     void deinit_drone_command_service();    
 
-    void init_drone_command_client(std::string service_name);
-    void deinit_drone_command_client(std::string service_name);
-    uint8_t send_drone_command_async(std::string service_name, const aviata::srv::DroneCommand::Request &request);
+    void init_drone_command_client(std::string other_drone_id);
+    void deinit_drone_command_client(std::string other_drone_id);
+    uint8_t send_drone_command(std::string other_drone_id, std::string &drone_command, int dock = -1);
 
 private:
     const std::string drone_id;

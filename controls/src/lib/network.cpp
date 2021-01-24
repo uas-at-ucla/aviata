@@ -82,3 +82,60 @@ void Network::send_status(aviata::msg::DroneStatus status)
 {
     // status_publisher->publish(status);
 }
+
+// Drone Command Service
+
+void init_drone_command_service(std::function<void(aviata::srv::DroneCommand::Request::SharedPtr,
+                                aviata::srv::DroneCommand::Response::SharedPtr)> callback)
+{
+    std::string service_name = drone_id + "_SERVICE";
+    drone_command_service = this->create_service<aviata::srv::DroneCommand>(service_name, callback, sensor_data_qos);
+}
+
+void deinit_drone_command_service()
+{
+    drone_command_service = nullptr;
+}
+
+// Drone Command Client
+
+void init_drone_command_client(std::string other_drone_id)
+{
+    std::string service_name = other_drone_id + "_SERVICE";
+    drone_command_clients[service_name] = this->create_client<aviata::srv::DroneCommand>(service_name);
+}
+
+void deinit_drone_command_client(std::string other_drone_id)
+{
+    std::string service_name = other_drone_id + "_SERVICE";
+    drone_command_clients[service_name] = nullptr;
+}
+
+// @brief function is blocking- TODO: make async 
+// @return acknowledgement received through the ROS2 service
+uint8_t send_drone_command(std::string other_drone_id, std::string &drone_command, int dock = -1)
+{
+    std::string service_name = other_drone_id + "_SERVICE";
+
+    if (!drone_command_clients[service_name]->service_is_ready())
+    {
+        if (!rclcpp::ok())
+            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
+        else
+            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), other_drone_id + " service not available");
+        return 0;
+    }
+
+    auto request = std::make_shared<aviata::srv::DroneCommand::Request>(); 
+    request->command = drone_command;
+    request->dock = dock;
+
+    auto result = drone_command_clients[service_name]->async_send_request(request);
+
+    // Wait for the result.
+    if (rclcpp::spin_until_future_complete(this, result) == rclcpp::executor::FutureReturnCode::SUCCESS)
+    {
+        return result.get()->ack;
+    }
+    return 0;
+}
