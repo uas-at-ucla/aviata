@@ -19,6 +19,12 @@
 #define UNDOCK "UNDOCK"
 #define DOCK "DOCK"
 #define CANCEL_DOCKING "CANCEL_DOCKING"
+// Manual control if necessary
+// #define DRONE_SETPOINT "DRONE_SETPOINT"
+// #define DRONE_ARM "DRONE_ARM"
+// #define DRONE_DISARM "DRONE_DISARM"
+// #define DRONE_TAKEOFF "DRONE_TAKEOFF"
+// #define DRONE_LAND "DRONE_LAND"
 
 // From Ground Station to Leader Drone
 #define LEADER_SETPOINT "LEADER_SETPOINT"
