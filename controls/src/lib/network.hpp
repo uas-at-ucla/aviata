@@ -2,6 +2,8 @@
 #define NETWORK_HPP
 
 #include <functional>
+#include <map>
+
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "aviata/msg/drone_status.hpp"
@@ -69,10 +71,18 @@ public:
     void unsubscribe_drone_status();
     void send_status(aviata::msg::DroneStatus status); //old
 
-    void subscribe_to_dock_command();
+    // void subscribe_to_dock_command();
+    // void subscribe_to_undock_command();
 
-    void subscribe_to_undock_command();
+// https://index.ros.org/doc/ros2/Tutorials/Custom-ROS2-Interfaces/#test-the-new-interfaces
+    void init_drone_command_service(const std::string service_name = drone_id + "_SERVICE", 
+                                    std::function<void(aviata::srv::DroneCommand::Request::SharedPtr, 
+                                                       aviata::srv::DroneCommand::Response::SharedPtr)> callback);
+    void deinit_drone_command_service();    
 
+    void init_drone_command_client(std::string service_name);
+    void deinit_drone_command_client(std::string service_name);
+    uint8_t send_drone_command_async(std::string service_name, const aviata::srv::DroneCommand::Request &request);
 
 private:
     const std::string drone_id;
@@ -84,6 +94,9 @@ private:
 
     rclcpp::Publisher<aviata::msg::DroneStatus>::SharedPtr drone_status_publisher;
     rclcpp::Subscription<aviata::msg::DroneStatus>::SharedPtr drone_status_subscription;
+
+    rclcpp::Service<aviata::srv::DroneCommand>::SharedPtr drone_command_service;
+    std::map<std::string, rclcpp::Client<aviata::srv::DroneCommand>::SharedPtr> drone_command_clients;
 };
 
 #endif
