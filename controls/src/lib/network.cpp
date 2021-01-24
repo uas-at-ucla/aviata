@@ -85,27 +85,28 @@ void Network::send_status(aviata::msg::DroneStatus status)
 
 // Drone Command Service
 
-void init_drone_command_service(std::function<void(aviata::srv::DroneCommand::Request::SharedPtr,
+// @brief uses default qos profile (rmw_qos_profile_services_default)
+void Network::init_drone_command_service(std::function<void(aviata::srv::DroneCommand::Request::SharedPtr,
                                 aviata::srv::DroneCommand::Response::SharedPtr)> callback)
 {
     std::string service_name = drone_id + "_SERVICE";
-    drone_command_service = this->create_service<aviata::srv::DroneCommand>(service_name, callback, sensor_data_qos);
+    drone_command_service = this->create_service<aviata::srv::DroneCommand>(service_name, callback);
 }
 
-void deinit_drone_command_service()
+void Network::deinit_drone_command_service()
 {
     drone_command_service = nullptr;
 }
 
 // Drone Command Client
 
-void init_drone_command_client(std::string other_drone_id)
+void Network::init_drone_command_client(std::string other_drone_id)
 {
     std::string service_name = other_drone_id + "_SERVICE";
     drone_command_clients[service_name] = this->create_client<aviata::srv::DroneCommand>(service_name);
 }
 
-void deinit_drone_command_client(std::string other_drone_id)
+void Network::deinit_drone_command_client(std::string other_drone_id)
 {
     std::string service_name = other_drone_id + "_SERVICE";
     drone_command_clients[service_name] = nullptr;
@@ -113,7 +114,7 @@ void deinit_drone_command_client(std::string other_drone_id)
 
 // @brief function is blocking- TODO: make async 
 // @return acknowledgement received through the ROS2 service
-uint8_t send_drone_command(std::string other_drone_id, std::string &drone_command, int dock = -1)
+uint8_t Network::send_drone_command(std::string other_drone_id, std::string &drone_command, int dock)
 {
     std::string service_name = other_drone_id + "_SERVICE";
 
@@ -133,7 +134,7 @@ uint8_t send_drone_command(std::string other_drone_id, std::string &drone_comman
     auto result = drone_command_clients[service_name]->async_send_request(request);
 
     // Wait for the result.
-    if (rclcpp::spin_until_future_complete(this, result) == rclcpp::executor::FutureReturnCode::SUCCESS)
+    if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result) == rclcpp::executor::FutureReturnCode::SUCCESS)
     {
         return result.get()->ack;
     }

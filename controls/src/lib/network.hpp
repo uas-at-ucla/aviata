@@ -9,6 +9,8 @@
 #include "aviata/msg/drone_status.hpp"
 #include "aviata/msg/follower_setpoint.hpp"
 
+#include "aviata/srv/drone_command.hpp"
+
 // define all message types as string constants (to use as ROS topics)
 
 // Inputs to Ground Station
