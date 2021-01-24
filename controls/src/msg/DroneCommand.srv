@@ -1,0 +1,7 @@
+string request  # message types defined in network.hpp
+int8 dock -1    # used for docking requests (default -1)
+
+# Unused:
+# string drone_id 
+---
+uint8 ack       # acknowledgment
