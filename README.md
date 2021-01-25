@@ -51,3 +51,8 @@ Next, run the `aviata_drone` executable from within the controls/build folder. F
 ```bash
 ./aviata_drone leader lead udp://:14540
 ```
+
+## Build PX4-Autopilot for Pixhawk
+```bash
+make px4_fmu-v3_default
+```
