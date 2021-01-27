@@ -1,5 +1,4 @@
 #include "drone.hpp"
-#include "aviata/msg/follower_setpoint.hpp"
 
 using namespace std::chrono;
 
@@ -199,3 +198,11 @@ void Drone::set_follower_setpoint(float q[4], float *thrust)
     //     // offset calculations
     //     px4_io.set_attitude_and_thrust(q, thrust); // TODO update function call
 }
+
+// @brief to be used as callback for service server
+void Drone::command_handler(aviata::srv::DroneCommand::Request::SharedPtr request, 
+                            aviata::srv::DroneCommand::Response::SharedPtr response)
+{
+    
+}
+

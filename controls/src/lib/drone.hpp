@@ -12,6 +12,9 @@
 #include "px4_io.hpp"
 #include "network.hpp"
 
+#include "aviata/srv/drone_command.hpp"
+#include "aviata/msg/follower_setpoint.hpp"
+
 enum DroneState {
     STANDBY,
     ARRIVING,
@@ -87,6 +90,9 @@ private:
     void get_leader_setpoint(float q[4], float* thrust);
 
     void set_follower_setpoint(float q[4], float* thrust);
+
+    void command_handler(aviata::srv::DroneCommand::Request::SharedPtr request, 
+                         aviata::srv::DroneCommand::Response::SharedPtr response);
 };
 
 #endif
