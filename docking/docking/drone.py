@@ -69,7 +69,7 @@ class Drone:
 
         # Takeoff the vehicle (later, we can assume that the drone is already flying when we run this script)
         print("-- Taking off")
-        await self.drone.action.set_takeoff_altitude(self.down * -1.0) # meters
+        await self.drone.action.set_takeoff_altitude(3.0) # meters
         await self.drone.action.takeoff()
         await asyncio.sleep(8)
 
@@ -302,10 +302,10 @@ class Drone:
         """Safely stop the drone and stop offboard mode"""
         print("-- Stopping offboard")
         try:
-            await drone.offboard.stop()
+            await self.drone.offboard.stop()
         except OffboardError as error:
             print(f"Stopping offboard mode failed with error code: \
                 {error._result.result}")
 
         print("-- Landing drone")
-        await drone.action.land()
+        await self.drone.action.land()
