@@ -114,7 +114,7 @@ void Network::deinit_drone_command_client(std::string other_drone_id)
 
 // @brief function is blocking- TODO: make async 
 // @return acknowledgement received through the ROS2 service
-uint8_t Network::send_drone_command(std::string other_drone_id, std::string &drone_command, int dock)
+uint8_t Network::send_drone_command(std::string other_drone_id, DroneCommand drone_command, int dock)
 {
     std::string service_name = other_drone_id + "_SERVICE";
 

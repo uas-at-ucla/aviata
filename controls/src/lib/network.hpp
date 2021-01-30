@@ -11,47 +11,34 @@
 
 #include "aviata/srv/drone_command.hpp"
 
-// define all message types as string constants (to use as ROS topics)
+// define all command message types as enum constants
+enum DroneCommand
+{
+    // Inputs to Ground Station
+    REQUEST_SWAP,
+    REQUEST_UNDOCK,
+    REQUEST_DOCK,
+    TERMINATE_FLIGHT,
+    // From Ground Station to a Drone
+    UNDOCK,
+    DOCK,
+    CANCEL_DOCKING,
+    SETPOINT,
+    LEADER_SETPOINT,
+    // Anywhere to Drone, have different response if leader or follower
+    BECOME_LEADER,
+    REQUEST_NEW_LEADER,
+    ARM,
+    DISARM,
+    TAKEOFF,
+    LAND
+};
 
-// Inputs to Ground Station
-#define REQUEST_SWAP "REQUEST_SWAP"
-#define REQUEST_UNDOCK "REQUEST_UNDOCK"
-#define REQUEST_DOCK "REQUEST_DOCK"
-#define TERMINATE_FLIGHT "TERMINATE_FLIGHT"
-
-// From Ground Station to a Drone
-#define UNDOCK "UNDOCK"
-#define DOCK "DOCK"
-#define CANCEL_DOCKING "CANCEL_DOCKING"
-// Manual control if necessary
-// #define DRONE_SETPOINT "DRONE_SETPOINT"
-// #define DRONE_ARM "DRONE_ARM"
-// #define DRONE_DISARM "DRONE_DISARM"
-// #define DRONE_TAKEOFF "DRONE_TAKEOFF"
-// #define DRONE_LAND "DRONE_LAND"
-
-// From Ground Station to Leader Drone
-#define LEADER_SETPOINT "LEADER_SETPOINT"
-#define FRAME_ARM "FRAME_ARM"
-#define FRAME_DISARM "FRAME_DISARM"
-#define FRAME_TAKEOFF "FRAME_TAKEOFF"
-#define FRAME_LAND "FRAME_LAND"
-
-// INITIALIZE_STATE
-
-// Drone to Drone
-#define BECOME_LEADER "BECOME_LEADER"
-#define REQUEST_NEW_LEADER "REQUEST_NEW_LEADER"
-#define FOLLOWER_ARM "FOLLOWER_ARM"
-#define FOLLOWER_DISARM "FOLLOWER_DISARM"
-
+// TOPICS
 #define FOLLOWER_SETPOINT "FOLLOWER_SETPOINT"
-
-// DRONE_STATUS
-
 #define DRONE_STATUS "DRONE_STATUS"
 
-class Network: public rclcpp::Node
+class Network : public rclcpp::Node
 {
 public:
     static void init();
@@ -59,16 +46,16 @@ public:
     static void shutdown();
 
     Network(std::string drone_id);
-    
+
     void init_follower_setpoint_publisher();
     void deinit_follower_setpoint_publisher();
-    void publish_follower_setpoint(const aviata::msg::FollowerSetpoint& follower_setpoint);
+    void publish_follower_setpoint(const aviata::msg::FollowerSetpoint &follower_setpoint);
     void subscribe_follower_setpoint(std::function<void(const aviata::msg::FollowerSetpoint::SharedPtr)> callback);
     void unsubscribe_follower_setpoint();
 
     void init_drone_status_publisher();
     void deinit_drone_status_publisher();
-    void publish_drone_status(const aviata::msg::DroneStatus& drone_status);
+    void publish_drone_status(const aviata::msg::DroneStatus &drone_status);
     void subscribe_drone_status(std::function<void(aviata::msg::DroneStatus::SharedPtr)> callback);
     void unsubscribe_drone_status();
     void send_status(aviata::msg::DroneStatus status); //old
@@ -76,10 +63,11 @@ public:
     // void subscribe_to_dock_command();
     // void subscribe_to_undock_command();
 
-// https://index.ros.org/doc/ros2/Tutorials/Custom-ROS2-Interfaces/#test-the-new-interfaces
-    void init_drone_command_service(std::function<void(aviata::srv::DroneCommand::Request::SharedPtr, 
-                                    aviata::srv::DroneCommand::Response::SharedPtr)> callback);
-    void deinit_drone_command_service();    
+    // https://index.ros.org/doc/ros2/Tutorials/Custom-ROS2-Interfaces/#test-the-new-interfaces
+    void init_drone_command_service(std::function<void(aviata::srv::DroneCommand::Request::SharedPtr,
+                                                       aviata::srv::DroneCommand::Response::SharedPtr)>
+                                        callback);
+    void deinit_drone_command_service();
 
     void init_drone_command_client(std::string other_drone_id);
     void deinit_drone_command_client(std::string other_drone_id);
