@@ -109,7 +109,7 @@ class ImageAnalyzer:
         # cv2.waitKey()
 
 # if __name__ == "__main__":
-#     img = cv2.imread("/home/axel/Pictures/a5.png")
+#     img = cv2.imread("../docking/res/3_stage_tags.png")
 
 #     scale_percent = 30 # percent of original size
 #     width = int(img.shape[1] * scale_percent / 100)
@@ -119,4 +119,5 @@ class ImageAnalyzer:
 #     resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
 
 #     image_analyzer = ImageAnalyzer()
-#     x_err, y_err, z_err, rot_err, e = image_analyzer.process_image(resized, 1)
+#     x_err, y_err, z_err, rot_err, e = image_analyzer.process_image(resized, 1, 45)
+#     print(x_err, y_err, z_err, rot_err)
