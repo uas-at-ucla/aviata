@@ -84,7 +84,7 @@ bool Drone::takeoff() {
     log(tag, "Armed");
 
     // Attempt to take off
-    action.set_takeoff_altitude(8);
+    action.set_takeoff_altitude(2);
     Action::Result takeoff_result = action.takeoff();
     if (takeoff_result != Action::Result::Success) {
         log(tag, "Takeoff failed, error code on next line", true);
@@ -202,5 +202,9 @@ void Drone::safe_land() {
 }
 
 void Drone::land() {
-
+    auto offboard = Offboard{m_system};
+    auto action = Action{m_system};
+    offboard.stop();
+    action.land();
+    action.disarm();
 }

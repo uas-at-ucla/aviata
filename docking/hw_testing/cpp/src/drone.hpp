@@ -19,6 +19,7 @@ public:
     bool connect_gazebo();
     bool takeoff();
     void initiate_docking(int target_id);
+    void land();
 
 private:
     Mavsdk mavsdk;
@@ -40,7 +41,6 @@ private:
     void stage2(int target_id);
     void offset_errors(double x, double y, double alt, double rot, int target_id); // offset for stg 1->2 transition
     void safe_land();
-    void land();
 };
 
 

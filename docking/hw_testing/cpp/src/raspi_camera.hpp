@@ -9,11 +9,11 @@ class RaspiCamera {
 
 public:
     RaspiCamera();
-    ~RaspiCamera();
     cv::Mat update_current_image();
 
 private:
     // raspicam::RaspiCam_Cv camera;
+    cv::VideoCapture camera;
 };
 
 
