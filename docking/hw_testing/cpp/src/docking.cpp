@@ -15,6 +15,7 @@ int main(/*int argc, char** argv */)
     //     sleep_for(seconds(1));
     // }
     RaspiCamera camera;
+    cv::Mat img = camera.update_current_image();
 
     return 0;
 }

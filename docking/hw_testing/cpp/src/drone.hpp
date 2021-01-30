@@ -7,8 +7,7 @@
 #define STAGE_1_TOLERANCE 0.10
 #define STAGE_2_TOLERANCE 0.05
 
-#include "camera_simulator.hpp"
-#include "image_analyzer.hpp"
+#include "raspi_camera.hpp"
 #include <mavsdk/mavsdk.h>
 
 using namespace mavsdk;
@@ -23,8 +22,8 @@ public:
 
 private:
     Mavsdk mavsdk;
-    CameraSimulator camera_simulator;
-    ImageAnalyzer image_analyzer; 
+    RaspiCamera raspi_camera;
+    // ImageAnalyzer image_analyzer; 
     float m_north;
     float m_east;
     float m_down;

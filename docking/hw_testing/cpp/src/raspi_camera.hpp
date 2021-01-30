@@ -2,18 +2,18 @@
 #define CAMERA_SIMULATOR_H_
 
 #include "util.hpp"
+#include <raspicam/raspicam_cv.h>
 #include <opencv2/core.hpp>
-
-using namespace cv;
 
 class RaspiCamera {
 
 public:
     RaspiCamera();
     ~RaspiCamera();
-    Mat update_current_image();
+    cv::Mat update_current_image();
 
 private:
+    // raspicam::RaspiCam_Cv camera;
 };
 
 

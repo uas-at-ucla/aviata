@@ -11,11 +11,12 @@
 #include <mavsdk/plugins/telemetry/telemetry.h>
 
 using namespace mavsdk;
+using namespace cv;
 using namespace std::chrono;
 using std::this_thread::sleep_for;
 
 Drone::Drone(Target t) 
-    : m_north(0), m_east(0), m_down(-5), m_yaw(0), m_dt(0.05), camera_simulator(t), m_target_info(t),image_analyzer()
+    : m_north(0), m_east(0), m_down(-5), m_yaw(0), m_dt(0.05), m_target_info(t) //,image_analyzer()
 {}
 
 /**
@@ -173,10 +174,10 @@ bool Drone::stage1(int target_id) {
         offboard.set_velocity_body(spin);
         log("Yaw", std::to_string(m_yaw));
         
-        Mat currImg=camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0); // looks a bit choppy only cause it's at 20fps, remove sleep_for and it's smooth
-        string tags="";
-        float* errs=image_analyzer.processImage(currImg,0,m_yaw,tags);
-        log("Tags",tags);
+        Mat currImg = raspi_camera.update_current_image(); // looks a bit choppy only cause it's at 20fps, remove sleep_for and it's smooth
+        // string tags="";
+        // float* errs=image_analyzer.processImage(currImg,0,m_yaw,tags);
+        // log("Tags",tags);
 
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
         duration<double, std::milli> d = (t2 - t1);
