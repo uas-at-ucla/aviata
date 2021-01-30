@@ -56,3 +56,21 @@ Next, run the `aviata_drone` executable from within the controls/build folder. F
 ```bash
 make px4_fmu-v3_default
 ```
+
+# Comms Code
+## Init and build
+First run ./init_mesh.sh to initiate and clone the submodule code. Then go to ./mesh/OONF to buiuld the framework. use command:
+```bash
+cd build
+cmake ..
+make
+```
+## Run the code
+First go to build folder (mesh/OONF/build) and create a file with unique id (0 - 255), note that NO node in your network should have the same ID.
+Then, go to OONF root folder (mesh/OONF) and run
+```bash
+run.sh <INTERFACE_NAME>  
+```
+<INTERFACE_NAME> should be the network interace you want to use for the mesh network, check it with command ifconfig.
+
+For more instructions and troubleshooting, see: https://docs.google.com/document/d/18OtGG7QGEEyhy4e1Phuv2IOWkYh8ndprgu_6wa8lDLM/edit?usp=sharing
