@@ -32,6 +32,10 @@
 
 #define DISPLAY_SCALE 1750
 
+#define MARGIN 10
+
+#define OVERSHOOT_CONSTANT 0.6
+
 #define ERROR_CONSOLE_TEXT "\033[31m" // Turn text on console red
 #define LOG_CONSOLE_TEXT "\033[34m" // Turn text on console blue
 #define NORMAL_CONSOLE_TEXT "\033[0m" // Restore normal console colour

@@ -1,5 +1,6 @@
 #include "drone.hpp"
 #include "util.hpp"
+#include "pid_controller.hpp"
 
 #include <iostream>
 #include <future>
@@ -174,7 +175,7 @@ bool Drone::stage1(int target_id) {
         log("Yaw", std::to_string(m_yaw));
         
         Mat currImg=camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0); // looks a bit choppy only cause it's at 20fps, remove sleep_for and it's smooth
-        string tags="";
+        std::string tags="";
         float* errs=image_analyzer.processImage(currImg,0,m_yaw,tags);
         log("Tags",tags);
 
@@ -189,7 +190,77 @@ bool Drone::stage1(int target_id) {
 }
 
 void Drone::stage2(int target_id) {
+    log("Stage 2","Docking Beginning");
+    PIDController* pid=new PIDController(m_dt);
+    int successful_frames=0;
+    std::string tags="";
 
+    while (true){
+        Mat img=camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+        float* errs=image_analyzer.processImage(currImg,id,m_yaw,tags);
+        int checked_frames=0;
+        int docking_attempts=0;
+
+        while(errs==nullptr){
+            checked_frames++;
+            log("No Tag Detected, Checked Frames",checked_frames+"");
+            offboard.set_velocity_body({0,0,-0/1,0});
+
+            if(checked_frames>1/m_dt){
+                docking_attempts++;
+                if(docking_attempts>MAX_ATTEMPTS){
+                    log("DOCKING FAILED","Maximum Attempts Exceeded",true);
+                    safe_land();
+
+                    delete pid;
+                    return;
+                }
+            }
+            camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+            errs=image_analyzer.processImage(currImg,id,m_yaw,tags);
+            while(errs==nullptr&&m_down*-1.0-m_target.alt<MAX_HEIGHT_STAGE_2){
+                offboard.set_velocity_body({0,0,-0.2,0});
+                camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                errs=image_analyzer.processImage(currImg,id,m_yaw,tags);
+            }
+            if(errs!=nullptr) break;
+            while(errs==nullptr&&m_down*-1.0-m_target_alt<MAX_HEIGHT){
+                offboard.set_velocity_body({0,0,-0.2,0});
+                camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                errs=image_analyzer.processImage(currImg,0,m_yaw,tags);
+            }
+            if(errs!=nullptr){
+                stage1(id);
+                camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                errs=image_analyzer.processImage(currImg,0,m_yaw,tags);
+                checked_frames=0;
+            }
+            else{
+                log("DOCKING FAILED","Maximum Attempts Exceeded",true);
+                safe_land();
+
+                delete pid;
+                return;
+            }
+            sleep_for(m_dt*1000);
+        }
+        errs[2]-=0.05;
+        if(errs[2]<STAGE_2_TOLERANCE*2&&errs[2]>-1.0*STAGE_2_TOLERANCE&&errs[3]<2.0&&errs[3]>-2.0 &&errs[0]<STAGE_2_TOLERANCE
+        &&errs[0]>-1.0* STAGE_2_TOLERANCE&&errs[1]<STAGE_2_TOLERANCE&&errs[1]>-1.0* STAGE_2_TOLERANCE){
+            successful_frames++;
+        }
+        else{
+            successful_frames=0;
+        }
+        if(successful_frames>1/m_dt)break;
+
+        float* velocities=pid.getVelocities(errs[0],errs[1],errs[3],0.1)
+        offboard.set_velocity_ned({velocities[1],velocities[0],velocities[2],errs[3]});
+        delete errs;
+        delete velocities;
+        sleep_for(m_dt*1000);
+    }
+    delete pid;
 }
 
 void Drone::offset_errors(double x, double y, double alt, double rot, int target_id) {
