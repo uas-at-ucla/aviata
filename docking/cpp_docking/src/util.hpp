@@ -34,6 +34,8 @@
 
 #define MARGIN 10
 
+#define BOOM_LENGTH 1.00
+
 #define OVERSHOOT_CONSTANT 0.6
 
 #define ERROR_CONSOLE_TEXT "\033[31m" // Turn text on console red

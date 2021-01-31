@@ -12,7 +12,7 @@
 #include <mavsdk/mavsdk.h>
 
 using namespace mavsdk;
-
+const float ALTITUDE_DISP = BOOM_LENGTH/2/tan(to_radians(CAMERA_FOV_VERTICAL/2))*2;
 class Drone {
 
 public: 
@@ -39,7 +39,7 @@ private:
 
     bool stage1(int target_id);
     void stage2(int target_id);
-    void offset_errors(double x, double y, double alt, double rot, int target_id); // offset for stg 1->2 transition
+    void offset_errors(float* errs, int target_id); // offset for stg 1->2 transition
     void safe_land();
     void land();
 };

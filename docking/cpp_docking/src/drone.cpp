@@ -142,10 +142,8 @@ void Drone::set_yaw(float yaw) {
     m_yaw = yaw;
 }
 
-bool Drone::stage1(int target_id) {
-
-
-    // Register for attitude updates
+bool Drone::stage1(int target_id){
+    log("Stage 1","Docking Beginning");
     auto telemetry = Telemetry{m_system}; // NOTE: telemetry updates are only received as long as the telemetry pointer is alive
                                           // will need to either resubscribe in stage 2 or move this to initiate_docking to keep it alive
                                           // and pass as argument to stage1(), stage2()
@@ -166,19 +164,54 @@ bool Drone::stage1(int target_id) {
 
     auto offboard = Offboard{m_system};
 
-    while (true) {
+    int failed_frames=0;
+    int successful_frames=0;
+    PIDController* pid=new PIDController(m_dt);
+    Mat img;
+    std::string tags="";
+
+    while(true){
         high_resolution_clock::time_point t1 = high_resolution_clock::now();
+        img=camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+        float* errs=image_analyzer.processImage(img,0,m_yaw,tags);
+        log("Tags Detected",tags);
+        if(errs==nullptr){
+           log("No Tag Detected, Failed Frames",failed_frames+"");
+           if(m_down*-1.0-m_target_info.alt>MAX_HEIGHT){
+               delete pid;
+               return false;
+           }
+           if(failed_frames>1/m_dt){
+               Offboard::VelocityBodyYawspeed change{};
+               change.down_m_s = -0.2f;
+               offboard.set_velocity_body(change);
+           }
+           sleep_for(milliseconds((int)(1000*m_dt)));
+           continue;
+        }
+        failed_frames=0;
+        offset_errors(errs,target_id);
+        float* velocities=pid->getVelocities(errs[0],errs[1],errs[2],0.4);
 
-        Offboard::VelocityBodyYawspeed spin{};
-        spin.yawspeed_deg_s = 36.0f;
-        offboard.set_velocity_body(spin);
-        log("Yaw", std::to_string(m_yaw));
-        
-        Mat currImg=camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0); // looks a bit choppy only cause it's at 20fps, remove sleep_for and it's smooth
-        std::string tags="";
-        float* errs=image_analyzer.processImage(currImg,0,m_yaw,tags);
-        log("Tags",tags);
+        if(errs[0]<STAGE_1_TOLERANCE&&errs[0]>-1.0*STAGE_1_TOLERANCE&&errs[1]<STAGE_1_TOLERANCE&&errs[1]>-1.0*STAGE_1_TOLERANCE&&
+        errs[2]<STAGE_1_TOLERANCE&&errs[2]>-1.0*STAGE_1_TOLERANCE&&errs[3]<2.0&&errs[3]>-2.0){
+            successful_frames++;
+        }
+        else{
+            successful_frames=0;
+        }
 
+        if(successful_frames>=1/m_dt){
+            break;
+        }
+        Offboard::VelocityNedYaw change{};
+        change.yaw_deg=errs[3];
+        change.north_m_s=velocities[1];
+        change.east_m_s=velocities[0];
+        change.down_m_s=velocities[2];
+        offboard.set_velocity_ned(change);
+        delete errs;
+        delete velocities;
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
         duration<double, std::milli> d = (t2 - t1);
         int time_span = d.count();
@@ -186,6 +219,8 @@ bool Drone::stage1(int target_id) {
             sleep_for(milliseconds((int) (m_dt * 1000 - time_span)));
         }
     }
+
+    delete pid;
     return true;
 }
 
@@ -279,7 +314,7 @@ void Drone::stage2(int target_id) {
         }
         if(successful_frames>1/m_dt)break;
 
-        float* velocities=pid->getVelocities(errs[0],errs[1],errs[3],0.1);
+        float* velocities=pid->getVelocities(errs[0],errs[1],errs[2],0.1);
         Offboard::VelocityNedYaw change{};
         change.yaw_deg=errs[3];
         change.north_m_s=velocities[1];
@@ -294,6 +329,7 @@ void Drone::stage2(int target_id) {
 }
 
 void Drone::safe_land() {
+    log("Landing","Safe landing begun");
     auto offboard = Offboard{m_system};
     for(int i=0;i<5/m_dt;i++){
         Offboard::VelocityNedYaw change{};
@@ -305,5 +341,29 @@ void Drone::safe_land() {
 }
 
 void Drone::land() {
+    log("Landing","Landing");
+    auto telemetry=Telemetry{m_system};
+    auto action=Action{m_system};
+    const Telemetry::Result set_rate_result=telemetry.set_rate_position(1.0);
+    if(set_rate_result!=Telemetry::Result::Success){
+        log("Landing","Telemetry Error",true);
+        return;
+    }
+    telemetry.subscribe_position([](Telemetry::Position position){
+        log("Landing",std::to_string(position.relative_altitude_m));
+    });
+    while(telemetry.in_air()){
+        sleep_for(seconds(1));
+    }
+    log("Landing","Landed");
 
+}
+
+void Drone::offset_errors(float* errs, int id){
+    float target_offset= id<=3 ? abs(id-3)*45 : (11-id)*45;
+    float x=errs[0]+BOOM_LENGTH/2 *cos(to_radians(target_offset-errs[3]));
+    float y=errs[1]+BOOM_LENGTH/2 *sin(to_radians(target_offset-errs[3]));
+    errs[2]-=ALTITUDE_DISP;
+    errs[0]=x;
+    errs[1]=y;
 }
