@@ -37,24 +37,31 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
     warpAffine(img, img, rot_mat, Size(img.cols, img.rows), INTER_LINEAR, BORDER_CONSTANT, Scalar(255, 255, 255));
     cvtColor(img,img,COLOR_BGR2GRAY);
 
-    zarray_t dets=apriltag_detector_detect(m_tagDetector,&img);
+    image_u8_t im={.width=img.cols,.height=img.rows, .stride=img.cols, .buf=img.data};
+
+    zarray_t* dets=apriltag_detector_detect(m_tagDetector,&im);
 
     std::string tagsDetected="";
-    for(int i=0;i<zarray_size(&dets);i++){
+    for(int i=0;i<zarray_size(dets);i++){
         apriltag_detection_t *det;
-        zarray_get(&dets,i,&det);
+        zarray_get(dets,i,&det);
         if(det->decision_margin>=MARGIN){
             tagsDetected+=det->id+" ";
         }
     }
     tags=tagsDetected;
 
-    for(int i=0;i<zarray_size(&dets);i++){
+    for(int i=0;i<zarray_size(dets);i++){
         apriltag_detection_t *det;
-        zarray_get(&dets,i,&det);
+        zarray_get(dets,i,&det);
         if(det->id==ind&&det->decision_margin>=MARGIN){
             double* center=det->c;
-            double *rect[2]=det->p;
+            double rect[4][2];
+            for(int i=0;i<4;i++){
+                for(int j=0;j<2;j++){
+                    rect[i][j]=(det->p)[i][j];
+                }
+            }
 
             std::vector<float> sideList;
             for(int i=0;i<4;i++){
