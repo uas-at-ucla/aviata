@@ -71,7 +71,9 @@ public:
 
     void init_drone_command_client(std::string other_drone_id);
     void deinit_drone_command_client(std::string other_drone_id);
-    uint8_t send_drone_command(std::string other_drone_id, std::string &drone_command, int dock = -1);
+    uint8_t send_drone_command(std::string other_drone_id, DroneCommand drone_command, int dock = -1);
+    std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> 
+        send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int dock = -1);
 
 private:
     const std::string drone_id;

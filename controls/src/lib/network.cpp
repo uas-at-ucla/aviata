@@ -140,3 +140,29 @@ uint8_t Network::send_drone_command(std::string other_drone_id, DroneCommand dro
     }
     return 0;
 }
+
+// @brief async command request
+// @return shared_future object to response of service (check if valid with response.valid() (std::shared_future object))
+// https://en.cppreference.com/w/cpp/thread/shared_future
+std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> 
+    Network::send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int dock)
+{
+    std::string service_name = other_drone_id + "_SERVICE";
+
+    if (!drone_command_clients[service_name]->service_is_ready())
+    {
+        if (!rclcpp::ok())
+            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
+        else
+            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), other_drone_id + " service not available");
+        return std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>>(); //returns empty (invalid) shared_future object
+    }
+
+    auto request = std::make_shared<aviata::srv::DroneCommand::Request>(); 
+    request->command = drone_command;
+    request->dock = dock;
+
+    return drone_command_clients[service_name]->async_send_request(request);
+}
+
+
