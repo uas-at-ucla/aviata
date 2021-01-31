@@ -82,7 +82,7 @@ $ ./docking # run the code
 ### Setup
 * Install C++ bindings for MAVSDK
   * Download the `.deb` file from [their repository](https://github.com/mavlink/MAVSDK/releases) corresponding to your Ubuntu version (20.04 for me)
-  * Install: `sudo dpkg -i mavsdk_0.24.0_ubuntu18.04_amd64.deb`
+  * Install: `sudo dpkg -i mavsdk_0.35.1_ubuntu20.04_amd64.deb`
   * See "Installation" section on MAVSDK's QuickStart guide: https://mavsdk.mavlink.io/develop/en/cpp/quickstart.html
 * Install OpenCV for C++
   * For some reason, I didn't have to do this step - I think it's because I already had it from installing OpenCV for the Python version of docking,
