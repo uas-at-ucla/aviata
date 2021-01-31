@@ -2,10 +2,10 @@
 #define IMAGE_ANALYZER_H_
 
 #include <opencv2/core.hpp>
+#include <apriltag/apriltag.h>
+#include <apriltag/tag36h11.h>
 using namespace cv;
 
-class apriltag_detector_t;
-class apriltag_family_t;
 class ImageAnalyzer{
 public:
     ImageAnalyzer();

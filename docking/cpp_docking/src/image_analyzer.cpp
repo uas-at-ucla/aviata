@@ -7,8 +7,8 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "apriltag.h"
-#include "tag36h11.h"
+#include <apriltag/apriltag.h>
+#include <apriltag/tag36h11.h>
 
 #include <string>
 #include <math.h>
@@ -16,14 +16,14 @@
 #include <algorithm>
 
 ImageAnalyzer::ImageAnalyzer(){
-    tf=tagStandard36h11_create();
+    tf=tag36h11_create();
     m_tagDetector=apriltag_detector_create();
     apriltag_detector_add_family(m_tagDetector,tf);
 
 }
 ImageAnalyzer::~ImageAnalyzer(){
     apriltag_detector_destroy(m_tagDetector);
-    tagStandard36h11_destroy(tf);
+    tag36h11_destroy(tf);
 }
 
 float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tags){
@@ -37,24 +37,24 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
     warpAffine(img, img, rot_mat, Size(img.cols, img.rows), INTER_LINEAR, BORDER_CONSTANT, Scalar(255, 255, 255));
     cvtColor(img,img,COLOR_BGR2GRAY);
 
-    zarray_t dets=m_tagDetector->extractTags(img);
+    zarray_t dets=apriltag_detector_detect(m_tagDetector,&img);
 
     std::string tagsDetected="";
-    for(int i=0;i<zarray_size(dets);i++){
+    for(int i=0;i<zarray_size(&dets);i++){
         apriltag_detection_t *det;
-        zarray_get(dets,i,&det);
+        zarray_get(&dets,i,&det);
         if(det->decision_margin>=MARGIN){
             tagsDetected+=det->id+" ";
         }
     }
     tags=tagsDetected;
 
-    for(int i=0;i<zarray_size(dets);i++){
+    for(int i=0;i<zarray_size(&dets);i++){
         apriltag_detection_t *det;
-        zarray_get(dets,i,&det);
+        zarray_get(&dets,i,&det);
         if(det->id==ind&&det->decision_margin>=MARGIN){
             double* center=det->c;
-            double rect[4][2]=det->p;
+            double *rect[2]=det->p;
 
             std::vector<float> sideList;
             for(int i=0;i<4;i++){
@@ -78,10 +78,10 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
 
             errs[2]=0.50/tan((CAMERA_FOV_HORIZONTAL*0.50)*M_PI/180.0)*width*tag_pixel_ratio;
 
-            float y3=rect[3].second;
-            float y0=rect[0].second;
-            float x3=rect[3].first;
-            float x0=rect[0].first;
+            float y3=rect[3][1];
+            float y0=rect[0][1];
+            float x3=rect[3][0];
+            float x0=rect[0][0];
 
             float incline_angle;
             if(x3-x0!=0){
@@ -102,8 +102,8 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
             }
             errs[3]=incline_angle*-1;
 
-            float x_offset=center.first-image_center.x;
-            float y_offset=center.second-image_center.y;
+            float x_offset=center[0]-image_center.x;
+            float y_offset=center[1]-image_center.y;
             errs[0]=x_offset*tag_pixel_ratio;
             errs[1]=y_offset*tag_pixel_ratio;
             return errs;
@@ -111,5 +111,5 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
         log("Image Analyzer: ","Desired apriltag not found, aborting",true);
         return nullptr;
     }
-    return nullptrt;
+    return nullptr;
 }

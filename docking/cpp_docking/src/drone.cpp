@@ -194,17 +194,38 @@ void Drone::stage2(int target_id) {
     PIDController* pid=new PIDController(m_dt);
     int successful_frames=0;
     std::string tags="";
+    auto offboard = Offboard{m_system};
+    // Register for attitude updates
+    auto telemetry = Telemetry{m_system}; // NOTE: telemetry updates are only received as long as the telemetry pointer is alive
+                                          // will need to either resubscribe in stage 2 or move this to initiate_docking to keep it alive
+                                          // and pass as argument to stage1(), stage2()
+    const Telemetry::Result set_rate_result_p = telemetry.set_rate_position_velocity_ned(40);
+    const Telemetry::Result set_rate_result_a = telemetry.set_rate_attitude(40);
+    if (set_rate_result_a != Telemetry::Result::Success || set_rate_result_p != Telemetry::Result::Success) {
+        std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
+        std::cout << "Setting position rate possibly failed:" << set_rate_result_p << '\n';
+    }
 
+    // Subscribe to getting periodic telemetry updates with lambda function
+    telemetry.subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
+        set_position(p.position.north_m, p.position.east_m, p.position.down_m);
+    });
+    telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
+        set_yaw(e.yaw_deg);
+    });
+    Mat img;
     while (true){
-        Mat img=camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-        float* errs=image_analyzer.processImage(currImg,id,m_yaw,tags);
+        img=camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+        float* errs=image_analyzer.processImage(img,target_id,m_yaw,tags);
         int checked_frames=0;
         int docking_attempts=0;
 
         while(errs==nullptr){
             checked_frames++;
             log("No Tag Detected, Checked Frames",checked_frames+"");
-            offboard.set_velocity_body({0,0,-0/1,0});
+            Offboard::VelocityBodyYawspeed change{};
+            change.down_m_s = -0.1f;
+            offboard.set_velocity_body(change);
 
             if(checked_frames>1/m_dt){
                 docking_attempts++;
@@ -216,23 +237,27 @@ void Drone::stage2(int target_id) {
                     return;
                 }
             }
-            camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-            errs=image_analyzer.processImage(currImg,id,m_yaw,tags);
-            while(errs==nullptr&&m_down*-1.0-m_target.alt<MAX_HEIGHT_STAGE_2){
-                offboard.set_velocity_body({0,0,-0.2,0});
-                camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-                errs=image_analyzer.processImage(currImg,id,m_yaw,tags);
+            Mat img= camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+            errs=image_analyzer.processImage(img,target_id,m_yaw,tags);
+            while(errs==nullptr&&m_down*-1.0-m_target_info.alt<MAX_HEIGHT_STAGE_2){
+                Offboard::VelocityBodyYawspeed change{};
+                change.down_m_s = -0.2f;
+                offboard.set_velocity_body(change);
+                img=camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                errs=image_analyzer.processImage(img,target_id,m_yaw,tags);
             }
             if(errs!=nullptr) break;
-            while(errs==nullptr&&m_down*-1.0-m_target_alt<MAX_HEIGHT){
-                offboard.set_velocity_body({0,0,-0.2,0});
-                camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-                errs=image_analyzer.processImage(currImg,0,m_yaw,tags);
+            while(errs==nullptr&&m_down*-1.0-m_target_info.alt<MAX_HEIGHT){
+                Offboard::VelocityBodyYawspeed change{};
+                change.down_m_s = -0.2f;
+                offboard.set_velocity_body(change);
+                img=camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                errs=image_analyzer.processImage(img,0,m_yaw,tags);
             }
             if(errs!=nullptr){
-                stage1(id);
-                camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-                errs=image_analyzer.processImage(currImg,0,m_yaw,tags);
+                stage1(target_id);
+                img=camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                errs=image_analyzer.processImage(img,0,m_yaw,tags);
                 checked_frames=0;
             }
             else{
@@ -242,7 +267,7 @@ void Drone::stage2(int target_id) {
                 delete pid;
                 return;
             }
-            sleep_for(m_dt*1000);
+            sleep_for(milliseconds((int)m_dt*1000));
         }
         errs[2]-=0.05;
         if(errs[2]<STAGE_2_TOLERANCE*2&&errs[2]>-1.0*STAGE_2_TOLERANCE&&errs[3]<2.0&&errs[3]>-2.0 &&errs[0]<STAGE_2_TOLERANCE
@@ -254,20 +279,28 @@ void Drone::stage2(int target_id) {
         }
         if(successful_frames>1/m_dt)break;
 
-        float* velocities=pid.getVelocities(errs[0],errs[1],errs[3],0.1)
-        offboard.set_velocity_ned({velocities[1],velocities[0],velocities[2],errs[3]});
+        float* velocities=pid->getVelocities(errs[0],errs[1],errs[3],0.1);
+        Offboard::VelocityNedYaw change{};
+        change.yaw_deg=errs[3];
+        change.north_m_s=velocities[1];
+        change.east_m_s=velocities[0];
+        change.down_m_s=velocities[2];
+        offboard.set_velocity_ned(change);
         delete errs;
         delete velocities;
-        sleep_for(m_dt*1000);
+        sleep_for(milliseconds((int)m_dt*1000));
     }
     delete pid;
 }
 
-void Drone::offset_errors(double x, double y, double alt, double rot, int target_id) {
-
-}
-
 void Drone::safe_land() {
+    auto offboard = Offboard{m_system};
+    for(int i=0;i<5/m_dt;i++){
+        Offboard::VelocityNedYaw change{};
+        change.north_m_s=0.4f;
+        change.down_m_s=-0.4f;
+        offboard.set_velocity_ned(change);
+    }
     land();
 }
 

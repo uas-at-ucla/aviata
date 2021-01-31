@@ -1,3 +1,6 @@
+#ifndef PID
+#define PID
+
 #include "pid_controller.hpp"
 #include <cstdlib>
 #include <algorithm>
@@ -34,3 +37,4 @@ float* PIDController::getVelocities(float x_err, float y_err, float alt_err, flo
     ans[2]=dv;
     return ans;
 }
+#endif

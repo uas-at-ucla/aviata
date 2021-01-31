@@ -18,6 +18,7 @@ add_compile_options(-g)
 
 find_package(MAVSDK REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(apriltag REQUIRED)
 
 include_directories(./src)
 
