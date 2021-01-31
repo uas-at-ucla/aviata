@@ -40,7 +40,6 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
     image_u8_t im={.width=img.cols,.height=img.rows, .stride=img.cols, .buf=img.data};
 
     zarray_t* dets=apriltag_detector_detect(m_tagDetector,&im);
-
     std::string tagsDetected="";
     for(int i=0;i<zarray_size(dets);i++){
         apriltag_detection_t *det;
@@ -113,10 +112,12 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
             float y_offset=center[1]-image_center.y;
             errs[0]=x_offset*tag_pixel_ratio;
             errs[1]=y_offset*tag_pixel_ratio;
+            apriltag_detection_destroy(det);
+            zarray_destroy(dets);
             return errs;
         }
-        log("Image Analyzer: ","Desired apriltag not found, aborting",true);
-        return nullptr;
+        apriltag_detection_destroy(det);
     }
+    zarray_destroy(dets);
     return nullptr;
 }
