@@ -133,12 +133,14 @@ bool Drone::takeoff()
     return true;
 }
 
+//Starts docking process
 void Drone::initiate_docking(int target_id)
 {
 
     bool stage1_outcome = stage1(target_id);
     if (stage1_outcome)
     {
+        log("Docking","Stage 1 Success");
         stage2(target_id);
     }
 }
@@ -155,6 +157,10 @@ void Drone::set_yaw(float yaw)
     m_yaw = yaw;
 }
 
+/*
+ * Attempts stage 1 of docking process
+ * @return true if successful
+ */
 bool Drone::stage1(int target_id)
 {
     log("Stage 1", "Docking Beginning");
@@ -189,18 +195,21 @@ bool Drone::stage1(int target_id)
     {
         high_resolution_clock::time_point t1 = high_resolution_clock::now();
         img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-        float *errs = image_analyzer.processImage(img, 0, m_yaw, tags);
+        float *errs = image_analyzer.processImage(img, 0, m_yaw, tags); //Detects apriltags and calculates errors
         log("Tags Detected", tags);
-        if (errs == nullptr)
+
+        if (errs == nullptr) //Central target not found
         {
             log("No Tag Detected, Failed Frames", std::to_string(failed_frames) + "");
-            if (m_down * -1.0 - m_target_info.alt > MAX_HEIGHT)
+            if (m_down * -1.0 - m_target_info.alt > MAX_HEIGHT) //Above maximum height, docking fails
             {
+                log("Docking","Error: above maximum height", true);
                 delete pid;
                 return false;
             }
-            if (failed_frames > 1 / m_dt)
+            if (failed_frames > 1 / m_dt) //Ascends to try to find central target
             {
+                log("Docking","Ascending");
                 Offboard::VelocityBodyYawspeed change{};
                 change.down_m_s = -0.2f;
                 offboard.set_velocity_body(change);
@@ -208,36 +217,41 @@ bool Drone::stage1(int target_id)
             sleep_for(milliseconds((int)(1000 * m_dt)));
             continue;
         }
-        failed_frames = 0;
-        offset_errors(errs, target_id);
-        float *velocities = pid->getVelocities(errs[0], errs[1], errs[2], 0.4);
 
+        failed_frames = 0;
+        log("Docking","Errors: x_err: "+std::to_string(errs[0])+" y_err: "+std::to_string(errs[1])+" alt_err: "+std::to_string(errs[2])+" rot_err: "+std::to_string(errs[3]));
+        offset_errors(errs, target_id); //Adjusts errors for stage 1 to stage 2 transition 
+        log("Docking","Offset Errors: x_err: "+std::to_string(errs[0])+" y_err: "+std::to_string(errs[1])+" alt_err: "+std::to_string(errs[2])+" rot_err: "+std::to_string(errs[3]));
+        float *velocities = pid->getVelocities(errs[0], errs[1], errs[2], 0.4); //Gets velocities for errors
+        log("Docking","Velocities: east: "+std::to_string(velocities[0])+" north: "+std::to_string(velocities[1])+" down: "+std::to_string(velocities[2]));
+
+        //Checks if drone within correct tolerance
         if (errs[0] < STAGE_1_TOLERANCE && errs[0] > -1.0 * STAGE_1_TOLERANCE && errs[1] < STAGE_1_TOLERANCE && errs[1] > -1.0 * STAGE_1_TOLERANCE &&
-            errs[2] < STAGE_1_TOLERANCE && errs[2] > -1.0 * STAGE_1_TOLERANCE && errs[3] < 2.0 && errs[3] > -2.0)
-        {
+            errs[2] < STAGE_1_TOLERANCE && errs[2] > -1.0 * STAGE_1_TOLERANCE && errs[3] < 2.0 && errs[3] > -2.0){
             successful_frames++;
         }
-        else
-        {
+        else{
             successful_frames = 0;
         }
 
-        if (successful_frames >= 1 / m_dt)
-        {
-            break;
-        }
+        if (successful_frames >= 1 / m_dt) break; //Stage 1 succesful
 
+        //Updates drone velocities with calculated values
         Offboard::VelocityNedYaw change{};
         change.yaw_deg = errs[3];
         change.north_m_s = velocities[1];
         change.east_m_s = velocities[0];
         change.down_m_s = velocities[2];
         offboard.set_velocity_ned(change);
-        delete errs;
+
+        delete errs; //Cleanup
         delete velocities;
+
+        //Calculates how long to wait to keep refresh rate constant
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
         duration<double, std::milli> d = (t2 - t1);
         int time_span = d.count();
+        log("Docking","Iteration Time: "+std::to_string(time_span));
         if (time_span < m_dt * 1000)
         {
             sleep_for(milliseconds((int)(m_dt * 1000 - time_span)));
@@ -248,6 +262,10 @@ bool Drone::stage1(int target_id)
     return true;
 }
 
+/**
+ * Attempts stage 2 of docking
+ * Will execute completely if successful, drone will safely land if failure
+ */
 void Drone::stage2(int target_id)
 {
     log("Stage 2", "Docking Beginning");
@@ -274,26 +292,30 @@ void Drone::stage2(int target_id)
     telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
         set_yaw(e.yaw_deg);
     });
+
     Mat img;
     while (true)
     {
+        //Update image and process for errors
         img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
         float *errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
+        log("Tags Detected", tags);
         int checked_frames = 0;
         int docking_attempts = 0;
 
-        while (errs == nullptr)
+        while (errs == nullptr) //Target tag not detected
         {
             checked_frames++;
             log("No Tag Detected, Checked Frames", checked_frames + "");
-            Offboard::VelocityBodyYawspeed change{};
+
+            Offboard::VelocityBodyYawspeed change{}; //Ascends to try to find peripheral target
             change.down_m_s = -0.1f;
             offboard.set_velocity_body(change);
 
-            if (checked_frames > 1 / m_dt)
+            if (checked_frames > 1 / m_dt) //If not detected for one second, 
             {
                 docking_attempts++;
-                if (docking_attempts > MAX_ATTEMPTS)
+                if (docking_attempts > MAX_ATTEMPTS) //Maximum attempts exceeded, docking failure
                 {
                     log("DOCKING FAILED", "Maximum Attempts Exceeded", true);
                     safe_land();
@@ -301,45 +323,59 @@ void Drone::stage2(int target_id)
                     delete pid;
                     return;
                 }
-            }
-            Mat img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-            errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
-            while (errs == nullptr && m_down * -1.0 - m_target_info.alt < MAX_HEIGHT_STAGE_2)
-            {
-                Offboard::VelocityBodyYawspeed change{};
-                change.down_m_s = -0.2f;
-                offboard.set_velocity_body(change);
                 img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
                 errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
-            }
-            if (errs != nullptr)
-                break;
-            while (errs == nullptr && m_down * -1.0 - m_target_info.alt < MAX_HEIGHT)
-            {
-                Offboard::VelocityBodyYawspeed change{};
-                change.down_m_s = -0.2f;
-                offboard.set_velocity_body(change);
-                img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-                errs = image_analyzer.processImage(img, 0, m_yaw, tags);
-            }
-            if (errs != nullptr)
-            {
-                stage1(target_id);
-                img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-                errs = image_analyzer.processImage(img, 0, m_yaw, tags);
-                checked_frames = 0;
-            }
-            else
-            {
-                log("DOCKING FAILED", "Maximum Attempts Exceeded", true);
-                safe_land();
 
-                delete pid;
-                return;
+                //Ascends until max height or until peripheral target detected
+                while (errs == nullptr && m_down * -1.0 - m_target_info.alt < MAX_HEIGHT_STAGE_2)
+                {
+                    log("Docking","Ascending for peripheral target");
+                    Offboard::VelocityBodyYawspeed change{};
+                    change.down_m_s = -0.2f;
+                    offboard.set_velocity_body(change);
+                    img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                    errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
+                }
+                if (errs != nullptr) //Peripheral target detected, continues with docking normally
+                    break;
+                
+                log("Docking","Peripheral target not detected, ascending for central target");
+                //Peripheral target not detected, ascend until max height reached or central target detected
+                while (errs == nullptr && m_down * -1.0 - m_target_info.alt < MAX_HEIGHT)
+                {
+                    Offboard::VelocityBodyYawspeed change{};
+                    change.down_m_s = -0.2f;
+                    offboard.set_velocity_body(change);
+                    img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                    errs = image_analyzer.processImage(img, 0, m_yaw, tags);
+                }
+
+                //Central target detected, re-attempt stage 1
+                if (errs != nullptr)
+                {
+                    log("Docking","Central target detected, re-attempting stage 1");
+                    stage1(target_id);
+                    img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                    errs = image_analyzer.processImage(img, 0, m_yaw, tags);
+                    checked_frames = 0;
+                }
+                else //Maximum height exceeded, docking failure
+                {
+                    log("DOCKING FAILED", "Maximum Height Exceeded", true);
+                    safe_land();
+
+                    delete pid;
+                    return;
+                }
             }
             sleep_for(milliseconds((int)m_dt * 1000));
+            img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+            float *errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
         }
-        errs[2] -= 0.05;
+
+        errs[2] -= 0.05; //Adjusts altitude error for desired location
+
+        //Checks if within docking range
         if (errs[2] < STAGE_2_TOLERANCE * 2 && errs[2] > -1.0 * STAGE_2_TOLERANCE && errs[3] < 2.0 && errs[3] > -2.0 && errs[0] < STAGE_2_TOLERANCE && errs[0] > -1.0 * STAGE_2_TOLERANCE && errs[1] < STAGE_2_TOLERANCE && errs[1] > -1.0 * STAGE_2_TOLERANCE)
         {
             successful_frames++;
@@ -348,16 +384,22 @@ void Drone::stage2(int target_id)
         {
             successful_frames = 0;
         }
-        if (successful_frames > 1 / m_dt)
+        if (successful_frames > 1 / m_dt) //Docking success, within range for 1 second
             break;
 
-        float *velocities = pid->getVelocities(errs[0], errs[1], errs[2], 0.1);
+        log("Docking","Errors: x_err: "+std::to_string(errs[0])+" y_err: "+std::to_string(errs[1])+" alt_err: "+std::to_string(errs[2])+" rot_err: "+std::to_string(errs[3]));
+        float *velocities = pid->getVelocities(errs[0], errs[1], errs[2], 0.1); //Gets velocities for errors
+        log("Docking","Velocities: east: "+std::to_string(velocities[0])+" north: "+std::to_string(velocities[1])+" down: "+std::to_string(velocities[2]));
+
+        //Updates drone velocities
         Offboard::VelocityNedYaw change{};
         change.yaw_deg = errs[3];
         change.north_m_s = velocities[1];
         change.east_m_s = velocities[0];
         change.down_m_s = velocities[2];
         offboard.set_velocity_ned(change);
+
+        //Cleanup
         delete errs;
         delete velocities;
         sleep_for(milliseconds((int)m_dt * 1000));
@@ -365,6 +407,7 @@ void Drone::stage2(int target_id)
     delete pid;
 }
 
+//Method to move drone away from frame by ascending and moving to the north
 void Drone::safe_land()
 {
     log("Landing", "Safe landing begun");
@@ -379,6 +422,7 @@ void Drone::safe_land()
     land();
 }
 
+//Lands and disarms drone
 void Drone::land()
 {
     log("Landing", "Landing");
@@ -400,6 +444,7 @@ void Drone::land()
     log("Landing", "Landed");
 }
 
+//Utility method to adjust errors for stage 1 
 void Drone::offset_errors(float *errs, int id)
 {
     float target_offset = id <= 3 ? abs(id - 3) * 45 : (11 - id) * 45;

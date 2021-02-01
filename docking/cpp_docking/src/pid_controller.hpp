@@ -1,4 +1,7 @@
+#ifndef PID_H
+#define PID_H
 
+//PID Controller class 
 class PIDController{
     public:
         PIDController(float dt);
@@ -8,3 +11,4 @@ class PIDController{
         float m_dt;
         float* m_prev_errs;
 };
+#endif //PID_H
