@@ -20,6 +20,10 @@ int main(int argc, char** argv) {
         drone.lead_standalone(connection_url);
     } else if (strcmp(argv[2], "follow_s") == 0) {
         drone.follow_standalone(connection_url);
+    } else if (strcmp(argv[2], "lead_0") == 0) {
+        drone.lead_as_0(connection_url);
+    } else if (strcmp(argv[2], "follow_1") == 0) {
+        drone.follow_as_1(connection_url);
     } else {
         std::cout << "Unkown program: " << argv[2] << std::endl;
     }

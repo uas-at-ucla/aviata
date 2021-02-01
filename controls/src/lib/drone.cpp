@@ -113,7 +113,51 @@ int Drone::lead_standalone(std::string connection_url)
     if (px4_io.connect_to_pixhawk(connection_url, 5) == false) {
         return 1;
     }
+    basic_lead();
+    return 0;
+}
 
+int Drone::follow_standalone(std::string connection_url)
+{
+    if (px4_io.connect_to_pixhawk(connection_url, 5) == false) {
+        return 1;
+    }
+    basic_follow();
+    return 0;
+}
+
+int Drone::lead_as_0(std::string connection_url)
+{
+    if (px4_io.connect_to_pixhawk(connection_url, 5) == false) {
+        return 1;
+    }
+
+    while (px4_io.undock() != 1) {}
+    std::cout << "Drone is undocked." << std::endl;
+    while (px4_io.dock(0, nullptr, 0) != 1) {}
+    std::cout << "Docking command sent successfully!" << std::endl;
+    basic_lead();
+
+    return 0;
+}
+
+int Drone::follow_as_1(std::string connection_url)
+{
+    if (px4_io.connect_to_pixhawk(connection_url, 5) == false) {
+        return 1;
+    }
+
+    while (px4_io.undock() != 1) {}
+    std::cout << "Drone is undocked." << std::endl;
+    while (px4_io.dock(1, nullptr, 0) != 1) {}
+    std::cout << "Docking command sent successfully!" << std::endl;
+    basic_follow();
+
+    return 0;
+}
+
+void Drone::basic_lead()
+{
     network->init_follower_setpoint_publisher();
 
     px4_io.subscribe_attitude_target([this](const mavlink_attitude_target_t &attitude_target) {
@@ -127,16 +171,10 @@ int Drone::lead_standalone(std::string connection_url)
         px4_io.call_queued_mavsdk_callbacks();
         Network::spin_some(network);
     }
-
-    return 0;
 }
 
-int Drone::follow_standalone(std::string connection_url)
+void Drone::basic_follow()
 {
-    if (px4_io.connect_to_pixhawk(connection_url, 5) == false) {
-        return 1;
-    }
-
     bool in_offboard = false;
 
     network->subscribe_follower_setpoint([this, &in_offboard](const aviata::msg::FollowerSetpoint::SharedPtr follower_setpoint) {
@@ -161,8 +199,6 @@ int Drone::follow_standalone(std::string connection_url)
         px4_io.call_queued_mavsdk_callbacks();
         Network::spin_some(network);
     }
-
-    return 0;
 }
 
 void Drone::update_drone_status()
