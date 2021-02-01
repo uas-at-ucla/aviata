@@ -45,7 +45,7 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
         apriltag_detection_t *det;
         zarray_get(dets,i,&det);
         if(det->decision_margin>=MARGIN){
-            tagsDetected+=det->id+" ";
+            tagsDetected+=std::to_string(det->id)+" ";
         }
     }
     tags=tagsDetected;
