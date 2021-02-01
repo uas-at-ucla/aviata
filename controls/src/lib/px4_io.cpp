@@ -130,11 +130,10 @@ int PX4IO::set_offboard_mode() {
     offboard_command.param1 = VEHICLE_MODE_FLAG_CUSTOM_MODE_ENABLED;
     offboard_command.param2 = PX4_CUSTOM_MAIN_MODE_OFFBOARD;
     MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(offboard_command);
-    if (result == MavlinkPassthrough::Result::Success) {
-        return 1;
-    } else {
+    if (result != MavlinkPassthrough::Result::Success) {
         return 0;
     }
+    return 1;
 }
 
 // @return 1 if successful, 0 otherwise
@@ -249,8 +248,8 @@ int PX4IO::set_attitude_target(mavlink_set_attitude_target_t& att_target_struct)
     uint16_t encode_result; //encode function returns a uint16_t, not sure what it represents
     encode_result = mavlink_msg_set_attitude_target_encode(our_system_id, our_component_id, &set_attitude_target_message, &att_target_struct);
 
-    MavlinkPassthrough::Result set_att_result = mavlink_passthrough->send_message(set_attitude_target_message);
-    if ( set_att_result != MavlinkPassthrough::Result::Success){
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_message(set_attitude_target_message);
+    if (result != MavlinkPassthrough::Result::Success) {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to set attitude and thrust." 
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
@@ -270,6 +269,47 @@ void PX4IO::subscribe_flight_mode(std::function<void(Telemetry::FlightMode)> use
 void PX4IO::unsubscribe_flight_mode()
 {
     telemetry->subscribe_flight_mode(nullptr);
+}
+
+int PX4IO::dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing)
+{
+    MavlinkPassthrough::CommandLong cmd;
+    cmd.target_sysid = sys->get_system_id();
+    cmd.target_compid = 0;
+    cmd.command = MAV_CMD_AVIATA_FINALIZE_DOCKING;
+    cmd.param1 = docking_slot;
+    float* missing_drone_ptrs[] = {&cmd.param2, &cmd.param3, &cmd.param4, &cmd.param5, &cmd.param6, &cmd.param7};
+    uint8_t i = 0;
+    for (; i < n_missing && i < 6; i++) {
+        *missing_drone_ptrs[i] = missing_drones[i];
+    }
+    for (; i < 6; i++) {
+        *missing_drone_ptrs[i] = NAN;
+    }
+    
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
+    if (result != MavlinkPassthrough::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send docking MAVLink command." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+int PX4IO::undock()
+{
+    MavlinkPassthrough::CommandLong cmd;
+    cmd.target_sysid = sys->get_system_id();
+    cmd.target_compid = 0;
+    cmd.command = MAV_CMD_AVIATA_SET_STANDALONE;
+    
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
+    if (result != MavlinkPassthrough::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send undocking MAVLink command." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;
 }
 
 ////////////////////////////////////////////

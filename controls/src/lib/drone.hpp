@@ -48,7 +48,8 @@ public:
     int test_follow_att_target(std::string connection_url);
     int lead_standalone(std::string connection_url);
     int follow_standalone(std::string connection_url);
-
+    int lead_as_0(std::string connection_url);
+    int follow_as_1(std::string connection_url);
     
 private:
     const std::string drone_id;
@@ -63,6 +64,9 @@ private:
     DroneStatus drone_status;
     uint8_t docking_slot = 0;
     std::map<std::string, DroneStatus> swarm; // map by ID
+
+    void basic_lead();
+    void basic_follow();
 
     void update_drone_status(); // call before sending data
 

@@ -306,7 +306,11 @@ void Drone::stage2(int target_id)
         while (errs == nullptr) //Target tag not detected
         {
             checked_frames++;
+<<<<<<< HEAD
             log("No Tag Detected, Checked Frames", std::to_string(checked_frames));
+=======
+            log("No Tag Detected", "Checked Frames: "+std::to_string(checked_frames)+ "");
+>>>>>>> cf7cb5210bec9b248b6d760ab53adbf24bd38609
 
             Offboard::VelocityBodyYawspeed change{}; //Ascends to try to find peripheral target
             change.down_m_s = -0.1f;
@@ -371,6 +375,7 @@ void Drone::stage2(int target_id)
             sleep_for(milliseconds((int)m_dt * 1000));
             img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
             float *errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
+            log("Tags Detected", tags);
         }
 
         errs[2] -= 0.05; //Adjusts altitude error for desired location

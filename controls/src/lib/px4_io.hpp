@@ -56,6 +56,9 @@ public:
     void subscribe_flight_mode(std::function<void(Telemetry::FlightMode)> user_callback);
     void unsubscribe_flight_mode();
 
+    int dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing);
+    int undock();
+
     int takeoff_and_land_test(int argc, char** argv);
 
 private:
