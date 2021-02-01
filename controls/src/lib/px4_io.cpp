@@ -129,8 +129,12 @@ int PX4IO::set_offboard_mode() {
     offboard_command.command = MAV_CMD_DO_SET_MODE;
     offboard_command.param1 = VEHICLE_MODE_FLAG_CUSTOM_MODE_ENABLED;
     offboard_command.param2 = PX4_CUSTOM_MAIN_MODE_OFFBOARD;
-    mavlink_passthrough->send_command_long(offboard_command); // TODO check success
-    return 1;
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(offboard_command);
+    if (result == MavlinkPassthrough::Result::Success) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 // @return 1 if successful, 0 otherwise
@@ -254,7 +258,19 @@ int PX4IO::set_attitude_target(mavlink_set_attitude_target_t& att_target_struct)
     return 1;    
 }
 
+void PX4IO::subscribe_flight_mode(std::function<void(Telemetry::FlightMode)> user_callback) {
+        mavsdk_callback_manager.subscribe_mavsdk_callback<Telemetry::FlightMode>(
+        [this](std::function<void(Telemetry::FlightMode)> callback) {
+            telemetry->subscribe_flight_mode(callback);
+        },
+        user_callback
+    );
+}
 
+void PX4IO::unsubscribe_flight_mode()
+{
+    telemetry->subscribe_flight_mode(nullptr);
+}
 
 ////////////////////////////////////////////
 // example code below

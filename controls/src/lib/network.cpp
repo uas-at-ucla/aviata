@@ -82,3 +82,87 @@ void Network::send_status(aviata::msg::DroneStatus status)
 {
     // status_publisher->publish(status);
 }
+
+// Drone Command Service
+
+// @brief uses default qos profile (rmw_qos_profile_services_default)
+void Network::init_drone_command_service(std::function<void(aviata::srv::DroneCommand::Request::SharedPtr,
+                                aviata::srv::DroneCommand::Response::SharedPtr)> callback)
+{
+    std::string service_name = drone_id + "_SERVICE";
+    drone_command_service = this->create_service<aviata::srv::DroneCommand>(service_name, callback);
+}
+
+void Network::deinit_drone_command_service()
+{
+    drone_command_service = nullptr;
+}
+
+// Drone Command Client
+
+void Network::init_drone_command_client(std::string other_drone_id)
+{
+    std::string service_name = other_drone_id + "_SERVICE";
+    drone_command_clients[service_name] = this->create_client<aviata::srv::DroneCommand>(service_name);
+}
+
+void Network::deinit_drone_command_client(std::string other_drone_id)
+{
+    std::string service_name = other_drone_id + "_SERVICE";
+    drone_command_clients[service_name] = nullptr;
+}
+
+// @brief function is blocking- TODO: make async 
+// @return acknowledgement received through the ROS2 service
+uint8_t Network::send_drone_command(std::string other_drone_id, DroneCommand drone_command, int dock)
+{
+    std::string service_name = other_drone_id + "_SERVICE";
+
+    if (!drone_command_clients[service_name]->service_is_ready())
+    {
+        if (!rclcpp::ok())
+            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
+        else
+            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), other_drone_id + " service not available");
+        return 0;
+    }
+
+    auto request = std::make_shared<aviata::srv::DroneCommand::Request>(); 
+    request->command = drone_command;
+    request->dock = dock;
+
+    auto result = drone_command_clients[service_name]->async_send_request(request);
+
+    // Wait for the result.
+    if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result) == rclcpp::executor::FutureReturnCode::SUCCESS)
+    {
+        return result.get()->ack;
+    }
+    return 0;
+}
+
+// @brief async command request
+// @return shared_future object to response of service (check if valid with response.valid() (std::shared_future object))
+// https://en.cppreference.com/w/cpp/thread/shared_future
+std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> 
+    Network::send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int dock)
+{
+    std::string service_name = other_drone_id + "_SERVICE";
+
+    if (!drone_command_clients[service_name]->service_is_ready())
+    {
+        if (!rclcpp::ok())
+            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
+        else
+            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), other_drone_id + " service not available");
+        return std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>>(); //returns empty (invalid) shared_future object
+    }
+
+    auto request = std::make_shared<aviata::srv::DroneCommand::Request>(); 
+    request->command = drone_command;
+    request->dock = dock;
+
+    return drone_command_clients[service_name]->async_send_request(request);
+}
+
+

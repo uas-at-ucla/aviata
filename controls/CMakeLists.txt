@@ -29,7 +29,14 @@ find_package(MAVSDK REQUIRED)
 file(GLOB_RECURSE ROS_MESSAGES RELATIVE ${CMAKE_SOURCE_DIR}
     src/msg/*.msg
 )
-rosidl_generate_interfaces(${PROJECT_NAME} ${ROS_MESSAGES})
+
+# rosidl_generate_interfaces(${PROJECT_NAME} ${ROS_MESSAGES})
+
+file(GLOB_RECURSE ROS_SERVICES RELATIVE ${CMAKE_SOURCE_DIR}
+    src/srv/*.srv
+)
+
+rosidl_generate_interfaces(${PROJECT_NAME} ${ROS_MESSAGES} ${ROS_SERVICES})
 
 file(GLOB_RECURSE LIB_SOURCES RELATIVE ${CMAKE_SOURCE_DIR}
     src/lib/*.hpp

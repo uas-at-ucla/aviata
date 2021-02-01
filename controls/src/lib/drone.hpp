@@ -12,6 +12,9 @@
 #include "px4_io.hpp"
 #include "network.hpp"
 
+#include "aviata/srv/drone_command.hpp"
+#include "aviata/msg/follower_setpoint.hpp"
+
 enum DroneState {
     STANDBY,
     ARRIVING,
@@ -43,6 +46,9 @@ public:
     int run(std::string connection_url);
     int test_lead_att_target(std::string connection_url);
     int test_follow_att_target(std::string connection_url);
+    int lead_standalone(std::string connection_url);
+    int follow_standalone(std::string connection_url);
+
     
 private:
     const std::string drone_id;
@@ -87,6 +93,9 @@ private:
     void get_leader_setpoint(float q[4], float* thrust);
 
     void set_follower_setpoint(float q[4], float* thrust);
+
+    void command_handler(aviata::srv::DroneCommand::Request::SharedPtr request, 
+                         aviata::srv::DroneCommand::Response::SharedPtr response);
 };
 
 #endif
