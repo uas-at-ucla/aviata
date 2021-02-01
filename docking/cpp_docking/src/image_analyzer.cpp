@@ -121,7 +121,7 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
 
             //Finds the offset of the image location, finds x/y err
             float x_offset=center[0]-image_center.x;
-            float y_offset=center[1]-image_center.y;
+            float y_offset=image_center.y-center[1];
             errs[0]=x_offset*tag_pixel_ratio;
             errs[1]=y_offset*tag_pixel_ratio;
 

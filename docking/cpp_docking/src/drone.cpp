@@ -16,7 +16,7 @@ using namespace std::chrono;
 using std::this_thread::sleep_for;
 
 Drone::Drone(Target t)
-    : m_north(0), m_east(0), m_down(-5), m_yaw(0), m_dt(0.05), camera_simulator(t), m_target_info(t), image_analyzer()
+    : camera_simulator(t), image_analyzer(), m_north(0), m_east(0), m_down(-5), m_yaw(0), m_target_info(t), m_dt(0.05)
 {
 }
 
@@ -297,7 +297,7 @@ void Drone::stage2(int target_id)
     while (true)
     {
         //Update image and process for errors
-        img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+        img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
         float *errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
         log("Tags Detected", tags);
         int checked_frames = 0;
@@ -306,7 +306,7 @@ void Drone::stage2(int target_id)
         while (errs == nullptr) //Target tag not detected
         {
             checked_frames++;
-            log("No Tag Detected, Checked Frames", checked_frames + "");
+            log("No Tag Detected, Checked Frames", std::to_string(checked_frames));
 
             Offboard::VelocityBodyYawspeed change{}; //Ascends to try to find peripheral target
             change.down_m_s = -0.1f;
@@ -428,6 +428,9 @@ void Drone::land()
     log("Landing", "Landing");
     auto telemetry = Telemetry{m_system};
     auto action = Action{m_system};
+    auto offboard = Offboard{m_system};
+    offboard.stop();
+    action.land();
     const Telemetry::Result set_rate_result = telemetry.set_rate_position(1.0);
     if (set_rate_result != Telemetry::Result::Success)
     {
@@ -442,6 +445,8 @@ void Drone::land()
         sleep_for(seconds(1));
     }
     log("Landing", "Landed");
+    action.disarm();
+    log("Landing", "Disarmed");
 }
 
 //Utility method to adjust errors for stage 1 

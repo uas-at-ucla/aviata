@@ -3,7 +3,7 @@
 
 #define MAX_ATTEMPTS 3
 #define MAX_HEIGHT 10
-#define MAX_HEIGHT_STAGE_2 10
+#define MAX_HEIGHT_STAGE_2 3
 #define STAGE_1_TOLERANCE 0.10
 #define STAGE_2_TOLERANCE 0.05
 
@@ -12,7 +12,7 @@
 #include <mavsdk/mavsdk.h>
 
 using namespace mavsdk;
-const float ALTITUDE_DISP = BOOM_LENGTH/2/tan(to_radians(CAMERA_FOV_VERTICAL/2))*2;
+const float ALTITUDE_DISP = BOOM_LENGTH/2/tan(to_radians(CAMERA_FOV_VERTICAL/2))*1.5;
 class Drone {
 
 public: 
