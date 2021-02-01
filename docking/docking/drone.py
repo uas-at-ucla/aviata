@@ -216,7 +216,7 @@ class Drone:
                     # Re-attempts stage 1
                     if not errs is None:
                         await self.stage1(id)
-                        img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw)
+                        img = self.camera_simulator.updateCurrentImage(self.east, self.north, self.down * -1.0, self.yaw, id)
                         errs = self.image_analyzer.process_image(img, id, self.yaw)
                         checked_frames = 0
                     else: # If the central target cannot be found at maximum height (maybe could have re-attempt stage 1 again, not sure)

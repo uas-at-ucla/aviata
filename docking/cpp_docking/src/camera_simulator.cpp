@@ -17,7 +17,7 @@ CameraSimulator::CameraSimulator(Target target)
     : m_log_tag("Camera Sim"), m_target(target) 
 {
     m_scale_constant = get_view_scale_constant(TARGET_SIZE);
-    m_peripheral_scale_constant = get_view_scale_constant(PERIPHERAL_TARGET_SIZE);
+    m_peripheral_scale_constant = get_view_scale_constant(4.50);
 
     m_display_width = (int) (DISPLAY_SCALE * tan(to_radians(CAMERA_FOV_HORIZONTAL / 2.0)));
     m_display_height = (int) (DISPLAY_SCALE * tan(to_radians(CAMERA_FOV_VERTICAL / 2.0)));
@@ -71,7 +71,7 @@ Mat CameraSimulator::update_current_image(float absLon, float absLat, float absA
         std::string tag_name = "../res/peripheral_tags/tag36_11_0000" + std::to_string(target_id) + ".png";
         Mat loaded_image = imread(tag_name); // Each image is 10x10,should be ok to load each iteration but could be preloaded
         scale = abs((int) (m_peripheral_scale_constant / relativeAlt));
-        resize(loaded_image, april_tag, Size(scale, scale), 0, 0);
+        resize(loaded_image, april_tag, Size(scale, scale), 0, 0, INTER_NEAREST);
     }
 
     // Sets translation of AprilTag

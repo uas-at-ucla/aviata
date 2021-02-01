@@ -91,7 +91,7 @@ bool Drone::takeoff()
     log(tag, "Armed");
 
     // Attempt to take off
-    action.set_takeoff_altitude(8);
+    action.set_takeoff_altitude(4);
     Action::Result takeoff_result = action.takeoff();
     if (takeoff_result != Action::Result::Success)
     {
@@ -323,7 +323,7 @@ void Drone::stage2(int target_id)
                     delete pid;
                     return;
                 }
-                img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
                 errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
 
                 //Ascends until max height or until peripheral target detected
@@ -333,7 +333,7 @@ void Drone::stage2(int target_id)
                     Offboard::VelocityBodyYawspeed change{};
                     change.down_m_s = -0.2f;
                     offboard.set_velocity_body(change);
-                    img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                    img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
                     errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
                 }
                 if (errs != nullptr) //Peripheral target detected, continues with docking normally
@@ -355,8 +355,8 @@ void Drone::stage2(int target_id)
                 {
                     log("Docking","Central target detected, re-attempting stage 1");
                     stage1(target_id);
-                    img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-                    errs = image_analyzer.processImage(img, 0, m_yaw, tags);
+                    img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
+                    errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
                     checked_frames = 0;
                 }
                 else //Maximum height exceeded, docking failure
@@ -369,7 +369,7 @@ void Drone::stage2(int target_id)
                 }
             }
             sleep_for(milliseconds((int)m_dt * 1000));
-            img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+            img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
             float *errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
             log("Tags Detected", tags);
         }
