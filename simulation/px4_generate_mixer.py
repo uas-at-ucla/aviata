@@ -250,7 +250,7 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
 
     buf.write(u"static constexpr float _config_aviata_drone_angle[] {\n")
     for drone_angle in geometries_list[0]['drone_angles']:
-        buf.write(u"\t{:9f},\n".format(drone_angle))
+        buf.write(u"\t{:9f}, // {:.1f} degrees\n".format(drone_angle, np.rad2deg(drone_angle)))
     buf.write(u"};\n\n")
     
     # Print enum

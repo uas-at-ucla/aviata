@@ -1,0 +1,5 @@
+import constants_two_drones as constants_selection
+import generate_matrices_two_drones as generate_matrices_selection
+constants = constants_selection
+generate_matrices = generate_matrices_selection
+generate_matrices.configure_constants(constants)
