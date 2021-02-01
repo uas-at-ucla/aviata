@@ -306,11 +306,7 @@ void Drone::stage2(int target_id)
         while (errs == nullptr) //Target tag not detected
         {
             checked_frames++;
-<<<<<<< HEAD
-            log("No Tag Detected, Checked Frames", std::to_string(checked_frames));
-=======
             log("No Tag Detected", "Checked Frames: "+std::to_string(checked_frames)+ "");
->>>>>>> cf7cb5210bec9b248b6d760ab53adbf24bd38609
 
             Offboard::VelocityBodyYawspeed change{}; //Ascends to try to find peripheral target
             change.down_m_s = -0.1f;
