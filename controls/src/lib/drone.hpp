@@ -46,6 +46,9 @@ public:
     int run(std::string connection_url);
     int test_lead_att_target(std::string connection_url);
     int test_follow_att_target(std::string connection_url);
+    int lead_standalone(std::string connection_url);
+    int follow_standalone(std::string connection_url);
+
     
 private:
     const std::string drone_id;

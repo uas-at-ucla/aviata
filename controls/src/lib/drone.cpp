@@ -108,6 +108,63 @@ int Drone::test_follow_att_target(std::string connection_url)
     return 0;
 }
 
+int Drone::lead_standalone(std::string connection_url)
+{
+    if (px4_io.connect_to_pixhawk(connection_url, 5) == false) {
+        return 1;
+    }
+
+    network->init_follower_setpoint_publisher();
+
+    px4_io.subscribe_attitude_target([this](const mavlink_attitude_target_t &attitude_target) {
+        aviata::msg::FollowerSetpoint follower_setpoint;
+        std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(follower_setpoint.q));
+        follower_setpoint.thrust = attitude_target.thrust;
+        network->publish_follower_setpoint(follower_setpoint);
+    });
+
+    while (true) {
+        px4_io.call_queued_mavsdk_callbacks();
+        Network::spin_some(network);
+    }
+
+    return 0;
+}
+
+int Drone::follow_standalone(std::string connection_url)
+{
+    if (px4_io.connect_to_pixhawk(connection_url, 5) == false) {
+        return 1;
+    }
+
+    bool in_offboard = false;
+
+    network->subscribe_follower_setpoint([this, &in_offboard](const aviata::msg::FollowerSetpoint::SharedPtr follower_setpoint) {
+        mavlink_set_attitude_target_t attitude_target;
+        std::copy(std::begin(follower_setpoint->q), std::end(follower_setpoint->q), std::begin(attitude_target.q));
+        attitude_target.thrust = follower_setpoint->thrust;
+        px4_io.set_attitude_target(attitude_target);
+        if (!in_offboard) {
+            if (px4_io.set_offboard_mode() == 1) {
+                in_offboard = true;
+            }
+        }
+    });
+
+    px4_io.subscribe_flight_mode([this, &in_offboard](mavsdk::Telemetry::FlightMode flight_mode) {
+        if (flight_mode != mavsdk::Telemetry::FlightMode::Offboard) {
+            in_offboard = false;
+        }
+    });
+
+    while (true) {
+        px4_io.call_queued_mavsdk_callbacks();
+        Network::spin_some(network);
+    }
+
+    return 0;
+}
+
 void Drone::update_drone_status()
 {
     drone_status.drone_state = drone_state;

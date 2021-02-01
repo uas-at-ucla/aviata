@@ -53,6 +53,9 @@ public:
     void unsubscribe_attitude_target();
     int set_attitude_target(mavlink_set_attitude_target_t& att_target_struct);
 
+    void subscribe_flight_mode(std::function<void(Telemetry::FlightMode)> user_callback);
+    void unsubscribe_flight_mode();
+
     int takeoff_and_land_test(int argc, char** argv);
 
 private:

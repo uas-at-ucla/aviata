@@ -12,10 +12,14 @@ int main(int argc, char** argv) {
     }
 
     Drone drone(argv[1]);
-    if (strcmp(argv[2], "lead") == 0) {
+    if (strcmp(argv[2], "lead_test") == 0) {
         drone.test_lead_att_target(connection_url);
-    } else if (strcmp(argv[2], "follow") == 0) {
+    } else if (strcmp(argv[2], "follow_test") == 0) {
         drone.test_follow_att_target(connection_url);
+    } else if (strcmp(argv[2], "lead_s") == 0) {
+        drone.lead_standalone(connection_url);
+    } else if (strcmp(argv[2], "follow_s") == 0) {
+        drone.follow_standalone(connection_url);
     } else {
         std::cout << "Unkown program: " << argv[2] << std::endl;
     }
