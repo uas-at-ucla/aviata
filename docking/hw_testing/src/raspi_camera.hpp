@@ -5,7 +5,8 @@
 #include <raspicam/raspicam_cv.h>
 #include <opencv2/core.hpp>
 
-class RaspiCamera {
+class RaspiCamera
+{
 
 public:
     RaspiCamera();
@@ -15,6 +16,5 @@ private:
     // raspicam::RaspiCam_Cv camera;
     cv::VideoCapture camera;
 };
-
 
 #endif // CAMERA_SIMULATOR_H_

@@ -17,7 +17,8 @@ int main(/*int argc, char** argv */)
 
     RaspiCamera camera;
     sleep_for(seconds(2));
-    for(;;) {
+    for (;;)
+    {
         high_resolution_clock::time_point t1 = high_resolution_clock::now();
         cv::Mat img = camera.update_current_image();
 

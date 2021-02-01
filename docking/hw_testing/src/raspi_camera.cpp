@@ -12,33 +12,38 @@ using namespace std;
 using namespace std::chrono;
 using std::this_thread::sleep_for;
 
-RaspiCamera::RaspiCamera() {
-    int deviceID = 0;             // 0 = open default camera
-    int apiID = cv::CAP_ANY;      // 0 = autodetect default API
+RaspiCamera::RaspiCamera()
+{
+    int deviceID = 0;        // 0 = open default camera
+    int apiID = cv::CAP_ANY; // 0 = autodetect default API
     camera.open(deviceID, apiID);
-    log("width", std::to_string(camera.set(cv::CAP_PROP_FRAME_WIDTH,640))); // more resolution doesn't hurt performance too much and pic is SO much better
-    log("height", std::to_string(camera.set(cv::CAP_PROP_FRAME_HEIGHT,480)));
+    log("width", std::to_string(camera.set(cv::CAP_PROP_FRAME_WIDTH, 640))); // more resolution doesn't hurt performance too much and pic is SO much better
+    log("height", std::to_string(camera.set(cv::CAP_PROP_FRAME_HEIGHT, 480)));
     log("fps", std::to_string(camera.set(cv::CAP_PROP_FPS, 50)));
     log("zoom", std::to_string(camera.set(cv::CAP_PROP_ZOOM, 1)));
 
-
     // check if we succeeded
-    if (!camera.isOpened()) {
+    if (!camera.isOpened())
+    {
         log("Camera", "ERROR! Unable to open camera", true);
-    } else {
+    }
+    else
+    {
         log("Camera", "Camera initialization successful");
-        log("Camera", "Recording at " + std::to_string(camera.get(cv::CAP_PROP_FPS)) + 
-            ", " + std::to_string(camera.get(cv::CAP_PROP_FRAME_WIDTH)) + 
-            "x" + std::to_string(camera.get(cv::CAP_PROP_FRAME_HEIGHT)));
+        log("Camera", "Recording at " + std::to_string(camera.get(cv::CAP_PROP_FPS)) +
+                          ", " + std::to_string(camera.get(cv::CAP_PROP_FRAME_WIDTH)) +
+                          "x" + std::to_string(camera.get(cv::CAP_PROP_FRAME_HEIGHT)));
     }
 }
 
-Mat RaspiCamera::update_current_image() {
+Mat RaspiCamera::update_current_image()
+{
     Mat frame;
     camera.read(frame);
 
     // check if we succeeded
-    if (frame.empty()) {
+    if (frame.empty())
+    {
         cerr << "ERROR! blank frame grabbed\n";
         log("Camera", "ERROR! blank frame grabbed", true);
     }
