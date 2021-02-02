@@ -12,7 +12,7 @@
 #include <mavsdk/mavsdk.h>
 
 using namespace mavsdk;
-const float ALTITUDE_DISP = BOOM_LENGTH/2/tan(to_radians(CAMERA_FOV_VERTICAL/2))*2;
+const float ALTITUDE_DISP = BOOM_LENGTH/2/tan(to_radians(CAMERA_FOV_VERTICAL/2))*1.5;
 class Drone {
 
 public: 

@@ -91,7 +91,7 @@ bool Drone::takeoff()
     log(tag, "Armed");
 
     // Attempt to take off
-    action.set_takeoff_altitude(4);
+    action.set_takeoff_altitude(8);
     Action::Result takeoff_result = action.takeoff();
     if (takeoff_result != Action::Result::Success)
     {

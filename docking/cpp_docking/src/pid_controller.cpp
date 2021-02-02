@@ -44,6 +44,14 @@ float *PIDController::getVelocities(float x_err, float y_err, float alt_err, flo
         dv = max_speed * dv / abs(dv);
     }
 
+    if (abs(ev) > max_speed) {
+        ev = max_speed * ev / abs(ev);
+    }
+
+    if (abs(nv) > max_speed) {
+        nv = max_speed * nv / abs(nv);
+    }
+
     m_prev_errs[0] = x_err;
     m_prev_errs[1] = y_err;
     m_prev_errs[2] = alt_err;

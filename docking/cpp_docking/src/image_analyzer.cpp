@@ -34,8 +34,8 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
     Point2f image_center(img.cols / 2, img.rows / 2);
 
     //Rotates target image and converts to greyscale
-    Mat rot_mat = getRotationMatrix2D(image_center, -1.0*yaw, 1.0);
-    warpAffine(img, img, rot_mat, Size(img.cols, img.rows), INTER_LINEAR, BORDER_CONSTANT, Scalar(255, 255, 255));
+    // Mat rot_mat = getRotationMatrix2D(image_center, -1.0*yaw, 1.0);
+    // warpAffine(img, img, rot_mat, Size(img.cols, img.rows), INTER_LINEAR, BORDER_CONSTANT, Scalar(255, 255, 255));
     cvtColor(img,img,COLOR_BGR2GRAY);
 
     image_u8_t im={.width=img.cols,.height=img.rows, .stride=img.cols, .buf=img.data}; //Converts CV2 image to C-friendly image format
@@ -59,6 +59,8 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
         zarray_get(dets,i,&det);
 
         if(det->id==ind&&det->decision_margin>=MARGIN){ //Target tag found
+
+            // 1. Calculate altitude error
 
             //Gathers location information on detection
             double* center=det->c;
@@ -94,6 +96,8 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
 
             errs[2]=0.50/tan((CAMERA_FOV_HORIZONTAL*0.50)*M_PI/180.0)*width*tag_pixel_ratio; //Calculates alt_err
 
+            // 2. Calculate rotation error
+
             float y3=rect[3][1]; //Chooses points for calculating diagonal angle
             float y0=rect[0][1];
             float x3=rect[3][0];
@@ -117,13 +121,23 @@ float* ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string& tag
             else{
                 incline_angle=0;
             }
-            errs[3]=incline_angle*-1; //Finds rotational error from diagonal angle
+            errs[3]=incline_angle*-1 + yaw; //Finds rotational error from diagonal angle
 
-            //Finds the offset of the image location, finds x/y err
+            //Finds the offset of the image location
             float x_offset=center[0]-image_center.x;
             float y_offset=image_center.y-center[1];
-            errs[0]=x_offset*tag_pixel_ratio;
-            errs[1]=y_offset*tag_pixel_ratio;
+
+            // 3. Calculate x/y error
+
+            float raw_x = x_offset*tag_pixel_ratio;
+            float raw_y = y_offset*tag_pixel_ratio;
+            float r = sqrt(raw_x * raw_x + raw_y * raw_y);
+            float theta = atan2(raw_y, raw_x);
+            theta += -1.0 * to_radians(yaw); // convert from body to ned coordinates
+            float real_x = r * cos(theta);
+            float real_y = r * sin(theta);
+            errs[0]= real_x;
+            errs[1]= real_y;
 
             //Cleanup
             apriltag_detection_destroy(det);
