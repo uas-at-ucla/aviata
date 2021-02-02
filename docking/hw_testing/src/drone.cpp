@@ -16,7 +16,7 @@ using namespace std::chrono;
 using std::this_thread::sleep_for;
 
 Drone::Drone(Target t)
-    : raspi_camera(t), image_analyzer(), m_north(0), m_east(0), m_down(-5), m_yaw(0), m_target_info(t), m_dt(0.05)
+    : raspi_camera(), image_analyzer(), m_north(0), m_east(0), m_down(-5), m_yaw(0), m_target_info(t), m_dt(0.05)
 {
 }
 
@@ -29,7 +29,7 @@ Drone::Drone(Target t)
 bool Drone::connect_gazebo()
 {
     std::string tag = "Connecting";
-    std::string connection_url = "udp://:14540"; // change as needed, or add command-line parsing
+    std::string connection_url = "serial:///dev/ttyAMA0:921600"; // change as needed, or add command-line parsing
     ConnectionResult connection_result = mavsdk.add_any_connection(connection_url);
 
     if (connection_result != ConnectionResult::Success)
@@ -69,16 +69,8 @@ bool Drone::connect_gazebo()
     return true;
 }
 
-/**
- * Attempt to take off.
- * 
- * @return true if successful, false otherwise
- * */
-bool Drone::takeoff()
-{
-    std::string tag = "Takeoff";
-    std::promise<void> in_air_promise;
-    auto in_air_future = in_air_promise.get_future();
+bool Drone::arm() {
+    std::string tag = "Arming";
 
     // Arm the drone
     auto action = Action{m_system};
@@ -89,8 +81,22 @@ bool Drone::takeoff()
         return false;
     }
     log(tag, "Armed");
+    return true;
+}
+
+/**
+ * Attempt to take off.
+ * 
+ * @return true if successful, false otherwise
+ * */
+bool Drone::takeoff()
+{
 
     // Attempt to take off
+    // std::string tag = "Takeoff";
+    // std::promise<void> in_air_promise;
+    // auto in_air_future = in_air_promise.get_future();
+    // auto action = Action{m_system};
     // action.set_takeoff_altitude(4);
     // Action::Result takeoff_result = action.takeoff();
     // if (takeoff_result != Action::Result::Success)
@@ -132,6 +138,49 @@ bool Drone::takeoff()
 
     return true;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// TESTING FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Drone::test1() {
+    Mat img;
+    std::string tag = "Test 1";
+    std::string tags_detected = "";
+
+    high_resolution_clock::time_point t1 = high_resolution_clock::now();
+    int time_span = 0;
+    int count_frames = 0;
+    while (time_span < 5 * 1000 /* 5 seconds */) {
+        high_resolution_clock::time_point f1 = high_resolution_clock::now();
+        img = raspi_camera.update_current_image(); // this is blocking
+        high_resolution_clock::time_point f2 = high_resolution_clock::now();
+        duration<double, std::milli> c1 = (f2 - f1);
+
+        high_resolution_clock::time_point f3 = high_resolution_clock::now();
+        float *errs = image_analyzer.processImage(img, 0, m_yaw, tags_detected); //Detects apriltags and calculates errors
+        high_resolution_clock::time_point f4 = high_resolution_clock::now();
+        duration<double, std::milli> c2 = (f4 - f3);
+
+        if (errs != nullptr) {
+            log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()));
+        } else {
+            log(tag, "Failed to find Apriltag");
+        }
+
+        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+        duration<double, std::milli> d = (t2 - t1);
+        time_span = d.count();
+        count_frames++;
+    }
+    cv::imwrite("out/test.png", img);
+    log(tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(count_frames));
+    log(tag, "Average FPS: " + std::to_string(count_frames / (time_span / 1000)));
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// DOCKING FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Starts docking process
 void Drone::initiate_docking(int target_id)

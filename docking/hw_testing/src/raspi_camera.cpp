@@ -15,12 +15,11 @@ using std::this_thread::sleep_for;
 RaspiCamera::RaspiCamera()
 {
     int deviceID = 0;        // 0 = open default camera
-    int apiID = cv::CAP_ANY; // 0 = autodetect default API
-    camera.open(deviceID, apiID);
-    log("width", std::to_string(camera.set(cv::CAP_PROP_FRAME_WIDTH, 640))); // more resolution doesn't hurt performance too much and pic is SO much better
-    log("height", std::to_string(camera.set(cv::CAP_PROP_FRAME_HEIGHT, 480)));
-    log("fps", std::to_string(camera.set(cv::CAP_PROP_FPS, 50)));
-    log("zoom", std::to_string(camera.set(cv::CAP_PROP_ZOOM, 1)));
+    camera.open(deviceID, cv::CAP_V4L2);
+    log("width", std::to_string(camera.set(cv::CAP_PROP_FRAME_WIDTH, 640 * 1))); // more resolution doesn't hurt performance too much and pic is SO much better
+    log("height", std::to_string(camera.set(cv::CAP_PROP_FRAME_HEIGHT, 480 * 1)));
+    // log("fps", std::to_string(camera.set(cv::CAP_PROP_FPS, 60)));
+    // log("zoom", std::to_string(camera.set(cv::CAP_PROP_ZOOM, 1)));
 
     // check if we succeeded
     if (!camera.isOpened())

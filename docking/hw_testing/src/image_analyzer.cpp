@@ -14,11 +14,13 @@
 #include <math.h>
 #include <vector>
 #include <algorithm>
+using namespace std::chrono;
 
 ImageAnalyzer::ImageAnalyzer()
 {
     tf = tag36h11_create();
     m_tagDetector = apriltag_detector_create();
+    m_tagDetector->nthreads = 4;
     apriltag_detector_add_family(m_tagDetector, tf);
 }
 ImageAnalyzer::~ImageAnalyzer()
@@ -36,13 +38,21 @@ float *ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tag
     Point2f image_center(img.cols / 2, img.rows / 2);
 
     //Rotates target image and converts to greyscale
+    // high_resolution_clock::time_point f1 = high_resolution_clock::now();
     Mat rot_mat = getRotationMatrix2D(image_center, -1.0 * yaw, 1.0);
     warpAffine(img, img, rot_mat, Size(img.cols, img.rows), INTER_LINEAR, BORDER_CONSTANT, Scalar(255, 255, 255));
     cvtColor(img, img, COLOR_BGR2GRAY);
+    // high_resolution_clock::time_point f2 = high_resolution_clock::now();
+    // duration<double, std::milli> c1 = (f2 - f1);
+    // log("Rotation time", std::to_string(c1.count()));
 
+    // f1 = high_resolution_clock::now();
     image_u8_t im = {.width = img.cols, .height = img.rows, .stride = img.cols, .buf = img.data}; //Converts CV2 image to C-friendly image format
 
     zarray_t *dets = apriltag_detector_detect(m_tagDetector, &im); //Detects apriltags
+    // f2 = high_resolution_clock::now();
+    // c1 = (f2 - f1);
+    // log("Apriltag Time", std::to_string(c1.count()));
 
     //Prints detected tags
     std::string tagsDetected = "";

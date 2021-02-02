@@ -19,8 +19,10 @@ class Drone
 public:
     Drone(Target t);
     bool connect_gazebo();
+    bool arm();
     bool takeoff();
     void initiate_docking(int target_id);
+    void test1();
 
 private:
     Mavsdk mavsdk;
