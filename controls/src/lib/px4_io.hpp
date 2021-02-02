@@ -36,8 +36,10 @@ public:
     void call_queued_mavsdk_callbacks();
 
     int arm_system();
-
     int disarm_system();
+
+    int arm();
+    int disarm();
 
     int set_offboard_mode();
 
@@ -55,6 +57,9 @@ public:
 
     void subscribe_flight_mode(std::function<void(Telemetry::FlightMode)> user_callback);
     void unsubscribe_flight_mode();
+
+    void subscribe_armed(std::function<void(bool)> user_callback);
+    void unsubscribe_armed();
 
     int dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing);
     int undock();

@@ -78,7 +78,6 @@ void PX4IO::call_queued_mavsdk_callbacks() {
 
 // @return 1 if successful, 0 otherwise
 int PX4IO::arm_system()
-//return 0 if fail, 1 if successs
 {
     while (telemetry->health_all_ok() != true) {
         std::cout << drone_id << " is getting ready to arm." << std::endl;
@@ -115,6 +114,32 @@ int PX4IO::disarm_system()
     const Action::Result disarm_result = action->disarm();
     if (disarm_result != Action::Result::Success) {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to disarm: " << disarm_result << NORMAL_CONSOLE_TEXT
+                  << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+// @return 1 if successful, 0 otherwise
+int PX4IO::arm()
+{
+    std::cout << "Arming " << drone_id << std::endl;
+    const Action::Result result = action->arm();
+    if (result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to arm: " << result << NORMAL_CONSOLE_TEXT
+                  << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+// @return 1 if successful, 0 otherwise
+int PX4IO::disarm()
+{
+    std::cout << "Disarming " << drone_id << std::endl;
+    const Action::Result result = action->disarm();
+    if (result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to disarm: " << result << NORMAL_CONSOLE_TEXT
                   << std::endl;
         return 0;
     }
@@ -266,9 +291,21 @@ void PX4IO::subscribe_flight_mode(std::function<void(Telemetry::FlightMode)> use
     );
 }
 
-void PX4IO::unsubscribe_flight_mode()
-{
+void PX4IO::unsubscribe_flight_mode() {
     telemetry->subscribe_flight_mode(nullptr);
+}
+
+void PX4IO::subscribe_armed(std::function<void(bool)> user_callback) {
+        mavsdk_callback_manager.subscribe_mavsdk_callback<bool>(
+        [this](std::function<void(bool)> callback) {
+            telemetry->subscribe_armed(callback);
+        },
+        user_callback
+    );
+}
+
+void PX4IO::unsubscribe_armed() {
+    telemetry->subscribe_armed(nullptr);
 }
 
 int PX4IO::dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing)
