@@ -9,6 +9,6 @@ int main(/*int argc, char** argv */)
     drone.connect_gazebo();
     drone.takeoff();
     drone.initiate_docking(3);
-    
+
     return 0;
 }

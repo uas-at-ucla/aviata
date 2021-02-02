@@ -11,9 +11,9 @@ PIDController::PIDController(float dt)
     : m_dt(dt)
 {
     m_prev_errs = new float[3];
-    m_prev_errs[0]=0;
-    m_prev_errs[1]=0;
-    m_prev_errs[2]=0;
+    m_prev_errs[0] = 0;
+    m_prev_errs[1] = 0;
+    m_prev_errs[2] = 0;
 }
 PIDController::~PIDController()
 {
@@ -44,11 +44,13 @@ float *PIDController::getVelocities(float x_err, float y_err, float alt_err, flo
         dv = max_speed * dv / abs(dv);
     }
 
-    if (abs(ev) > max_speed) {
+    if (abs(ev) > max_speed)
+    {
         ev = max_speed * ev / abs(ev);
     }
 
-    if (abs(nv) > max_speed) {
+    if (abs(nv) > max_speed)
+    {
         nv = max_speed * nv / abs(nv);
     }
 
