@@ -37,6 +37,7 @@ structpayload_drone_height = (M_structure * structure_drone_height + M_payload *
 drone_prop_height = 0.05 # vertical distance between a drone's propellers and its center of mass (meters)
 
 # Control Constants
+# TODO Do PID tuning like in constants_two_drones.py
 P_pos = np.array([0.95, 0.95, 1.0]) / 2
 
 P_vel = np.array([1.8, 1.8, 4.0]) / 2
@@ -57,27 +58,30 @@ max_acc_hor = 5.0 # m/s^2
 max_acc_down = 3.0
 max_acc_up = 4.0
 
-max_att_rate = np.array([3.84, 3.84, 3.49]) # radians/s
+max_att_rate = np.deg2rad(np.array([220.0, 220.0, 200.0])) # radians/s
 
 # PX4 Defaults:
-# P_pos = np.array([0.95, 0.95, 1.0])
+# P_pos = np.array([0.95, 0.95, 1.0]) # MPC_XY_P, MPC_Z_P
 
-# P_vel = np.array([1.8, 1.8, 4.0])
-# I_vel = np.array([0.4, 0.4, 2.0])
-# D_vel = np.array([0.2, 0.2, 0.0])
+# P_vel = np.array([1.8, 1.8, 4.0]) # MPC_XY_VEL_P_ACC, MPC_Z_VEL_P_ACC
+# I_vel = np.array([0.4, 0.4, 2.0]) # MPC_XY_VEL_I_ACC, MPC_Z_VEL_I_ACC
+# D_vel = np.array([0.2, 0.2, 0.0]) # MPC_XY_VEL_D_ACC, MPC_Z_VEL_D_ACC
 
-# P_att = np.array([6.5, 6.5, 2.8])
+# P_att = np.array([6.5, 6.5, 2.8]) # MC_ROLL_P, MC_PITCH_P, MC_YAW_P
 
-# P_att_rate = np.array([0.15, 0.15, 0.2])
-# I_att_rate = np.array([0.2, 0.2, 0.1])
-# D_att_rate = np.array([0.003, 0.003, 0.0])
+# P_att_rate = np.array([0.15, 0.15, 0.2]) # MC_ROLLRATE_P, MC_PITCHRATE_P, MC_YAWRATE_P
+# I_att_rate = np.array([0.2, 0.2, 0.1]) # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I
+# D_att_rate = np.array([0.003, 0.003, 0.0]) # MC_ROLLRATE_D, MC_PITCHRATE_D, MC_YAWRATE_D
+# # To scale all at once: MC_ROLLRATE_K, MC_PITCHRATE_K, MC_YAWRATE_K
+# # Also relevant: MC_ROLLRATE_FF, MC_PITCHRATE_FF, MC_YAWRATE_FF; MC_RR_INT_LIM, MC_PR_INT_LIM, MC_YR_INT_LIM
 
-# max_vel_hor = 12.0 # m/s
-# max_vel_down = 1.0
-# max_vel_up = 3.0
+# max_vel_hor = 12.0 # m/s MPC_XY_VEL_MAX, MPC_XY_CRUISE
+# max_vel_down = 1.0 # MPC_Z_VEL_MAX_DN
+# max_vel_up = 3.0 # MPC_Z_VEL_MAX_UP
+# # Also relevant: MPC_TKO_SPEED
 
-# max_acc_hor = 5.0 # m/s^2
-# max_acc_down = 3.0
-# max_acc_up = 4.0
+# max_acc_hor = 5.0 # m/s^2 MPC_ACC_HOR_MAX, MPC_ACC_HOR
+# max_acc_down = 3.0 # MPC_ACC_DOWN_MAX
+# max_acc_up = 4.0 # MPC_ACC_UP_MAX
 
-# max_att_rate = np.array([3.84, 3.84, 3.49]) # radians/s
+# max_att_rate = np.deg2rad(np.array([220.0, 220.0, 200.0])) # radians/s MC_ROLLRATE_MAX, MC_PITCHRATE_MAX, MC_YAWRATE_MAX, MPC_YAWRAUTO_MAX
