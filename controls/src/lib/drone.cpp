@@ -162,13 +162,22 @@ void Drone::basic_lead()
     network->init_follower_setpoint_publisher();
 
     bool armed = false;
+    bool kill_switch_engaged = false;
 
     px4_io.subscribe_armed([&armed](bool is_armed) {
         armed = is_armed;
     });
 
-    px4_io.subscribe_attitude_target([this, &armed](const mavlink_attitude_target_t &attitude_target) {
-        if (armed) {
+    px4_io.subscribe_status_text([&kill_switch_engaged](mavsdk::Telemetry::StatusText status_text) {
+        if (status_text.text == "Kill-switch engaged") {
+            kill_switch_engaged = true;
+        } else if (status_text.text == "Kill-switch disengaged") {
+            kill_switch_engaged = false;
+        }
+    });
+
+    px4_io.subscribe_attitude_target([this, &armed, &kill_switch_engaged](const mavlink_attitude_target_t &attitude_target) {
+        if (armed && !kill_switch_engaged) {
             aviata::msg::FollowerSetpoint follower_setpoint;
             std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(follower_setpoint.q));
             follower_setpoint.thrust = attitude_target.thrust;

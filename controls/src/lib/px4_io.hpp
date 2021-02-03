@@ -78,6 +78,8 @@ public:
 
     void subscribe_flight_mode(std::function<void(Telemetry::FlightMode)> user_callback);
     void unsubscribe_flight_mode();
+    void subscribe_status_text(std::function<void(Telemetry::StatusText)> user_callback);
+    void unsubscribe_status_text();
 
     void subscribe_armed(std::function<void(bool)> user_callback);
     void unsubscribe_armed();

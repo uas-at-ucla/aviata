@@ -310,6 +310,19 @@ void PX4IO::unsubscribe_flight_mode() {
     telemetry->subscribe_flight_mode(nullptr);
 }
 
+void PX4IO::subscribe_status_text(std::function<void(Telemetry::StatusText)> user_callback) {
+        mavsdk_callback_manager.subscribe_mavsdk_callback<Telemetry::StatusText>(
+        [this](std::function<void(Telemetry::StatusText)> callback) {
+            telemetry->subscribe_status_text(callback);
+        },
+        user_callback
+    );
+}
+
+void PX4IO::unsubscribe_status_text() {
+    telemetry->subscribe_status_text(nullptr);
+}
+
 void PX4IO::subscribe_armed(std::function<void(bool)> user_callback) {
         mavsdk_callback_manager.subscribe_mavsdk_callback<bool>(
         [this](std::function<void(bool)> callback) {
