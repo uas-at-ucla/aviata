@@ -78,7 +78,6 @@ void PX4IO::call_queued_mavsdk_callbacks() {
 
 // @return 1 if successful, 0 otherwise
 int PX4IO::arm_system()
-//return 0 if fail, 1 if successs
 {
     while (telemetry->health_all_ok() != true) {
         std::cout << drone_id << " is getting ready to arm." << std::endl;
@@ -122,6 +121,32 @@ int PX4IO::disarm_system()
 }
 
 // @return 1 if successful, 0 otherwise
+int PX4IO::arm()
+{
+    std::cout << "Arming " << drone_id << std::endl;
+    const Action::Result result = action->arm();
+    if (result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to arm: " << result << NORMAL_CONSOLE_TEXT
+                  << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+// @return 1 if successful, 0 otherwise
+int PX4IO::disarm()
+{
+    std::cout << "Disarming " << drone_id << std::endl;
+    const Action::Result result = action->disarm();
+    if (result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to disarm: " << result << NORMAL_CONSOLE_TEXT
+                  << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+// @return 1 if successful, 0 otherwise
 int PX4IO::set_offboard_mode() {
     MavlinkPassthrough::CommandLong offboard_command;
     offboard_command.target_sysid = target_system;
@@ -130,6 +155,21 @@ int PX4IO::set_offboard_mode() {
     offboard_command.param1 = VEHICLE_MODE_FLAG_CUSTOM_MODE_ENABLED;
     offboard_command.param2 = PX4_CUSTOM_MAIN_MODE_OFFBOARD;
     MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(offboard_command);
+    if (result != MavlinkPassthrough::Result::Success) {
+        return 0;
+    }
+    return 1;
+}
+
+// @return 1 if successful, 0 otherwise
+int PX4IO::set_manual_mode() {
+    MavlinkPassthrough::CommandLong command;
+    command.target_sysid = target_system;
+    command.target_compid = target_component;
+    command.command = MAV_CMD_DO_SET_MODE;
+    command.param1 = VEHICLE_MODE_FLAG_CUSTOM_MODE_ENABLED;
+    command.param2 = PX4_CUSTOM_MAIN_MODE_MANUAL;
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(command);
     if (result != MavlinkPassthrough::Result::Success) {
         return 0;
     }
@@ -266,9 +306,34 @@ void PX4IO::subscribe_flight_mode(std::function<void(Telemetry::FlightMode)> use
     );
 }
 
-void PX4IO::unsubscribe_flight_mode()
-{
+void PX4IO::unsubscribe_flight_mode() {
     telemetry->subscribe_flight_mode(nullptr);
+}
+
+void PX4IO::subscribe_status_text(std::function<void(Telemetry::StatusText)> user_callback) {
+        mavsdk_callback_manager.subscribe_mavsdk_callback<Telemetry::StatusText>(
+        [this](std::function<void(Telemetry::StatusText)> callback) {
+            telemetry->subscribe_status_text(callback);
+        },
+        user_callback
+    );
+}
+
+void PX4IO::unsubscribe_status_text() {
+    telemetry->subscribe_status_text(nullptr);
+}
+
+void PX4IO::subscribe_armed(std::function<void(bool)> user_callback) {
+        mavsdk_callback_manager.subscribe_mavsdk_callback<bool>(
+        [this](std::function<void(bool)> callback) {
+            telemetry->subscribe_armed(callback);
+        },
+        user_callback
+    );
+}
+
+void PX4IO::unsubscribe_armed() {
+    telemetry->subscribe_armed(nullptr);
 }
 
 int PX4IO::dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing)
