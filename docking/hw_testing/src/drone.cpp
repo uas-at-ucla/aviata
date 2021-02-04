@@ -589,3 +589,56 @@ void Drone::test1() {
     log("Test 1", "Done holding");
     land();
 }
+
+
+void Drone::test2() {
+    std::string tag = "Test 2";
+    bool arm_code = arm();
+    if (!arm_code) {
+        log(tag, "Failed to arm");
+        return;
+    }
+    bool takeoff_code = takeoff();
+    if (!takeoff_code) {
+        log(tag, "Failed to take off");
+        return;
+    }
+
+    log(tag, "Holding...");
+
+    Mat img;
+    std::string tags_detected = "";
+
+    auto offboard = Offboard{m_system};
+    auto telemetry = Telemetry{m_system};
+    telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
+        set_yaw(e.yaw_deg);
+    });
+
+    high_resolution_clock::time_point t1 = high_resolution_clock::now();
+    int time_span = 0;
+    int count_frames = 0;
+    while (time_span < 5 * 1000 /* 5 seconds */) {
+        img = raspi_camera.update_current_image();
+        float *errs = image_analyzer.processImage(img, 0, m_yaw, tags_detected);
+
+        Offboard::VelocityNedYaw change{};
+        if (errs != nullptr) {
+            log(tag, "Errors: " + std::to_string(errs[0]) + " " + std::to_string(errs[1]) + " " + std::to_string(errs[2]) + " " + std::to_string(errs[3]));
+            change.yaw_deg = errs[3];
+        } else {
+            log(tag, "Failed to find Apriltag");
+            change.yaw_deg = m_yaw;
+        }
+
+        offboard.set_velocity_ned(change);
+
+        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+        duration<double, std::milli> d = (t2 - t1);
+        time_span = d.count();
+        count_frames++;
+    }
+
+    log(tag, "Done holding");
+    land();
+}
