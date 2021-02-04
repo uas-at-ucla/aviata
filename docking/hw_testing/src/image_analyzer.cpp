@@ -19,6 +19,7 @@ ImageAnalyzer::ImageAnalyzer()
 {
     tf = tag36h11_create();
     m_tagDetector = apriltag_detector_create();
+    m_tagDetector->nthreads = 4;
     apriltag_detector_add_family(m_tagDetector, tf);
 }
 ImageAnalyzer::~ImageAnalyzer()
