@@ -6,6 +6,10 @@
 #include <future>
 #include <string>
 
+#include <opencv2/core.hpp>
+#include <opencv2/core/types.hpp>
+#include <opencv2/imgcodecs.hpp>
+
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/action/action.h>
 #include <mavsdk/plugins/offboard/offboard.h>
@@ -69,6 +73,21 @@ bool Drone::connect_gazebo()
     return true;
 }
 
+bool Drone::arm() {
+    std::string tag = "Arming";
+
+    // Arm the drone
+    auto action = Action{m_system};
+    Action::Result arm_result = action.arm();
+    if (arm_result != Action::Result::Success)
+    {
+        log(tag, "Arming failed", true);
+        return false;
+    }
+    log(tag, "Armed");
+    return true;
+}
+
 /**
  * Attempt to take off.
  * 
@@ -80,18 +99,9 @@ bool Drone::takeoff()
     std::promise<void> in_air_promise;
     auto in_air_future = in_air_promise.get_future();
 
-    // Arm the drone
-    auto action = Action{m_system};
-    Action::Result arm_result = action.arm();
-    if (arm_result != Action::Result::Success)
-    {
-        log(tag, "Arming failed", true);
-        return false;
-    }
-    log(tag, "Armed");
-
     // Attempt to take off
-    action.set_takeoff_altitude(8);
+    auto action = Action{m_system};
+    action.set_takeoff_altitude(3);
     Action::Result takeoff_result = action.takeoff();
     if (takeoff_result != Action::Result::Success)
     {
@@ -373,7 +383,7 @@ void Drone::stage2(int target_id)
             }
             sleep_for(milliseconds((int)m_dt * 1000));
             img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-            float *errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
+            errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
             log("Tags Detected", tags);
         }
 
@@ -433,8 +443,21 @@ void Drone::land()
     auto telemetry = Telemetry{m_system};
     auto action = Action{m_system};
     auto offboard = Offboard{m_system};
-    offboard.stop();
-    action.land();
+    Offboard::Result offboard_result = offboard.stop();
+    if (offboard_result != Offboard::Result::Success)
+    {
+        log("Landing", "Offboard stop failed, error code on next line", true);
+        std::cout << "Code: " << offboard_result << std::endl;
+        return;
+    }
+
+    const Action::Result land_result = action.land();
+    if (land_result != Action::Result::Success) {
+        log("Landing", "Land failed, error code on next line", true);
+        std::cout << "Code: " << land_result << std::endl;
+        return;
+    }
+
     const Telemetry::Result set_rate_result = telemetry.set_rate_position(1.0);
     if (set_rate_result != Telemetry::Result::Success)
     {
@@ -442,15 +465,23 @@ void Drone::land()
         return;
     }
     telemetry.subscribe_position([](Telemetry::Position position) {
-        log("Landing", std::to_string(position.relative_altitude_m));
+        log("Landing", "Current altitude: " + std::to_string(position.relative_altitude_m));
     });
+
     while (telemetry.in_air())
     {
         sleep_for(seconds(1));
     }
-    log("Landing", "Landed");
-    action.disarm();
-    log("Landing", "Disarmed");
+
+    log("Landing", "Landed successfully " + std::to_string(telemetry.in_air()));
+    Action::Result disarm_result = action.disarm();
+    if (disarm_result != Action::Result::Success)
+    {
+        log("Landing", "Disarming failed", true);
+        std::cout << "Code: " << disarm_result << std::endl;
+        return;
+    }
+    log("Landing", "Disarmed successfully");
 }
 
 //Utility method to adjust errors for stage 1
@@ -462,4 +493,90 @@ void Drone::offset_errors(float *errs, int id)
     errs[2] -= ALTITUDE_DISP;
     errs[0] = x;
     errs[1] = y;
+}
+
+/////////////// Testing functions
+
+void Drone::test0() {
+    bool arm_code = arm();
+    if (!arm_code) {
+        log("Test 0", "Failed to arm");
+        return;
+    }
+    bool takeoff_code = takeoff();
+    if (!takeoff_code) {
+        log("Test 0", "Failed to take off");
+        return;
+    }
+
+    log("Test 0", "Holding...");
+
+    int time_span = 0;
+    auto offboard = Offboard{m_system};
+    high_resolution_clock::time_point start = high_resolution_clock::now();
+    while (time_span < 1000 * 5) {
+        Offboard::VelocityNedYaw stay{};
+        offboard.set_velocity_ned(stay);
+        high_resolution_clock::time_point now = high_resolution_clock::now();
+        duration<double, std::milli> d = (now - start);
+        time_span = d.count();
+    }
+    log("Test 0", "Done holding");
+    land();
+}
+
+void Drone::test1() {
+    bool arm_code = arm();
+    if (!arm_code) {
+        log("Test 1", "Failed to arm");
+        return;
+    }
+    bool takeoff_code = takeoff();
+    if (!takeoff_code) {
+        log("Test 1", "Failed to take off");
+        return;
+    }
+
+    log("Test 1", "Holding...");
+
+    Mat img;
+    std::string tag = "Test 1";
+    std::string tags_detected = "";
+
+    high_resolution_clock::time_point t1 = high_resolution_clock::now();
+    int time_span = 0;
+    int count_frames = 0;
+    auto offboard = Offboard{m_system};
+    while (time_span < 5 * 1000 /* 5 seconds */) {
+        high_resolution_clock::time_point f1 = high_resolution_clock::now();
+        img = camera_simulator.update_current_image(0, 0, 5, 0, 0); // this is blocking
+        high_resolution_clock::time_point f2 = high_resolution_clock::now();
+        duration<double, std::milli> c1 = (f2 - f1);
+
+        high_resolution_clock::time_point f3 = high_resolution_clock::now();
+        float *errs = image_analyzer.processImage(img, 0, m_yaw, tags_detected); //Detects apriltags and calculates errors
+        high_resolution_clock::time_point f4 = high_resolution_clock::now();
+        duration<double, std::milli> c2 = (f4 - f3);
+
+        if (errs != nullptr) {
+            log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) + 
+                    " errors: " + std::to_string(errs[0]) + " " + std::to_string(errs[1]) + " " + std::to_string(errs[2]) + " " + std::to_string(errs[3]));
+        } else {
+            log(tag, "Failed to find Apriltag");
+        }
+
+        Offboard::VelocityNedYaw stay{};
+        offboard.set_velocity_ned(stay);
+
+        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+        duration<double, std::milli> d = (t2 - t1);
+        time_span = d.count();
+        count_frames++;
+    }
+    cv::imwrite("test.png", img);
+    log(tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(count_frames));
+    log(tag, "Average FPS: " + std::to_string(count_frames / (time_span / 1000)));
+
+    log("Test 1", "Done holding");
+    land();
 }

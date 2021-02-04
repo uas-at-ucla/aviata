@@ -22,6 +22,8 @@ public:
     bool arm();
     bool takeoff();
     void initiate_docking(int target_id);
+
+    void test0();
     void test1();
 
 private:
