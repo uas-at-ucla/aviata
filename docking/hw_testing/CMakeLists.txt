@@ -14,7 +14,15 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-add_compile_options(-g)
+# Set release build type by default
+# invoke with cmake .. -DCMAKE_BUILD_TYPE=Debug to enable debugging
+# revert to optimization with -DCMAKE_BUILD_TYPE=Release (CMake will cache last used value)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 # set(raspicam_DIR "/usr/local/lib/cmake")
 # find_package(raspicam REQUIRED)

@@ -156,15 +156,33 @@ int Drone::follow_as_1(std::string connection_url)
     return 0;
 }
 
+
 void Drone::basic_lead()
 {
     network->init_follower_setpoint_publisher();
 
-    px4_io.subscribe_attitude_target([this](const mavlink_attitude_target_t &attitude_target) {
-        aviata::msg::FollowerSetpoint follower_setpoint;
-        std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(follower_setpoint.q));
-        follower_setpoint.thrust = attitude_target.thrust;
-        network->publish_follower_setpoint(follower_setpoint);
+    bool armed = false;
+    bool kill_switch_engaged = false;
+
+    px4_io.subscribe_armed([&armed](bool is_armed) {
+        armed = is_armed;
+    });
+
+    px4_io.subscribe_status_text([&kill_switch_engaged](mavsdk::Telemetry::StatusText status_text) {
+        if (status_text.text == "Kill-switch engaged") {
+            kill_switch_engaged = true;
+        } else if (status_text.text == "Kill-switch disengaged") {
+            kill_switch_engaged = false;
+        }
+    });
+
+    px4_io.subscribe_attitude_target([this, &armed, &kill_switch_engaged](const mavlink_attitude_target_t &attitude_target) {
+        if (armed && !kill_switch_engaged) {
+            aviata::msg::FollowerSetpoint follower_setpoint;
+            std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(follower_setpoint.q));
+            follower_setpoint.thrust = attitude_target.thrust;
+            network->publish_follower_setpoint(follower_setpoint);
+        }
     });
 
     while (true) {
@@ -176,8 +194,19 @@ void Drone::basic_lead()
 void Drone::basic_follow()
 {
     bool in_offboard = false;
+    bool armed = false;
+    int64_t last_msg_time = 0;
 
-    network->subscribe_follower_setpoint([this, &in_offboard](const aviata::msg::FollowerSetpoint::SharedPtr follower_setpoint) {
+    px4_io.subscribe_flight_mode([&in_offboard](mavsdk::Telemetry::FlightMode flight_mode) {
+        in_offboard = (flight_mode == mavsdk::Telemetry::FlightMode::Offboard);
+    });
+
+    px4_io.subscribe_armed([&armed](bool is_armed) {
+        armed = is_armed;
+    });
+
+    network->subscribe_follower_setpoint([this, &in_offboard, &armed, &last_msg_time](const aviata::msg::FollowerSetpoint::SharedPtr follower_setpoint) {
+        last_msg_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
         mavlink_set_attitude_target_t attitude_target;
         std::copy(std::begin(follower_setpoint->q), std::end(follower_setpoint->q), std::begin(attitude_target.q));
         attitude_target.thrust = follower_setpoint->thrust;
@@ -187,15 +216,22 @@ void Drone::basic_follow()
                 in_offboard = true;
             }
         }
-    });
-
-    px4_io.subscribe_flight_mode([this, &in_offboard](mavsdk::Telemetry::FlightMode flight_mode) {
-        if (flight_mode != mavsdk::Telemetry::FlightMode::Offboard) {
-            in_offboard = false;
+        if (in_offboard && !armed) {
+            if (px4_io.arm() == 1) {
+                armed = true;
+            }
         }
     });
 
     while (true) {
+        if (duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - last_msg_time > 100) {
+            if (armed) {
+                if (px4_io.disarm() == 1) {
+                    armed = false;
+                    px4_io.set_manual_mode(); // Take out of offboard mode to prevent annoying failsafe beeps
+                }
+            }
+        }
         px4_io.call_queued_mavsdk_callbacks();
         Network::spin_some(network);
     }
