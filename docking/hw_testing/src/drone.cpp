@@ -147,6 +147,7 @@ void Drone::test1() {
     Mat img;
     std::string tag = "Test 1";
     std::string tags_detected = "";
+    raspi_camera.start();
 
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     int time_span = 0;
@@ -174,6 +175,7 @@ void Drone::test1() {
         count_frames++;
     }
     cv::imwrite("out/test.png", img);
+    raspi_camera.end();
     log(tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(count_frames));
     log(tag, "Average FPS: " + std::to_string(count_frames / (time_span / 1000)));
 }

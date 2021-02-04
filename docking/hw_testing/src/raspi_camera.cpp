@@ -3,6 +3,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
 #include <opencv2/highgui.hpp>
+#include <thread>
 
 #include "util.hpp"
 #include "raspi_camera.hpp"
@@ -11,6 +12,21 @@ using namespace cv;
 using namespace std;
 using namespace std::chrono;
 using std::this_thread::sleep_for;
+
+bool running = false;
+
+void thread_routine(VideoCapture& camera, Mat& frame) {
+    while (running) {
+        camera.read(frame);
+
+        // check if we succeeded
+        if (frame.empty())
+        {
+            cerr << "ERROR! blank frame grabbed\n";
+            log("Camera", "ERROR! blank frame grabbed", true);
+        }
+    }
+}
 
 RaspiCamera::RaspiCamera()
 {
@@ -35,17 +51,22 @@ RaspiCamera::RaspiCamera()
     }
 }
 
+void RaspiCamera::start() {
+    running = true;
+    sleep_for(seconds(2));
+    m_thread = new std::thread(thread_routine, std::ref(camera), std::ref(m_latest_frame));
+}
+
+void RaspiCamera::end() {
+    running = false;
+    m_thread->join();
+    delete m_thread;
+}
+
 Mat RaspiCamera::update_current_image()
 {
-    Mat frame;
-    camera.read(frame);
-
-    // check if we succeeded
-    if (frame.empty())
-    {
-        cerr << "ERROR! blank frame grabbed\n";
-        log("Camera", "ERROR! blank frame grabbed", true);
+    while (m_latest_frame.empty()) {
+        //
     }
-
-    return frame;
+    return m_latest_frame;
 }
