@@ -402,6 +402,13 @@ void Drone::stage2(int target_id)
             break;
 
         log("Docking", "Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
+        
+        //Adjusts errors to decrease overshooting
+        errs[0]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
+        errs[1]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
+        errs[3]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
+        errs[2]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
+
         float *velocities = pid->getVelocities(errs[0], errs[1], errs[2], 0.1); //Gets velocities for errors
         log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
 

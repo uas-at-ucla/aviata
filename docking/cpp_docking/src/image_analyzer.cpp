@@ -32,7 +32,6 @@ float *ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tag
     float *errs = new float[4];
 
     int width = img.cols;
-    int height = img.rows;
     Point2f image_center(img.cols / 2, img.rows / 2);
 
     //Rotates target image and converts to greyscale
