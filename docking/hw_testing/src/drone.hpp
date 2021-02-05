@@ -25,6 +25,7 @@ public:
 
     void test0();
     void test1();
+    void test2();
 
 private:
     Mavsdk mavsdk;

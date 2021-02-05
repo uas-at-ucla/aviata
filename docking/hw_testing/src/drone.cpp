@@ -70,7 +70,6 @@ bool Drone::connect_gazebo()
 }
 
 bool Drone::arm() {
-    return false;
     std::string tag = "Arming";
 
     // Arm the drone
@@ -92,7 +91,6 @@ bool Drone::arm() {
  * */
 bool Drone::takeoff()
 {
-    return false;
     std::string tag = "Takeoff";
     std::promise<void> in_air_promise;
     auto in_air_future = in_air_promise.get_future();
@@ -558,7 +556,7 @@ void Drone::test1() {
     auto offboard = Offboard{m_system};
     while (time_span < 5 * 1000 /* 5 seconds */) {
         high_resolution_clock::time_point f1 = high_resolution_clock::now();
-        img = camera_simulator.update_current_image(0, 0, 5, 0, 0); // this is blocking
+        img = raspi_camera.update_current_image(); // this is blocking
         high_resolution_clock::time_point f2 = high_resolution_clock::now();
         duration<double, std::milli> c1 = (f2 - f1);
 

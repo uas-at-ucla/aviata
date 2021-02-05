@@ -10,7 +10,7 @@
 
 //Constants
 
-#define CENTRAL_TAG_SIZE 0.227
+#define CENTRAL_TAG_SIZE 0.135 // CHANGE ACCORDING TO TARGET SIZE -- CURRENT VALUE FOR CDR TESTING
 #define PERIPHERAL_TAG_SIZE 0.045
 
 // Measured in meters, East and North are positive

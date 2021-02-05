@@ -11,7 +11,7 @@ int main(/*int argc, char** argv */)
     Target t;
 
     Drone drone(t);
-    // drone.connect_gazebo();
+    drone.connect_gazebo();
     // drone.arm();
     drone.test1();
 
