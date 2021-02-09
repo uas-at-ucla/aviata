@@ -401,12 +401,22 @@ void Drone::stage2(int target_id)
         if (successful_frames > 1 / m_dt) //Docking success, within range for 1 second
             break;
 
+        
+        //Adjusts errors to prevent rotating out of frame
+        if (errs[0] < STAGE_1_TOLERANCE && errs[0] > -1.0 * STAGE_1_TOLERANCE && errs[1] < STAGE_1_TOLERANCE && errs[1] > -1.0 * STAGE_1_TOLERANCE)
+        {
+            errs[3]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
+        }
+        else{
+            errs[3]-=90;
+            errs[3]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
+        }
+
         log("Docking", "Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
         
         //Adjusts errors to decrease overshooting
         errs[0]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
         errs[1]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
-        errs[3]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
         errs[2]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
 
         float *velocities = pid->getVelocities(errs[0], errs[1], errs[2], 0.1); //Gets velocities for errors
