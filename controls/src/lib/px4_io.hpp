@@ -39,6 +39,17 @@ enum PX4_CUSTOM_MAIN_MODE {
 	PX4_CUSTOM_MAIN_MODE_RATTITUDE,
 	PX4_CUSTOM_MAIN_MODE_SIMPLE /* unused, but reserved for future use */
 };
+enum PX4_CUSTOM_SUB_MODE_AUTO {
+	PX4_CUSTOM_SUB_MODE_AUTO_READY = 1,
+	PX4_CUSTOM_SUB_MODE_AUTO_TAKEOFF,
+	PX4_CUSTOM_SUB_MODE_AUTO_LOITER,
+	PX4_CUSTOM_SUB_MODE_AUTO_MISSION,
+	PX4_CUSTOM_SUB_MODE_AUTO_RTL,
+	PX4_CUSTOM_SUB_MODE_AUTO_LAND,
+	PX4_CUSTOM_SUB_MODE_AUTO_RESERVED_DO_NOT_USE, // was PX4_CUSTOM_SUB_MODE_AUTO_RTGS, deleted 2020-03-05
+	PX4_CUSTOM_SUB_MODE_AUTO_FOLLOW_TARGET,
+	PX4_CUSTOM_SUB_MODE_AUTO_PRECLAND
+};
 
 using namespace mavsdk;
 
@@ -62,7 +73,7 @@ public:
     int disarm();
 
     int set_offboard_mode();
-    int set_manual_mode();
+    int set_hold_mode();
 
     int takeoff_system();
 

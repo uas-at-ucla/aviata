@@ -228,7 +228,7 @@ void Drone::basic_follow()
             if (armed) {
                 if (px4_io.disarm() == 1) {
                     armed = false;
-                    px4_io.set_manual_mode(); // Take out of offboard mode to prevent annoying failsafe beeps
+                    px4_io.set_hold_mode(); // Take out of offboard mode to prevent annoying failsafe beeps
                 }
             }
         }

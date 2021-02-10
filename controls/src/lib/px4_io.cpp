@@ -162,13 +162,14 @@ int PX4IO::set_offboard_mode() {
 }
 
 // @return 1 if successful, 0 otherwise
-int PX4IO::set_manual_mode() {
+int PX4IO::set_hold_mode() {
     MavlinkPassthrough::CommandLong command;
     command.target_sysid = target_system;
     command.target_compid = target_component;
     command.command = MAV_CMD_DO_SET_MODE;
     command.param1 = VEHICLE_MODE_FLAG_CUSTOM_MODE_ENABLED;
-    command.param2 = PX4_CUSTOM_MAIN_MODE_MANUAL;
+    command.param2 = PX4_CUSTOM_MAIN_MODE_AUTO;
+    command.param3 = PX4_CUSTOM_SUB_MODE_AUTO_LOITER;
     MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(command);
     if (result != MavlinkPassthrough::Result::Success) {
         return 0;
