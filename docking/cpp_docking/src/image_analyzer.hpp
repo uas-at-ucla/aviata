@@ -11,7 +11,7 @@ class ImageAnalyzer
 public:
     ImageAnalyzer();
     ~ImageAnalyzer();
-    float *processImage(Mat img, int ind, float yaw, std::string &tags); //returns x_err, y_err, alt_err, rot_err packaged as float*
+    bool processImage(Mat img, int ind, float yaw, std::string &tags, std::array<float, 4>& errs);
 private:
     apriltag_detector_t *m_tagDetector;
     apriltag_family_t *tf;

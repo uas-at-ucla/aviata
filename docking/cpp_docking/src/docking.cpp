@@ -4,6 +4,7 @@
 int main(/*int argc, char** argv */)
 {
     Target t;
+    // t.lat = 2;
     //t.yaw = 180;
 
     Drone drone(t);

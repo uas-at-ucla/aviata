@@ -1,28 +1,21 @@
-#ifndef PID
-#define PID
-
 #include "util.hpp"
 #include "pid_controller.hpp"
 #include <cstdlib>
+#include <array>
 #include <algorithm>
 #include <string>
 
 PIDController::PIDController(float dt)
     : m_dt(dt)
 {
-    m_prev_errs = new float[3];
-    m_prev_errs[0] = 0;
-    m_prev_errs[1] = 0;
-    m_prev_errs[2] = 0;
+    m_prev_errs = {0, 0, 0};
 }
 PIDController::~PIDController()
-{
-    delete[] m_prev_errs;
-}
+{}
 
-float *PIDController::getVelocities(float x_err, float y_err, float alt_err, float max_speed)
+std::array<float, 3> PIDController::getVelocities(float x_err, float y_err, float alt_err, float max_speed)
 {
-    float *ans = new float[3];
+    std::array<float, 3> ans = {0, 0, 0};
     float ku_nv = 2.6;
     float ku_ev = 2.15;
     float ku_dv = 3.5;
@@ -64,4 +57,3 @@ float *PIDController::getVelocities(float x_err, float y_err, float alt_err, flo
 
     return ans;
 }
-#endif

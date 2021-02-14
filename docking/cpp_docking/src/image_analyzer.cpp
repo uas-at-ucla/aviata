@@ -27,20 +27,24 @@ ImageAnalyzer::~ImageAnalyzer()
     tag36h11_destroy(tf);
 }
 
-float *ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags)
+/**
+ * Determines drone's offset from target
+ * 
+ * @param img image to analyze
+ * @param ind index of the target we want to dock to
+ * @param yaw current orientation of the drone (0 degrees = north, positive clockwise)
+ * @param tags reference parameter which is set to a string of indices representing detected tags
+ * @param errs reference parameter which is set to the errors detected by this analyzer (4 element array, x y z yaw errors in that order)
+ * @return true if target was detected, false otherwise (and errs remains unchanged if so)
+ * 
+ * */
+bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags, std::array<float, 4>& errs)
 {
-    float *errs = new float[4];
-
     int width = img.cols;
     Point2f image_center(img.cols / 2, img.rows / 2);
 
-    //Rotates target image and converts to greyscale
-    // Mat rot_mat = getRotationMatrix2D(image_center, -1.0*yaw, 1.0);
-    // warpAffine(img, img, rot_mat, Size(img.cols, img.rows), INTER_LINEAR, BORDER_CONSTANT, Scalar(255, 255, 255));
     cvtColor(img, img, COLOR_BGR2GRAY);
-
     image_u8_t im = {.width = img.cols, .height = img.rows, .stride = img.cols, .buf = img.data}; //Converts CV2 image to C-friendly image format
-
     zarray_t *dets = apriltag_detector_detect(m_tagDetector, &im); //Detects apriltags
 
     //Prints detected tags
@@ -159,10 +163,10 @@ float *ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tag
             //Cleanup
             apriltag_detection_destroy(det);
             zarray_destroy(dets);
-            return errs;
+            return true;
         }
         apriltag_detection_destroy(det);
     }
     zarray_destroy(dets);
-    return nullptr; //Tag not detected, returns nullptr
+    return false;
 }

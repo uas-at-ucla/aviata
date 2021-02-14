@@ -5,6 +5,7 @@
 #include <iostream>
 #include <future>
 #include <string>
+#include <memory>
 
 #include <opencv2/core.hpp>
 #include <opencv2/core/types.hpp>
@@ -73,6 +74,11 @@ bool Drone::connect_gazebo()
     return true;
 }
 
+/**
+ * Attempt to arm the drone.
+ * 
+ * @return true if successful, false otherwise.
+ * */
 bool Drone::arm() {
     std::string tag = "Arming";
 
@@ -89,7 +95,7 @@ bool Drone::arm() {
 }
 
 /**
- * Attempt to take off.
+ * Attempt to take off and start offboard mode. Drone must be armed first.
  * 
  * @return true if successful, false otherwise
  * */
@@ -197,7 +203,7 @@ bool Drone::stage1(int target_id)
 
     int failed_frames = 0;
     int successful_frames = 0;
-    PIDController *pid = new PIDController(m_dt);
+    PIDController pid(m_dt);
     Mat img;
     std::string tags = "";
 
@@ -205,16 +211,16 @@ bool Drone::stage1(int target_id)
     {
         high_resolution_clock::time_point t1 = high_resolution_clock::now();
         img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-        float *errs = image_analyzer.processImage(img, 0, m_yaw, tags); //Detects apriltags and calculates errors
+        std::array<float, 4> errs = {0, 0, 0, 0};
+        bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags, errs); //Detects apriltags and calculates errors
         log("Tags Detected", tags);
 
-        if (errs == nullptr) //Central target not found
+        if (!is_tag_detected) //Central target not found
         {
             log("No Tag Detected, Failed Frames", std::to_string(failed_frames) + "");
             if (m_down * -1.0 - m_target_info.alt > MAX_HEIGHT) //Above maximum height, docking fails
             {
                 log("Docking", "Error: above maximum height", true);
-                delete pid;
                 return false;
             }
             if (failed_frames > 1 / m_dt) //Ascends to try to find central target
@@ -232,7 +238,7 @@ bool Drone::stage1(int target_id)
         log("Docking", "Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
         offset_errors(errs, target_id); //Adjusts errors for stage 1 to stage 2 transition
         log("Docking", "Offset Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
-        float *velocities = pid->getVelocities(errs[0], errs[1], errs[2], 0.4); //Gets velocities for errors
+        std::array<float, 3> velocities = pid.getVelocities(errs[0], errs[1], errs[2], 0.4); //Gets velocities for errors
         log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
 
         //Checks if drone within correct tolerance
@@ -257,9 +263,6 @@ bool Drone::stage1(int target_id)
         change.down_m_s = velocities[2];
         offboard.set_velocity_ned(change);
 
-        delete errs; //Cleanup
-        delete velocities;
-
         //Calculates how long to wait to keep refresh rate constant
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
         duration<double, std::milli> d = (t2 - t1);
@@ -271,7 +274,6 @@ bool Drone::stage1(int target_id)
         }
     }
 
-    delete pid;
     return true;
 }
 
@@ -282,7 +284,7 @@ bool Drone::stage1(int target_id)
 void Drone::stage2(int target_id)
 {
     log("Stage 2", "Docking Beginning");
-    PIDController *pid = new PIDController(m_dt);
+    PIDController pid(m_dt);
     int successful_frames = 0;
     std::string tags = "";
     auto offboard = Offboard{m_system};
@@ -311,12 +313,13 @@ void Drone::stage2(int target_id)
     {
         //Update image and process for errors
         img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-        float *errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
+        std::array<float, 4> errs = {0, 0, 0, 0};
+        bool is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
         log("Tags Detected", tags);
         int checked_frames = 0;
         int docking_attempts = 0;
 
-        while (errs == nullptr) //Target tag not detected
+        while (!is_tag_detected) //Target tag not detected
         {
             checked_frames++;
             log("No Tag Detected", "Checked Frames: " + std::to_string(checked_frames) + "");
@@ -333,57 +336,54 @@ void Drone::stage2(int target_id)
                     log("DOCKING FAILED", "Maximum Attempts Exceeded", true);
                     safe_land();
 
-                    delete pid;
                     return;
                 }
                 img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-                errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
+                is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
 
                 //Ascends until max height or until peripheral target detected
-                while (errs == nullptr && m_down * -1.0 - m_target_info.alt < MAX_HEIGHT_STAGE_2)
+                while (!is_tag_detected && m_down * -1.0 - m_target_info.alt < MAX_HEIGHT_STAGE_2)
                 {
                     log("Docking", "Ascending for peripheral target");
                     Offboard::VelocityBodyYawspeed change{};
                     change.down_m_s = -0.2f;
                     offboard.set_velocity_body(change);
                     img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-                    errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
+                    is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
                 }
-                if (errs != nullptr) //Peripheral target detected, continues with docking normally
+                if (is_tag_detected) //Peripheral target detected, continues with docking normally
                     break;
 
                 log("Docking", "Peripheral target not detected, ascending for central target");
                 //Peripheral target not detected, ascend until max height reached or central target detected
-                while (errs == nullptr && m_down * -1.0 - m_target_info.alt < MAX_HEIGHT)
+                while (!is_tag_detected && m_down * -1.0 - m_target_info.alt < MAX_HEIGHT)
                 {
                     Offboard::VelocityBodyYawspeed change{};
                     change.down_m_s = -0.2f;
                     offboard.set_velocity_body(change);
                     img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-                    errs = image_analyzer.processImage(img, 0, m_yaw, tags);
+                    is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags, errs);
                 }
 
                 //Central target detected, re-attempt stage 1
-                if (errs != nullptr)
+                if (is_tag_detected)
                 {
                     log("Docking", "Central target detected, re-attempting stage 1");
                     stage1(target_id);
                     img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-                    errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
+                    is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
                     checked_frames = 0;
                 }
                 else //Maximum height exceeded, docking failure
                 {
                     log("DOCKING FAILED", "Maximum Height Exceeded", true);
                     safe_land();
-
-                    delete pid;
                     return;
                 }
             }
             sleep_for(milliseconds((int)m_dt * 1000));
             img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-            errs = image_analyzer.processImage(img, target_id, m_yaw, tags);
+            is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
             log("Tags Detected", tags);
         }
 
@@ -419,7 +419,7 @@ void Drone::stage2(int target_id)
         errs[1]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
         errs[2]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
 
-        float *velocities = pid->getVelocities(errs[0], errs[1], errs[2], 0.1); //Gets velocities for errors
+        std::array<float, 3> velocities = pid.getVelocities(errs[0], errs[1], errs[2], 0.1); //Gets velocities for errors
         log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
 
         //Updates drone velocities
@@ -430,12 +430,8 @@ void Drone::stage2(int target_id)
         change.down_m_s = velocities[2];
         offboard.set_velocity_ned(change);
 
-        //Cleanup
-        delete errs;
-        delete velocities;
         sleep_for(milliseconds((int)m_dt * 1000));
     }
-    delete pid;
 }
 
 //Method to move drone away from frame by ascending and moving to the north
@@ -502,7 +498,7 @@ void Drone::land()
 }
 
 //Utility method to adjust errors for stage 1
-void Drone::offset_errors(float *errs, int id)
+void Drone::offset_errors(std::array<float, 4>& errs, int id)
 {
     float target_offset = id <= 3 ? abs(id - 3) * 45 : (11 - id) * 45;
     float x = errs[0] + BOOM_LENGTH / 2 * cos(to_radians(target_offset - errs[3]));
@@ -571,11 +567,12 @@ void Drone::test1() {
         duration<double, std::milli> c1 = (f2 - f1);
 
         high_resolution_clock::time_point f3 = high_resolution_clock::now();
-        float *errs = image_analyzer.processImage(img, 0, m_yaw, tags_detected); //Detects apriltags and calculates errors
+        std::array<float, 4> errs = {0, 0, 0, 0};
+        bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags_detected, errs); //Detects apriltags and calculates errors
         high_resolution_clock::time_point f4 = high_resolution_clock::now();
         duration<double, std::milli> c2 = (f4 - f3);
 
-        if (errs != nullptr) {
+        if (!is_tag_detected) {
             log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) + 
                     " errors: " + std::to_string(errs[0]) + " " + std::to_string(errs[1]) + " " + std::to_string(errs[2]) + " " + std::to_string(errs[3]));
         } else {
@@ -630,10 +627,12 @@ void Drone::test2() {
     int count_frames = 0;
     while (time_span < 5 * 1000 /* 5 seconds */) {
         img = camera_simulator.update_current_image(1, 1, m_down * -1.0, m_yaw, 0);
-        float *errs = image_analyzer.processImage(img, 0, m_yaw, tags_detected);
+
+        std::array<float, 4> errs = {0, 0, 0, 0};
+        bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags_detected, errs);
 
         Offboard::VelocityNedYaw change{};
-        if (errs != nullptr) {
+        if (!is_tag_detected) {
             log(tag, "Errors: " + std::to_string(errs[0]) + " " + std::to_string(errs[1]) + " " + std::to_string(errs[2]) + " " + std::to_string(errs[3]));
             change.yaw_deg = errs[3];
         } else {

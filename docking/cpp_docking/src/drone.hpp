@@ -46,7 +46,7 @@ private:
 
     bool stage1(int target_id);
     void stage2(int target_id);
-    void offset_errors(float *errs, int target_id); // offset for stg 1->2 transition
+    void offset_errors(std::array<float, 4>& errs, int target_id); // offset for stg 1->2 transition
     void safe_land();
     void land();
 };
