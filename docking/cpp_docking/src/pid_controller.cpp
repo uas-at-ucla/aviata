@@ -10,9 +10,21 @@ PIDController::PIDController(float dt)
 {
     m_prev_errs = {0, 0, 0};
 }
-PIDController::~PIDController()
-{}
 
+PIDController::~PIDController()
+{
+}
+
+/**
+ * Apply PID logic to calculated errors to determine appropriate velocity.
+ * 
+ * @param x_err x (east) offset in meters
+ * @param y_err y (north) offset in meters
+ * @param alt_err z (altitude) offset in meters
+ * @param max_speed cap on the calculated errors
+ * @return 3-element array for x, y, z velocity in meters / second
+ * 
+ * */
 std::array<float, 3> PIDController::getVelocities(float x_err, float y_err, float alt_err, float max_speed)
 {
     std::array<float, 3> ans = {0, 0, 0};

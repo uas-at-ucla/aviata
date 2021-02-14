@@ -38,14 +38,14 @@ ImageAnalyzer::~ImageAnalyzer()
  * @return true if target was detected, false otherwise (and errs remains unchanged if so)
  * 
  * */
-bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags, std::array<float, 4>& errs)
+bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags, std::array<float, 4> &errs)
 {
     int width = img.cols;
     Point2f image_center(img.cols / 2, img.rows / 2);
 
     cvtColor(img, img, COLOR_BGR2GRAY);
     image_u8_t im = {.width = img.cols, .height = img.rows, .stride = img.cols, .buf = img.data}; //Converts CV2 image to C-friendly image format
-    zarray_t *dets = apriltag_detector_detect(m_tagDetector, &im); //Detects apriltags
+    zarray_t *dets = apriltag_detector_detect(m_tagDetector, &im);                                //Detects apriltags
 
     //Prints detected tags
     std::string tagsDetected = "";

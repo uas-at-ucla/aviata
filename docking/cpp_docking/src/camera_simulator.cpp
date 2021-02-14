@@ -17,7 +17,7 @@ CameraSimulator::CameraSimulator(Target target)
     : m_log_tag("Camera Sim"), m_target(target)
 {
     m_scale_constant = get_view_scale_constant(TARGET_SIZE);
-    m_peripheral_scale_constant = get_view_scale_constant(6.0); // should be 4.50, made it bigger for testing reliability. no longer correctly approximates targ size
+    m_peripheral_scale_constant = get_view_scale_constant(8.0); // should be 4.50, made it bigger for testing reliability. no longer correctly approximates targ size
                                                                 // should consider real life target size and whether rotation of peripheral targets in camera simulator
                                                                 // is the cause of missing the transition or if it truly is the size of the target
                                                                 // target 1 (no rotation relative to central target) works fine at 4.50, none of the others do (fail
@@ -38,11 +38,28 @@ void CameraSimulator::update_target_location(Target t)
     m_target = t;
 }
 
+/**
+ * Calculate the scaling constant for the image of the Apriltag we'll transform
+ * 
+ * @param target_size physical size of the target in centimeters
+ * @return scaling constant to use for calculations
+ * */
 float CameraSimulator::get_view_scale_constant(float target_size)
 {
     return DISPLAY_SCALE * target_size / 2.0 / 100.0;
 }
 
+/**
+ * Generates a picture corresponding to what the drone's on-board camera would see in real life
+ * 
+ * @param absLon the drone's x (east) position
+ * @param absLat the drone's y (north) position
+ * @param absAlt the drone's z (altitude) position
+ * @param absYaw the drone's rotation from north (0 degrees = north, positive clockwise to 180)
+ * @param target_id the target the drone is looking for
+ * @return an OpenCV image with what the drone sees from it's position
+ * 
+ * */
 Mat CameraSimulator::update_current_image(float absLon, float absLat, float absAlt, float absYaw, int target_id)
 {
 
@@ -146,7 +163,7 @@ Mat CameraSimulator::update_current_image(float absLon, float absLat, float absA
     imshow("Test", background);
     waitKey(1);
 
-    return background; // change to background later
+    return background;
 }
 
 void CameraSimulator::rotate_image(Mat &image, double angle)

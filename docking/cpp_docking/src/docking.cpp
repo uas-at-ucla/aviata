@@ -1,5 +1,4 @@
 #include "drone.hpp"
-#include "camera_simulator.hpp" // temporary
 
 int main(/*int argc, char** argv */)
 {

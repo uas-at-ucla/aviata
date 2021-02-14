@@ -79,7 +79,8 @@ bool Drone::connect_gazebo()
  * 
  * @return true if successful, false otherwise.
  * */
-bool Drone::arm() {
+bool Drone::arm()
+{
     std::string tag = "Arming";
 
     // Arm the drone
@@ -152,7 +153,25 @@ bool Drone::takeoff()
 //Starts docking process
 void Drone::initiate_docking(int target_id)
 {
+    // set up telemetry updates; happens in background through callbacks
+    auto telemetry = Telemetry{m_system}; // NOTE: telemetry updates are only received as long as the telemetry pointer is alive
+    const Telemetry::Result set_rate_result_p = telemetry.set_rate_position_velocity_ned(40);
+    const Telemetry::Result set_rate_result_a = telemetry.set_rate_attitude(40);
+    if (set_rate_result_a != Telemetry::Result::Success || set_rate_result_p != Telemetry::Result::Success)
+    {
+        std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
+        std::cout << "Setting position rate possibly failed:" << set_rate_result_p << '\n';
+    }
 
+    // Subscribe to getting periodic telemetry updates with lambda function
+    telemetry.subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
+        set_position(p.position.north_m, p.position.east_m, p.position.down_m);
+    });
+    telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
+        set_yaw(e.yaw_deg);
+    });
+
+    // begin docking
     bool stage1_outcome = stage1(target_id);
     if (stage1_outcome)
     {
@@ -176,36 +195,18 @@ void Drone::set_yaw(float yaw)
 /*
  * Attempts stage 1 of docking process
  * @return true if successful
- */
+ * */
 bool Drone::stage1(int target_id)
 {
     log("Stage 1", "Docking Beginning");
-    auto telemetry = Telemetry{m_system}; // NOTE: telemetry updates are only received as long as the telemetry pointer is alive
-                                          // will need to either resubscribe in stage 2 or move this to initiate_docking to keep it alive
-                                          // and pass as argument to stage1(), stage2()
-    const Telemetry::Result set_rate_result_p = telemetry.set_rate_position_velocity_ned(40);
-    const Telemetry::Result set_rate_result_a = telemetry.set_rate_attitude(40);
-    if (set_rate_result_a != Telemetry::Result::Success || set_rate_result_p != Telemetry::Result::Success)
-    {
-        std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
-        std::cout << "Setting position rate possibly failed:" << set_rate_result_p << '\n';
-    }
-
-    // Subscribe to getting periodic telemetry updates with lambda function
-    telemetry.subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
-        set_position(p.position.north_m, p.position.east_m, p.position.down_m);
-    });
-    telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
-        set_yaw(e.yaw_deg);
-    });
 
     auto offboard = Offboard{m_system};
+    PIDController pid(m_dt);
+    std::string tags = "";
+    Mat img;
 
     int failed_frames = 0;
     int successful_frames = 0;
-    PIDController pid(m_dt);
-    Mat img;
-    std::string tags = "";
 
     while (true)
     {
@@ -284,31 +285,13 @@ bool Drone::stage1(int target_id)
 void Drone::stage2(int target_id)
 {
     log("Stage 2", "Docking Beginning");
-    PIDController pid(m_dt);
-    int successful_frames = 0;
-    std::string tags = "";
     auto offboard = Offboard{m_system};
-    // Register for attitude updates
-    auto telemetry = Telemetry{m_system}; // NOTE: telemetry updates are only received as long as the telemetry pointer is alive
-                                          // will need to either resubscribe in stage 2 or move this to initiate_docking to keep it alive
-                                          // and pass as argument to stage1(), stage2()
-    const Telemetry::Result set_rate_result_p = telemetry.set_rate_position_velocity_ned(40);
-    const Telemetry::Result set_rate_result_a = telemetry.set_rate_attitude(40);
-    if (set_rate_result_a != Telemetry::Result::Success || set_rate_result_p != Telemetry::Result::Success)
-    {
-        std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
-        std::cout << "Setting position rate possibly failed:" << set_rate_result_p << '\n';
-    }
-
-    // Subscribe to getting periodic telemetry updates with lambda function
-    telemetry.subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
-        set_position(p.position.north_m, p.position.east_m, p.position.down_m);
-    });
-    telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
-        set_yaw(e.yaw_deg);
-    });
-
+    std::string tags = "";
+    PIDController pid(m_dt);
     Mat img;
+
+    int successful_frames = 0;
+
     while (true)
     {
         //Update image and process for errors
@@ -401,23 +384,23 @@ void Drone::stage2(int target_id)
         if (successful_frames > 1 / m_dt) //Docking success, within range for 1 second
             break;
 
-        
         //Adjusts errors to prevent rotating out of frame
         if (errs[0] < STAGE_1_TOLERANCE && errs[0] > -1.0 * STAGE_1_TOLERANCE && errs[1] < STAGE_1_TOLERANCE && errs[1] > -1.0 * STAGE_1_TOLERANCE)
         {
-            errs[3]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
+            errs[3] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
         }
-        else{
-            errs[3]-=90;
-            errs[3]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
+        else
+        {
+            errs[3] -= 90;
+            errs[3] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
         }
 
         log("Docking", "Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
-        
+
         //Adjusts errors to decrease overshooting
-        errs[0]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
-        errs[1]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
-        errs[2]*=tanh(OVERSHOOT_CONSTANT*errs[2]*errs[2]);
+        errs[0] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
+        errs[1] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
+        errs[2] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
 
         std::array<float, 3> velocities = pid.getVelocities(errs[0], errs[1], errs[2], 0.1); //Gets velocities for errors
         log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
@@ -465,7 +448,8 @@ void Drone::land()
     }
 
     const Action::Result land_result = action.land();
-    if (land_result != Action::Result::Success) {
+    if (land_result != Action::Result::Success)
+    {
         log("Landing", "Land failed, error code on next line", true);
         std::cout << "Code: " << land_result << std::endl;
         return;
@@ -498,7 +482,7 @@ void Drone::land()
 }
 
 //Utility method to adjust errors for stage 1
-void Drone::offset_errors(std::array<float, 4>& errs, int id)
+void Drone::offset_errors(std::array<float, 4> &errs, int id)
 {
     float target_offset = id <= 3 ? abs(id - 3) * 45 : (11 - id) * 45;
     float x = errs[0] + BOOM_LENGTH / 2 * cos(to_radians(target_offset - errs[3]));
@@ -510,14 +494,17 @@ void Drone::offset_errors(std::array<float, 4>& errs, int id)
 
 /////////////// Testing functions
 
-void Drone::test0() {
+void Drone::test0()
+{
     bool arm_code = arm();
-    if (!arm_code) {
+    if (!arm_code)
+    {
         log("Test 0", "Failed to arm");
         return;
     }
     bool takeoff_code = takeoff();
-    if (!takeoff_code) {
+    if (!takeoff_code)
+    {
         log("Test 0", "Failed to take off");
         return;
     }
@@ -527,7 +514,8 @@ void Drone::test0() {
     int time_span = 0;
     auto offboard = Offboard{m_system};
     high_resolution_clock::time_point start = high_resolution_clock::now();
-    while (time_span < 1000 * 5) {
+    while (time_span < 1000 * 5)
+    {
         Offboard::VelocityNedYaw stay{};
         offboard.set_velocity_ned(stay);
         high_resolution_clock::time_point now = high_resolution_clock::now();
@@ -538,14 +526,17 @@ void Drone::test0() {
     land();
 }
 
-void Drone::test1() {
+void Drone::test1()
+{
     bool arm_code = arm();
-    if (!arm_code) {
+    if (!arm_code)
+    {
         log("Test 1", "Failed to arm");
         return;
     }
     bool takeoff_code = takeoff();
-    if (!takeoff_code) {
+    if (!takeoff_code)
+    {
         log("Test 1", "Failed to take off");
         return;
     }
@@ -560,7 +551,8 @@ void Drone::test1() {
     int time_span = 0;
     int count_frames = 0;
     auto offboard = Offboard{m_system};
-    while (time_span < 5 * 1000 /* 5 seconds */) {
+    while (time_span < 5 * 1000 /* 5 seconds */)
+    {
         high_resolution_clock::time_point f1 = high_resolution_clock::now();
         img = camera_simulator.update_current_image(0, 0, 5, 0, 0); // this is blocking
         high_resolution_clock::time_point f2 = high_resolution_clock::now();
@@ -572,10 +564,13 @@ void Drone::test1() {
         high_resolution_clock::time_point f4 = high_resolution_clock::now();
         duration<double, std::milli> c2 = (f4 - f3);
 
-        if (!is_tag_detected) {
-            log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) + 
-                    " errors: " + std::to_string(errs[0]) + " " + std::to_string(errs[1]) + " " + std::to_string(errs[2]) + " " + std::to_string(errs[3]));
-        } else {
+        if (!is_tag_detected)
+        {
+            log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
+                         " errors: " + std::to_string(errs[0]) + " " + std::to_string(errs[1]) + " " + std::to_string(errs[2]) + " " + std::to_string(errs[3]));
+        }
+        else
+        {
             log(tag, "Failed to find Apriltag");
         }
 
@@ -595,15 +590,18 @@ void Drone::test1() {
     land();
 }
 
-void Drone::test2() {
+void Drone::test2()
+{
     std::string tag = "Test 2";
     bool arm_code = arm();
-    if (!arm_code) {
+    if (!arm_code)
+    {
         log(tag, "Failed to arm");
         return;
     }
     bool takeoff_code = takeoff();
-    if (!takeoff_code) {
+    if (!takeoff_code)
+    {
         log(tag, "Failed to take off");
         return;
     }
@@ -625,17 +623,21 @@ void Drone::test2() {
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     int time_span = 0;
     int count_frames = 0;
-    while (time_span < 5 * 1000 /* 5 seconds */) {
+    while (time_span < 5 * 1000 /* 5 seconds */)
+    {
         img = camera_simulator.update_current_image(1, 1, m_down * -1.0, m_yaw, 0);
 
         std::array<float, 4> errs = {0, 0, 0, 0};
         bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags_detected, errs);
 
         Offboard::VelocityNedYaw change{};
-        if (!is_tag_detected) {
+        if (!is_tag_detected)
+        {
             log(tag, "Errors: " + std::to_string(errs[0]) + " " + std::to_string(errs[1]) + " " + std::to_string(errs[2]) + " " + std::to_string(errs[3]));
             change.yaw_deg = errs[3];
-        } else {
+        }
+        else
+        {
             log(tag, "Failed to find Apriltag");
             change.yaw_deg = m_yaw;
         }
