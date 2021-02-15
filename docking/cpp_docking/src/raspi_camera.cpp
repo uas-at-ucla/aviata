@@ -38,7 +38,7 @@ RaspiCamera::RaspiCamera(Target target)
     }
 }
 
-Mat RaspiCamera::update_current_image(float unused1, float unused2, float unused3, float unused4, int unused5 = 0)
+Mat RaspiCamera::update_current_image(float unused1, float unused2, float unused3, float unused4, int unused5)
 {
     // unused variables, kept to match CameraSimulator's API
     UNUSED(unused1);

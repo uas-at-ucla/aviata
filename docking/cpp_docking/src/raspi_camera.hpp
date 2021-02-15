@@ -2,8 +2,8 @@
 #define RASPI_CAMERA_H_
 
 #include "util.hpp"
-#include <raspicam/raspicam_cv.h>
 #include <opencv2/core.hpp>
+#include <opencv2/videoio.hpp>
 
 class RaspiCamera
 {

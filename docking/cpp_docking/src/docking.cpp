@@ -8,9 +8,10 @@ int main(/*int argc, char** argv */)
 
     Drone drone(t);
     drone.connect_gazebo();
-    drone.arm();
-    drone.takeoff(3);
-    drone.initiate_docking(1);
+    drone.test1();
+    // drone.arm();
+    // drone.takeoff(3);
+    // drone.initiate_docking(1);
     //drone.test2();
 
     return 0;
