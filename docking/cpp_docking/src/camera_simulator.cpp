@@ -33,11 +33,6 @@ CameraSimulator::CameraSimulator(Target target)
     }
 }
 
-void CameraSimulator::update_target_location(Target t)
-{
-    m_target = t;
-}
-
 /**
  * Calculate the scaling constant for the image of the Apriltag we'll transform
  * 

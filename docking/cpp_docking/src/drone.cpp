@@ -21,7 +21,7 @@ using namespace std::chrono;
 using std::this_thread::sleep_for;
 
 Drone::Drone(Target t)
-    : camera_simulator(t), image_analyzer(), m_north(0), m_east(0), m_down(-5), m_yaw(0), m_target_info(t), m_dt(0.05)
+    : camera(t), image_analyzer(), m_north(0), m_east(0), m_down(-5), m_yaw(0), m_target_info(t), m_dt(0.05)
 {
 }
 
@@ -34,7 +34,14 @@ Drone::Drone(Target t)
 bool Drone::connect_gazebo()
 {
     std::string tag = "Connecting";
-    std::string connection_url = "udp://:14540"; // change as needed, or add command-line parsing
+
+    std::string connection_url;
+    #if USE_RASPI_CAMERA == 1
+        connection_url = "serial:///dev/ttyAMA0:921600";
+    #else
+        connection_url = "udp://:14540";
+    #endif
+
     ConnectionResult connection_result = mavsdk.add_any_connection(connection_url);
 
     if (connection_result != ConnectionResult::Success)
@@ -100,7 +107,7 @@ bool Drone::arm()
  * 
  * @return true if successful, false otherwise
  * */
-bool Drone::takeoff()
+bool Drone::takeoff(int takeoff_alt)
 {
     std::string tag = "Takeoff";
     std::promise<void> in_air_promise;
@@ -108,7 +115,7 @@ bool Drone::takeoff()
 
     // Attempt to take off
     auto action = Action{m_system};
-    action.set_takeoff_altitude(3);
+    action.set_takeoff_altitude(takeoff_alt);
     Action::Result takeoff_result = action.takeoff();
     if (takeoff_result != Action::Result::Success)
     {
@@ -211,7 +218,7 @@ bool Drone::stage1(int target_id)
     while (true)
     {
         high_resolution_clock::time_point t1 = high_resolution_clock::now();
-        img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+        img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
         std::array<float, 4> errs = {0, 0, 0, 0};
         bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags, errs); //Detects apriltags and calculates errors
         log("Tags Detected", tags);
@@ -295,7 +302,7 @@ void Drone::stage2(int target_id)
     while (true)
     {
         //Update image and process for errors
-        img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
+        img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
         std::array<float, 4> errs = {0, 0, 0, 0};
         bool is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
         log("Tags Detected", tags);
@@ -321,7 +328,7 @@ void Drone::stage2(int target_id)
 
                     return;
                 }
-                img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
+                img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
                 is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
 
                 //Ascends until max height or until peripheral target detected
@@ -331,7 +338,7 @@ void Drone::stage2(int target_id)
                     Offboard::VelocityBodyYawspeed change{};
                     change.down_m_s = -0.2f;
                     offboard.set_velocity_body(change);
-                    img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
+                    img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
                     is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
                 }
                 if (is_tag_detected) //Peripheral target detected, continues with docking normally
@@ -344,7 +351,7 @@ void Drone::stage2(int target_id)
                     Offboard::VelocityBodyYawspeed change{};
                     change.down_m_s = -0.2f;
                     offboard.set_velocity_body(change);
-                    img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                    img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
                     is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags, errs);
                 }
 
@@ -353,7 +360,7 @@ void Drone::stage2(int target_id)
                 {
                     log("Docking", "Central target detected, re-attempting stage 1");
                     stage1(target_id);
-                    img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
+                    img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
                     is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
                     checked_frames = 0;
                 }
@@ -365,7 +372,7 @@ void Drone::stage2(int target_id)
                 }
             }
             sleep_for(milliseconds((int)m_dt * 1000));
-            img = camera_simulator.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
+            img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
             is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
             log("Tags Detected", tags);
         }
@@ -502,7 +509,7 @@ void Drone::test0()
         log("Test 0", "Failed to arm");
         return;
     }
-    bool takeoff_code = takeoff();
+    bool takeoff_code = takeoff(1);
     if (!takeoff_code)
     {
         log("Test 0", "Failed to take off");
@@ -534,7 +541,7 @@ void Drone::test1()
         log("Test 1", "Failed to arm");
         return;
     }
-    bool takeoff_code = takeoff();
+    bool takeoff_code = takeoff(1);
     if (!takeoff_code)
     {
         log("Test 1", "Failed to take off");
@@ -554,7 +561,7 @@ void Drone::test1()
     while (time_span < 5 * 1000 /* 5 seconds */)
     {
         high_resolution_clock::time_point f1 = high_resolution_clock::now();
-        img = camera_simulator.update_current_image(0, 0, 5, 0, 0); // this is blocking
+        img = camera.update_current_image(0, 0, 5, 0, 0); // this is blocking
         high_resolution_clock::time_point f2 = high_resolution_clock::now();
         duration<double, std::milli> c1 = (f2 - f1);
 
@@ -568,9 +575,7 @@ void Drone::test1()
         {
             log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
                          " errors: " + std::to_string(errs[0]) + " " + std::to_string(errs[1]) + " " + std::to_string(errs[2]) + " " + std::to_string(errs[3]));
-        }
-        else
-        {
+        } else {
             log(tag, "Failed to find Apriltag");
         }
 
@@ -599,7 +604,7 @@ void Drone::test2()
         log(tag, "Failed to arm");
         return;
     }
-    bool takeoff_code = takeoff();
+    bool takeoff_code = takeoff(1);
     if (!takeoff_code)
     {
         log(tag, "Failed to take off");
@@ -616,16 +621,13 @@ void Drone::test2()
     telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
         set_yaw(e.yaw_deg);
     });
-    telemetry.subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
-        set_position(p.position.north_m, p.position.east_m, p.position.down_m);
-    });
 
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     int time_span = 0;
     int count_frames = 0;
     while (time_span < 5 * 1000 /* 5 seconds */)
     {
-        img = camera_simulator.update_current_image(1, 1, m_down * -1.0, m_yaw, 0);
+        img = camera.update_current_image(1, 1, 0, 0, 0);
 
         std::array<float, 4> errs = {0, 0, 0, 0};
         bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags_detected, errs);
@@ -635,9 +637,7 @@ void Drone::test2()
         {
             log(tag, "Errors: " + std::to_string(errs[0]) + " " + std::to_string(errs[1]) + " " + std::to_string(errs[2]) + " " + std::to_string(errs[3]));
             change.yaw_deg = errs[3];
-        }
-        else
-        {
+        } else {
             log(tag, "Failed to find Apriltag");
             change.yaw_deg = m_yaw;
         }
@@ -650,6 +650,6 @@ void Drone::test2()
         count_frames++;
     }
 
-    log("Test 1", "Done holding");
+    log(tag, "Done holding");
     land();
 }

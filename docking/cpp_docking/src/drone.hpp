@@ -7,7 +7,14 @@
 #define STAGE_1_TOLERANCE 0.10
 #define STAGE_2_TOLERANCE 0.05
 
-#include "camera_simulator.hpp"
+#if USE_RASPI_CAMERA == 1
+    #include "raspi_camera.hpp"
+    typedef RaspiCamera Camera;
+#else
+    #include "camera_simulator.hpp"
+    typedef CameraSimulator Camera;
+#endif
+
 #include "image_analyzer.hpp"
 #include <mavsdk/mavsdk.h>
 
@@ -20,7 +27,7 @@ public:
     Drone(Target t);
     bool connect_gazebo();
     bool arm();
-    bool takeoff();
+    bool takeoff(int takeoff_alt);
     void initiate_docking(int target_id);
 
     // testing functions
@@ -30,7 +37,7 @@ public:
 
 private:
     Mavsdk mavsdk;
-    CameraSimulator camera_simulator;
+    Camera camera;
     ImageAnalyzer image_analyzer;
     Target m_target_info;
 
