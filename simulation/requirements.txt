@@ -5,3 +5,4 @@ pyquaternion
 PyOpenGL
 PyOpenGL_accelerate
 toml
+cvxpy

@@ -41,6 +41,7 @@ Generates c/cpp header/source files for multirotor mixers
 from geometry descriptions files (.toml format)
 """
 import sys
+import optimize_saturation
 
 try:
     import toml
@@ -193,7 +194,10 @@ def geometry_to_mix(geometry):
     A = np.vstack([Am, At])
 
     # Mix matrix computed as pseudoinverse of A
-    B = np.linalg.pinv(A) # TODO maybe change to a different generalized inverse (try to minimize motor saturation)
+    B = np.linalg.pinv(A)
+
+    # Optimal inverse to minimize motor saturation:
+    # B = optimize_saturation.optimal_inverse(A)
 
     return A, B
 
