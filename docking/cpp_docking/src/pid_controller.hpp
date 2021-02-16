@@ -1,16 +1,18 @@
 #ifndef PID_H
 #define PID_H
 
+#include <array>
+
 //PID Controller class
 class PIDController
 {
 public:
     PIDController(float dt);
     ~PIDController();
-    float *getVelocities(float x_err, float y_err, float alt_err, float max_speed);
+    std::array<float, 3> getVelocities(float x_err, float y_err, float alt_err, float max_speed);
 
 private:
     float m_dt;
-    float *m_prev_errs;
+    std::array<float, 3> m_prev_errs;
 };
 #endif //PID_H

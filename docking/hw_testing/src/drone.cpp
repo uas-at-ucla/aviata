@@ -96,7 +96,7 @@ bool Drone::takeoff()
     auto in_air_future = in_air_promise.get_future();
 
     auto action = Action{m_system};
-    action.set_takeoff_altitude(3);
+    action.set_takeoff_altitude(1);
     Action::Result takeoff_result = action.takeoff();
     if (takeoff_result != Action::Result::Success)
     {

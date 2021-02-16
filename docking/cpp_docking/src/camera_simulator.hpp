@@ -11,7 +11,6 @@ class CameraSimulator
 
 public:
     CameraSimulator(Target target);
-    void update_target_location(Target target);
     Mat update_current_image(float absLon, float absLat, float absAlt, float absYaw, int target_id = 0);
 
 private:

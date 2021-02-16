@@ -1,28 +1,33 @@
-#ifndef PID
-#define PID
-
 #include "util.hpp"
 #include "pid_controller.hpp"
 #include <cstdlib>
+#include <array>
 #include <algorithm>
 #include <string>
 
 PIDController::PIDController(float dt)
     : m_dt(dt)
 {
-    m_prev_errs = new float[3];
-    m_prev_errs[0] = 0;
-    m_prev_errs[1] = 0;
-    m_prev_errs[2] = 0;
-}
-PIDController::~PIDController()
-{
-    delete[] m_prev_errs;
+    m_prev_errs = {0, 0, 0};
 }
 
-float *PIDController::getVelocities(float x_err, float y_err, float alt_err, float max_speed)
+PIDController::~PIDController()
 {
-    float *ans = new float[3];
+}
+
+/**
+ * Apply PID logic to calculated errors to determine appropriate velocity.
+ * 
+ * @param x_err x (east) offset in meters
+ * @param y_err y (north) offset in meters
+ * @param alt_err z (altitude) offset in meters
+ * @param max_speed cap on the calculated errors
+ * @return 3-element array for x, y, z velocity in meters / second
+ * 
+ * */
+std::array<float, 3> PIDController::getVelocities(float x_err, float y_err, float alt_err, float max_speed)
+{
+    std::array<float, 3> ans = {0, 0, 0};
     float ku_nv = 2.6;
     float ku_ev = 2.15;
     float ku_dv = 3.5;
@@ -64,4 +69,3 @@ float *PIDController::getVelocities(float x_err, float y_err, float alt_err, flo
 
     return ans;
 }
-#endif
