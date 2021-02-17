@@ -78,7 +78,6 @@ void PX4IO::call_queued_mavsdk_callbacks() {
 
 // @return 1 if successful, 0 otherwise
 int PX4IO::arm_system()
-//return 0 if fail, 1 if successs
 {
     while (telemetry->health_all_ok() != true) {
         std::cout << drone_id << " is getting ready to arm." << std::endl;
@@ -122,6 +121,32 @@ int PX4IO::disarm_system()
 }
 
 // @return 1 if successful, 0 otherwise
+int PX4IO::arm()
+{
+    std::cout << "Arming " << drone_id << std::endl;
+    const Action::Result result = action->arm();
+    if (result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to arm: " << result << NORMAL_CONSOLE_TEXT
+                  << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+// @return 1 if successful, 0 otherwise
+int PX4IO::disarm()
+{
+    std::cout << "Disarming " << drone_id << std::endl;
+    const Action::Result result = action->disarm();
+    if (result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to disarm: " << result << NORMAL_CONSOLE_TEXT
+                  << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+// @return 1 if successful, 0 otherwise
 int PX4IO::set_offboard_mode() {
     MavlinkPassthrough::CommandLong offboard_command;
     offboard_command.target_sysid = target_system;
@@ -129,7 +154,26 @@ int PX4IO::set_offboard_mode() {
     offboard_command.command = MAV_CMD_DO_SET_MODE;
     offboard_command.param1 = VEHICLE_MODE_FLAG_CUSTOM_MODE_ENABLED;
     offboard_command.param2 = PX4_CUSTOM_MAIN_MODE_OFFBOARD;
-    mavlink_passthrough->send_command_long(offboard_command); // TODO check success
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(offboard_command);
+    if (result != MavlinkPassthrough::Result::Success) {
+        return 0;
+    }
+    return 1;
+}
+
+// @return 1 if successful, 0 otherwise
+int PX4IO::set_hold_mode() {
+    MavlinkPassthrough::CommandLong command;
+    command.target_sysid = target_system;
+    command.target_compid = target_component;
+    command.command = MAV_CMD_DO_SET_MODE;
+    command.param1 = VEHICLE_MODE_FLAG_CUSTOM_MODE_ENABLED;
+    command.param2 = PX4_CUSTOM_MAIN_MODE_AUTO;
+    command.param3 = PX4_CUSTOM_SUB_MODE_AUTO_LOITER;
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(command);
+    if (result != MavlinkPassthrough::Result::Success) {
+        return 0;
+    }
     return 1;
 }
 
@@ -245,8 +289,8 @@ int PX4IO::set_attitude_target(mavlink_set_attitude_target_t& att_target_struct)
     uint16_t encode_result; //encode function returns a uint16_t, not sure what it represents
     encode_result = mavlink_msg_set_attitude_target_encode(our_system_id, our_component_id, &set_attitude_target_message, &att_target_struct);
 
-    MavlinkPassthrough::Result set_att_result = mavlink_passthrough->send_message(set_attitude_target_message);
-    if ( set_att_result != MavlinkPassthrough::Result::Success){
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_message(set_attitude_target_message);
+    if (result != MavlinkPassthrough::Result::Success) {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to set attitude and thrust." 
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
@@ -254,7 +298,85 @@ int PX4IO::set_attitude_target(mavlink_set_attitude_target_t& att_target_struct)
     return 1;    
 }
 
+void PX4IO::subscribe_flight_mode(std::function<void(Telemetry::FlightMode)> user_callback) {
+        mavsdk_callback_manager.subscribe_mavsdk_callback<Telemetry::FlightMode>(
+        [this](std::function<void(Telemetry::FlightMode)> callback) {
+            telemetry->subscribe_flight_mode(callback);
+        },
+        user_callback
+    );
+}
 
+void PX4IO::unsubscribe_flight_mode() {
+    telemetry->subscribe_flight_mode(nullptr);
+}
+
+void PX4IO::subscribe_status_text(std::function<void(Telemetry::StatusText)> user_callback) {
+        mavsdk_callback_manager.subscribe_mavsdk_callback<Telemetry::StatusText>(
+        [this](std::function<void(Telemetry::StatusText)> callback) {
+            telemetry->subscribe_status_text(callback);
+        },
+        user_callback
+    );
+}
+
+void PX4IO::unsubscribe_status_text() {
+    telemetry->subscribe_status_text(nullptr);
+}
+
+void PX4IO::subscribe_armed(std::function<void(bool)> user_callback) {
+        mavsdk_callback_manager.subscribe_mavsdk_callback<bool>(
+        [this](std::function<void(bool)> callback) {
+            telemetry->subscribe_armed(callback);
+        },
+        user_callback
+    );
+}
+
+void PX4IO::unsubscribe_armed() {
+    telemetry->subscribe_armed(nullptr);
+}
+
+int PX4IO::dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing)
+{
+    MavlinkPassthrough::CommandLong cmd;
+    cmd.target_sysid = sys->get_system_id();
+    cmd.target_compid = 0;
+    cmd.command = MAV_CMD_AVIATA_FINALIZE_DOCKING;
+    cmd.param1 = docking_slot;
+    float* missing_drone_ptrs[] = {&cmd.param2, &cmd.param3, &cmd.param4, &cmd.param5, &cmd.param6, &cmd.param7};
+    uint8_t i = 0;
+    for (; i < n_missing && i < 6; i++) {
+        *missing_drone_ptrs[i] = missing_drones[i];
+    }
+    for (; i < 6; i++) {
+        *missing_drone_ptrs[i] = NAN;
+    }
+    
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
+    if (result != MavlinkPassthrough::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send docking MAVLink command." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+int PX4IO::undock()
+{
+    MavlinkPassthrough::CommandLong cmd;
+    cmd.target_sysid = sys->get_system_id();
+    cmd.target_compid = 0;
+    cmd.command = MAV_CMD_AVIATA_SET_STANDALONE;
+    
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
+    if (result != MavlinkPassthrough::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send undocking MAVLink command." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;
+}
 
 ////////////////////////////////////////////
 // example code below

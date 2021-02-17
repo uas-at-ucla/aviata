@@ -2,8 +2,7 @@
 
 import numpy as np
 import px4_mixer_multirotor
-import generate_matrices
-import constants
+import config
 import graphics
 from drones import *
 from OpenGL.GLUT import *
@@ -11,7 +10,8 @@ from OpenGL.GLUT import *
 
 def mixer_test(): # test
     missing_drones = [] # 0 through 7
-    geometry, geometries = generate_matrices.generate_aviata_matrices(missing_drones)
+    geometry_prime = config.generate_matrices.generate_aviata_matrices()
+    geometry = config.generate_matrices.generate_aviata_matrices(missing_drones, geometry_prime)
     mixer = geometry['mix']['B_px_4dof']
     actuator_effectiveness = geometry['mix']['A_4dof']
 
@@ -38,13 +38,13 @@ def mixer_test(): # test
 
 
 def pos_control_test():
-    missing_drones = [0] # 0 through 7
+    missing_drones = [] # 0 through 7
     sample_period_ms = 50
     # forces_setpoint = np.matrix([0.0007, 0.0, 0.2, 0.63]).T
     pos_setpoint = np.array([0.0, 0.0, 0.0])
     yaw_setpoint = 0
 
-    world = PhysicalWorld(constants.num_drones, sample_period_ms)
+    world = PhysicalWorld(config.constants.num_drones, sample_period_ms)
     world.set_missing_drones(missing_drones)
     world.leader_drone.set_pos_setpoint(pos_setpoint, yaw_setpoint)
 

@@ -41,6 +41,7 @@ Generates c/cpp header/source files for multirotor mixers
 from geometry descriptions files (.toml format)
 """
 import sys
+import optimize_saturation
 
 try:
     import toml
@@ -193,7 +194,10 @@ def geometry_to_mix(geometry):
     A = np.vstack([Am, At])
 
     # Mix matrix computed as pseudoinverse of A
-    B = np.linalg.pinv(A) # TODO maybe change to a different generalized inverse (try to minimize motor saturation)
+    B = np.linalg.pinv(A)
+
+    # Optimal inverse to minimize motor saturation:
+    # B = optimize_saturation.optimal_inverse(A)
 
     return A, B
 
@@ -250,7 +254,7 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
 
     buf.write(u"static constexpr float _config_aviata_drone_angle[] {\n")
     for drone_angle in geometries_list[0]['drone_angles']:
-        buf.write(u"\t{:9f},\n".format(drone_angle))
+        buf.write(u"\t{:9f}, // {:.1f} degrees\n".format(drone_angle, np.rad2deg(drone_angle)))
     buf.write(u"};\n\n")
     
     # Print enum

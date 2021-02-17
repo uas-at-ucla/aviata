@@ -3,46 +3,60 @@
 
 #define MAX_ATTEMPTS 3
 #define MAX_HEIGHT 10
-#define MAX_HEIGHT_STAGE_2 10
+#define MAX_HEIGHT_STAGE_2 3
 #define STAGE_1_TOLERANCE 0.10
 #define STAGE_2_TOLERANCE 0.05
 
-#include "camera_simulator.hpp"
+#if USE_RASPI_CAMERA == 1
+    #include "raspi_camera.hpp"
+    typedef RaspiCamera Camera;
+#else
+    #include "camera_simulator.hpp"
+    typedef CameraSimulator Camera;
+#endif
+
 #include "image_analyzer.hpp"
 #include <mavsdk/mavsdk.h>
 
 using namespace mavsdk;
-const float ALTITUDE_DISP = BOOM_LENGTH/2/tan(to_radians(CAMERA_FOV_VERTICAL/2))*2;
-class Drone {
+const float ALTITUDE_DISP = BOOM_LENGTH / 2 / tan(to_radians(CAMERA_FOV_VERTICAL / 2)) * 2;
+class Drone
+{
 
-public: 
+public:
     Drone(Target t);
     bool connect_gazebo();
-    bool takeoff();
+    bool arm();
+    bool takeoff(int takeoff_alt);
     void initiate_docking(int target_id);
+
+    // testing functions
+    void test0();
+    void test1();
+    void test2();
 
 private:
     Mavsdk mavsdk;
-    CameraSimulator camera_simulator;
-    ImageAnalyzer image_analyzer; 
+    Camera camera;
+    ImageAnalyzer image_analyzer;
+    Target m_target_info;
+
     float m_north;
     float m_east;
     float m_down;
     float m_yaw;
-    Target m_target_info;
     float m_dt; // loop cycle time, seconds
 
     std::shared_ptr<mavsdk::System> m_system; // pointer to mavsdk connection to drone
 
     void set_position(float n, float e, float d); // set position obtained from telemetry
-    void set_yaw(float yaw); // set yaw angle obtained from telemetry
+    void set_yaw(float yaw);                      // set yaw angle obtained from telemetry
 
     bool stage1(int target_id);
     void stage2(int target_id);
-    void offset_errors(float* errs, int target_id); // offset for stg 1->2 transition
+    void offset_errors(std::array<float, 4> &errs, int target_id); // offset for stg 1->2 transition
     void safe_land();
     void land();
 };
-
 
 #endif // DRONE_H_

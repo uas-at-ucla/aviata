@@ -27,13 +27,12 @@ cmake --build build/default && \
 cd build/default && \
 sudo make install) || echo "Skipping MAVSDK"
 
-# OONF
+# OONF (custom fork)
 cd ~
 (git clone https://github.com/AusarYao/OONF.git && sudo apt install -y libnl-3-dev && \
 cd OONF/build && \
 cmake .. && \
-make && \
-sudo make install) || echo "Skipping OONF"
+make) || echo "Skipping OONF"
 
 # ROS2
 cd ~

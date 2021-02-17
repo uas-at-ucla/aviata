@@ -6,8 +6,13 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 import matplotlib.pyplot as plt
 from itertools import combinations
-import constants
 import px4_generate_mixer
+
+constants = None
+
+def configure_constants(constants_selection):
+    global constants
+    constants = constants_selection
 
 TWO_PI = math.pi * 2
 
@@ -36,12 +41,10 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
     drone_rotors_sequential = []
     CW = False
     angle = (TWO_PI/constants.num_rotors) / 2
-    if constants.drones_face_inward:
-        angle -= math.pi
     for i in range(constants.num_rotors):
         rotor_pos = constants.r * np.exp(1j * angle)
         drone_rotors_sequential.append({
-            'position': np.array([np.real(rotor_pos) + constants.R, np.imag(rotor_pos), 0]),
+            'position': np.array([np.real(rotor_pos), np.imag(rotor_pos), 0]),
             'direction': 'CW' if CW else 'CCW',
             'axis': np.array([0.0, 0.0, -1.0]),
             'Ct': constants.Ct,
@@ -63,20 +66,12 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
     M = constants.M_structure_payload
     COM = constants.M_structure_payload * structpayload_pos
 
-    if len(missing_drones) == 0: # establish drone flight controller angles for initial geometry
-        drone_angles = []
-        drone_angle_offset = 0
-        if constants.drones_face_inward:
-            drone_angle_offset = -math.pi
+    orientation_test = False # rotate drone 1 (left) by 45 degrees, while keeping drone 0 (right) facing forward
+    drone_angles = []
 
     structure_rotors = []
     angle = (TWO_PI/constants.num_drones) / 2
     for i in range(constants.num_drones):
-        if len(missing_drones) == 0:
-            drone_angle = angle + drone_angle_offset
-            if drone_angle > math.pi:
-                drone_angle -= TWO_PI
-            drone_angles.append(np.degrees(drone_angle))
         rotation = Rotation.from_rotvec(np.array([0, 0, angle]))
         if i not in missing_drones:
             M += constants.M_drone
@@ -86,9 +81,18 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
             if i in missing_drones:
                 rotor['Ct'] = 0
                 rotor['Cm'] = 0
-            rotor['position'] = rotation.apply(drone_rotors[j]['position'])
+            drone_angle = 0
+            if orientation_test and i == 1:
+                drone_angle = math.pi/4
+            if len(missing_drones) == 0:
+                drone_angles.append(drone_angle)
+            drone_angle_rotation = Rotation.from_rotvec(np.array([0, 0, drone_angle]))
+            rotor['position'] = drone_angle_rotation.apply(drone_rotors[j]['position']) + rotation.apply(np.array([constants.R, 0.0, 0.0]))
             structure_rotors.append(rotor)
         angle += (TWO_PI/constants.num_drones)
+
+    if len(missing_drones) == 0: # establish drone flight controller angles for initial geometry
+        drone_angles = [0, math.pi/4 if orientation_test else 0]
 
     # make the center of mass the reference point
     COM /= M
@@ -163,7 +167,7 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
     return geometry
 
 
-def generate_aviata_permutations(max_missing_drones):
+def generate_aviata_permutations(max_missing_drones=0):
     missing_drones_permutations = [[]]
     for i in range(1, max_missing_drones+1):
         missing_drones_permutations += combinations(range(constants.num_drones), i)
@@ -182,12 +186,14 @@ def generate_aviata_permutations(max_missing_drones):
         # for drone_geometry in geometries:
         #     drone_geometries[drone_geometry['info']['key']] = drone_geometry
         # drone_geometries_list += geometries
-    return combined_geometries, combined_geometries_list
+    return combined_geometries, combined_geometries_list, max_missing_drones
 
 
-if __name__ == '__main__':
-    max_missing_drones = 4
-    combined_geometries, combined_geometries_list = generate_aviata_permutations(max_missing_drones)
+def main():
+    import constants_two_drones
+    configure_constants(constants_two_drones)
+
+    combined_geometries, combined_geometries_list, max_missing_drones = generate_aviata_permutations()
 
     header = px4_generate_mixer.generate_mixer_multirotor_header(combined_geometries_list,
                                                                  use_normalized_mix=True,
@@ -227,3 +233,6 @@ if __name__ == '__main__':
             y.append(rotor['position'][0])
     plt.scatter(x, y)
     plt.show()
+
+if __name__ == '__main__':
+    main()

@@ -1,12 +1,11 @@
 from dataclasses import dataclass
 import numpy as np
 from pyquaternion import Quaternion
-import constants
+import config
 import px4_mixer_multirotor
-import generate_matrices
 from pid import PID
 
-combined_geometries, combined_geometries_list = generate_matrices.generate_aviata_permutations(max_missing_drones=4)
+combined_geometries, combined_geometries_list, max_missing_drones = config.generate_matrices.generate_aviata_permutations()
 
 
 def constrain(val, min, max):
@@ -75,11 +74,11 @@ class Drone:
 
     def configure_mixer(self, missing_drones):
         if self.drone_pos is not None:
-            geometry_name = generate_matrices.geometry_name(missing_drones)
+            geometry_name = config.generate_matrices.geometry_name(missing_drones)
             self.mixer = combined_geometries[geometry_name]['mix']['B_px_4dof']
             self.hover_thrust = combined_geometries[geometry_name]['thr_hover']
-            self.rotor_start_index = self.drone_pos * constants.num_rotors
-            self.rotor_end_index = self.rotor_start_index + constants.num_rotors
+            self.rotor_start_index = self.drone_pos * config.constants.num_rotors
+            self.rotor_end_index = self.rotor_start_index + config.constants.num_rotors
 
     def set_sensors(self, sensors):
         self.sensors = sensors
@@ -91,7 +90,7 @@ class Drone:
     def set_att_thrust_setpoint(self, att_sp, thr_body_sp_z):
         if not self.control_mode == CONTROL_MODE_FOLLOWER:
             if not self.control_mode == CONTROL_MODE_LEADER:
-                self.att_rate_pid = PID(constants.P_att_rate, constants.I_att_rate, constants.D_att_rate)
+                self.att_rate_pid = PID(config.constants.P_att_rate, config.constants.I_att_rate, config.constants.D_att_rate)
                 next(self.att_rate_pid)
             self.control_mode = CONTROL_MODE_FOLLOWER
         self.att_setpoint = att_sp
@@ -100,9 +99,9 @@ class Drone:
     def set_pos_setpoint(self, pos_sp, yaw_sp):
         if not self.control_mode == CONTROL_MODE_LEADER:
             if not self.control_mode == CONTROL_MODE_FOLLOWER:
-                self.att_rate_pid = PID(constants.P_att_rate, constants.I_att_rate, constants.D_att_rate)
+                self.att_rate_pid = PID(config.constants.P_att_rate, config.constants.I_att_rate, config.constants.D_att_rate)
                 next(self.att_rate_pid)
-            self.vel_pid = PID(constants.P_vel, constants.I_vel, constants.D_vel)
+            self.vel_pid = PID(config.constants.P_vel, config.constants.I_vel, config.constants.D_vel)
             next(self.vel_pid)
             self.control_mode = CONTROL_MODE_LEADER
         self.pos_setpoint = pos_sp
@@ -113,20 +112,20 @@ class Drone:
             if self.control_mode == CONTROL_MODE_LEADER:
                 # Roughly based on PX4 v1.11. See https://uasatucla.org/en/subsystems/controls/multirotor-physics-and-controls#part-3-control-the-control-system-architecture
                 pos_err = self.pos_setpoint - self.sensors.pos
-                vel_sp = constants.P_pos * pos_err
-                vel_sp[:2] = limit_norm(vel_sp[:2], constants.max_vel_hor)
-                vel_sp[2] = constrain(vel_sp[2], -constants.max_vel_up, constants.max_vel_down)
+                vel_sp = config.constants.P_pos * pos_err
+                vel_sp[:2] = limit_norm(vel_sp[:2], config.constants.max_vel_hor)
+                vel_sp[2] = constrain(vel_sp[2], -config.constants.max_vel_up, config.constants.max_vel_down)
 
                 acc_sp = self.vel_pid.send([self.sensors.vel, vel_sp, dt])
-                acc_sp[:2] = limit_norm(acc_sp[:2], constants.max_acc_hor)
-                acc_sp[2] = constrain(acc_sp[2], -constants.max_acc_up, constants.max_acc_down)
+                acc_sp[:2] = limit_norm(acc_sp[:2], config.constants.max_acc_hor)
+                acc_sp[2] = constrain(acc_sp[2], -config.constants.max_acc_up, config.constants.max_acc_down)
 
                 # See https://github.com/PX4/Firmware/blob/release/1.11/src/modules/mc_pos_control/PositionControl/PositionControl.cpp#L192
-                att_z_vec = -np.array([acc_sp[0], acc_sp[1], -constants.g])
+                att_z_vec = -np.array([acc_sp[0], acc_sp[1], -config.constants.g])
                 att_z_vec /= np.linalg.norm(att_z_vec)
 
                 # achieve desired vertical thrust assuming we're facing the direction of att_z_vec (might make more sense to use current attitude (?) but this is how PX4 does it)
-                self.thrust_setpoint = -acc_sp[2] * (self.hover_thrust / constants.g) + self.hover_thrust
+                self.thrust_setpoint = -acc_sp[2] * (self.hover_thrust / config.constants.g) + self.hover_thrust
                 self.thrust_setpoint /= np.dot(np.array([0, 0, 1]), att_z_vec)
 
                 # determine att_sp quaternion using att_z_vec and yaw_setpoint (see https://github.com/PX4/Firmware/blob/release/1.11/src/modules/mc_pos_control/PositionControl/ControlMath.cpp#L70)
@@ -147,8 +146,8 @@ class Drone:
                 # See https://github.com/PX4/Firmware/blob/release/1.11/src/modules/mc_att_control/AttitudeControl/AttitudeControl.cpp#L83
                 att_err_q = self.sensors.att.inverse * self.att_setpoint
                 att_err = 2 * att_err_q.imaginary # PX4 approximation of att_err_q.axis * att_err_q.angle = 2 * math.asin(att_err_q.imaginary)
-                att_rate_sp = constants.P_att * att_err
-                att_rate_sp = constrain(att_rate_sp, -constants.max_att_rate, constants.max_att_rate)
+                att_rate_sp = config.constants.P_att * att_err
+                att_rate_sp = constrain(att_rate_sp, -config.constants.max_att_rate, config.constants.max_att_rate)
 
                 att_rate_body = self.sensors.att.inverse.rotate(self.sensors.att_rate)
                 torque_sp = self.att_rate_pid.send([att_rate_body, att_rate_sp, dt])
@@ -158,6 +157,8 @@ class Drone:
                 self.forces_setpoint[3,0] = self.thrust_setpoint
 
             u, u_final = px4_normal_mode(self.forces_setpoint, self.mixer)
+            # u_final = np.dot(self.mixer, self.forces_setpoint)
+            # u_final = constrain(u_final, 0, 1)
             self.motor_inputs = u_final[self.rotor_start_index:self.rotor_end_index]
 
 
@@ -210,7 +211,7 @@ class PhysicalWorld:
             if drone.drone_pos in missing_drones:
                 drone.set_drone_pos(None)
         # Initialize empty_slots to list all structure positions:
-        empty_slots = list(range(constants.num_drones))
+        empty_slots = list(range(config.constants.num_drones))
         # Exclude positions that should be empty from empty_slots:
         for missing_drone in missing_drones:
             empty_slots.remove(missing_drone)
@@ -233,7 +234,7 @@ class PhysicalWorld:
 
         self.network.broadcast(Drone.configure_mixer, missing_drones)
 
-        self.structure.geometry = combined_geometries[generate_matrices.geometry_name(missing_drones)]
+        self.structure.geometry = combined_geometries[config.generate_matrices.geometry_name(missing_drones)]
 
     def tick(self):
         prev_att_rate = self.structure.att_rate
@@ -269,11 +270,11 @@ class PhysicalWorld:
         actuator_effectiveness = self.structure.geometry['mix']['A_4dof']
         combined_mixer = self.structure.geometry['mix']['B_px_4dof']
         # ideal_forces = np.linalg.multi_dot([actuator_effectiveness, combined_mixer, setpoint]) # TODO retrieve setpoint from one of the drones (this probably isn't important though)
-        self.structure.u = np.zeros([constants.num_drones * constants.num_rotors, 1])
+        self.structure.u = np.zeros([config.constants.num_drones * config.constants.num_rotors, 1])
         for drone in self.drones:
             if drone.drone_pos is not None:
-                rotor_start = drone.drone_pos * constants.num_rotors
-                rotor_end = rotor_start + constants.num_rotors
+                rotor_start = drone.drone_pos * config.constants.num_rotors
+                rotor_end = rotor_start + config.constants.num_rotors
                 self.structure.u[rotor_start:rotor_end] = drone.motor_inputs
         forces = np.dot(actuator_effectiveness, self.structure.u)[:,0]
 
@@ -286,4 +287,4 @@ class PhysicalWorld:
         # transform from body frame to global frame
         self.structure.ang_acc = self.structure.att.rotate(ang_acc)
         self.structure.lin_acc = self.structure.att.rotate(np.array((0.0, 0.0, lin_acc)))
-        self.structure.lin_acc[2] += constants.g # gravity is a thing
+        self.structure.lin_acc[2] += config.constants.g # gravity is a thing
