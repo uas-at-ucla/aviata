@@ -3,6 +3,8 @@
 
 #include <functional>
 #include <map>
+#include <ctime>
+#include <chrono>
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
@@ -32,6 +34,25 @@ enum DroneCommand
     DISARM,
     TAKEOFF,
     LAND
+};
+
+// struct to hold data about each drone_command request (ROS2 Service)
+// objects stored in drone_command_requests and drone_command_responses in drone.hpp
+struct CommandRequest {
+    // Request
+    std::string other_drone_id;
+    DroneCommand drone_command;
+    int dock;
+
+    // Response
+    std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> command_request;
+    uint8_t ack; // store the response once received
+    // int next_action; // if necessary
+
+    // logging/debugging purposes
+    std::string request_origin;
+    std::chrono::high_resolution_clock::time_point timestamp_request; // timestamp_request = std::chrono::high_resolution_clock::now()
+    std::chrono::high_resolution_clock::time_point timestamp_response;
 };
 
 // TOPICS
