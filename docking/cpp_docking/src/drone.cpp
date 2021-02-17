@@ -516,7 +516,7 @@ void Drone::test0()
         log("Test 0", "Failed to arm");
         return;
     }
-    bool takeoff_code = takeoff(1);
+    bool takeoff_code = takeoff(2);
     if (!takeoff_code)
     {
         log("Test 0", "Failed to take off");
@@ -548,7 +548,7 @@ void Drone::test1()
         log("Test 1", "Failed to arm");
         return;
     }
-    bool takeoff_code = takeoff(1);
+    bool takeoff_code = takeoff(3);
     if (!takeoff_code)
     {
         log("Test 1", "Failed to take off");
@@ -566,10 +566,10 @@ void Drone::test1()
     int count_frames = 0;
 
     auto offboard = Offboard{m_system};
-    // auto telemetry = Telemetry{m_system}; // 2 and 3
-    // telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
-    //     set_yaw(e.yaw_deg);
-    // });
+    auto telemetry = Telemetry{m_system}; // 2 and 3
+    telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
+        set_yaw(e.yaw_deg);
+    });
 
     PIDController pid(m_dt);
 
@@ -587,19 +587,20 @@ void Drone::test1()
         duration<double, std::milli> c2 = (f4 - f3);
 
         Offboard::VelocityNedYaw change{};
+        change.down_m_s = -0.2;
         if (is_tag_detected)
         {
             log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
                          " errors: " + std::to_string(errs[0]) + " " + std::to_string(errs[1]) + " " + std::to_string(errs[2]) + " " + std::to_string(errs[3]));
-            // std::array<float, 3> velocities = pid.getVelocities(errs[0], errs[1], errs[2], 0.1); // 3
-            // change.north_m_s = velocities[1]; // 3
-            // change.east_m_s = velocities[0]; // 3
-            // change.yaw_deg = errs[3]; // 2
+            std::array<float, 3> velocities = pid.getVelocities(errs[0], errs[1], errs[2], 0.1); // 3
+            change.north_m_s = velocities[1]; // 3
+            change.east_m_s = velocities[0]; // 3
+            change.yaw_deg = errs[3]; // 2
         } else {
             log(tag, "Failed to find Apriltag");
-            // change.yaw_deg = m_yaw; // 2
-            // change.north_m_s = 0.0; // 3
-            // change.east_m_s = 0.0; // 3
+            change.yaw_deg = m_yaw; // 2
+            change.north_m_s = 0.0; // 3
+            change.east_m_s = 0.0; // 3
         }
 
         offboard.set_velocity_ned(change);
