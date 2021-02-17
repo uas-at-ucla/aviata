@@ -3,6 +3,9 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
+#include <ctime>
+#include <chrono>
 
 #include "../mavlink/v2.0/common/mavlink.h"
 #include <mavsdk/mavsdk.h>
@@ -37,6 +40,24 @@ struct DroneStatus {
     float yaw;
 };
 
+// struct to hold data about each drone_command request (ROS2 Service)
+struct CommandRequest {
+    // Request
+    std::string other_drone_id;
+    DroneCommand drone_command;
+    int dock;
+
+    // Response
+    std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> command_request;
+    uint8_t ack; // store the response once received
+    // int next_action; // if necessary
+
+    // logging/debugging purposes
+    std::string request_origin;
+    std::chrono::high_resolution_clock::time_point timestamp_request; // timestamp_request = std::chrono::high_resolution_clock::now()
+    std::chrono::high_resolution_clock::time_point timestamp_response;
+};
+
 class Drone
 {
 public:
@@ -64,6 +85,10 @@ private:
     DroneStatus drone_status;
     uint8_t docking_slot = 0;
     std::map<std::string, DroneStatus> swarm; // map by ID
+
+    // Command Request Lists
+    std::vector<CommandRequest> drone_command_requests;
+    std::vector<CommandRequest> drone_command_responses; // TODO: log to file at end of flight?
 
     void basic_lead();
     void basic_follow();
@@ -100,6 +125,8 @@ private:
 
     void command_handler(aviata::srv::DroneCommand::Request::SharedPtr request, 
                          aviata::srv::DroneCommand::Response::SharedPtr response);
+
+    void check_command_requests();
 };
 
 #endif

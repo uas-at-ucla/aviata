@@ -389,3 +389,45 @@ void Drone::command_handler(aviata::srv::DroneCommand::Request::SharedPtr reques
         response->ack = 0;
     }
 }
+
+// to be called in each loop
+void Drone::check_command_requests()
+{
+    for (auto it = drone_command_requests.begin(); it != drone_command_requests.end();)
+    {
+        if (it->command_request.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
+        {
+            // TODO: do action, raise flag, something
+
+            it->ack = it->command_request.get()->ack;
+            it->timestamp_response = std::chrono::high_resolution_clock::now();
+
+            // Process Acknowledgement
+            if (it->ack == 0) // request failed, try sending again?
+            {
+                CommandRequest retry;
+                retry.other_drone_id = it->other_drone_id;
+                retry.drone_command = it->drone_command;
+                retry.dock = it->dock;
+                retry.command_request = network->send_drone_command_async(retry.other_drone_id, retry.drone_command, retry.dock);
+                retry.request_origin = it->request_origin + "_R";
+                retry.timestamp_request = std::chrono::high_resolution_clock::now();
+
+                drone_command_requests.push_back(retry);
+            }
+            else if (it->ack == 1)
+            {
+                // TODO
+            }
+
+            // Copy completed request to drone_command_responses vector
+            CommandRequest done = *it;
+            drone_command_responses.push_back(done);
+            drone_command_requests.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
