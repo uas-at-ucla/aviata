@@ -9,7 +9,7 @@ This subsystem focuses on the docking portion of AVIATA - from the time a drone 
   * `drone`: handles communicating with the drone through MAVSDK and with the other modules
   * `pid_controller`: turns calculated errors from the latest camera frame into velocity commands to send to the drone
   * `raspi_camera`: interface for the camera on-board the drone. Replaces `camera_simulator` when run in physical testing
-  * `docking`: startup script
+  * `docking`: entrypoint
 * The rest of the folders are old code related to research during the proposal stage and preliminary designs
 
 ## Installation/Prerequisites
@@ -33,6 +33,9 @@ This subsystem focuses on the docking portion of AVIATA - from the time a drone 
 
 ## Preparing and compiling the code
 
+Use CMake as follows
+
+To build for simulation,
 ```
 $ cd cpp_docking
 $ mkdir build
@@ -50,21 +53,9 @@ $ cd build
 $ cmake -DCMAKE_BUILD_TYPE=Release .. # generate Makefile (with optimization)
 $ make docking_physical # compile
 ```
-
-Shortcut scripts to make this easier. The especially important one is `run.sh`, as this includes a command that will save all log messages to a text file for future reference. This will be very useful for testing on the Raspberry Pi, for flight logs.
-
-Defaults are set to compile and set everything up for simulation. To compile for the Raspberry Pi, you'll need to specify extra arguments.
-
-```
-$ cd cpp_docking
-$ ./generate_makefile.sh # to use debug mode
-$ ./generate_makefile.sh release # to use optimization
-$ ./compile.sh # to compile for simulation
-$ ./compile.sh docking_physical # to compile for the raspberry pi
-$ ./run.sh
-```
-
-After making the 
+General notes
+  * You should only have to rerun `cmake ..` if `CMakeLists.txt` changes
+  * To run changes to the code itself, just run `make` followed by the executable (e.g. `./docking_simulation`)
 ## Running the simulation
 1. Start Gazebo (from the directory in which you installed PX4)
 ```
@@ -82,10 +73,17 @@ $ cd build/
 $ ./docking_simulation
 ```
 
+## Shortcut scripts
 
-# C++ Version
+Shortcut scripts to make compilation even easier. The especially important one is `run.sh`, as this includes a command that will save all log messages to a text file for future reference. This is very useful for testing on the Raspberry Pi, for saving flight logs.
 
-### Basic info:
-* Build using CMake
-  * You should only have to rerun `cmake ..` if `CMakeLists.txt` changes
-  * To run changes to the code itself, just run `make` followed by the executable (`./docking`)
+Defaults are set to compile and set everything up for simulation. To compile for the Raspberry Pi, you'll need to specify extra arguments.
+
+```
+$ cd cpp_docking
+$ ./generate_makefile.sh # to use debug mode
+$ ./generate_makefile.sh release # to use optimization
+$ ./compile.sh # to compile for simulation
+$ ./compile.sh docking_physical # to compile for the raspberry pi
+$ ./run.sh # run the program
+```
