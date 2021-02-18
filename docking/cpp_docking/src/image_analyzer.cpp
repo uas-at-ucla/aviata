@@ -39,9 +39,8 @@ ImageAnalyzer::~ImageAnalyzer()
  * @return true if target was detected, false otherwise (and errs remains unchanged if so)
  * 
  * */
-bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags, std::array<float, 4> &errs)
+bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags, Errors &errs)
 {
-    int width = img.cols;
     Point2f image_center(img.cols / 2, img.rows / 2);
 
     cvtColor(img, img, COLOR_BGR2GRAY);
@@ -111,7 +110,7 @@ bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags,
                 tag_pixel_ratio = ((float)PERIPHERAL_TAG_SIZE) / sideAvg;
             }
 
-            errs[2] = 0.50 / tan((CAMERA_FOV_HORIZONTAL * 0.50) * M_PI / 180.0) * width * tag_pixel_ratio; //Calculates alt_err
+            errs.alt = 0.50 / tan((CAMERA_FOV_HORIZONTAL * 0.50) * M_PI / 180.0) * img.cols * tag_pixel_ratio; //Calculates alt_err
 
             // 2. Calculate rotation error
 
@@ -143,11 +142,14 @@ bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags,
             {
                 incline_angle = 0;
             }
-            errs[3] = incline_angle * -1 + yaw; //Finds rotational error from diagonal angle
+            errs.yaw = incline_angle * -1 + yaw; //Finds rotational error from diagonal angle
 
             //Finds the offset of the image location
             float x_offset = center[0] - image_center.x;
             float y_offset = image_center.y - center[1];
+            // float x_percent_offset = abs(x_offset / (img.cols / 2) * 100);
+            // float y_percent_offset = abs(y_offset / (img.rows / 2) * 100);
+            // errs.horiz_percentage_offset = sqrt(x_percent_offset * x_percent_offset + y_percent_offset * y_percent_offset);
 
             // 3. Calculate x/y error
 
@@ -158,8 +160,8 @@ bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags,
             theta += -1.0 * to_radians(yaw); // convert from body to ned coordinates
             float real_x = r * cos(theta);
             float real_y = r * sin(theta);
-            errs[0] = real_x;
-            errs[1] = real_y;
+            errs.x = real_x;
+            errs.y = real_y;
 
             //Cleanup
             apriltag_detection_destroy(det);

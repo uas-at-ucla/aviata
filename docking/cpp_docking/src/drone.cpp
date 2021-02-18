@@ -191,6 +191,7 @@ void Drone::initiate_docking(int target_id)
     {
         log("Docking", "Stage 1 Success");
         stage2(target_id);
+        land();
     }
 }
 
@@ -226,7 +227,7 @@ bool Drone::stage1(int target_id)
     {
         high_resolution_clock::time_point t1 = high_resolution_clock::now();
         img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-        std::array<float, 4> errs = {0, 0, 0, 0};
+        Errors errs;
         bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags, errs); //Detects apriltags and calculates errors
         log("Tags Detected", tags);
 
@@ -250,15 +251,15 @@ bool Drone::stage1(int target_id)
         }
 
         failed_frames = 0;
-        log("Docking", "Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
+        log("Docking", "Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
         offset_errors(errs, target_id); //Adjusts errors for stage 1 to stage 2 transition
-        log("Docking", "Offset Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
-        std::array<float, 3> velocities = pid.getVelocities(errs[0], errs[1], errs[2], 0.4); //Gets velocities for errors
+        log("Docking", "Offset Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
+        std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.4); //Gets velocities for errors
         log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
 
         //Checks if drone within correct tolerance
-        if (errs[0] < STAGE_1_TOLERANCE && errs[0] > -1.0 * STAGE_1_TOLERANCE && errs[1] < STAGE_1_TOLERANCE && errs[1] > -1.0 * STAGE_1_TOLERANCE &&
-            errs[2] < STAGE_1_TOLERANCE && errs[2] > -1.0 * STAGE_1_TOLERANCE && errs[3] < 2.0 && errs[3] > -2.0)
+        if (errs.x < STAGE_1_TOLERANCE && errs.x > -1.0 * STAGE_1_TOLERANCE && errs.y < STAGE_1_TOLERANCE && errs.y > -1.0 * STAGE_1_TOLERANCE &&
+            errs.alt < STAGE_1_TOLERANCE && errs.alt > -1.0 * STAGE_1_TOLERANCE && errs.yaw < 2.0 && errs.yaw > -2.0)
         {
             successful_frames++;
         }
@@ -272,7 +273,7 @@ bool Drone::stage1(int target_id)
 
         //Updates drone velocities with calculated values
         Offboard::VelocityNedYaw change{};
-        change.yaw_deg = errs[3];
+        change.yaw_deg = errs.yaw;
         change.north_m_s = velocities[1];
         change.east_m_s = velocities[0];
         change.down_m_s = velocities[2];
@@ -303,6 +304,7 @@ void Drone::stage2(int target_id)
     std::string tags = "";
     PIDController pid(m_dt);
     Mat img;
+    bool has_centered = false;
 
     int successful_frames = 0;
 
@@ -310,7 +312,7 @@ void Drone::stage2(int target_id)
     {
         //Update image and process for errors
         img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-        std::array<float, 4> errs = {0, 0, 0, 0};
+        Errors errs;
         bool is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
         log("Tags Detected", tags);
         int checked_frames = 0;
@@ -384,10 +386,10 @@ void Drone::stage2(int target_id)
             log("Tags Detected", tags);
         }
 
-        errs[2] -= 0.05; //Adjusts altitude error for desired location
+        errs.alt -= 0.05; //Adjusts altitude error for desired location
 
         //Checks if within docking range
-        if (errs[2] < STAGE_2_TOLERANCE * 2 && errs[2] > -1.0 * STAGE_2_TOLERANCE && errs[3] < 2.0 && errs[3] > -2.0 && errs[0] < STAGE_2_TOLERANCE && errs[0] > -1.0 * STAGE_2_TOLERANCE && errs[1] < STAGE_2_TOLERANCE && errs[1] > -1.0 * STAGE_2_TOLERANCE)
+        if (errs.alt < STAGE_2_TOLERANCE * 4 && errs.alt > -4 * STAGE_2_TOLERANCE && /*errs.yaw < 2.0 && errs.yaw > -2.0 &&*/ errs.x < STAGE_2_TOLERANCE && errs.x > -1.0 * STAGE_2_TOLERANCE && errs.y < STAGE_2_TOLERANCE && errs.y > -1.0 * STAGE_2_TOLERANCE)
         {
             successful_frames++;
         }
@@ -399,35 +401,30 @@ void Drone::stage2(int target_id)
             break;
 
         //Adjusts errors to prevent rotating out of frame
-        if (errs[0] < STAGE_1_TOLERANCE && errs[0] > -1.0 * STAGE_1_TOLERANCE && errs[1] < STAGE_1_TOLERANCE && errs[1] > -1.0 * STAGE_1_TOLERANCE)
-        {
-            // errs[3] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
-        }
-        else
-        {
-            errs[3] -= 90;
-            // errs[3] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
+        bool is_centered = errs.x < STAGE_1_TOLERANCE && errs.x > -1.0 * STAGE_1_TOLERANCE && errs.y < STAGE_1_TOLERANCE && errs.y > -1.0 * STAGE_1_TOLERANCE;
+        if (!is_centered && !has_centered) {
+            errs.yaw -= 90;
+            has_centered = true; // prevent rerotating away once we've done it once
         }
 
-        log("Docking", "Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
+        log("Docking", "Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
 
         //Adjusts errors to decrease overshooting
-        errs[0] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
-        errs[1] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
-        errs[2] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
+        if (errs.x > 0.40) errs.x *= tanh(OVERSHOOT_CONSTANT * errs.alt * errs.alt);
+        if (errs.y > 0.40) errs.y *= tanh(OVERSHOOT_CONSTANT * errs.alt * errs.alt);
+        if (errs.alt > 0.40) errs.alt *= tanh(OVERSHOOT_CONSTANT * errs.alt * errs.alt);
+        // else errs.alt *= .5;
 
-        std::array<float, 3> velocities = pid.getVelocities(errs[0], errs[1], errs[2], 0.1); //Gets velocities for errors
+        std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.4); //Gets velocities for errors
         log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
 
         //Updates drone velocities
         Offboard::VelocityNedYaw change{};
-        change.yaw_deg = errs[3];
+        change.yaw_deg = errs.yaw;
         change.north_m_s = velocities[1];
         change.east_m_s = velocities[0];
         change.down_m_s = velocities[2];
         offboard.set_velocity_ned(change);
-
-        sleep_for(milliseconds((int)m_dt * 1000));
     }
 }
 
@@ -496,14 +493,14 @@ void Drone::land()
 }
 
 //Utility method to adjust errors for stage 1
-void Drone::offset_errors(std::array<float, 4> &errs, int id)
+void Drone::offset_errors(Errors &errs, int id)
 {
     float target_offset = id <= 3 ? abs(id - 3) * 45 : (11 - id) * 45;
-    float x = errs[0] + BOOM_LENGTH / 2 * cos(to_radians(target_offset - errs[3]));
-    float y = errs[1] + BOOM_LENGTH / 2 * sin(to_radians(target_offset - errs[3]));
-    errs[2] -= ALTITUDE_DISP;
-    errs[0] = x;
-    errs[1] = y;
+    float x = errs.x + BOOM_LENGTH / 2 * cos(to_radians(target_offset - errs.yaw));
+    float y = errs.y + BOOM_LENGTH / 2 * sin(to_radians(target_offset - errs.yaw));
+    errs.alt -= ALTITUDE_DISP;
+    errs.x = x;
+    errs.y = y;
 }
 
 /////////////// Testing functions
@@ -575,7 +572,7 @@ void Drone::test1()
 
     PIDController pid(m_dt);
 
-    std::array<float, 4> errs = {0, 0, 0, 0};
+    Errors errs;
     while (time_span < 10 * 1000 /* 10 seconds */)
     {
         high_resolution_clock::time_point f1 = high_resolution_clock::now();
@@ -593,11 +590,11 @@ void Drone::test1()
         if (is_tag_detected)
         {
             log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
-                         " errors: " + std::to_string(errs[0]) + " " + std::to_string(errs[1]) + " " + std::to_string(errs[2]) + " " + std::to_string(errs[3]));
-            std::array<float, 3> velocities = pid.getVelocities(errs[0], errs[1], errs[2], 0.1); // 3
+                         " errors: " + std::to_string(errs.x) + " " + std::to_string(errs.y) + " " + std::to_string(errs.alt) + " " + std::to_string(errs.yaw));
+            std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.1); // 3
             change.north_m_s = velocities[1]; // 3
             change.east_m_s = velocities[0]; // 3
-            change.yaw_deg = errs[3]; // 2
+            change.yaw_deg = errs.yaw; // 2
         } else {
             log(tag, "Failed to find Apriltag");
             change.yaw_deg = m_yaw; // 2
@@ -675,19 +672,19 @@ void Drone::simulation_test_moving_target() {
         m_target_info.lon += .2 * time_span / 1000 * lon_sign;
         camera.update_target(m_target_info);
         img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-        std::array<float, 4> errs = {0, 0, 0, 0};
+        Errors errs;
         image_analyzer.processImage(img, 0, m_yaw, tags, errs); //Detects apriltags and calculates errors
         log("Tags Detected", tags);
 
-        log("Docking", "Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
-        errs[2] -= 1;
-        log("Docking", "Offset Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
-        std::array<float, 3> velocities = pid.getVelocities(errs[0], errs[1], errs[2], 0.4); //Gets velocities for errors
+        log("Docking", "Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
+        errs.alt -= 1;
+        log("Docking", "Offset Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
+        std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.4); //Gets velocities for errors
         log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
 
         //Updates drone velocities with calculated values
         Offboard::VelocityNedYaw change{};
-        change.yaw_deg = errs[3];
+        change.yaw_deg = errs.yaw;
         change.north_m_s = velocities[1];
         change.east_m_s = velocities[0];
         change.down_m_s = velocities[2];

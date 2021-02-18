@@ -17,9 +17,9 @@ CameraSimulator::CameraSimulator(Target target)
     : m_log_tag("Camera Sim"), m_target(target)
 {
     m_scale_constant = get_view_scale_constant(TARGET_SIZE);
-    m_peripheral_scale_constant = get_view_scale_constant(8.0); // should be 4.50, made it bigger for testing reliability. no longer correctly approximates targ size
-                                                                // should consider real life target size and whether rotation of peripheral targets in camera simulator
-                                                                // is the cause of missing the transition or if it truly is the size of the target
+    m_peripheral_scale_constant = get_view_scale_constant(PERIPHERAL_TAG_SIZE * 100); // should be 4.50, made it bigger for testing reliability. no longer correctly approximates targ size
+                                                                // should consider real life target size and whether rotation and interpolation of peripheral targets in 
+                                                                // camera simulator is the cause of missing the transition or if it truly is the size of the target
                                                                 // target 1 (no rotation relative to central target) works fine at 4.50, none of the others do (fail
                                                                 // during rotation at the start of stage 2)
 

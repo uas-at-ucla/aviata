@@ -11,7 +11,7 @@
 // Constants
 
 #define CENTRAL_TAG_SIZE 0.227 // to be changed according to actual target size
-#define PERIPHERAL_TAG_SIZE 0.045 // likewise
+#define PERIPHERAL_TAG_SIZE 0.08 // likewise
 
 // Camera information for simulator, measured in degrees
 #define CAMERA_FOV_VERTICAL 48.8
@@ -20,7 +20,6 @@
 
 // Target information, measured in centimeters
 #define TARGET_SIZE 234
-#define PERIPHERAL_TARGET_SIZE 4.50 // remove, causes confusion with PERIPHERAL_TAG_SIZE
 #define DRONE_RADIUS 1.1135 // measured in meters, 1m boom + half the central tag side length (possibly slightly off for corners but good enough)
 
 
@@ -58,6 +57,15 @@ struct Target
     float lon = 0;
     float alt = 0;
     float yaw = 0;
+};
+
+struct Errors
+{
+    float x = 0;
+    float y = 0;
+    float alt = 0;
+    float yaw = 0;
+    float horiz_percentage_offset = 0;
 };
 
 #endif // UTIL_H_
