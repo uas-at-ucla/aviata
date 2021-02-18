@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 
 #include "../mavlink/v2.0/common/mavlink.h"
 #include <mavsdk/mavsdk.h>
@@ -65,6 +66,10 @@ private:
     uint8_t docking_slot = 0;
     std::map<std::string, DroneStatus> swarm; // map by ID
 
+    // Command Request Lists
+    std::vector<CommandRequest> drone_command_requests;
+    std::vector<CommandRequest> drone_command_responses; // TODO: log to file at end of flight?
+
     void basic_lead();
     void basic_follow();
 
@@ -100,6 +105,8 @@ private:
 
     void command_handler(aviata::srv::DroneCommand::Request::SharedPtr request, 
                          aviata::srv::DroneCommand::Response::SharedPtr response);
+
+    void check_command_requests();
 };
 
 #endif

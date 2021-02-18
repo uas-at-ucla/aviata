@@ -17,7 +17,7 @@ void Network::shutdown()
 
 Network::Network(std::string drone_id) : Node(drone_id), drone_id(drone_id) {}
 
-// Follower Setpoint
+// FOLLOWER SETPOINT
 
 void Network::init_follower_setpoint_publisher()
 {
@@ -47,7 +47,7 @@ void Network::unsubscribe_follower_setpoint()
     follower_setpoint_subscription = nullptr;
 }
 
-// Drone Status
+// DRONE STATUS
 
 void Network::init_drone_status_publisher()
 {
@@ -83,7 +83,7 @@ void Network::send_status(aviata::msg::DroneStatus status)
     // status_publisher->publish(status);
 }
 
-// Drone Command Service
+// DRONE COMMAND SERVICE
 
 // @brief uses default qos profile (rmw_qos_profile_services_default)
 void Network::init_drone_command_service(std::function<void(aviata::srv::DroneCommand::Request::SharedPtr,
@@ -98,7 +98,7 @@ void Network::deinit_drone_command_service()
     drone_command_service = nullptr;
 }
 
-// Drone Command Client
+// DRONE COMMAND CLIENT
 
 void Network::init_drone_command_client(std::string other_drone_id)
 {
