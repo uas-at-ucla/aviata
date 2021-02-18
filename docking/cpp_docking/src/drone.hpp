@@ -34,6 +34,7 @@ public:
     void test0();
     void test1();
     void test2();
+    void simulation_test_moving_target();
 
 private:
     Mavsdk mavsdk;

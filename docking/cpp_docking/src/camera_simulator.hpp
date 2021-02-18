@@ -12,6 +12,7 @@ class CameraSimulator
 public:
     CameraSimulator(Target target);
     Mat update_current_image(float absLon, float absLat, float absAlt, float absYaw, int target_id = 0);
+    void update_target(Target target);
 
 private:
     std::string m_log_tag;

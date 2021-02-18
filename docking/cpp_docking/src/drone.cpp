@@ -401,12 +401,12 @@ void Drone::stage2(int target_id)
         //Adjusts errors to prevent rotating out of frame
         if (errs[0] < STAGE_1_TOLERANCE && errs[0] > -1.0 * STAGE_1_TOLERANCE && errs[1] < STAGE_1_TOLERANCE && errs[1] > -1.0 * STAGE_1_TOLERANCE)
         {
-            errs[3] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
+            // errs[3] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
         }
         else
         {
             errs[3] -= 90;
-            errs[3] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
+            // errs[3] *= tanh(OVERSHOOT_CONSTANT * errs[2] * errs[2]);
         }
 
         log("Docking", "Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
@@ -567,6 +567,8 @@ void Drone::test1()
 
     auto offboard = Offboard{m_system};
     auto telemetry = Telemetry{m_system}; // 2 and 3
+    const Telemetry::Result set_rate_result_a = telemetry.set_rate_attitude(20);
+    if (set_rate_result_a != Telemetry::Result::Success) std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
     telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
         set_yaw(e.yaw_deg);
     });
@@ -611,10 +613,90 @@ void Drone::test1()
         time_span = d.count();
         count_frames++;
     }
+    Offboard::VelocityNedYaw hold{};
+    offboard.set_velocity_ned(hold);
     cv::imwrite("test.png", img);
     log(tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(count_frames));
     log(tag, "Average FPS: " + std::to_string(count_frames / (time_span / 1000)));
-
-    log("Test 1", "Done holding");
     land();
+}
+
+void Drone::simulation_test_moving_target() {
+    bool arm_code = arm();
+    if (!arm_code)
+    {
+        log("Test 1", "Failed to arm");
+        return;
+    }
+    bool takeoff_code = takeoff(3);
+    if (!takeoff_code)
+    {
+        log("Test 1", "Failed to take off");
+        return;
+    }
+
+    auto offboard = Offboard{m_system};
+    auto telemetry = Telemetry{m_system}; // 2 and 3
+    const Telemetry::Result set_rate_result_p = telemetry.set_rate_position_velocity_ned(40);
+    const Telemetry::Result set_rate_result_a = telemetry.set_rate_attitude(40);
+    if (set_rate_result_a != Telemetry::Result::Success || set_rate_result_p != Telemetry::Result::Success)
+    {
+        std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
+        std::cout << "Setting position rate possibly failed:" << set_rate_result_p << '\n';
+    }
+
+    // Subscribe to getting periodic telemetry updates with lambda function
+    telemetry.subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
+        set_position(p.position.north_m, p.position.east_m, p.position.down_m);
+    });
+    telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
+        set_yaw(e.yaw_deg);
+    });
+    PIDController pid(m_dt);
+    std::string tags = "";
+    Mat img;
+
+    int time_span = 0; // time per iteration
+
+    int sign_switch = 0;
+    int lat_sign = 1;
+    int lon_sign = 1;
+    while (true)
+    {
+        high_resolution_clock::time_point t1 = high_resolution_clock::now();
+
+        sign_switch += time_span;
+        if (sign_switch > 2000) {
+            lat_sign = ((rand() % 2 == 0) ? 1 : -1);
+            lon_sign = ((rand() % 2 == 0) ? 1 : -1);
+            sign_switch = 0;
+        }
+        m_target_info.lat += .2 * time_span / 1000 * lat_sign;
+        m_target_info.lon += .2 * time_span / 1000 * lon_sign;
+        camera.update_target(m_target_info);
+        img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+        std::array<float, 4> errs = {0, 0, 0, 0};
+        image_analyzer.processImage(img, 0, m_yaw, tags, errs); //Detects apriltags and calculates errors
+        log("Tags Detected", tags);
+
+        log("Docking", "Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
+        errs[2] -= 1;
+        log("Docking", "Offset Errors: x_err: " + std::to_string(errs[0]) + " y_err: " + std::to_string(errs[1]) + " alt_err: " + std::to_string(errs[2]) + " rot_err: " + std::to_string(errs[3]));
+        std::array<float, 3> velocities = pid.getVelocities(errs[0], errs[1], errs[2], 0.4); //Gets velocities for errors
+        log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
+
+        //Updates drone velocities with calculated values
+        Offboard::VelocityNedYaw change{};
+        change.yaw_deg = errs[3];
+        change.north_m_s = velocities[1];
+        change.east_m_s = velocities[0];
+        change.down_m_s = velocities[2];
+        offboard.set_velocity_ned(change);
+
+        //Calculates how long to wait to keep refresh rate constant
+        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+        duration<double, std::milli> d = (t2 - t1);
+        time_span = d.count();
+        log("Docking", "Iteration Time: " + std::to_string(time_span));
+    }
 }
