@@ -444,7 +444,7 @@ void Drone::safe_land()
 }
 
 //Lands and disarms drone
-void Drone::land()
+bool Drone::land()
 {
     log("Landing", "Landing");
     auto telemetry = Telemetry{m_system};
@@ -455,7 +455,6 @@ void Drone::land()
     {
         log("Landing", "Offboard stop failed, error code on next line", true);
         std::cout << "Code: " << offboard_result << std::endl;
-        return;
     }
 
     const Action::Result land_result = action.land();
@@ -463,14 +462,13 @@ void Drone::land()
     {
         log("Landing", "Land failed, error code on next line", true);
         std::cout << "Code: " << land_result << std::endl;
-        return;
+        return false; // should reattempt landing
     }
 
     const Telemetry::Result set_rate_result = telemetry.set_rate_position(1.0);
     if (set_rate_result != Telemetry::Result::Success)
     {
         log("Landing", "Telemetry Error", true);
-        return;
     }
     telemetry.subscribe_position([](Telemetry::Position position) {
         log("Landing", "Current altitude: " + std::to_string(position.relative_altitude_m));
@@ -487,9 +485,10 @@ void Drone::land()
     {
         log("Landing", "Disarming failed", true);
         std::cout << "Code: " << disarm_result << std::endl;
-        return;
+        return false;;
     }
     log("Landing", "Disarmed successfully");
+    return true;
 }
 
 //Utility method to adjust errors for stage 1
@@ -534,7 +533,7 @@ void Drone::test0()
         time_span = d.count();
     }
     log("Test 0", "Done holding");
-    land();
+    while (!land()) ;
 }
 
 void Drone::test1()
@@ -670,7 +669,7 @@ void Drone::simulation_test_moving_target() {
         }
         m_target_info.lat += .2 * time_span / 1000 * lat_sign;
         m_target_info.lon += .2 * time_span / 1000 * lon_sign;
-        camera.update_target(m_target_info);
+        // camera.update_target(m_target_info);
         img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
         Errors errs;
         image_analyzer.processImage(img, 0, m_yaw, tags, errs); //Detects apriltags and calculates errors

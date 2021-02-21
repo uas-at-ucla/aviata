@@ -29,6 +29,7 @@ public:
     bool arm();
     bool takeoff(int takeoff_alt);
     void initiate_docking(int target_id);
+    bool land();
 
     // testing functions
     void test0();
@@ -57,7 +58,6 @@ private:
     void stage2(int target_id);
     void offset_errors(Errors &errs, int target_id); // offset for stg 1->2 transition
     void safe_land();
-    void land();
 };
 
 #endif // DRONE_H_
