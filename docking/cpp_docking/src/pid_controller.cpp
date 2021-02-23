@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <string>
 
-PIDController::PIDController(float dt)
-    : m_dt(dt)
+PIDController::PIDController(float dt,bool overshoot)
+    : m_dt(dt),m_overshoot_adjust(overshoot)
 {
     m_prev_errs = {0, 0, 0};
 }
@@ -32,13 +32,34 @@ std::array<float, 3> PIDController::getVelocities(float x_err, float y_err, floa
     float ku_ev = 2.15;
     float ku_dv = 3.5;
 
-    float kp_nv = 0.6 * ku_nv;
-    float kp_ev = 0.6 * ku_ev;
-    float kp_dv = 0.6 * ku_dv;
+    float tu_nv=0.75;
+    float tu_ev=0.90;
+    float tu_dv=0.45;
 
-    float kd_nv = 0.15;
-    float kd_ev = 0.15;
-    float kd_dv = 0.12;
+    float kp_nv;
+    float kp_ev;
+    float kp_dv;
+    float kd_nv;
+    float kd_ev;
+    float kd_dv;
+    if(!m_overshoot_adjust){ 
+        kp_nv = 0.6 * ku_nv;
+        kp_ev = 0.6 * ku_ev;
+        kp_dv = 0.6 * ku_dv;
+
+        kd_nv = 0.15;
+        kd_ev = 0.15;
+        kd_dv = 0.12;
+    }
+    else{
+        kp_nv = 0.2 * ku_nv;
+        kp_ev = 0.2 * ku_ev;
+        kp_dv = 0.2 * ku_dv;
+
+        kd_nv = 0.066*ku_nv*tu_nv;
+        kd_ev = 0.066*ku_ev*tu_ev;
+        kd_dv = 0.066*ku_dv*tu_dv;
+    }
 
     float ev = x_err * kp_ev + (x_err - m_prev_errs[0]) / m_dt * kd_ev;
     float nv = y_err * kp_nv + (y_err - m_prev_errs[1]) / m_dt * kd_nv;

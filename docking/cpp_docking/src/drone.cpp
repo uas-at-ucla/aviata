@@ -302,7 +302,7 @@ void Drone::stage2(int target_id)
     log("Stage 2", "Docking Beginning");
     auto offboard = Offboard{m_system};
     std::string tags = "";
-    PIDController pid(m_dt);
+    PIDController pid(m_dt,true);
     Mat img;
     bool has_centered = false;
 
@@ -408,12 +408,6 @@ void Drone::stage2(int target_id)
         }
 
         log("Docking", "Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
-
-        //Adjusts errors to decrease overshooting
-        if (errs.x > 0.40) errs.x *= tanh(OVERSHOOT_CONSTANT * errs.alt * errs.alt);
-        if (errs.y > 0.40) errs.y *= tanh(OVERSHOOT_CONSTANT * errs.alt * errs.alt);
-        if (errs.alt > 0.40) errs.alt *= tanh(OVERSHOOT_CONSTANT * errs.alt * errs.alt);
-        // else errs.alt *= .5;
 
         std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.4); //Gets velocities for errors
         log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
