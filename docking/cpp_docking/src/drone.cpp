@@ -459,20 +459,30 @@ bool Drone::land()
         return false; // should reattempt landing
     }
 
+    // subscribe to telemetry updates to monitor
     const Telemetry::Result set_rate_result = telemetry.set_rate_position(1.0);
-    if (set_rate_result != Telemetry::Result::Success)
-    {
+    if (set_rate_result != Telemetry::Result::Success) {
         log("Landing", "Telemetry Error", true);
     }
     telemetry.subscribe_position([](Telemetry::Position position) {
         log("Landing", "Current altitude: " + std::to_string(position.relative_altitude_m));
     });
+    Telemetry::LandedState curr_state = telemetry.landed_state();
+    log("Landing", "Current landed state: " + get_landed_state_string(curr_state));
+    telemetry.subscribe_landed_state([this, &curr_state](Telemetry::LandedState landed_state) {
+        if (curr_state != landed_state) {
+            curr_state = landed_state;
+            log("Landing", "Current landed state: " + get_landed_state_string(curr_state));
+        }
+    });
 
-    while (telemetry.in_air())
+    // wait for landing to be complete
+    while (curr_state != Telemetry::LandedState::OnGround)
     {
         sleep_for(seconds(1));
     }
 
+    // cleanup and disarm
     log("Landing", "Landed successfully " + std::to_string(telemetry.in_air()));
     Action::Result disarm_result = action.disarm();
     if (disarm_result != Action::Result::Success)

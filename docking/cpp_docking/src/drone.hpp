@@ -17,6 +17,7 @@
 
 #include "image_analyzer.hpp"
 #include <mavsdk/mavsdk.h>
+#include <mavsdk/plugins/telemetry/telemetry.h>
 
 using namespace mavsdk;
 const float ALTITUDE_DISP = BOOM_LENGTH / 2 / tan(to_radians(CAMERA_FOV_VERTICAL / 2)) * 2;
@@ -58,6 +59,18 @@ private:
     void stage2(int target_id);
     void offset_errors(Errors &errs, int target_id); // offset for stg 1->2 transition
     void safe_land();
+
+    inline std::string get_landed_state_string(mavsdk::Telemetry::LandedState ls)
+    {
+        switch (ls)
+        {
+            case Telemetry::LandedState::OnGround: return "On ground";
+            case Telemetry::LandedState::TakingOff: return "Taking off";
+            case Telemetry::LandedState::Landing: return "Landing";
+            case Telemetry::LandedState::InAir: return "In air";
+            default: return "UNKNOWN";
+        }
+    }
 };
 
 #endif // DRONE_H_
