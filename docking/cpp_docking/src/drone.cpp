@@ -504,6 +504,8 @@ void Drone::offset_errors(Errors &errs, int id)
     errs.alt -= ALTITUDE_DISP;
     errs.x = x;
     errs.y = y;
+    float yaw=errs.yaw+90-((id-1)*45);
+    errs.yaw=yaw;
 }
 
 /////////////// Testing functions
