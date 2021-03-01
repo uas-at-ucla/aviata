@@ -86,8 +86,9 @@ void Network::send_status(aviata::msg::DroneStatus status)
 // DRONE COMMAND SERVICE
 
 // @brief uses default qos profile (rmw_qos_profile_services_default)
+// @param callback the command handler
 void Network::init_drone_command_service(std::function<void(aviata::srv::DroneCommand::Request::SharedPtr,
-                                aviata::srv::DroneCommand::Response::SharedPtr)> callback)
+                                                            aviata::srv::DroneCommand::Response::SharedPtr)> callback)
 {
     std::string service_name = drone_id + "_SERVICE";
     drone_command_service = this->create_service<aviata::srv::DroneCommand>(service_name, callback);

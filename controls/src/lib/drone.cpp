@@ -13,6 +13,24 @@ Drone::Drone(std::string drone_id) : drone_id(drone_id), px4_io(drone_id), telem
     drone_status.drone_id = drone_id;
     drone_status.drone_state = drone_state;
     drone_status.docking_slot = docking_slot;
+
+    network->subscribe_drone_status([&](const aviata::msg::DroneStatus::SharedPtr ds_rec) {
+        DroneStatus rec;
+        rec.drone_id = ds_rec->drone_id;
+        rec.drone_state = static_cast<DroneState>(ds_rec->drone_state);
+        rec.docking_slot = ds_rec->docking_slot;
+        rec.battery_percent = ds_rec->battery_percent; 
+        rec.gps_position.latitude_deg = ds_rec->gps_position[0]; // consider changing gps_position telemetry to array as well like the msg
+        rec.gps_position.longitude_deg = ds_rec->gps_position[1];
+        rec.gps_position.absolute_altitude_m = ds_rec->gps_position[2];
+        rec.gps_position.relative_altitude_m = ds_rec->gps_position[3];
+        rec.yaw = ds_rec->yaw;
+        swarm[rec.drone_id] = rec;
+    });
+    network->init_drone_command_service([this](const aviata::srv::DroneCommand::Request::SharedPtr request,
+                                               aviata::srv::DroneCommand::Response::SharedPtr response) {
+        command_handler(request, response);
+    });
 }
 
 Drone::~Drone()
@@ -213,8 +231,16 @@ void Drone::basic_follow()
         mavlink_set_attitude_target_t attitude_target;
         std::copy(std::begin(follower_setpoint->q), std::end(follower_setpoint->q), std::begin(attitude_target.q));
         attitude_target.thrust = follower_setpoint->thrust;
-        this->leader_increment = follower_setpoint->leader_increment;
-        px4_io.set_attitude_target(attitude_target);
+
+        //switch to new leader if receive setpoint (and ignore unknown leader_increments)
+        if (follower_setpoint->leader_increment == this->leader_increment)
+            px4_io.set_attitude_target(attitude_target);
+        else if (follower_setpoint->leader_increment == this->leader_increment_next)
+        {
+            this->leader_increment = this->leader_increment_next;
+            px4_io.set_attitude_target(attitude_target);
+        }
+
         if (!in_offboard) {
             if (px4_io.set_offboard_mode() == 1) {
                 in_offboard = true;
@@ -250,79 +276,119 @@ void Drone::update_drone_status()
     drone_status.battery_percent = telemValues.droneBattery.remaining_percent;
 }
 
-void Drone::arm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
+int Drone::arm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
 {
     if (drone_state == STANDBY || drone_state == DOCKED_FOLLOWER)
-        px4_io.arm_system();
+        return px4_io.arm_system();
+    return 0;
 }
 
-void Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
+int Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
 {
+    // control logic
+    return 0;
 }
 
-void Drone::disarm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
+int Drone::disarm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
 {
     if (drone_state == STANDBY || drone_state == DOCKED_FOLLOWER)
-        px4_io.disarm_system();
+        return px4_io.disarm_system();
+    return 0;
 }
 
-void Drone::disarm_frame() // for DOCKED_LEADER (send disarm_drone() to followers)
+int Drone::disarm_frame() // for DOCKED_LEADER (send disarm_drone() to followers)
 {
+    // control logic
+    return 0;
 }
 
-void Drone::takeoff_drone() // for drones in STANDBY
+int Drone::takeoff_drone() // for drones in STANDBY
 {
     if (drone_state == STANDBY)
-        px4_io.takeoff_system();
+        return px4_io.takeoff_system();
+    return 0;
 }
 
-void Drone::takeoff_frame() // for DOCKED_LEADER (send attitude and thrust to followers)
+int Drone::takeoff_frame() // for DOCKED_LEADER (send attitude and thrust to followers)
 {
+     // control logic
+    return 0;
 }
 
-void Drone::land_drone() // for any undocked drone
+int Drone::land_drone() // for any undocked drone
 {
     if (drone_state == STANDBY || drone_state == NEEDS_SERVICE)
-        px4_io.land_system();
+        return px4_io.land_system();
 }
 
-void Drone::land_frame() // for DOCKED_LEADER (send attitude and thrust to followers)
+int Drone::land_frame() // for DOCKED_LEADER (send attitude and thrust to followers)
 {
+    // control logic
+    return 0;
 }
 
-void Drone::undock()
-{
-    if (drone_state == DOCKED_FOLLOWER)
-        drone_state = UNDOCKING;
-    // TODO implment control
-}
-
-// @param n frame position
-void Drone::dock(int n)
-{
-    // TODO possibly integrate controls stuff through ROS here?
-}
-
-void Drone::become_leader()
+int Drone::undock()
 {
     if (drone_state == DOCKED_FOLLOWER)
     {
-        drone_state = DOCKED_LEADER;
-        // TODO implement controls
+        drone_state = UNDOCKING;
+        // TODO implment control
+        return 1;
     }
+    return 0;
 }
 
-void Drone::become_follower() //for successful sender of request_new_leader
+// @param n frame position
+int Drone::dock(int n)
+{
+    // TODO possibly integrate controls stuff through ROS here?
+    return 1;
+}
+
+int Drone::become_leader()
+{
+    if (drone_state == DOCKED_FOLLOWER) //TODO also check if battery% is above a certain threshold
+    {
+        drone_state = DOCKED_LEADER;
+        // Tell all drones to listen for new leader
+        for (const auto& [id, status] : swarm)
+        {
+            // for testing
+            network->send_drone_command_async(id, LISTEN_NEW_LEADER, leader_increment);
+            // complete format
+            // send_drone_command(it->drone_id, LISTEN_NEW_LEADER, leader_increment, "listen new leader, " + drone_id);
+        }
+        return 1;
+    }
+    return 0;
+}
+
+int Drone::become_follower() //for successful sender of request_new_leader
 {
     if (drone_state == DOCKED_LEADER)
     {
         drone_state = DOCKED_FOLLOWER;
-    }
 
-    if (1) //undock request
-    {
-        drone_state = UNDOCKING;
+        float highest_batt = 0;
+        std::string highest_batt_drone = "";
+        for (const auto& [id, status] : swarm)
+        {
+            // determine drone to become leader
+            if (status.battery_percent > highest_batt)
+            {
+                highest_batt = status.battery_percent;
+                highest_batt_drone = id;
+            }
+        }
+        uint8_t lead_inc_new = leader_increment + 1; // could do something fancier like random (for unecessary security reasons)
+        
+        // for testing
+        network->send_drone_command_async(highest_batt_drone, BECOME_LEADER, lead_inc_new);
+        // complete format
+        // send_drone_command(highest_batt_drone, BECOME_LEADER, lead_inc_new, "become new leader, " + drone_id);
+        return 1;
     }
+    return 0;
 }
 
 void Drone::get_leader_setpoint(float q[4], float *thrust)
@@ -338,8 +404,22 @@ void Drone::set_follower_setpoint(float q[4], float *thrust)
     //     px4_io.set_attitude_and_thrust(q, thrust); // TODO update function call
 }
 
+// @brief async, adds to list of command requests
+void Drone::send_drone_command(std::string other_drone_id, DroneCommand drone_command, int param, std::string request_origin)
+{
+    CommandRequest com;
+    com.other_drone_id = other_drone_id;
+    com.drone_command = drone_command;
+    com.param = param;
+    com.command_request = network->send_drone_command_async(other_drone_id, drone_command, param);
+    com.request_origin = request_origin;
+    com.timestamp_request = std::chrono::high_resolution_clock::now();
+    drone_command_requests.push_back(com);
+}
+
+
 // @brief to be used as callback for service server
-void Drone::command_handler(aviata::srv::DroneCommand::Request::SharedPtr request,
+void Drone::command_handler(const aviata::srv::DroneCommand::Request::SharedPtr request,
                             aviata::srv::DroneCommand::Response::SharedPtr response)
 {
     switch (request->command)
@@ -347,49 +427,53 @@ void Drone::command_handler(aviata::srv::DroneCommand::Request::SharedPtr reques
     case DroneCommand::REQUEST_SWAP:
 
         break;
-    case  DroneCommand::REQUEST_UNDOCK:
+    case DroneCommand::REQUEST_UNDOCK:
 
         break;
-    case  DroneCommand::REQUEST_DOCK:
+    case DroneCommand::REQUEST_DOCK:
 
         break;
-    case  DroneCommand::TERMINATE_FLIGHT:
+    case DroneCommand::TERMINATE_FLIGHT:
 
         break;
-    case  DroneCommand::UNDOCK:
+    case DroneCommand::UNDOCK:
 
         break;
-    case  DroneCommand::DOCK:
+    case DroneCommand::DOCK:
 
         break;
-    case  DroneCommand::CANCEL_DOCKING:
+    case DroneCommand::CANCEL_DOCKING:
 
         break;
-    case  DroneCommand::SETPOINT:
+    case DroneCommand::SETPOINT:
 
         break;
-    case  DroneCommand::LEADER_SETPOINT:
+    case DroneCommand::LEADER_SETPOINT:
 
         break;
-    case  DroneCommand::BECOME_LEADER:
+    case DroneCommand::BECOME_LEADER:
+        // TODO: check if battery is above certain %
+        this->leader_increment = request->param;
+        this->leader_increment_next = 0;
+        response->ack = become_leader();
+        break;
+    case DroneCommand::REQUEST_NEW_LEADER:
+        response->ack = become_follower();
+        break;
+    case DroneCommand::LISTEN_NEW_LEADER:
+        this->leader_increment_next = request->param;
+        response->ack = 1;
+        break;
+    case DroneCommand::ARM:
 
         break;
-    case  DroneCommand::REQUEST_NEW_LEADER:
+    case DroneCommand::DISARM:
 
         break;
-    case  DroneCommand::LISTEN_NEW_LEADER:
+    case DroneCommand::TAKEOFF:
 
         break;
-    case  DroneCommand::ARM:
-
-        break;
-    case  DroneCommand::DISARM:
-
-        break;
-    case  DroneCommand::TAKEOFF:
-
-        break;
-    case  DroneCommand::LAND:
+    case DroneCommand::LAND:
 
         break;
     default:
@@ -412,15 +496,7 @@ void Drone::check_command_requests()
             // Process Acknowledgement
             if (it->ack == 0) // request failed, try sending again?
             {
-                CommandRequest retry;
-                retry.other_drone_id = it->other_drone_id;
-                retry.drone_command = it->drone_command;
-                retry.param = it->param;
-                retry.command_request = network->send_drone_command_async(retry.other_drone_id, retry.drone_command, retry.param);
-                retry.request_origin = it->request_origin + "_R";
-                retry.timestamp_request = std::chrono::high_resolution_clock::now();
-
-                drone_command_requests.push_back(retry);
+                send_drone_command(it->other_drone_id, it->drone_command, it->param, it->request_origin + "_R");
             }
             else if (it->ack == 1)
             {

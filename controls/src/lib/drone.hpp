@@ -64,7 +64,7 @@ private:
     DroneState drone_state;
     DroneStatus drone_status;
     uint8_t docking_slot = 0;
-    std::map<std::string, DroneStatus> swarm; // map by ID
+    std::map<std::string, DroneStatus> swarm; // map by drone_id
 
     // Leader
     uint8_t leader_increment = 0;
@@ -79,35 +79,37 @@ private:
 
     void update_drone_status(); // call before sending data
 
-    void arm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
+    int arm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
     
-    void arm_frame(); // for DOCKED_LEADER (send arm_drone() to followers)
+    int arm_frame(); // for DOCKED_LEADER (send arm_drone() to followers)
     
-    void disarm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
+    int disarm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
     
-    void disarm_frame(); // for DOCKED_LEADER (send disarm_drone() to followers)
+    int disarm_frame(); // for DOCKED_LEADER (send disarm_drone() to followers)
 
-    void takeoff_drone(); // for drones in STANDBY
+    int takeoff_drone(); // for drones in STANDBY
     
-    void takeoff_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
+    int takeoff_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
 
-    void land_drone(); // for any undocked drone
+    int land_drone(); // for any undocked drone
     
-    void land_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
+    int land_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
 
-    void undock();
+    int undock();
 
-    void dock(int n); 
+    int dock(int n); 
 
-    void become_leader();
+    int become_leader();
 
-    void become_follower(); //for successful sender of request_new_leader
+    int become_follower(); //for successful sender of request_new_leader
 
     void get_leader_setpoint(float q[4], float* thrust);
 
     void set_follower_setpoint(float q[4], float* thrust);
 
-    void command_handler(aviata::srv::DroneCommand::Request::SharedPtr request, 
+    void send_drone_command(std::string other_drone_id, DroneCommand drone_command, int param = -1, std::string request_origin = "");
+
+    void command_handler(const aviata::srv::DroneCommand::Request::SharedPtr request, 
                          aviata::srv::DroneCommand::Response::SharedPtr response);
 
     void check_command_requests();
