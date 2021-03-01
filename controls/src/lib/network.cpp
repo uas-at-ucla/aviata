@@ -114,7 +114,7 @@ void Network::deinit_drone_command_client(std::string other_drone_id)
 
 // @brief function is blocking- TODO: make async 
 // @return acknowledgement received through the ROS2 service
-uint8_t Network::send_drone_command(std::string other_drone_id, DroneCommand drone_command, int dock)
+uint8_t Network::send_drone_command(std::string other_drone_id, DroneCommand drone_command, int param)
 {
     std::string service_name = other_drone_id + "_SERVICE";
 
@@ -129,7 +129,7 @@ uint8_t Network::send_drone_command(std::string other_drone_id, DroneCommand dro
 
     auto request = std::make_shared<aviata::srv::DroneCommand::Request>(); 
     request->command = drone_command;
-    request->dock = dock;
+    request->param = param;
 
     auto result = drone_command_clients[service_name]->async_send_request(request);
 
@@ -145,7 +145,7 @@ uint8_t Network::send_drone_command(std::string other_drone_id, DroneCommand dro
 // @return shared_future object to response of service (check if valid with response.valid() (std::shared_future object))
 // https://en.cppreference.com/w/cpp/thread/shared_future
 std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> 
-    Network::send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int dock)
+    Network::send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int param)
 {
     std::string service_name = other_drone_id + "_SERVICE";
 
@@ -160,7 +160,7 @@ std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>>
 
     auto request = std::make_shared<aviata::srv::DroneCommand::Request>(); 
     request->command = drone_command;
-    request->dock = dock;
+    request->param = param;
 
     return drone_command_clients[service_name]->async_send_request(request);
 }

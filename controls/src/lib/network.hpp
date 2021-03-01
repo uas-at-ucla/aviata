@@ -30,6 +30,7 @@ enum DroneCommand
     // Anywhere to Drone, have different response if leader or follower
     BECOME_LEADER,
     REQUEST_NEW_LEADER,
+    LISTEN_NEW_LEADER,
     ARM,
     DISARM,
     TAKEOFF,
@@ -42,7 +43,7 @@ struct CommandRequest {
     // Request
     std::string other_drone_id;
     DroneCommand drone_command;
-    int dock;
+    int param;
 
     // Response
     std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> command_request;
@@ -92,9 +93,9 @@ public:
 
     void init_drone_command_client(std::string other_drone_id);
     void deinit_drone_command_client(std::string other_drone_id);
-    uint8_t send_drone_command(std::string other_drone_id, DroneCommand drone_command, int dock = -1);
+    uint8_t send_drone_command(std::string other_drone_id, DroneCommand drone_command, int param = -1);
     std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> 
-        send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int dock = -1);
+        send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int param = -1);
 
 private:
     const std::string drone_id;

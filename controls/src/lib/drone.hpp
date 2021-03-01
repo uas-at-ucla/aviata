@@ -66,6 +66,10 @@ private:
     uint8_t docking_slot = 0;
     std::map<std::string, DroneStatus> swarm; // map by ID
 
+    // Leader
+    uint8_t leader_increment = 0;
+    uint8_t leader_increment_next = 0;
+
     // Command Request Lists
     std::vector<CommandRequest> drone_command_requests;
     std::vector<CommandRequest> drone_command_responses; // TODO: log to file at end of flight?

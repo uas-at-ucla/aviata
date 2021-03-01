@@ -340,49 +340,52 @@ void Drone::command_handler(aviata::srv::DroneCommand::Request::SharedPtr reques
 {
     switch (request->command)
     {
-    case REQUEST_SWAP:
+    case DroneCommand::REQUEST_SWAP:
 
         break;
-    case REQUEST_UNDOCK:
+    case  DroneCommand::REQUEST_UNDOCK:
 
         break;
-    case REQUEST_DOCK:
+    case  DroneCommand::REQUEST_DOCK:
 
         break;
-    case TERMINATE_FLIGHT:
+    case  DroneCommand::TERMINATE_FLIGHT:
 
         break;
-    case UNDOCK:
+    case  DroneCommand::UNDOCK:
 
         break;
-    case DOCK:
+    case  DroneCommand::DOCK:
 
         break;
-    case CANCEL_DOCKING:
+    case  DroneCommand::CANCEL_DOCKING:
 
         break;
-    case SETPOINT:
+    case  DroneCommand::SETPOINT:
 
         break;
-    case LEADER_SETPOINT:
+    case  DroneCommand::LEADER_SETPOINT:
 
         break;
-    case BECOME_LEADER:
+    case  DroneCommand::BECOME_LEADER:
 
         break;
-    case REQUEST_NEW_LEADER:
+    case  DroneCommand::REQUEST_NEW_LEADER:
 
         break;
-    case ARM:
+    case  DroneCommand::LISTEN_NEW_LEADER:
 
         break;
-    case DISARM:
+    case  DroneCommand::ARM:
 
         break;
-    case TAKEOFF:
+    case  DroneCommand::DISARM:
 
         break;
-    case LAND:
+    case  DroneCommand::TAKEOFF:
+
+        break;
+    case  DroneCommand::LAND:
 
         break;
     default:
@@ -408,8 +411,8 @@ void Drone::check_command_requests()
                 CommandRequest retry;
                 retry.other_drone_id = it->other_drone_id;
                 retry.drone_command = it->drone_command;
-                retry.dock = it->dock;
-                retry.command_request = network->send_drone_command_async(retry.other_drone_id, retry.drone_command, retry.dock);
+                retry.param = it->param;
+                retry.command_request = network->send_drone_command_async(retry.other_drone_id, retry.drone_command, retry.param);
                 retry.request_origin = it->request_origin + "_R";
                 retry.timestamp_request = std::chrono::high_resolution_clock::now();
 
