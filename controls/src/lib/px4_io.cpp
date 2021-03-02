@@ -72,6 +72,9 @@ bool PX4IO::connect_to_pixhawk(std::string connection_url, int timeout_seconds)
     return true;
 }
 
+void PX4IO::get_telemetry_ptr(std::shared_ptr<Telemetry> tlm)
+{   tlm = telemetry;    }
+
 void PX4IO::call_queued_mavsdk_callbacks() {
     mavsdk_callback_manager.call_queued_mavsdk_callbacks();
 }

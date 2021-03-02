@@ -20,10 +20,11 @@ Drone::Drone(std::string drone_id) : drone_id(drone_id), px4_io(drone_id), telem
         rec.drone_state = static_cast<DroneState>(ds_rec->drone_state);
         rec.docking_slot = ds_rec->docking_slot;
         rec.battery_percent = ds_rec->battery_percent; 
-        rec.gps_position.latitude_deg = ds_rec->gps_position[0]; // consider changing gps_position telemetry to array as well like the msg
-        rec.gps_position.longitude_deg = ds_rec->gps_position[1];
-        rec.gps_position.absolute_altitude_m = ds_rec->gps_position[2];
-        rec.gps_position.relative_altitude_m = ds_rec->gps_position[3];
+        // rec.gps_position.latitude_deg = ds_rec->gps_position[0]; // consider changing gps_position telemetry to array as well like the msg
+        // rec.gps_position.longitude_deg = ds_rec->gps_position[1];
+        // rec.gps_position.absolute_altitude_m = ds_rec->gps_position[2];
+        // rec.gps_position.relative_altitude_m = ds_rec->gps_position[3];
+        std::copy(std::begin(ds_rec->gps_position), std::end(ds_rec->gps_position), std::begin(rec.gps_position));
         rec.yaw = ds_rec->yaw;
         swarm[rec.drone_id] = rec;
     });
@@ -271,7 +272,7 @@ void Drone::update_drone_status()
 {
     drone_status.drone_state = drone_state;
     drone_status.docking_slot = docking_slot;
-    drone_status.gps_position = telemValues.dronePosition;
+    std::copy(std::begin(telemValues.dronePosition), std::end(telemValues.dronePosition), std::begin(drone_status.gps_position));
     drone_status.yaw = telemValues.droneQuarternion.z; //TODO: verify
     drone_status.battery_percent = telemValues.droneBattery.remaining_percent;
 }

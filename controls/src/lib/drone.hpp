@@ -34,7 +34,8 @@ struct DroneStatus {
     uint8_t docking_slot;
 
     float battery_percent; 
-    mavsdk::Telemetry::Position gps_position;
+    // mavsdk::Telemetry::Position gps_position;
+    float gps_position[4];
     float yaw;
 };
 
