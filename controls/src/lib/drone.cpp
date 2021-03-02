@@ -239,6 +239,7 @@ void Drone::basic_follow()
         else if (follower_setpoint->leader_increment == this->leader_increment_next)
         {
             this->leader_increment = this->leader_increment_next;
+            // If static leader IDs: this->leader_increment_next = (this->leader_increment_next + 1)
             px4_io.set_attitude_target(attitude_target);
         }
 
@@ -368,7 +369,7 @@ int Drone::become_follower() //for successful sender of request_new_leader
 {
     if (drone_state == DOCKED_LEADER)
     {
-        drone_state = DOCKED_FOLLOWER;
+        // drone_state = DOCKED_FOLLOWER; // TODO: Do this in acknowledgment callback
 
         float highest_batt = 0;
         std::string highest_batt_drone = "";
@@ -408,6 +409,7 @@ void Drone::set_follower_setpoint(float q[4], float *thrust)
 // @brief async, adds to list of command requests
 void Drone::send_drone_command(std::string other_drone_id, DroneCommand drone_command, int param, std::string request_origin)
 {
+    // TODO add callback as parameter
     CommandRequest com;
     com.other_drone_id = other_drone_id;
     com.drone_command = drone_command;
@@ -415,6 +417,7 @@ void Drone::send_drone_command(std::string other_drone_id, DroneCommand drone_co
     com.command_request = network->send_drone_command_async(other_drone_id, drone_command, param);
     com.request_origin = request_origin;
     com.timestamp_request = std::chrono::high_resolution_clock::now();
+    com.callback = std::make_shared<std::function<void(uint8_t)>>([](uint8_t ack) {}); // TODO
     drone_command_requests.push_back(com);
 }
 
@@ -494,7 +497,7 @@ void Drone::check_command_requests()
             it->ack = it->command_request.get()->ack;
             it->timestamp_response = std::chrono::high_resolution_clock::now();
 
-            // Process Acknowledgement
+            // Process Acknowledgement - TODO: Decide if this logic should be moved to callback
             if (it->ack == 0) // request failed, try sending again?
             {
                 send_drone_command(it->other_drone_id, it->drone_command, it->param, it->request_origin + "_R");
@@ -503,6 +506,8 @@ void Drone::check_command_requests()
             {
                 // TODO
             }
+
+            (*it->callback)(it->ack);
 
             // Copy completed request to drone_command_responses vector
             CommandRequest done = *it;

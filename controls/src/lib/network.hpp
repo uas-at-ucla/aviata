@@ -48,6 +48,7 @@ struct CommandRequest {
     // Response
     std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> command_request;
     uint8_t ack; // store the response once received
+    std::shared_ptr<std::function<void(uint8_t ack)>> callback;
     // int next_action; // if necessary
 
     // logging/debugging purposes
