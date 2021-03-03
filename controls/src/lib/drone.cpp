@@ -353,12 +353,18 @@ int Drone::become_leader()
     {
         drone_state = DOCKED_LEADER;
         // Tell all drones to listen for new leader
+        leader_follower_listened = swarm.size();
         for (const auto& [id, status] : swarm)
         {
-            // for testing
-            network->send_drone_command_async(id, LISTEN_NEW_LEADER, leader_increment);
-            // complete format
-            // send_drone_command(it->drone_id, LISTEN_NEW_LEADER, leader_increment, "listen new leader, " + drone_id);
+            send_drone_command(id, LISTEN_NEW_LEADER, leader_increment, "listen new leader, " + drone_id, 
+            [this](uint8_t ack) { //
+                if (ack == 1)
+                    leader_follower_listened--;
+                if (leader_follower_listened == 0) //last follower acknowledged
+                {
+                    // Start Leader stuff
+                }
+            });
         }
         return 1;
     }
@@ -369,7 +375,6 @@ int Drone::become_follower() //for successful sender of request_new_leader
 {
     if (drone_state == DOCKED_LEADER)
     {
-        // drone_state = DOCKED_FOLLOWER; // TODO: Do this in acknowledgment callback
 
         float highest_batt = 0;
         std::string highest_batt_drone = "";
@@ -384,10 +389,12 @@ int Drone::become_follower() //for successful sender of request_new_leader
         }
         uint8_t lead_inc_new = leader_increment + 1; // could do something fancier like random (for unecessary security reasons)
         
-        // for testing
-        network->send_drone_command_async(highest_batt_drone, BECOME_LEADER, lead_inc_new);
-        // complete format
-        // send_drone_command(highest_batt_drone, BECOME_LEADER, lead_inc_new, "become new leader, " + drone_id);
+        send_drone_command(highest_batt_drone, BECOME_LEADER, lead_inc_new, "become new leader, " + drone_id,
+        [this](uint8_t ack) {
+            if (ack == 1)
+                drone_state = DOCKED_FOLLOWER;
+                // End Leader Stuff
+        });
         return 1;
     }
     return 0;
@@ -407,20 +414,20 @@ void Drone::set_follower_setpoint(float q[4], float *thrust)
 }
 
 // @brief async, adds to list of command requests
-void Drone::send_drone_command(std::string other_drone_id, DroneCommand drone_command, int param, std::string request_origin)
+void Drone::send_drone_command(std::string other_drone_id, DroneCommand drone_command, int param, std::string request_origin,
+                               std::function<void(uint8_t ack)> callback)
 {
-    // TODO add callback as parameter
     CommandRequest com;
     com.other_drone_id = other_drone_id;
     com.drone_command = drone_command;
     com.param = param;
+    *com.callback = callback;
     com.command_request = network->send_drone_command_async(other_drone_id, drone_command, param);
     com.request_origin = request_origin;
     com.timestamp_request = std::chrono::high_resolution_clock::now();
     com.callback = std::make_shared<std::function<void(uint8_t)>>([](uint8_t ack) {}); // TODO
     drone_command_requests.push_back(com);
 }
-
 
 // @brief to be used as callback for service server
 void Drone::command_handler(const aviata::srv::DroneCommand::Request::SharedPtr request,
@@ -492,21 +499,15 @@ void Drone::check_command_requests()
     {
         if (it->command_request.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
         {
-            // TODO: do action, raise flag, something
-
             it->ack = it->command_request.get()->ack;
             it->timestamp_response = std::chrono::high_resolution_clock::now();
 
             // Process Acknowledgement - TODO: Decide if this logic should be moved to callback
             if (it->ack == 0) // request failed, try sending again?
             {
-                send_drone_command(it->other_drone_id, it->drone_command, it->param, it->request_origin + "_R");
+                send_drone_command(it->other_drone_id, it->drone_command, it->param, it->request_origin + "_R", *it->callback);
             }
-            else if (it->ack == 1)
-            {
-                // TODO
-            }
-
+            // let the callback handle all ack's
             (*it->callback)(it->ack);
 
             // Copy completed request to drone_command_responses vector

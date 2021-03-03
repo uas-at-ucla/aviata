@@ -71,6 +71,8 @@ private:
     uint8_t leader_increment = 0;
     uint8_t leader_increment_next = 0;
 
+    uint8_t leader_follower_listened = 0; // keep track of how many followers acknowledged LISTEN_NEW_LEADER command
+
     // Command Request Lists
     std::vector<CommandRequest> drone_command_requests;
     std::vector<CommandRequest> drone_command_responses; // TODO: log to file at end of flight?
@@ -108,7 +110,8 @@ private:
 
     void set_follower_setpoint(float q[4], float* thrust);
 
-    void send_drone_command(std::string other_drone_id, DroneCommand drone_command, int param = -1, std::string request_origin = "");
+    void send_drone_command(std::string other_drone_id, DroneCommand drone_command, int param, std::string request_origin,
+                            std::function<void(uint8_t ack)> callback);
 
     void command_handler(const aviata::srv::DroneCommand::Request::SharedPtr request, 
                          aviata::srv::DroneCommand::Response::SharedPtr response);
