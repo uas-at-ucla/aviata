@@ -298,8 +298,8 @@ int Drone::arm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
             return 1;
         return arm_frame();
     }
-    network->publish_drone_debug("Arm drone failed: improper DroneState = " + drone_state);
-    return 2;
+    network->publish_drone_debug("Arm Drone FAILED: improper DroneState = " + drone_state);
+    return 0;
 }
 
 int Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
@@ -313,21 +313,28 @@ int Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
                                [this](uint8_t ack) {
                                    if (ack == 1)
                                        leader_follower_armed--;
-                                   else if (ack == 2)
+                                   else
                                    {
-                                       network->publish_drone_debug("Arm Frame Failed: Ack = " + ack);
+                                       network->publish_drone_debug("Arm Frame FAILED: Ack = " + ack);
+                                       // TODO: cancel tasks?
                                        disarm_frame();
                                    }
                                    if (leader_follower_armed == 0) //last drone armed
-                                       px4_io.arm_system();        // arm itself last
+                                       {
+                                           network->publish_drone_debug("Arm Frame SUCCESS");
+                                           px4_io.arm_system(); // arm itself last
+                                       }
+                                   network->publish_drone_debug("Arm Frame in progress: awaiting ack for = " + leader_follower_armed);
+
                                });
         }
         return 1;
     }
+    network->publish_drone_debug("Arm Frame FAILED: leader improper DroneState = " + drone_state);
     return 0;
 }
 
-int Drone::disarm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
+int Drone::disarm_drone() 
 {
     if (drone_state == STANDBY || drone_state == DOCKED_FOLLOWER || drone_state == NEEDS_SERVICE)
         return px4_io.disarm_system();
@@ -337,11 +344,11 @@ int Drone::disarm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
             return 1;
         return disarm_frame();
     }
-    network->publish_drone_debug("Disarm drone failed: improper DroneState = " + drone_state);
-    return 2;
+    network->publish_drone_debug("Disarm Drone FAILED: improper DroneState = " + drone_state);
+    return 0;
 }
 
-int Drone::disarm_frame() // for DOCKED_LEADER (send disarm_drone() to followers)
+int Drone::disarm_frame() 
 {
     if (drone_state == DOCKED_LEADER)
     {
@@ -352,17 +359,23 @@ int Drone::disarm_frame() // for DOCKED_LEADER (send disarm_drone() to followers
                                [this](uint8_t ack) {
                                    if (ack == 1)
                                        leader_follower_disarmed--;
-                                   else if (ack == 2)
+                                   else
                                    {
-                                       network->publish_drone_debug("Disarm Frame Failed: Ack = " + ack);
+                                       network->publish_drone_debug("Disarm Frame FAILED: Ack = " + ack);
                                        // kill switch of some sort?
                                    }
                                    if (leader_follower_disarmed == 0) //last drone armed
-                                       px4_io.disarm_system();        // disarm itself last
+                                       {
+                                           network->publish_drone_debug("Disarm Frame SUCCESS");
+                                           px4_io.disarm_system(); // disarm itself last
+                                       }
+                                   network->publish_drone_debug("Disarm Frame in progress: awaiting ack for = " + leader_follower_disarmed);
+
                                });
         }
         return 1;
     }
+    network->publish_drone_debug("Disarm Frame FAILED: leader improper DroneState = " + drone_state);
     return 0;
 }
 
@@ -370,13 +383,20 @@ int Drone::takeoff_drone() // for drones in STANDBY
 {
     if (drone_state == STANDBY || drone_state == DOCKED_LEADER)
         return px4_io.takeoff_system();
-    network->publish_drone_debug("Takeoff failed: improper DroneState = " + drone_state);
-    return 2;
+
+    network->publish_drone_debug("Takeoff Drone FAILED: improper DroneState = " + drone_state);
+    return 0;
 }
 
 int Drone::takeoff_frame() // for DOCKED_LEADER (send attitude and thrust to followers)
 {
-     // control logic
+    if (drone_state == DOCKED_LEADER)
+    {
+        // TODO: start setpoint following for followers
+        network->publish_drone_debug("Frame taking off");
+        return takeoff_drone();
+    }
+    network->publish_drone_debug("Takeoff Frame FAILED: improper DroneState = " + drone_state);
     return 0;
 }
 
@@ -384,11 +404,19 @@ int Drone::land_drone() // for any undocked drone
 {
     if (drone_state == STANDBY || drone_state == NEEDS_SERVICE)
         return px4_io.land_system();
+
+    network->publish_drone_debug("Land Drone FAILED: improper DroneState = " + drone_state);
+    return 0;
 }
 
 int Drone::land_frame() // for DOCKED_LEADER (send attitude and thrust to followers)
 {
-    // control logic
+    if (drone_state == DOCKED_LEADER)
+    {
+        network->publish_drone_debug("Frame landing");
+        return land_drone();
+    }
+    network->publish_drone_debug("Land Frame FAILED: improper DroneState = " + drone_state);
     return 0;
 }
 
@@ -414,7 +442,6 @@ int Drone::become_leader()
 {
     if (drone_state == DOCKED_FOLLOWER) //TODO also check if battery% is above a certain threshold
     {
-        drone_state = DOCKED_LEADER;
         // Tell all drones to listen for new leader
         leader_follower_listened = swarm.size();
         for (const auto &[id, status] : swarm)
@@ -425,12 +452,17 @@ int Drone::become_leader()
                                        leader_follower_listened--;
                                    if (leader_follower_listened == 0) //last follower acknowledged
                                    {
+                                       drone_state = DOCKED_LEADER;
+                                       network->publish_drone_debug("Become Leader SUCCESS");
+
                                        // Start Leader stuff
                                    }
+                                   network->publish_drone_debug("Become Leader in progress: awaiting ack for = " + leader_follower_listened);
                                });
         }
         return 1;
     }
+    network->publish_drone_debug("Become Leader FAILED: improper DroneState = " + drone_state);
     return 0;
 }
 
@@ -451,15 +483,18 @@ int Drone::become_follower() //for successful sender of request_new_leader
             }
         }
         uint8_t lead_inc_new = leader_increment + 1; // could do something fancier like random (for unecessary security reasons)
+        network->publish_drone_debug("Identified new leader: drone_id = " + highest_batt_drone);
         
         send_drone_command(highest_batt_drone, BECOME_LEADER, lead_inc_new, "become new leader, " + drone_id,
         [this](uint8_t ack) {
             if (ack == 1)
                 drone_state = DOCKED_FOLLOWER;
+                network->publish_drone_debug("Become Follower SUCCESS");
                 // End Leader Stuff
         });
         return 1;
     }
+    network->publish_drone_debug("Become Follower FAILED: improper DroneState = " + drone_state);
     return 0;
 }
 
@@ -476,7 +511,7 @@ void Drone::set_follower_setpoint(float q[4], float *thrust)
     //     px4_io.set_attitude_and_thrust(q, thrust); // TODO update function call
 }
 
-// @brief async, adds to list of command requests
+// @brief async, adds to list of command requests, call check_command_requests() to process
 void Drone::send_drone_command(std::string other_drone_id, DroneCommand drone_command, int param, std::string request_origin,
                                std::function<void(uint8_t ack)> callback)
 {
@@ -488,7 +523,7 @@ void Drone::send_drone_command(std::string other_drone_id, DroneCommand drone_co
     com.command_request = network->send_drone_command_async(other_drone_id, drone_command, param);
     com.request_origin = request_origin;
     com.timestamp_request = std::chrono::high_resolution_clock::now();
-    com.callback = std::make_shared<std::function<void(uint8_t)>>([](uint8_t ack) {}); // TODO
+    // com.callback = std::make_shared<std::function<void(uint8_t)>>([](uint8_t ack) {}); // TODO
     drone_command_requests.push_back(com);
 }
 
