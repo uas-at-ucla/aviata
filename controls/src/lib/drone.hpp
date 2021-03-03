@@ -72,6 +72,8 @@ private:
     uint8_t leader_increment_next = 0;
 
     uint8_t leader_follower_listened = 0; // keep track of how many followers acknowledged LISTEN_NEW_LEADER command
+    uint8_t leader_follower_armed = 0;
+    uint8_t leader_follower_disarmed = 0;
 
     // Command Request Lists
     std::vector<CommandRequest> drone_command_requests;

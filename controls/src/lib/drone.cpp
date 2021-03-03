@@ -276,31 +276,102 @@ void Drone::update_drone_status()
     std::copy(std::begin(telemValues.dronePosition), std::end(telemValues.dronePosition), std::begin(drone_status.gps_position));
     drone_status.yaw = telemValues.droneQuarternion.z; //TODO: verify
     drone_status.battery_percent = telemValues.droneBattery.remaining_percent;
+
+    // consider moving to new function for changing frame geoemetry, etc. when docking
+    for (auto it = swarm.begin(); it != swarm.end();)
+    {
+        // remove DroneStatus of drones no longer on frame
+        if (it->second.drone_state == UNDOCKING || it->second.drone_state == DEPARTING)
+            it = swarm.erase(it);
+        else
+            ++it;
+    }
 }
 
 int Drone::arm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
 {
     if (drone_state == STANDBY || drone_state == DOCKED_FOLLOWER)
         return px4_io.arm_system();
-    return 0;
+    else if (drone_state == DOCKED_LEADER)
+    {
+        if (leader_follower_armed != 0) // protect against infinite recursive call for leader
+            return 1;
+        return arm_frame();
+    }
+    aviata::msg::DroneDebug drone_debug;
+    drone_debug.debug = "Arm drone failed: " + drone_id;
+    network->publish_drone_debug(drone_debug);
+    return 2;
 }
 
 int Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
 {
-    // control logic
+    if (drone_state == DOCKED_LEADER)
+    {
+        leader_follower_armed = swarm.size();
+        for (const auto &[id, status] : swarm)
+        {
+            send_drone_command(id, ARM, -1, "arm, " + drone_id,
+                               [this](uint8_t ack) {
+                                   if (ack == 1)
+                                       leader_follower_armed--;
+                                   else if (ack == 2)
+                                   {
+                                       aviata::msg::DroneDebug drone_debug;
+                                       drone_debug.debug = "Arm Frame Failed.";
+                                       network->publish_drone_debug(drone_debug);
+                                       disarm_frame();
+                                   }
+                                   if (leader_follower_armed == 0) //last drone armed
+                                       px4_io.arm_system();        // arm itself last
+                               });
+        }
+        return 1;
+    }
     return 0;
 }
 
 int Drone::disarm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
 {
-    if (drone_state == STANDBY || drone_state == DOCKED_FOLLOWER)
+    if (drone_state == STANDBY || drone_state == DOCKED_FOLLOWER || drone_state == NEEDS_SERVICE)
         return px4_io.disarm_system();
-    return 0;
+    else if (drone_state == DOCKED_LEADER)
+    {
+        if (leader_follower_disarmed != 0) // protect against infinite recursive call for leader
+            return 1;
+        return disarm_frame();
+    }
+
+    aviata::msg::DroneDebug drone_debug;
+    drone_debug.debug = "Disarm drone failed: " + drone_id;
+    network->publish_drone_debug(drone_debug);
+    return 2;
 }
 
 int Drone::disarm_frame() // for DOCKED_LEADER (send disarm_drone() to followers)
 {
-    // control logic
+    if (drone_state == DOCKED_LEADER)
+    {
+        leader_follower_disarmed = swarm.size();
+        for (const auto &[id, status] : swarm)
+        {
+            send_drone_command(id, DISARM, -1, "disarm, " + drone_id,
+                               [this](uint8_t ack) {
+                                   if (ack == 1)
+                                       leader_follower_disarmed--;
+                                   else if (ack == 2)
+                                   {
+                                       aviata::msg::DroneDebug drone_debug;
+                                       drone_debug.debug = "Disarm Frame Failed.";
+                                       network->publish_drone_debug(drone_debug);
+                                       // kill switch of some sort?
+                                   }
+                                   if (leader_follower_disarmed == 0) //last drone armed
+                                       px4_io.disarm_system();        // disarm itself last
+                               });
+        }
+        return 1;
+    }
     return 0;
 }
 
@@ -354,17 +425,17 @@ int Drone::become_leader()
         drone_state = DOCKED_LEADER;
         // Tell all drones to listen for new leader
         leader_follower_listened = swarm.size();
-        for (const auto& [id, status] : swarm)
+        for (const auto &[id, status] : swarm)
         {
-            send_drone_command(id, LISTEN_NEW_LEADER, leader_increment, "listen new leader, " + drone_id, 
-            [this](uint8_t ack) { //
-                if (ack == 1)
-                    leader_follower_listened--;
-                if (leader_follower_listened == 0) //last follower acknowledged
-                {
-                    // Start Leader stuff
-                }
-            });
+            send_drone_command(id, LISTEN_NEW_LEADER, leader_increment, "listen new leader, " + drone_id,
+                               [this](uint8_t ack) { //
+                                   if (ack == 1)
+                                       leader_follower_listened--;
+                                   if (leader_follower_listened == 0) //last follower acknowledged
+                                   {
+                                       // Start Leader stuff
+                                   }
+                               });
         }
         return 1;
     }
@@ -513,7 +584,7 @@ void Drone::check_command_requests()
             // Copy completed request to drone_command_responses vector
             CommandRequest done = *it;
             drone_command_responses.push_back(done);
-            drone_command_requests.erase(it);
+            it = drone_command_requests.erase(it);
         }
         else
         {
