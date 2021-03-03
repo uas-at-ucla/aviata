@@ -591,7 +591,7 @@ void Drone::test1()
         duration<double, std::milli> c2 = (f4 - f3);
 
         Offboard::VelocityNedYaw change{};
-        change.down_m_s = -0.2;
+        // change.down_m_s = -0.2;
         if (is_tag_detected)
         {
             log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
@@ -701,4 +701,11 @@ void Drone::simulation_test_moving_target() {
         time_span = d.count();
         log("Docking", "Iteration Time: " + std::to_string(time_span));
     }
+}
+
+void Drone::test_telemetry() {
+    auto telemetry = Telemetry{m_system}; // 2 and 3
+    telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
+        log("Telemetry", "got telemetry: " + std::to_string(e.yaw_deg));
+    });
 }

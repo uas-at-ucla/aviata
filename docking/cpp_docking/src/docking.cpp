@@ -6,14 +6,16 @@ int main(/*int argc, char** argv */)
 {
     Target t;
     // t.lat = 2;
-    //t.yaw = 180;
+    // t.yaw = 90;
 
     Drone drone(t);
     drone.connect_gazebo();
-    // drone.test1();
-    drone.arm();
-    drone.takeoff(3);
-    drone.land();
+    drone.test_telemetry();
+    // // drone.test1();
+    // drone.arm();
+    // drone.takeoff(3);
+    // // drone.land();
+    // drone.initiate_docking(1);
     // drone.initiate_docking(2);
     //drone.test2();
 
@@ -55,7 +57,7 @@ int main(/*int argc, char** argv */)
 //         Errors errs;
 //         bool found = ia->processImage(img, 0, 0, test, errs);
 //         if (found) {
-//             log("test", "found: " + img_name + " ----------");
+//             log("test", "found: " + img_name + " ---------- " + std::to_string(errs.x) + " " + std::to_string(errs.y) + " " + std::to_string(errs.alt) + " " + std::to_string(errs.yaw));
 //             dets++;
 //         } else {
 //             log("test", "not found: " + img_name, true);

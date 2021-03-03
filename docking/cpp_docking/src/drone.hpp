@@ -37,6 +37,7 @@ public:
     void test1();
     void test2();
     void simulation_test_moving_target();
+    void test_telemetry();
 
 private:
     Mavsdk mavsdk;
