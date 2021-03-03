@@ -298,9 +298,7 @@ int Drone::arm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
             return 1;
         return arm_frame();
     }
-    aviata::msg::DroneDebug drone_debug;
-    drone_debug.debug = "Arm drone failed: " + drone_id;
-    network->publish_drone_debug(drone_debug);
+    network->publish_drone_debug("Arm drone failed: improper DroneState = " + drone_state);
     return 2;
 }
 
@@ -317,9 +315,7 @@ int Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
                                        leader_follower_armed--;
                                    else if (ack == 2)
                                    {
-                                       aviata::msg::DroneDebug drone_debug;
-                                       drone_debug.debug = "Arm Frame Failed.";
-                                       network->publish_drone_debug(drone_debug);
+                                       network->publish_drone_debug("Arm Frame Failed: Ack = " + ack);
                                        disarm_frame();
                                    }
                                    if (leader_follower_armed == 0) //last drone armed
@@ -341,10 +337,7 @@ int Drone::disarm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
             return 1;
         return disarm_frame();
     }
-
-    aviata::msg::DroneDebug drone_debug;
-    drone_debug.debug = "Disarm drone failed: " + drone_id;
-    network->publish_drone_debug(drone_debug);
+    network->publish_drone_debug("Disarm drone failed: improper DroneState = " + drone_state);
     return 2;
 }
 
@@ -361,9 +354,7 @@ int Drone::disarm_frame() // for DOCKED_LEADER (send disarm_drone() to followers
                                        leader_follower_disarmed--;
                                    else if (ack == 2)
                                    {
-                                       aviata::msg::DroneDebug drone_debug;
-                                       drone_debug.debug = "Disarm Frame Failed.";
-                                       network->publish_drone_debug(drone_debug);
+                                       network->publish_drone_debug("Disarm Frame Failed: Ack = " + ack);
                                        // kill switch of some sort?
                                    }
                                    if (leader_follower_disarmed == 0) //last drone armed
@@ -377,9 +368,10 @@ int Drone::disarm_frame() // for DOCKED_LEADER (send disarm_drone() to followers
 
 int Drone::takeoff_drone() // for drones in STANDBY
 {
-    if (drone_state == STANDBY)
+    if (drone_state == STANDBY || drone_state == DOCKED_LEADER)
         return px4_io.takeoff_system();
-    return 0;
+    network->publish_drone_debug("Takeoff failed: improper DroneState = " + drone_state);
+    return 2;
 }
 
 int Drone::takeoff_frame() // for DOCKED_LEADER (send attitude and thrust to followers)

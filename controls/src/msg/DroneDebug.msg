@@ -1,3 +1,3 @@
 string debug
-
-# string drone_id # if necessary
+string drone_id
+# timestamp # if useful

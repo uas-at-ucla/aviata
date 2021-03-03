@@ -91,13 +91,26 @@ void Network::deinit_drone_debug_publisher()
     drone_debug_publisher = nullptr;
 }
 
-void Network::publish_drone_debug(const aviata::msg::DroneDebug &drone_debug)
+void Network::publish_drone_debug(const std::string & debug_msg)
 {
     if (drone_debug_publisher != nullptr)
     {
         init_drone_debug_publisher();
     }
+    aviata::msg::DroneDebug drone_debug;
+    drone_debug.debug = debug_msg;
+    drone_debug.drone_id = this->get_name();
     drone_debug_publisher->publish(drone_debug);
+}
+
+void Network::subscribe_drone_debug(std::function<void(aviata::msg::DroneDebug::SharedPtr)> callback)
+{
+    drone_debug_subscription = this->create_subscription<aviata::msg::DroneDebug>(DRONE_DEBUG, sensor_data_qos, callback);
+}
+
+void Network::unsubscribe_drone_debug()
+{
+    drone_debug_subscription = nullptr;
 }
 
 // DRONE COMMAND SERVICE

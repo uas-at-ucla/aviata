@@ -85,8 +85,10 @@ public:
 
     void init_drone_debug_publisher();
     void deinit_drone_debug_publisher();
-    void publish_drone_debug(const aviata::msg::DroneDebug &drone_debug);
+    void publish_drone_debug(const std::string & debug_msg);
     // subscribe functions only on groundstation?
+    void subscribe_drone_debug(std::function<void(aviata::msg::DroneDebug::SharedPtr)> callback);
+    void unsubscribe_drone_debug();
 
     // https://index.ros.org/doc/ros2/Tutorials/Custom-ROS2-Interfaces/#test-the-new-interfaces
     void init_drone_command_service(std::function<void(const aviata::srv::DroneCommand::Request::SharedPtr,
@@ -111,6 +113,7 @@ private:
     rclcpp::Subscription<aviata::msg::DroneStatus>::SharedPtr drone_status_subscription;
     
     rclcpp::Publisher<aviata::msg::DroneDebug>::SharedPtr drone_debug_publisher;
+    rclcpp::Subscription<aviata::msg::DroneDebug>::SharedPtr drone_debug_subscription;
 
     rclcpp::Service<aviata::srv::DroneCommand>::SharedPtr drone_command_service;
     std::map<std::string, rclcpp::Client<aviata::srv::DroneCommand>::SharedPtr> drone_command_clients;
