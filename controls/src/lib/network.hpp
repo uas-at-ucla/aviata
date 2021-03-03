@@ -10,6 +10,7 @@
 #include "std_msgs/msg/string.hpp"
 #include "aviata/msg/drone_status.hpp"
 #include "aviata/msg/follower_setpoint.hpp"
+#include "aviata/msg/drone_debug.hpp"
 
 #include "aviata/srv/drone_command.hpp"
 
@@ -60,6 +61,7 @@ struct CommandRequest {
 // TOPICS
 #define FOLLOWER_SETPOINT "FOLLOWER_SETPOINT"
 #define DRONE_STATUS "DRONE_STATUS"
+#define DRONE_DEBUG "DRONE_DEBUG"
 
 class Network : public rclcpp::Node
 {
@@ -81,10 +83,11 @@ public:
     void publish_drone_status(const aviata::msg::DroneStatus &drone_status);
     void subscribe_drone_status(std::function<void(aviata::msg::DroneStatus::SharedPtr)> callback);
     void unsubscribe_drone_status();
-    void send_status(aviata::msg::DroneStatus status); //old
 
-    // void subscribe_to_dock_command();
-    // void subscribe_to_undock_command();
+    void init_drone_debug_publisher();
+    void deinit_drone_debug_publisher();
+    void publish_drone_debug(const aviata::msg::DroneDebug &drone_debug);
+    // subscribe functions only on groundstation?
 
     // https://index.ros.org/doc/ros2/Tutorials/Custom-ROS2-Interfaces/#test-the-new-interfaces
     void init_drone_command_service(std::function<void(const aviata::srv::DroneCommand::Request::SharedPtr,
@@ -108,6 +111,8 @@ private:
 
     rclcpp::Publisher<aviata::msg::DroneStatus>::SharedPtr drone_status_publisher;
     rclcpp::Subscription<aviata::msg::DroneStatus>::SharedPtr drone_status_subscription;
+    
+    rclcpp::Publisher<aviata::msg::DroneDebug>::SharedPtr drone_debug_publisher;
 
     rclcpp::Service<aviata::srv::DroneCommand>::SharedPtr drone_command_service;
     std::map<std::string, rclcpp::Client<aviata::srv::DroneCommand>::SharedPtr> drone_command_clients;

@@ -31,10 +31,11 @@ void Network::deinit_follower_setpoint_publisher()
 
 void Network::publish_follower_setpoint(const aviata::msg::FollowerSetpoint &follower_setpoint)
 {
-    if (follower_setpoint_publisher != nullptr)
+    if (follower_setpoint_publisher == nullptr)
     {
-        follower_setpoint_publisher->publish(follower_setpoint);
+        init_follower_setpoint_publisher();
     }
+    follower_setpoint_publisher->publish(follower_setpoint);
 }
 
 void Network::subscribe_follower_setpoint(std::function<void(const aviata::msg::FollowerSetpoint::SharedPtr)> callback)
@@ -61,10 +62,11 @@ void Network::deinit_drone_status_publisher()
 
 void Network::publish_drone_status(const aviata::msg::DroneStatus &drone_status)
 {
-    if (drone_status_publisher != nullptr)
+    if (drone_status_publisher == nullptr)
     {
-        drone_status_publisher->publish(drone_status);
+        init_drone_status_publisher();
     }
+    drone_status_publisher->publish(drone_status);
 }
 
 void Network::subscribe_drone_status(std::function<void(aviata::msg::DroneStatus::SharedPtr)> callback)
@@ -77,10 +79,25 @@ void Network::unsubscribe_drone_status()
     drone_status_subscription = nullptr;
 }
 
-// @brief to be deprecated?
-void Network::send_status(aviata::msg::DroneStatus status)
+// DRONE DEBUG
+
+void Network::init_drone_debug_publisher()
 {
-    // status_publisher->publish(status);
+    drone_debug_publisher = this->create_publisher<aviata::msg::DroneDebug>(DRONE_DEBUG, sensor_data_qos);
+}
+
+void Network::deinit_drone_debug_publisher()
+{
+    drone_debug_publisher = nullptr;
+}
+
+void Network::publish_drone_debug(const aviata::msg::DroneDebug &drone_debug)
+{
+    if (drone_debug_publisher != nullptr)
+    {
+        init_drone_debug_publisher();
+    }
+    drone_debug_publisher->publish(drone_debug);
 }
 
 // DRONE COMMAND SERVICE
