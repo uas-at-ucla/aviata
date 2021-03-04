@@ -65,19 +65,19 @@ std::array<float, 3> PIDController::getVelocities(float x_err, float y_err, floa
     float nv = y_err * kp_nv + (y_err - m_prev_errs[1]) / m_dt * kd_nv;
     float dv = alt_err * kp_dv + (alt_err - m_prev_errs[2]) / m_dt * kd_dv;
 
-    if (abs(dv) > max_speed)
+    if (absolute_value(dv) > max_speed)
     {
-        dv = max_speed * dv / abs(dv);
+        dv = max_speed * dv / absolute_value(dv);
     }
 
-    if (abs(ev) > max_speed)
+    if (absolute_value(ev) > max_speed)
     {
-        ev = max_speed * ev / abs(ev);
+        ev = max_speed * ev / absolute_value(ev);
     }
 
-    if (abs(nv) > max_speed)
+    if (absolute_value(nv) > max_speed)
     {
-        nv = max_speed * nv / abs(nv);
+        nv = max_speed * nv / absolute_value(nv);
     }
 
     m_prev_errs[0] = x_err;

@@ -544,6 +544,10 @@ void Drone::test0()
 
 void Drone::test1()
 {
+    log("Test 1", "Warming camera up...");
+    for (int count = 0; count < 60; count++) {
+        camera.update_current_image(0, 0, 5, 0, 0);
+    }
     bool arm_code = arm();
     if (!arm_code)
     {

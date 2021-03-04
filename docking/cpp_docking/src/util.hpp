@@ -61,6 +61,15 @@ inline double to_degrees(double radians)
     return radians * 180.0 / M_PI;
 }
 
+// cmath::abs() is only implemented for int, long int, or long long int
+inline float absolute_value(float val) {
+    if (val < 0.0) {
+        return -1.0 * val;
+    } else {
+        return val;
+    }
+}
+
 // Target type
 struct Target
 {
