@@ -5,22 +5,13 @@ void apriltag_test();
 int main(/*int argc, char** argv */)
 {
     Target t;
-    // t.lat = 2;
     // t.yaw = 90;
 
     Drone drone(t);
     drone.connect_gazebo();
-    drone.test_telemetry();
-    // // drone.test1();
-    // drone.arm();
-    // drone.takeoff(3);
-    // // drone.land();
-    // drone.initiate_docking(1);
-    // drone.initiate_docking(2);
-    //drone.test2();
-
-    // drone.simulation_test_moving_target();
-    // apriltag_test();
+    drone.arm();
+    drone.takeoff(2);
+    drone.initiate_docking(1);
 
     return 0;
 }

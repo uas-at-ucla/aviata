@@ -594,9 +594,10 @@ void Drone::test1()
         // change.down_m_s = -0.2;
         if (is_tag_detected)
         {
+            std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.1);
             log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
-                         " errors: " + std::to_string(errs.x) + " " + std::to_string(errs.y) + " " + std::to_string(errs.alt) + " " + std::to_string(errs.yaw));
-            std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.1); // 3
+                         " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
+                         + " velocities: x=" + std::to_string(velocities[0]) + " y=" + std::to_string(velocities[1]) + " z=" + std::to_string(velocities[2]));
             change.north_m_s = velocities[1]; // 3
             change.east_m_s = velocities[0]; // 3
             change.yaw_deg = errs.yaw; // 2

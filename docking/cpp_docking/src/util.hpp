@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <cmath>
+#include <ctime>
+#include <iomanip>
 
 // Constants
 
@@ -36,7 +38,16 @@
 // Logs
 inline void log(const std::string &tag, const std::string msg, bool err = false)
 {
-    std::cout << (err ? ERROR_CONSOLE_TEXT : LOG_CONSOLE_TEXT) << "[" << tag << "] " << NORMAL_CONSOLE_TEXT << msg << std::endl;
+    std::time_t t = std::time(nullptr);
+    std::cout << (err ? ERROR_CONSOLE_TEXT : LOG_CONSOLE_TEXT) 
+              << "[" 
+              << std::put_time(std::localtime(&t), "%r")
+              << "|"
+              << tag 
+              << "] " 
+              << NORMAL_CONSOLE_TEXT 
+              << msg 
+              << std::endl;
 }
 
 // Math functions
