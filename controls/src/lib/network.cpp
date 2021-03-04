@@ -31,11 +31,10 @@ void Network::deinit_follower_setpoint_publisher()
 
 void Network::publish_follower_setpoint(const aviata::msg::FollowerSetpoint &follower_setpoint)
 {
-    if (follower_setpoint_publisher == nullptr)
+    if (follower_setpoint_publisher != nullptr)
     {
-        init_follower_setpoint_publisher();
+        follower_setpoint_publisher->publish(follower_setpoint);
     }
-    follower_setpoint_publisher->publish(follower_setpoint);
 }
 
 void Network::subscribe_follower_setpoint(std::function<void(const aviata::msg::FollowerSetpoint::SharedPtr)> callback)
@@ -62,11 +61,10 @@ void Network::deinit_drone_status_publisher()
 
 void Network::publish_drone_status(const aviata::msg::DroneStatus &drone_status)
 {
-    if (drone_status_publisher == nullptr)
+    if (drone_status_publisher != nullptr)
     {
-        init_drone_status_publisher();
+        drone_status_publisher->publish(drone_status);
     }
-    drone_status_publisher->publish(drone_status);
 }
 
 void Network::subscribe_drone_status(std::function<void(aviata::msg::DroneStatus::SharedPtr)> callback)
@@ -93,7 +91,7 @@ void Network::deinit_drone_debug_publisher()
 
 void Network::publish_drone_debug(const std::string & debug_msg)
 {
-    if (drone_debug_publisher != nullptr)
+    if (drone_debug_publisher == nullptr)
     {
         init_drone_debug_publisher();
     }
@@ -134,13 +132,15 @@ void Network::deinit_drone_command_service()
 void Network::init_drone_command_client(std::string other_drone_id)
 {
     std::string service_name = other_drone_id + "_SERVICE";
-    drone_command_clients[service_name] = this->create_client<aviata::srv::DroneCommand>(service_name);
+    if (drone_command_clients.find(service_name) == drone_command_clients.end())
+        drone_command_clients[service_name] = this->create_client<aviata::srv::DroneCommand>(service_name);
 }
 
 void Network::deinit_drone_command_client(std::string other_drone_id)
 {
     std::string service_name = other_drone_id + "_SERVICE";
-    drone_command_clients[service_name] = nullptr;
+    auto it = drone_command_clients.find(other_drone_id);
+    drone_command_clients.erase(it);
 }
 
 // @brief async command request
