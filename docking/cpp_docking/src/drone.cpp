@@ -590,7 +590,7 @@ void Drone::test1()
         high_resolution_clock::time_point f4 = high_resolution_clock::now();
         duration<double, std::milli> c2 = (f4 - f3);
 
-        Offboard::VelocityNedYaw change{};
+        Offboard::VelocityBodyYawspeed change{};
         // change.down_m_s = -0.2;
         if (is_tag_detected)
         {
@@ -598,17 +598,15 @@ void Drone::test1()
             log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
                          " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
                          + " velocities: x=" + std::to_string(velocities[0]) + " y=" + std::to_string(velocities[1]) + " z=" + std::to_string(velocities[2]));
-            change.north_m_s = velocities[1]; // 3
-            change.east_m_s = velocities[0]; // 3
-            change.yaw_deg = errs.yaw; // 2
+            change.forward_m_s = velocities[1]; // 3
+            change.right_m_s = velocities[0]; // 3
         } else {
             log(tag, "Failed to find Apriltag");
-            change.yaw_deg = m_yaw; // 2
-            change.north_m_s = 0.0; // 3
-            change.east_m_s = 0.0; // 3
+            change.forward_m_s = 0.0; // 3
+            change.right_m_s = 0.0; // 3
         }
 
-        offboard.set_velocity_ned(change);
+        offboard.set_velocity_body(change);
         // cv::imwrite("test"+ std::to_string(time_span) + ".png", img); // any (debug)
 
         high_resolution_clock::time_point t2 = high_resolution_clock::now();

@@ -156,13 +156,13 @@ bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags,
 
             float raw_x = x_offset * tag_pixel_ratio;
             float raw_y = y_offset * tag_pixel_ratio;
-            float r = sqrt(raw_x * raw_x + raw_y * raw_y);
-            float theta = atan2(raw_y, raw_x);
-            theta += -1.0 * to_radians(yaw); // convert from body to ned coordinates
-            float real_x = r * cos(theta);
-            float real_y = r * sin(theta);
-            errs.x = real_x;
-            errs.y = real_y;
+            // float r = sqrt(raw_x * raw_x + raw_y * raw_y);
+            // float theta = atan2(raw_y, raw_x);
+            // theta += -1.0 * to_radians(yaw); // convert from body to ned coordinates
+            // float real_x = r * cos(theta);
+            // float real_y = r * sin(theta);
+            errs.x = raw_x;//real_x;
+            errs.y = raw_y;//real_y;
 
             //Cleanup
             apriltag_detection_destroy(det);
