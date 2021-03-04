@@ -16,7 +16,6 @@ DroneTelemetry::~DroneTelemetry()
 
 void DroneTelemetry::init_telem()
 {
-    // TODO add these subscription functions to px4_io
     telemetry->subscribe_position([&](Telemetry::Position position) {
         dronePosition[0] = position.latitude_deg;
         dronePosition[1] = position.longitude_deg;
@@ -34,5 +33,6 @@ void DroneTelemetry::init_telem()
     px4_io.subscribe_attitude_target([this](const mavlink_attitude_target_t& attitude_target) {
         std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(q_target));
         thrust_target = attitude_target.thrust;
+        this->attitude_target = attitude_target;
     });
 }
