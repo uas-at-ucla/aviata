@@ -19,7 +19,7 @@ public:
     //attitude targets
     float q_target[4];
     float thrust_target;
-    mavlink_attitude_target_t attitude_target
+    mavlink_attitude_target_t attitude_target;
     
     DroneTelemetry(PX4IO& px4_io);
     ~DroneTelemetry();
