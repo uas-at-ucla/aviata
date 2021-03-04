@@ -539,18 +539,29 @@ void Drone::test0()
         time_span = d.count();
     }
     log("Test 0", "Done holding");
-    while (!land()) ;
+    bool landed = false;
+    do {
+        landed = land();
+    } while (landed == false);
 }
 
 void Drone::test1()
 {
+    log("Test 1", "Warming camera up...");
+    int count = 0;
+    Mat img;
+    while (count < 60) {
+        img = camera.update_current_image(0, 0, 5, 0, 0); // this is blocking
+        count++;
+    }
+
     bool arm_code = arm();
     if (!arm_code)
     {
         log("Test 1", "Failed to arm");
         return;
     }
-    bool takeoff_code = takeoff(3);
+    bool takeoff_code = takeoff(2);
     if (!takeoff_code)
     {
         log("Test 1", "Failed to take off");
@@ -559,7 +570,7 @@ void Drone::test1()
 
     log("Test 1", "Holding...");
 
-    Mat img;
+    // Mat img;
     std::string tag = "Test 1";
     std::string tags_detected = "";
 
@@ -600,16 +611,16 @@ void Drone::test1()
                          + " velocities: x=" + std::to_string(velocities[0]) + " y=" + std::to_string(velocities[1]) + " z=" + std::to_string(velocities[2]));
             change.north_m_s = velocities[1]; // 3
             change.east_m_s = velocities[0]; // 3
-            change.yaw_deg = errs.yaw; // 2
+            // change.yaw_deg = errs.yaw; // 2
         } else {
             log(tag, "Failed to find Apriltag");
-            change.yaw_deg = m_yaw; // 2
+            // change.yaw_deg = m_yaw; // 2
             change.north_m_s = 0.0; // 3
             change.east_m_s = 0.0; // 3
         }
 
         offboard.set_velocity_ned(change);
-        // cv::imwrite("test"+ std::to_string(time_span) + ".png", img); // any (debug)
+        cv::imwrite("test"+ std::to_string(time_span) + ".png", img); // any (debug)
 
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
         duration<double, std::milli> d = (t2 - t1);
@@ -621,7 +632,10 @@ void Drone::test1()
     cv::imwrite("test.png", img);
     log(tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(count_frames));
     log(tag, "Average FPS: " + std::to_string(count_frames / (time_span / 1000)));
-    land();
+    bool landed = false;
+    do {
+        landed = land();
+    } while (landed == false);
 }
 
 void Drone::simulation_test_moving_target() {
@@ -706,7 +720,43 @@ void Drone::simulation_test_moving_target() {
 
 void Drone::test_telemetry() {
     auto telemetry = Telemetry{m_system}; // 2 and 3
+    const Telemetry::Result set_rate_result_a = telemetry.set_rate_attitude(20);
     telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
-        log("Telemetry", "got telemetry: " + std::to_string(e.yaw_deg));
+        set_yaw(e.yaw_deg);
     });
+
+    Mat img;
+    std::string tag = "Test telem";
+    std::string tags_detected = "";
+
+    high_resolution_clock::time_point t1 = high_resolution_clock::now();
+    int time_span = 0;
+    int count_frames = 0;
+    Errors errs;
+    while (true)
+    {
+        high_resolution_clock::time_point f1 = high_resolution_clock::now();
+        img = camera.update_current_image(0, 0, 5, 0, 0); // this is blocking
+        high_resolution_clock::time_point f2 = high_resolution_clock::now();
+        duration<double, std::milli> c1 = (f2 - f1);
+
+        high_resolution_clock::time_point f3 = high_resolution_clock::now();
+        bool is_tag_detected = image_analyzer.processImage(img, 0, m_system, tags_detected, errs); //Detects apriltags and calculates errors
+        high_resolution_clock::time_point f4 = high_resolution_clock::now();
+        duration<double, std::milli> c2 = (f4 - f3);
+
+        if (is_tag_detected)
+        {
+            log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
+                         " errors: " + std::to_string(errs.x) + " " + std::to_string(errs.y) + " " + std::to_string(errs.alt) + " " + std::to_string(errs.yaw));
+            // std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.2);
+        } else {
+            log(tag, "Failed to find Apriltag");
+        }
+
+        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+        duration<double, std::milli> d = (t2 - t1);
+        time_span = d.count();
+        count_frames++;
+    }
 }
