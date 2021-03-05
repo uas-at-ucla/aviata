@@ -8,6 +8,17 @@ Drone::Drone(std::string drone_id) : drone_id(drone_id), px4_io(drone_id), telem
     drone_state = STANDBY;
     update_drone_status();
 
+    px4_io.subscribe_armed([this](bool is_armed) {
+        armed = is_armed;
+    });
+
+    px4_io.subscribe_status_text([this](mavsdk::Telemetry::StatusText status_text) {
+        if (status_text.text == "Kill-switch engaged")
+            kill_switch_engaged = true;
+        else if (status_text.text == "Kill-switch disengaged")
+            kill_switch_engaged = false;
+    });
+
     Network::init();
     network = std::make_shared<Network>(drone_id);
     // init publishers
@@ -283,7 +294,7 @@ void Drone::update_drone_status()
     drone_status.drone_state = drone_state;
     drone_status.docking_slot = docking_slot;
     std::copy(std::begin(telemValues.dronePosition), std::end(telemValues.dronePosition), std::begin(drone_status.gps_position));
-    drone_status.yaw = telemValues.droneQuarternion.z; //TODO: verify
+    drone_status.yaw = telemValues.droneEulerAngle.yaw_deg;
     drone_status.battery_percent = telemValues.droneBattery.remaining_percent;
 }
 
@@ -321,8 +332,8 @@ int Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
                                    }
                                    if (leader_follower_armed == 0) //last drone armed
                                        {
-                                           network->publish_drone_debug("Arm Frame SUCCESS");
                                            px4_io.arm_system(); // arm itself last
+                                           network->publish_drone_debug("Arm Frame SUCCESS");
                                        }
                                    network->publish_drone_debug("Arm Frame in progress: awaiting ack for = " + leader_follower_armed);
 
@@ -363,12 +374,12 @@ int Drone::disarm_frame()
                                    else
                                    {
                                        network->publish_drone_debug("Disarm Frame FAILED: Ack = " + ack);
-                                       // kill switch of some sort?
+                                       // TODO: kill switch of some sort?
                                    }
                                    if (leader_follower_disarmed == 0) //last drone armed
                                        {
-                                           network->publish_drone_debug("Disarm Frame SUCCESS");
                                            px4_io.disarm_system(); // disarm itself last
+                                           network->publish_drone_debug("Disarm Frame SUCCESS");
                                        }
                                    network->publish_drone_debug("Disarm Frame in progress: awaiting ack for = " + leader_follower_disarmed);
 
@@ -463,7 +474,8 @@ int Drone::become_leader()
                                        network->publish_drone_debug("Become Leader SUCCESS");
 
                                        // TODO: Start Leader stuff
-                                       network->init_follower_setpoint_publisher();
+                                       init_leader();
+                                       
                                    }
                                    network->publish_drone_debug("Become Leader in progress: awaiting ack for = " + leader_follower_listened);
                                });
@@ -500,7 +512,7 @@ int Drone::become_follower() //for successful sender of request_new_leader
                 network->publish_drone_debug("Become Follower SUCCESS");
                 
                 // TODO: End Leader Stuff
-                network->deinit_follower_setpoint_publisher();
+                deinit_leader();
         });
         return 1;
     }
@@ -508,17 +520,25 @@ int Drone::become_follower() //for successful sender of request_new_leader
     return 0;
 }
 
-void Drone::get_leader_setpoint(float q[4], float *thrust)
+void Drone::init_leader()
 {
-    q = telemValues.q_target;
-    thrust = &(telemValues.thrust_target);
+    network->init_follower_setpoint_publisher();
+    // send follower setpoints
+    px4_io.subscribe_attitude_target([this](const mavlink_attitude_target_t &attitude_target) {
+        if (!kill_switch_engaged) {
+            aviata::msg::FollowerSetpoint follower_setpoint;
+            std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(follower_setpoint.q));
+            follower_setpoint.thrust = attitude_target.thrust;
+            follower_setpoint.leader_increment = this->leader_increment;
+            network->publish_follower_setpoint(follower_setpoint);
+        }
+    });
 }
 
-void Drone::set_follower_setpoint(float q[4], float *thrust)
+void Drone::deinit_leader()
 {
-    // if (drone_state == DOCKED_FOLLOWER) //is this check necessary?
-    //     // offset calculations
-    //     px4_io.set_attitude_and_thrust(q, thrust); // TODO update function call
+    network->deinit_follower_setpoint_publisher();
+    px4_io.subscribe_attitude_target(nullptr); // possibly unecessary since publisher is deinitialized
 }
 
 // @brief async, adds to list of command requests, call check_command_requests() to process

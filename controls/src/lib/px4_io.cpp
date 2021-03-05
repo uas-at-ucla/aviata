@@ -82,40 +82,45 @@ void PX4IO::call_queued_mavsdk_callbacks() {
 // @return 1 if successful, 0 otherwise
 int PX4IO::arm_system()
 {
-    while (telemetry->health_all_ok() != true) {
+    if (telemetry->armed()) // if already armed
+        return 1;
+    while (!telemetry->health_all_ok())
+    {
         std::cout << drone_id << " is getting ready to arm." << std::endl;
-        sleep_for(seconds(1));
+        sleep_for(milliseconds(100));
     }
-
     // Arm vehicle
     std::cout << "Arming " << drone_id << "..." << std::endl;
     const Action::Result arm_result = action->arm();
-    if (arm_result != Action::Result::Success) {
+    if (arm_result != Action::Result::Success)
+    {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to arm: " << arm_result << NORMAL_CONSOLE_TEXT
                   << std::endl;
         return 0;
     }
-
-    while (!telemetry->armed()) {
-        sleep_for(seconds(1));
+    while (!telemetry->armed())
+    {
+        sleep_for(milliseconds(100));
     }
-
     return 1;
 }
 
 // @return 1 if successful, 0 otherwise
 int PX4IO::disarm_system()
 {
+    if (!telemetry->armed()) // if already disarmed
+        return 1;
     // Verify drone is on ground
-    while (telemetry->in_air() != true) {
+    while (telemetry->in_air() != true)
+    {
         std::cout << "Verifying " << drone_id << " is not in the air..." << std::endl;
-        sleep_for(seconds(1));
+        sleep_for(milliseconds(100));
     }
-
     // Disarm vehicle
     std::cout << "Disarming " << drone_id << "..." << std::endl;
     const Action::Result disarm_result = action->disarm();
-    if (disarm_result != Action::Result::Success) {
+    if (disarm_result != Action::Result::Success)
+    {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to disarm: " << disarm_result << NORMAL_CONSOLE_TEXT
                   << std::endl;
         return 0;
@@ -183,7 +188,7 @@ int PX4IO::set_hold_mode() {
 // @return 1 if successful, 0 otherwise
 int PX4IO::takeoff_system()
 {
-    if (telemetry->armed() != true){
+    if (!telemetry->armed()){
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " is not armed. Arm first before takeoff." 
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
@@ -209,13 +214,6 @@ int PX4IO::land_system()
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
     }
-
-    // // Check if vehicle is still in air
-    // while (telemetry->in_air()) {
-    //     std::cout << drone_id << " is landing..." << std::endl;
-    //     sleep_for(seconds(1));
-    // }
-    // std::cout << drone_id << " landed!" << std::endl;
     return 1;
 }
 
