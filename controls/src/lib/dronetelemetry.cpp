@@ -22,17 +22,21 @@ void DroneTelemetry::init_telem()
         dronePosition[2] = position.absolute_altitude_m;
         dronePosition[3] = position.relative_altitude_m;
     });
-    telemetry->subscribe_attitude_quaternion([&](Telemetry::Quaternion quaternion){
+    telemetry->subscribe_attitude_quaternion([&](Telemetry::Quaternion quaternion) {
         droneQuarternion = quaternion;
     });
     telemetry->subscribe_battery([&](Telemetry::Battery battery){
         droneBattery = battery;
     });
 
-    //drone always subscribing to its own target setpoint
-    px4_io.subscribe_attitude_target([this](const mavlink_attitude_target_t& attitude_target) {
-        std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(q_target));
-        thrust_target = attitude_target.thrust;
-        this->attitude_target = attitude_target;
+    telemetry->subscribe_attitude_euler([&](Telemetry::EulerAngle euler_angle) {
+        droneEulerAngle = euler_angle;
     });
+
+    // most likely unused
+    // px4_io.subscribe_attitude_target([this](const mavlink_attitude_target_t& attitude_target) {
+    //     std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(q_target));
+    //     thrust_target = attitude_target.thrust;
+    //     this->attitude_target = attitude_target;
+    // });
 }

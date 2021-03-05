@@ -67,6 +67,9 @@ private:
     uint8_t docking_slot = 0;
     std::map<std::string, DroneStatus> swarm; // map by drone_id
 
+    bool kill_switch_engaged;
+    bool armed;
+
     // Leader
     uint8_t leader_increment = 0;
     uint8_t leader_increment_next = 0;
@@ -108,9 +111,9 @@ private:
 
     int become_follower(); //for successful sender of request_new_leader
 
-    void get_leader_setpoint(float q[4], float* thrust);
+    void init_leader();
 
-    void set_follower_setpoint(float q[4], float* thrust);
+    void deinit_leader();
 
     void send_drone_command(std::string other_drone_id, DroneCommand drone_command, int param, std::string request_origin,
                             std::function<void(uint8_t ack)> callback);
