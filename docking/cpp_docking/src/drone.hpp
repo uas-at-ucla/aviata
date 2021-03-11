@@ -6,6 +6,7 @@
 #define MAX_HEIGHT_STAGE_2 3
 #define STAGE_1_TOLERANCE 0.10
 #define STAGE_2_TOLERANCE 0.05
+#define THRESHOLD_YAW_SPEED 0.2
 
 #if USE_RASPI_CAMERA == 1
     #include "raspi_camera.hpp"

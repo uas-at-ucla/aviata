@@ -143,7 +143,7 @@ bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags,
             {
                 incline_angle = 0;
             }
-            errs.yaw = incline_angle * -1 + yaw; //Finds rotational error from diagonal angle
+            //errs.yaw = incline_angle * -1 + yaw; //Finds rotational error from diagonal angle
 
             //Finds the offset of the image location
             float x_offset = center[0] - image_center.x;
@@ -153,7 +153,7 @@ bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags,
             // errs.horiz_percentage_offset = sqrt(x_percent_offset * x_percent_offset + y_percent_offset * y_percent_offset);
 
             // 3. Calculate x/y error
-
+            /**
             float raw_x = x_offset * tag_pixel_ratio;
             float raw_y = y_offset * tag_pixel_ratio;
             float r = sqrt(raw_x * raw_x + raw_y * raw_y);
@@ -163,6 +163,9 @@ bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags,
             float real_y = r * sin(theta);
             errs.x = real_x;
             errs.y = real_y;
+            **/
+           errs.x=x_offset * tag_pixel_ratio;
+           errs.y=y_offset * tag_pixel_ratio;
 
             //Cleanup
             apriltag_detection_destroy(det);
