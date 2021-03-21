@@ -145,6 +145,8 @@ class Drone:
             if self.control_mode == CONTROL_MODE_LEADER or self.control_mode == CONTROL_MODE_FOLLOWER:
                 # See https://github.com/PX4/Firmware/blob/release/1.11/src/modules/mc_att_control/AttitudeControl/AttitudeControl.cpp#L83
                 att_err_q = self.sensors.att.inverse * self.att_setpoint
+                if att_err_q[0] < 0:
+                    att_err_q = -att_err_q # put quaternion in "canonical" form
                 att_err = 2 * att_err_q.imaginary # PX4 approximation of att_err_q.axis * att_err_q.angle = 2 * math.asin(att_err_q.imaginary)
                 att_rate_sp = config.constants.P_att * att_err
                 att_rate_sp = constrain(att_rate_sp, -config.constants.max_att_rate, config.constants.max_att_rate)
@@ -267,7 +269,7 @@ class PhysicalWorld:
             if not drone is self.leader_drone:
                 drone.control_loop(self.sample_period_s)
 
-        actuator_effectiveness = self.structure.geometry['mix']['A_4dof']
+        actuator_effectiveness = self.structure.geometry['mix']['A']
         combined_mixer = self.structure.geometry['mix']['B_px_4dof']
         # ideal_forces = np.linalg.multi_dot([actuator_effectiveness, combined_mixer, setpoint]) # TODO retrieve setpoint from one of the drones (this probably isn't important though)
         self.structure.u = np.zeros([config.constants.num_drones * config.constants.num_rotors, 1])
@@ -279,12 +281,12 @@ class PhysicalWorld:
         forces = np.dot(actuator_effectiveness, self.structure.u)[:,0]
 
         torque = forces[:3]
-        force = forces[3]
+        force = forces[3:]
 
         ang_acc = np.dot(self.structure.geometry['Iinv'], torque - np.cross(self.structure.att_rate, np.dot(self.structure.geometry['I'], self.structure.att_rate)))
         lin_acc = force / self.structure.geometry['M']
 
         # transform from body frame to global frame
         self.structure.ang_acc = self.structure.att.rotate(ang_acc)
-        self.structure.lin_acc = self.structure.att.rotate(np.array((0.0, 0.0, lin_acc)))
+        self.structure.lin_acc = self.structure.att.rotate(lin_acc)
         self.structure.lin_acc[2] += config.constants.g # gravity is a thing
