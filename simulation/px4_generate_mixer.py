@@ -194,10 +194,10 @@ def geometry_to_mix(geometry):
     A = np.vstack([Am, At])
 
     # Mix matrix computed as pseudoinverse of A
-    B = np.linalg.pinv(A)
+    # B = np.linalg.pinv(A)
 
     # Optimal inverse to minimize motor saturation:
-    # B = optimize_saturation.optimal_inverse(A)
+    B = optimize_saturation.optimal_inverse(A)
 
     return A, B
 
