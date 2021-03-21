@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# TODO Not yet updated for canted motors
+
 import sys
 import math
 import numpy as np
