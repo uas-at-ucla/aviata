@@ -4,8 +4,8 @@ import numpy as np
 import cvxpy as cvx
 
 def maximize_setpoint(A, i, b, lower_bounds, upper_bounds, negative=False):
-    # n = A.shape[0] # number of rows of A (setpoints)
-    m = A.shape[1] # number of columns of A (rotors)
+    # m = A.shape[0] # number of rows of A (setpoints)
+    n = A.shape[1] # number of columns of A (rotors)
 
     # check that system has solution
     # if (np.linalg.matrix_rank(np.column_stack((A,b))) - np.linalg.matrix_rank(A)):
@@ -14,12 +14,22 @@ def maximize_setpoint(A, i, b, lower_bounds, upper_bounds, negative=False):
     # constraints for equality Ax = b, excluding the value to maximize
     A_eq = np.delete(A, i, 0)
     b_eq = np.delete(b, i, 0)
+    
+    # set irrelevant rotors to 0
+    b_nonzero = np.append(np.nonzero(b), i)
+    A_bnonzero = A[b_nonzero]
+    for j in range(n):
+        if np.all(A_bnonzero[:,j] == 0):
+            sel_j = np.zeros((1,n))
+            sel_j[0,j] = 1
+            A_eq = np.append(A_eq, sel_j, axis=0)
+            b_eq = np.append(b_eq, 0)
 
     # multiply A[i] by -1 if value to maximize is negative (want to maximize magnitude)
     A_i_obj = A[i] * (-1 if negative else 1)
 
     # Construct the problem.
-    x = cvx.Variable(m)
+    x = cvx.Variable(n)
     objective = cvx.Maximize(A_i_obj @ x)
     constraints = [A_eq@x == b_eq, x >= lower_bounds, x <= upper_bounds ]
     prob = cvx.Problem(objective, constraints)
@@ -30,10 +40,10 @@ def maximize_setpoint(A, i, b, lower_bounds, upper_bounds, negative=False):
     return x.value
 
 def optimal_inverse(A):
-    n = A.shape[0] # number of rows of A (setpoints)
-    m = A.shape[1] # number of columns of A (rotors)
-    B = np.zeros([m, n])
-    thrust_sol = maximize_setpoint(A, 5, np.zeros(n), np.zeros(m), np.ones(m), negative=True)
+    m = A.shape[0] # number of rows of A (setpoints)
+    n = A.shape[1] # number of columns of A (rotors)
+    B = np.zeros([n, m])
+    thrust_sol = maximize_setpoint(A, 5, np.zeros(m), np.zeros(n), np.ones(n), negative=True)
     max_thrust = A[5] @ thrust_sol
     B[:,5] = thrust_sol / max_thrust
 
@@ -44,7 +54,7 @@ def optimal_inverse(A):
     torque_contraints = np.minimum(hover_thrust_vals, inverse_hover_thrust_vals)
 
     for i in [0,1,2]:
-        torque_sol = maximize_setpoint(A, i, np.zeros(n), -torque_contraints, torque_contraints)
+        torque_sol = maximize_setpoint(A, i, np.zeros(m), -torque_contraints, torque_contraints)
         max_torque = A[i] @ torque_sol
         B[:,i] = torque_sol / max_torque
     
