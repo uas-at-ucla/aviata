@@ -12,6 +12,7 @@ int main(/*int argc, char** argv */)
     drone.arm();
     drone.takeoff(2);
     drone.initiate_docking(1);
+    // apriltag_test();
 
     return 0;
 }
@@ -30,7 +31,7 @@ int main(/*int argc, char** argv */)
 
 // void apriltag_test() {
 //     ImageAnalyzer *ia = new ImageAnalyzer();
-//     std::string path = "/home/axel/Desktop/UAS/testing/02-24-2021-offboard-manual/7-images";
+//     std::string path = "/home/axel/Desktop/UAS/testing/03-04-2021-xy-body-new-target-testing/7-images";
 //     int dets = 0;
 //     int nondets = 0;
 

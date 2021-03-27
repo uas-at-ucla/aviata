@@ -9,6 +9,7 @@
 
 #include <apriltag/apriltag.h>
 #include <apriltag/tag36h11.h>
+#include <apriltag/tag16h5.h>
 
 #include <string>
 #include <math.h>
@@ -18,6 +19,7 @@
 ImageAnalyzer::ImageAnalyzer()
 {
     tf = tag36h11_create();
+    // tf = tag16h5_create();
     m_tagDetector = apriltag_detector_create();
     m_tagDetector->nthreads = 4;
     m_tagDetector->quad_decimate = 1; // default is 2.0, so this will hurt speed but increase detection rate
@@ -27,6 +29,7 @@ ImageAnalyzer::~ImageAnalyzer()
 {
     apriltag_detector_destroy(m_tagDetector);
     tag36h11_destroy(tf);
+    // tag16h5_destroy(tf);
 }
 
 /**
