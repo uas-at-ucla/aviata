@@ -512,34 +512,6 @@ void Drone::offset_errors(Errors &errs, int id)
 
 void Drone::test0()
 {
-    bool arm_code = arm();
-    if (!arm_code)
-    {
-        log("Test 0", "Failed to arm");
-        return;
-    }
-    bool takeoff_code = takeoff(2);
-    if (!takeoff_code)
-    {
-        log("Test 0", "Failed to take off");
-        return;
-    }
-
-    log("Test 0", "Holding...");
-
-    int time_span = 0;
-    auto offboard = Offboard{m_system};
-    high_resolution_clock::time_point start = high_resolution_clock::now();
-    while (time_span < 1000 * 5)
-    {
-        Offboard::VelocityNedYaw stay{};
-        offboard.set_velocity_ned(stay);
-        high_resolution_clock::time_point now = high_resolution_clock::now();
-        duration<double, std::milli> d = (now - start);
-        time_span = d.count();
-    }
-    log("Test 0", "Done holding");
-    while (!land()) ;
 }
 
 void Drone::test1()
@@ -554,7 +526,7 @@ void Drone::test1()
         log("Test 1", "Failed to arm");
         return;
     }
-    bool takeoff_code = takeoff(3);
+    bool takeoff_code = takeoff(1);
     if (!takeoff_code)
     {
         log("Test 1", "Failed to take off");
@@ -582,6 +554,7 @@ void Drone::test1()
     PIDController pid(m_dt);
 
     Errors errs;
+    int n_missed_frames = 0;
     while (time_span < 10 * 1000 /* 10 seconds */)
     {
         high_resolution_clock::time_point f1 = high_resolution_clock::now();
@@ -598,16 +571,21 @@ void Drone::test1()
         // change.down_m_s = -0.2;
         if (is_tag_detected)
         {
-            std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.1);
-            log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
+            std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.4);
+            log(tag, "Apriltag found! " + std::to_string(time_span) + " camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
                          " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
                          + " velocities: x=" + std::to_string(velocities[0]) + " y=" + std::to_string(velocities[1]) + " z=" + std::to_string(velocities[2]));
             change.forward_m_s = velocities[1]; // 3
             change.right_m_s = velocities[0]; // 3
+            n_missed_frames = 0;
         } else {
-            log(tag, "Failed to find Apriltag");
-            change.forward_m_s = 0.0; // 3
-            change.right_m_s = 0.0; // 3
+            log(tag, "Failed to find Apriltag, number missed frames: " + std::to_string(n_missed_frames)); 
+
+            if (n_missed_frames > 3) {
+                change.forward_m_s = 0.0; // 3
+                change.right_m_s = 0.0; // 3
+            }
+            n_missed_frames++;
         }
 
         offboard.set_velocity_body(change);
@@ -620,7 +598,7 @@ void Drone::test1()
     }
     Offboard::VelocityNedYaw hold{};
     offboard.set_velocity_ned(hold);
-    cv::imwrite("test.png", img);
+    if (!img.empty()) cv::imwrite("test.png", img);
     log(tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(count_frames));
     log(tag, "Average FPS: " + std::to_string(count_frames / (time_span / 1000)));
     land();

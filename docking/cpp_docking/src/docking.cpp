@@ -6,9 +6,7 @@ int main(/*int argc, char** argv */)
 {
     Target t;
     // t.yaw = 90;
-    t.lon = 1;
-    t.lat = 1;
-
+    
     Drone drone(t);
     drone.connect_gazebo();
     drone.test1();

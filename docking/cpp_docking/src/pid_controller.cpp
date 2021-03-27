@@ -43,12 +43,12 @@ std::array<float, 3> PIDController::getVelocities(float x_err, float y_err, floa
     float kd_ev;
     float kd_dv;
     if(!m_overshoot_adjust){ 
-        kp_nv = 0.6 * ku_nv;
-        kp_ev = 0.6 * ku_ev;
+        kp_nv = 2;//0.6 * ku_nv;
+        kp_ev = 2;//0.6 * ku_ev;
         kp_dv = 0.6 * ku_dv;
 
-        kd_nv = 0.15;
-        kd_ev = 0.15;
+        kd_nv = 0.0; //0.15;
+        kd_ev = 0.0; //0.15;
         kd_dv = 0.12;
     }
     else{
@@ -61,9 +61,9 @@ std::array<float, 3> PIDController::getVelocities(float x_err, float y_err, floa
         kd_dv = 0.066*ku_dv*tu_dv;
     }
 
-    float ev = x_err * kp_ev + (x_err - m_prev_errs[0]) / m_dt * kd_ev;
-    float nv = y_err * kp_nv + (y_err - m_prev_errs[1]) / m_dt * kd_nv;
-    float dv = alt_err * kp_dv + (alt_err - m_prev_errs[2]) / m_dt * kd_dv;
+    float ev = x_err * kp_ev + (x_err - m_prev_errs[0]) * kd_ev;
+    float nv = y_err * kp_nv + (y_err - m_prev_errs[1]) * kd_nv;
+    float dv = alt_err * kp_dv + (alt_err - m_prev_errs[2]) * kd_dv;
 
     if (absolute_value(dv) > max_speed)
     {

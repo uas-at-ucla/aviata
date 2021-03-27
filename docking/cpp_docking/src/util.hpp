@@ -12,7 +12,7 @@
 
 // Constants
 
-#define CENTRAL_TAG_SIZE 0.227 // to be changed according to actual target size
+#define CENTRAL_TAG_SIZE 0.135 // to be changed according to actual target size
 #define PERIPHERAL_TAG_SIZE 0.08 // likewise
 
 // Camera information for simulator, measured in degrees
