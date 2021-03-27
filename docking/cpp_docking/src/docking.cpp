@@ -12,7 +12,10 @@ int main(/*int argc, char** argv */)
     drone.arm();
     drone.takeoff(4);
     drone.initiate_docking(1);
+<<<<<<< HEAD
     // drone.test1();
+=======
+>>>>>>> image analysis for debug
     // apriltag_test();
 
     return 0;
@@ -30,11 +33,19 @@ int main(/*int argc, char** argv */)
 #include <vector>
 namespace fs = std::filesystem;
 
+<<<<<<< HEAD
 void apriltag_test() {
     ImageAnalyzer *ia = new ImageAnalyzer();
     std::string path = "/home/axel/Desktop/UAS/testing/03-26-2021-pid-tuning/2-images";
     int dets = 0;
     int nondets = 0;
+=======
+// void apriltag_test() {
+//     ImageAnalyzer *ia = new ImageAnalyzer();
+//     std::string path = "/home/axel/Desktop/UAS/testing/03-04-2021-xy-body-new-target-testing/7-images";
+//     int dets = 0;
+//     int nondets = 0;
+>>>>>>> image analysis for debug
 
     std::vector<std::string> filenames;
     for (const auto &entry : fs::directory_iterator(path)) {
