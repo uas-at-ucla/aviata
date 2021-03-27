@@ -88,4 +88,12 @@ struct Errors
     float horiz_percentage_offset = 0;
 };
 
+struct Velocities
+{
+    float x = 0;
+    float y = 0;
+    float alt = 0;
+    float yaw = 0;
+};
+
 #endif // UTIL_H_
