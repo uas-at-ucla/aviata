@@ -1,5 +1,5 @@
 # The digest (the part that starts with @sha256) isn't strictly necessary, but it ensures that the base image is always the same to prevent unnecessary rebuilds.
-FROM debian:stable-slim@sha256:d22d25ae2092b04678879e3e3d9a052504982e69d68f15b7035fe7c443f34d6c
+FROM debian:buster-slim@sha256:9f1ca3f1ac7b3c291363c27cab3472777e882ab5f2c8823a8932dfd4f23f4e86
 
 RUN apt-get update && apt-get install -y wget cmake net-tools iputils-ping git build-essential
 

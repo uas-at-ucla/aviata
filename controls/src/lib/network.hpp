@@ -31,7 +31,7 @@ enum DroneCommand
     // Anywhere to Drone, have different response if leader or follower
     BECOME_LEADER,
     REQUEST_NEW_LEADER,
-    LISTEN_NEW_LEADER,
+    // LISTEN_NEW_LEADER,
     ARM,
     DISARM,
     TAKEOFF,

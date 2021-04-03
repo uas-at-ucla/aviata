@@ -54,68 +54,69 @@ public:
     int follow_as_1(std::string connection_url);
     
 private:
-    const std::string drone_id;
+    const std::string _drone_id;
 
     // APIs
-    std::shared_ptr<Network> network;
-    PX4IO px4_io;
-    DroneTelemetry telemValues;
+    std::shared_ptr<Network> _network;
+    PX4IO _px4_io;
+    DroneTelemetry _telem_values;
 
     // State
-    DroneState drone_state;
-    DroneStatus drone_status;
-    uint8_t docking_slot = 0;
-    std::map<std::string, DroneStatus> swarm; // map by drone_id
+    DroneState _drone_state;
+    DroneStatus _drone_status;
+    uint8_t _docking_slot = 0;
+    std::map<std::string, DroneStatus> _swarm; // map by drone_id
 
-    bool kill_switch_engaged;
-    bool armed;
+    bool _kill_switch_engaged;
+    bool _armed;
 
     // Leader
-    uint8_t leader_increment = 0;
-    uint8_t leader_increment_next = 0;
+    uint8_t _leader_seq_num = 0;
 
-    uint8_t leader_follower_listened = 0; // keep track of how many followers acknowledged LISTEN_NEW_LEADER command
-    uint8_t leader_follower_armed = 0;
-    uint8_t leader_follower_disarmed = 0;
+    // uint8_t leader_follower_listened = 0; // keep track of how many followers acknowledged LISTEN_NEW_LEADER command
+    uint8_t _leader_follower_armed = 0;
+    uint8_t _leader_follower_disarmed = 0;
 
     // Command Request Lists
-    std::vector<CommandRequest> drone_command_requests;
-    std::vector<CommandRequest> drone_command_responses; // TODO: log to file at end of flight?
+    std::vector<CommandRequest> _drone_command_requests;
+    std::vector<CommandRequest> _drone_command_responses; // TODO: log to file at end of flight?
 
     void basic_lead();
     void basic_follow();
 
+    bool valid_leader_msg(uint8_t leader_seq_num);
+
     void update_drone_status(); // call before sending data
 
-    int arm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
+    uint8_t arm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
     
-    int arm_frame(); // for DOCKED_LEADER (send arm_drone() to followers)
+    uint8_t arm_frame(); // for DOCKED_LEADER (send arm_drone() to followers)
     
-    int disarm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
+    uint8_t disarm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
     
-    int disarm_frame(); // for DOCKED_LEADER (send disarm_drone() to followers)
+    uint8_t disarm_frame(); // for DOCKED_LEADER (send disarm_drone() to followers)
 
-    int takeoff_drone(); // for drones in STANDBY
+    uint8_t takeoff_drone(); // for drones in STANDBY
     
-    int takeoff_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
+    uint8_t takeoff_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
 
-    int land_drone(); // for any undocked drone
+    uint8_t land_drone(); // for any undocked drone
     
-    int land_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
+    uint8_t land_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
 
-    int undock();
+    uint8_t undock();
 
-    int dock(int n); 
+    uint8_t dock(int n); 
 
-    int become_leader();
+    uint8_t become_leader(uint8_t leader_seq_num);
 
-    int become_follower(); //for successful sender of request_new_leader
+    uint8_t become_follower(); //for successful sender of request_new_leader
 
     void init_leader();
 
     void deinit_leader();
 
-    void send_drone_command(std::string other_drone_id, DroneCommand drone_command, int param, std::string request_origin,
+    void send_drone_command(std::string other_drone_id, DroneCommand drone_command, int8_t param, std::string request_origin,
                             std::function<void(uint8_t ack)> callback);
 
     void command_handler(const aviata::srv::DroneCommand::Request::SharedPtr request, 

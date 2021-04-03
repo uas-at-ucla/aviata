@@ -1,4 +1,4 @@
-int8 command  # message types defined in network.hpp
+uint8 command  # message types defined in network.hpp
 int8 param -1    # used for docking requests (default -1) or increment leader
 
 # Unused:
