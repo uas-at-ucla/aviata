@@ -1,5 +1,6 @@
 #include "network.hpp"
 
+// static functions
 void Network::init()
 {
     rclcpp::init(0, nullptr);
@@ -15,101 +16,24 @@ void Network::shutdown()
     rclcpp::shutdown();
 }
 
+
+// constructor
 Network::Network(std::string drone_id) : Node(drone_id), drone_id(drone_id) {}
 
-// FOLLOWER SETPOINT
-
-void Network::init_follower_setpoint_publisher()
-{
-    follower_setpoint_publisher = this->create_publisher<aviata::msg::FollowerSetpoint>(FOLLOWER_SETPOINT, sensor_data_qos);
-}
-
-void Network::deinit_follower_setpoint_publisher()
-{
-    follower_setpoint_publisher = nullptr;
-}
-
-void Network::publish_follower_setpoint(const aviata::msg::FollowerSetpoint &follower_setpoint)
-{
-    if (follower_setpoint_publisher != nullptr)
-    {
-        follower_setpoint_publisher->publish(follower_setpoint);
-    }
-}
-
-void Network::subscribe_follower_setpoint(std::function<void(const aviata::msg::FollowerSetpoint::SharedPtr)> callback)
-{
-    follower_setpoint_subscription = this->create_subscription<aviata::msg::FollowerSetpoint>(FOLLOWER_SETPOINT, sensor_data_qos, callback);
-}
-
-void Network::unsubscribe_follower_setpoint()
-{
-    follower_setpoint_subscription = nullptr;
-}
-
-// DRONE STATUS
-
-void Network::init_drone_status_publisher()
-{
-    drone_status_publisher = this->create_publisher<aviata::msg::DroneStatus>(DRONE_STATUS, sensor_data_qos);
-}
-
-void Network::deinit_drone_status_publisher()
-{
-    drone_status_publisher = nullptr;
-}
-
-void Network::publish_drone_status(const aviata::msg::DroneStatus &drone_status)
-{
-    if (drone_status_publisher != nullptr)
-    {
-        drone_status_publisher->publish(drone_status);
-    }
-}
-
-void Network::subscribe_drone_status(std::function<void(aviata::msg::DroneStatus::SharedPtr)> callback)
-{
-    drone_status_subscription = this->create_subscription<aviata::msg::DroneStatus>(DRONE_STATUS, sensor_data_qos, callback);
-}
-
-void Network::unsubscribe_drone_status()
-{
-    drone_status_subscription = nullptr;
-}
 
 // DRONE DEBUG
-
-void Network::init_drone_debug_publisher()
-{
-    drone_debug_publisher = this->create_publisher<aviata::msg::DroneDebug>(DRONE_DEBUG, sensor_data_qos);
-}
-
-void Network::deinit_drone_debug_publisher()
-{
-    drone_debug_publisher = nullptr;
-}
-
 void Network::publish_drone_debug(const std::string & debug_msg)
 {
-    if (drone_debug_publisher == nullptr)
+    if (std::get<PubSub<DRONE_DEBUG>>(pubsubs).publisher == nullptr)
     {
-        init_drone_debug_publisher();
+        init_publisher<DRONE_DEBUG>();
     }
     aviata::msg::DroneDebug drone_debug;
     drone_debug.debug = debug_msg;
-    drone_debug.drone_id = this->get_name();
-    drone_debug_publisher->publish(drone_debug);
+    drone_debug.drone_id = this->get_name(); // same as drone_id
+    publish<DRONE_DEBUG>(drone_debug);
 }
 
-void Network::subscribe_drone_debug(std::function<void(aviata::msg::DroneDebug::SharedPtr)> callback)
-{
-    drone_debug_subscription = this->create_subscription<aviata::msg::DroneDebug>(DRONE_DEBUG, sensor_data_qos, callback);
-}
-
-void Network::unsubscribe_drone_debug()
-{
-    drone_debug_subscription = nullptr;
-}
 
 // DRONE COMMAND SERVICE
 
@@ -166,5 +90,3 @@ std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>>
 
     return drone_command_clients[service_name]->async_send_request(request);
 }
-
-
