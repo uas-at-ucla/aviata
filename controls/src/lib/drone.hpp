@@ -9,35 +9,13 @@
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
 
+#include "dronestatus.hpp"
 #include "dronetelemetry.hpp"
 #include "px4_io.hpp"
 #include "network.hpp"
 
 #include "aviata/srv/drone_command.hpp"
 #include "aviata/msg/follower_setpoint.hpp"
-
-enum DroneState {
-    STANDBY,
-    ARRIVING,
-    DOCKING,
-    DOCKED_FOLLOWER,
-    DOCKED_LEADER,
-    UNDOCKING,
-    DEPARTING,
-    NEEDS_SERVICE
-};
-
-// reference values (copy of values within Drone)
-struct DroneStatus {
-    std::string drone_id;
-    DroneState drone_state;
-    uint8_t docking_slot;
-
-    float battery_percent; 
-    // mavsdk::Telemetry::Position gps_position;
-    float gps_position[4];
-    float yaw;
-};
 
 class Drone
 {
