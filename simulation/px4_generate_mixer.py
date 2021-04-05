@@ -201,34 +201,12 @@ def geometry_to_mix(geometry):
 
     return A, B
 
-def normalize_mix_px4(B):
+def normalize_mix_px4(B, inertia):
     '''
     Normalize mix for PX4
-    This is for compatibility only and should ideally not be used
+    This has been modified for AVIATA such that setpoints can be given in [rad/s^2] and [2g's (twice gravitational acceleration)] (approximately)
     '''
-    B_norm = np.linalg.norm(B, axis=0)
-    B_max = np.abs(B).max(axis=0)
-    B_sum = np.sum(B, axis=0)
-
-    # Same scale on roll and pitch
-    B_norm[0] = max(B_norm[0], B_norm[1]) / np.sqrt(B.shape[0] / 2.0)
-    B_norm[1] = B_norm[0]
-
-    # Scale yaw separately
-    B_norm[2] = B_max[2]
-
-    # Same scale on x, y
-    B_norm[3] = max(B_max[3], B_max[4])
-    B_norm[4] = B_norm[3]
-
-    # Scale z thrust separately
-    B_norm[5] = - B_sum[5] / len(B[:,5]) # np.count_nonzero(B[:,5])
-
-    # Normalize
-    B_norm[np.abs(B_norm) < 1e-3] = 1
-    B_px = (B / B_norm)
-
-    return B_px, B_norm
+    return B @ inertia
 
 def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, use_6dof=False, constants=None, max_missing_drones=0):
     '''
@@ -255,6 +233,14 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
     buf.write(u"static constexpr float _config_aviata_drone_angle[] {\n")
     for drone_angle in geometries_list[0]['drone_angles']:
         buf.write(u"\t{:9f}, // {:.1f} degrees\n".format(drone_angle, np.rad2deg(drone_angle)))
+    buf.write(u"};\n\n")
+    buf.write(u"static constexpr float _config_aviata_drone_angle_cos[] {\n")
+    for drone_angle in geometries_list[0]['drone_angles']:
+        buf.write(u"\t{:9f},\n".format(np.cos(drone_angle)))
+    buf.write(u"};\n\n")
+    buf.write(u"static constexpr float _config_aviata_drone_angle_sin[] {\n")
+    for drone_angle in geometries_list[0]['drone_angles']:
+        buf.write(u"\t{:9f},\n".format(np.sin(drone_angle)))
     buf.write(u"};\n\n")
     
     # Print enum
