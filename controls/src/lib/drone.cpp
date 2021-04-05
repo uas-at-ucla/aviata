@@ -81,6 +81,7 @@ int Drone::test_lead_att_target(std::string connection_url)
         std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(follower_setpoint.q));
         follower_setpoint.thrust = attitude_target.thrust;
         follower_setpoint.aviata_yaw_est = attitude_target.aviata_yaw_est;
+        follower_setpoint.aviata_docking_slot = attitude_target.aviata_docking_slot;
         follower_setpoint.leader_seq_num = _leader_seq_num;
         _network->publish_follower_setpoint(follower_setpoint);
         std::cout << "attitude_target thrust: " << attitude_target.thrust << std::endl;
@@ -137,6 +138,7 @@ int Drone::test_follow_att_target(std::string connection_url)
         std::copy(std::begin(follower_setpoint->q), std::end(follower_setpoint->q), std::begin(attitude_target.q));
         attitude_target.thrust = follower_setpoint->thrust;
         attitude_target.aviata_yaw_est = follower_setpoint->aviata_yaw_est;
+        attitude_target.aviata_docking_slot = follower_setpoint->aviata_docking_slot;
         _leader_seq_num = follower_setpoint->leader_seq_num;
         _px4_io.set_attitude_target(attitude_target);
         std::cout << "follower_setpoint thrust: " << follower_setpoint->thrust << std::endl;
@@ -225,6 +227,7 @@ void Drone::basic_lead()
             std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(follower_setpoint.q));
             follower_setpoint.thrust = attitude_target.thrust;
             follower_setpoint.aviata_yaw_est = attitude_target.aviata_yaw_est;
+            follower_setpoint.aviata_docking_slot = attitude_target.aviata_docking_slot;
             follower_setpoint.leader_seq_num = _leader_seq_num;
             _network->publish_follower_setpoint(follower_setpoint);
         }
@@ -260,6 +263,7 @@ void Drone::basic_follow()
         std::copy(std::begin(follower_setpoint->q), std::end(follower_setpoint->q), std::begin(attitude_target.q));
         attitude_target.thrust = follower_setpoint->thrust;
         attitude_target.aviata_yaw_est = follower_setpoint->aviata_yaw_est;
+        attitude_target.aviata_docking_slot = follower_setpoint->aviata_docking_slot;
         _px4_io.set_attitude_target(attitude_target);
 
         if (!in_offboard) {
@@ -553,6 +557,7 @@ void Drone::init_leader()
             std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(follower_setpoint.q));
             follower_setpoint.thrust = attitude_target.thrust;
             follower_setpoint.aviata_yaw_est = attitude_target.aviata_yaw_est;
+            follower_setpoint.aviata_docking_slot = attitude_target.aviata_docking_slot;
             follower_setpoint.leader_seq_num = _leader_seq_num;
             _network->publish_follower_setpoint(follower_setpoint);
         }
