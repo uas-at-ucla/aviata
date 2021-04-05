@@ -129,11 +129,11 @@ class Drone:
                 self.thrust_setpoint /= np.dot(np.array([0, 0, 1]), att_z_vec)
 
                 # determine att_sp quaternion using att_z_vec and yaw_setpoint (see https://github.com/PX4/Firmware/blob/release/1.11/src/modules/mc_pos_control/PositionControl/ControlMath.cpp#L70)
-                yaw_vec = np.exp(1j * self.yaw_setpoint)
-                yaw_vec = np.array([np.real(yaw_vec), np.imag(yaw_vec), 0.0])
-                att_y_vec = np.cross(att_z_vec, yaw_vec)
-                att_y_vec /= np.linalg.norm(att_y_vec)
-                att_x_vec = np.cross(att_y_vec, att_z_vec)
+                heading = np.exp(1j * self.yaw_setpoint)
+                att_y_dir = np.array([-np.imag(heading), np.real(heading), 0.0])
+                att_x_vec = np.cross(att_y_dir, att_z_vec)
+                att_x_vec /= np.linalg.norm(att_x_vec)
+                att_y_vec = np.cross(att_z_vec, att_x_vec)
                 att_rot_matrix = np.zeros((3,3))
                 att_rot_matrix[:,0] = att_x_vec
                 att_rot_matrix[:,1] = att_y_vec
@@ -147,7 +147,7 @@ class Drone:
                 att_err_q = self.sensors.att.inverse * self.att_setpoint
                 if att_err_q[0] < 0:
                     att_err_q = -att_err_q # put quaternion in "canonical" form
-                att_err = 2 * att_err_q.imaginary # PX4 approximation of att_err_q.axis * att_err_q.angle = 2 * math.asin(att_err_q.imaginary)
+                att_err = 2 * att_err_q.imaginary # PX4 approximation of att_err_q.axis * math.sin(att_err_q.angle/2) = att_err_q.imaginary
                 att_rate_sp = config.constants.P_att * att_err
                 att_rate_sp = constrain(att_rate_sp, -config.constants.max_att_rate, config.constants.max_att_rate)
 

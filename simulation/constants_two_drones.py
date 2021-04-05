@@ -37,15 +37,15 @@ structpayload_drone_height = (M_structure * structure_drone_height + M_payload *
 drone_prop_height = 0.05 # vertical distance between a drone's propellers and its center of mass (meters)
 
 # Control Constants
-roll_pitch_scale = 0.6
+rollrate_pitchrate_scale = 0.75
+yawrate_scale = 0.7
+rate_derivative_scale = 0.75
+rate_integral_scale = 0.25
+roll_pitch_scale = rollrate_pitchrate_scale * 0.9
+yaw_scale = yawrate_scale * 0.8
 xy_vel_scale = roll_pitch_scale
 xy_vel_integral_scale = 0.5
 xy_pos_scale = xy_vel_scale * 0.8
-yaw_scale = 0.125
-rollrate_pitchrate_scale = 6
-yawrate_scale = 3.5
-rate_derivative_scale = 0.75
-rate_integral_scale = 0.25
 
 P_pos = np.array([0.95*xy_pos_scale, 0.95*xy_pos_scale, 1.0]) # MPC_XY_P, MPC_Z_P
 
@@ -55,9 +55,9 @@ D_vel = np.array([0.2*xy_vel_scale, 0.2*xy_vel_scale, 0.0]) # MPC_XY_VEL_D_ACC, 
 
 P_att = np.array([6.5*roll_pitch_scale, 6.5, 2.8*yaw_scale]) # MC_ROLL_P, MC_PITCH_P, MC_YAW_P
 
-P_att_rate = np.array([0.15*rollrate_pitchrate_scale, 0.15, 0.2*yawrate_scale]) # MC_ROLLRATE_P, MC_PITCHRATE_P, MC_YAWRATE_P
-I_att_rate = np.array([0.2*rollrate_pitchrate_scale, 0.2, 0.1*yawrate_scale])*rate_integral_scale # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I
-D_att_rate = np.array([0.003*rollrate_pitchrate_scale, 0.003, 0.0015*yawrate_scale])*rate_derivative_scale # MC_ROLLRATE_D, MC_PITCHRATE_D, MC_YAWRATE_D
+P_att_rate = np.array([6.492*rollrate_pitchrate_scale, 6.492, 2.906*yawrate_scale]) # MC_ROLLRATE_P, MC_PITCHRATE_P, MC_YAWRATE_P
+I_att_rate = np.array([8.656*rollrate_pitchrate_scale, 8.656, 1.453*yawrate_scale])*rate_integral_scale # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I
+D_att_rate = np.array([0.12984*rollrate_pitchrate_scale, 0.12984, 0.0*yawrate_scale])*rate_derivative_scale # MC_ROLLRATE_D, MC_PITCHRATE_D, MC_YAWRATE_D
 # To scale all at once: MC_ROLLRATE_K, MC_PITCHRATE_K, MC_YAWRATE_K
 # Also relevant: MC_ROLLRATE_FF, MC_PITCHRATE_FF, MC_YAWRATE_FF; MC_RR_INT_LIM, MC_PR_INT_LIM, MC_YR_INT_LIM
 
@@ -71,7 +71,7 @@ max_acc_down = 3.0 # MPC_ACC_DOWN_MAX
 max_acc_up = 4.0 # MPC_ACC_UP_MAX
 
 # Changed MC_YAWRATE_MAX to equal default for MPC_YAWRAUTO_MAX (45 deg/s)
-max_att_rate = np.deg2rad(np.array([220.0, 220.0, 45.0])) # radians/s MC_ROLLRATE_MAX, MC_PITCHRATE_MAX, MC_YAWRATE_MAX, MPC_YAWRAUTO_MAX
+max_att_rate = np.deg2rad(np.array([220.0, 220.0, 200.0])) # radians/s MC_ROLLRATE_MAX, MC_PITCHRATE_MAX, MC_YAWRATE_MAX, MPC_YAWRAUTO_MAX
 
 if __name__ == '__main__':
     print("MPC_XY_P =", P_pos[0])
@@ -87,8 +87,9 @@ if __name__ == '__main__':
     print("MC_ROLLRATE_P =", P_att_rate[0])
     print("MC_ROLLRATE_I =", I_att_rate[0])
     print("MC_ROLLRATE_D =", D_att_rate[0])
-    # print("MC_PITCHRATE_K =", rollrate_pitchrate_scale)
-    # print("MC_PITCHRATE_D =", D_att_rate[1]/rollrate_pitchrate_scale)
+    # print("MC_PITCHRATE_P =", P_att_rate[1])
+    # print("MC_PITCHRATE_I =", I_att_rate[1])
+    # print("MC_PITCHRATE_D =", D_att_rate[1])
     print("MC_YAWRATE_P =", P_att_rate[2])
     print("MC_YAWRATE_I =", I_att_rate[2])
     print("MC_YAWRATE_D =", D_att_rate[2])
@@ -102,9 +103,9 @@ if __name__ == '__main__':
 
 # P_att = np.array([6.5, 6.5, 2.8]) # MC_ROLL_P, MC_PITCH_P, MC_YAW_P
 
-# P_att_rate = np.array([0.15, 0.15, 0.2]) # MC_ROLLRATE_P, MC_PITCHRATE_P, MC_YAWRATE_P
-# I_att_rate = np.array([0.2, 0.2, 0.1]) # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I
-# D_att_rate = np.array([0.003, 0.003, 0.0]) # MC_ROLLRATE_D, MC_PITCHRATE_D, MC_YAWRATE_D
+# P_att_rate = np.array([6.492, 6.492, 2.906]) # MC_ROLLRATE_P, MC_PITCHRATE_P, MC_YAWRATE_P. Scaled due to mixer: np.array([0.15*43.28, 0.15*43.28, 0.2*14.53])
+# I_att_rate = np.array([8.656, 8.656, 1.453]) # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I. Scaled due to mixer: np.array([0.2*43.28, 0.2*43.28, 0.1*14.53])
+# D_att_rate = np.array([0.12984, 0.12984, 0.0]) # MC_ROLLRATE_D, MC_PITCHRATE_D, MC_YAWRATE_D. Scaled due to mixer: np.array([0.003*43.28, 0.003*43.28, 0.0*14.53])
 # # To scale all at once: MC_ROLLRATE_K, MC_PITCHRATE_K, MC_YAWRATE_K
 # # Also relevant: MC_ROLLRATE_FF, MC_PITCHRATE_FF, MC_YAWRATE_FF; MC_RR_INT_LIM, MC_PR_INT_LIM, MC_YR_INT_LIM
 

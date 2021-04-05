@@ -10,8 +10,7 @@ from OpenGL.GLUT import *
 
 def mixer_test(): # test
     missing_drones = [] # 0 through 7
-    geometry_prime = config.generate_matrices.generate_aviata_matrices()
-    geometry = config.generate_matrices.generate_aviata_matrices(missing_drones, geometry_prime)
+    geometry = config.generate_matrices.generate_aviata_matrices(missing_drones)
     mixer = geometry['mix']['B_px_4dof']
     actuator_effectiveness = geometry['mix']['A']
 
