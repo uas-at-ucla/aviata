@@ -28,7 +28,6 @@ public:
 
 private:
     PX4IO& px4_io;
-    std::shared_ptr<Telemetry> telemetry;
 };
 
 #endif

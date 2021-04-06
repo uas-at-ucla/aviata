@@ -72,8 +72,9 @@ bool PX4IO::connect_to_pixhawk(std::string connection_url, int timeout_seconds)
     return true;
 }
 
-void PX4IO::get_telemetry_ptr(std::shared_ptr<Telemetry> tlm)
-{   tlm = telemetry;    }
+std::shared_ptr<Telemetry> PX4IO::telemetry_ptr() {
+    return telemetry;
+}
 
 void PX4IO::call_queued_mavsdk_callbacks() {
     mavsdk_callback_manager.call_queued_mavsdk_callbacks();
@@ -277,8 +278,8 @@ void PX4IO::unsubscribe_attitude_target()
 // @return 1 if successful, 0 otherwise
 int PX4IO::set_attitude_target(mavlink_set_attitude_target_t& att_target_struct)
 {
-    att_target_struct.body_roll_rate = 0;
-    att_target_struct.body_pitch_rate = 0;
+    // att_target_struct.body_roll_rate = 0;
+    // att_target_struct.body_pitch_rate = 0;
     att_target_struct.body_yaw_rate = 0;
     att_target_struct.type_mask = ATTITUDE_TARGET_TYPEMASK_BODY_ROLL_RATE_IGNORE | 
                                   ATTITUDE_TARGET_TYPEMASK_BODY_PITCH_RATE_IGNORE |

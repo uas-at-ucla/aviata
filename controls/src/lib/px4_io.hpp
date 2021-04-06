@@ -64,7 +64,7 @@ public:
     PX4IO(std::string drone_id, DroneSettings drone_settings);
     
     bool connect_to_pixhawk(std::string connection_url, int timeout_seconds);
-    void get_telemetry_ptr(std::shared_ptr<Telemetry> tlm);
+    std::shared_ptr<Telemetry> telemetry_ptr();
 
     void call_queued_mavsdk_callbacks();
 
