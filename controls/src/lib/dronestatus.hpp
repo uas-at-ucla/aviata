@@ -1,6 +1,11 @@
 #ifndef DRONESTATUS_HPP
 #define DRONESTATUS_HPP
 
+struct DroneSettings {
+    bool sim;
+    bool modify_px4_mixers;
+};
+
 enum DroneState {
     STANDBY,
     ARRIVING,

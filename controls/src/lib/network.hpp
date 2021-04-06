@@ -142,11 +142,16 @@ public:
                                                        aviata::srv::DroneCommand::Response::SharedPtr)> callback);
     void deinit_drone_command_service();
 
-    void init_drone_command_client(std::string other_drone_id);
+    void init_drone_command_client_if_needed(std::string other_drone_id);
     void deinit_drone_command_client(std::string other_drone_id);
 
     std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> 
         send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int param = -1);
+
+    void send_drone_command(std::string other_drone_id, DroneCommand drone_command, int8_t param, std::string request_origin,
+                            std::function<void(uint8_t ack)> callback);
+
+    void check_command_requests();
 
 private:
     const std::string drone_id;
@@ -155,6 +160,10 @@ private:
 
     rclcpp::Service<aviata::srv::DroneCommand>::SharedPtr drone_command_service;
     std::map<std::string, rclcpp::Client<aviata::srv::DroneCommand>::SharedPtr> drone_command_clients;
+
+    // Command Request Lists
+    std::vector<CommandRequest> drone_command_requests;
+    std::vector<CommandRequest> drone_command_responses; // TODO: log to file at end of flight?
 };
 
 #endif

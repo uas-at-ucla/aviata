@@ -14,7 +14,7 @@
 using namespace std::this_thread;
 using namespace std::chrono;
 
-PX4IO::PX4IO(std::string drone_id): drone_id(drone_id) {}
+PX4IO::PX4IO(std::string drone_id, DroneSettings drone_settings): drone_id(drone_id), drone_settings(drone_settings) {}
 
 //Discovering systems (the new way): https://mavsdk.mavlink.io/develop/en/cpp/api_changes.html
 //returns true if connection successful, false otherwise
@@ -340,6 +340,10 @@ void PX4IO::unsubscribe_armed() {
 
 int PX4IO::dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing)
 {
+    if (!drone_settings.modify_px4_mixers) {
+        return 1;
+    }
+
     MavlinkPassthrough::CommandLong cmd;
     cmd.target_sysid = sys->get_system_id();
     cmd.target_compid = 0;
@@ -365,6 +369,10 @@ int PX4IO::dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing
 
 int PX4IO::undock()
 {
+    if (!drone_settings.modify_px4_mixers) {
+        return 1;
+    }
+
     MavlinkPassthrough::CommandLong cmd;
     cmd.target_sysid = sys->get_system_id();
     cmd.target_compid = 0;
