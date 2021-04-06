@@ -54,6 +54,7 @@ static constexpr unsigned _config_aviata_rotor_count[] {
 	12, /* aviata_missing_ */
 };
 
+__attribute__((unused)) // Not really unused, but fixes compilation error
 const char* _config_aviata_key[] {
 	"aviata_missing_",	/* aviata_missing_ */
 };

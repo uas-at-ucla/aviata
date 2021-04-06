@@ -290,6 +290,7 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
     buf.write(u"};\n\n")
 
     # Print geometry key
+    buf.write(u"__attribute__((unused)) // Not really unused, but fixes compilation error\n")
     buf.write(u"const char* _config_aviata_key[] {\n")
     for geometry in geometries_list:
         buf.write(u"\t\"{}\",\t/* {} */\n".format(geometry['info']['key'], geometry['info']['name']))

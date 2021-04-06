@@ -24,6 +24,7 @@ Network::Network(std::string drone_id) : Node(drone_id), drone_id(drone_id) {}
 // DRONE DEBUG
 void Network::publish_drone_debug(const std::string & debug_msg)
 {
+    std::cout << "Drone Debug: " << debug_msg << std::endl;
     if (std::get<PubSub<DRONE_DEBUG>>(pubsubs).publisher == nullptr)
     {
         init_publisher<DRONE_DEBUG>();
@@ -53,17 +54,18 @@ void Network::deinit_drone_command_service()
 
 // DRONE COMMAND CLIENT
 
-void Network::init_drone_command_client(std::string other_drone_id)
+void Network::init_drone_command_client_if_needed(std::string other_drone_id)
 {
     std::string service_name = other_drone_id + "_SERVICE";
-    if (drone_command_clients.find(service_name) == drone_command_clients.end())
+    if (drone_command_clients.find(service_name) == drone_command_clients.end()) {
         drone_command_clients[service_name] = this->create_client<aviata::srv::DroneCommand>(service_name);
+    }
 }
 
 void Network::deinit_drone_command_client(std::string other_drone_id)
 {
     std::string service_name = other_drone_id + "_SERVICE";
-    auto it = drone_command_clients.find(other_drone_id);
+    auto it = drone_command_clients.find(service_name);
     drone_command_clients.erase(it);
 }
 
@@ -75,7 +77,7 @@ std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>>
 {
     std::string service_name = other_drone_id + "_SERVICE";
 
-    if (!drone_command_clients[service_name]->service_is_ready())
+    if (drone_command_clients.find(service_name) == drone_command_clients.end() || !drone_command_clients[service_name]->service_is_ready())
     {
         if (!rclcpp::ok())
             RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
@@ -89,4 +91,44 @@ std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>>
     request->param = param;
 
     return drone_command_clients[service_name]->async_send_request(request);
+}
+
+// @brief async, adds to list of command requests, call check_command_requests() to process
+void Network::send_drone_command(std::string other_drone_id, DroneCommand drone_command, int8_t param, std::string request_origin,
+                                 std::function<void(uint8_t ack)> callback)
+{
+    CommandRequest com;
+    com.other_drone_id = other_drone_id;
+    com.drone_command = drone_command;
+    com.param = param;
+    com.callback = std::make_shared<std::function<void(uint8_t)>>(callback);
+    com.command_request = send_drone_command_async(other_drone_id, drone_command, param);
+    com.request_origin = request_origin;
+    com.timestamp_request = std::chrono::high_resolution_clock::now();
+    drone_command_requests.push_back(com);
+}
+
+// to be called in each loop
+void Network::check_command_requests()
+{
+    for (auto it = drone_command_requests.begin(); it != drone_command_requests.end();)
+    {
+        if (it->command_request.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
+        {
+            it->ack = it->command_request.get()->ack;
+            it->timestamp_response = std::chrono::high_resolution_clock::now();
+
+            // let the callback handle the ack
+            (*it->callback)(it->ack);
+
+            // Copy completed request to drone_command_responses vector
+            CommandRequest done = *it;
+            drone_command_responses.push_back(done);
+            it = drone_command_requests.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
 }
