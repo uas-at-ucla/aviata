@@ -7,22 +7,20 @@
 typedef struct __mavlink_attitude_target_t {
  uint32_t time_boot_ms; /*< [ms] Timestamp (time since system boot).*/
  float q[4]; /*<  Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)*/
- float body_roll_rate; /*< [rad/s] Body roll rate*/
- float body_pitch_rate; /*< [rad/s] Body pitch rate*/
- float body_yaw_rate; /*< [rad/s] Body yaw rate*/
+ float body_roll_rate; /*< [rad] For AVIATA: Yaw estimate of the originator of this setpoint (not actually body_roll_rate)*/
+ float body_pitch_rate; /*<  For AVIATA: The docking slot of the originator of this setpoint (not actually body_pitch_rate)*/
+ float body_yaw_rate; /*<  Unused by AVIATA (not actually body_yaw_rate)*/
  float thrust; /*<  Collective thrust, normalized to 0 .. 1 (-1 .. 1 for vehicles capable of reverse trust)*/
- float aviata_yaw_est; /*<  For AVIATA: Yaw estimate of the originator of this setpoint (radians)*/
  uint8_t type_mask; /*<  Bitmap to indicate which dimensions should be ignored by the vehicle.*/
- uint8_t aviata_docking_slot; /*<  For AVIATA: The docking slot of the originator of this setpoint*/
 } mavlink_attitude_target_t;
 
-#define MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN 42
-#define MAVLINK_MSG_ID_ATTITUDE_TARGET_MIN_LEN 42
-#define MAVLINK_MSG_ID_83_LEN 42
-#define MAVLINK_MSG_ID_83_MIN_LEN 42
+#define MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN 37
+#define MAVLINK_MSG_ID_ATTITUDE_TARGET_MIN_LEN 37
+#define MAVLINK_MSG_ID_83_LEN 37
+#define MAVLINK_MSG_ID_83_MIN_LEN 37
 
-#define MAVLINK_MSG_ID_ATTITUDE_TARGET_CRC 82
-#define MAVLINK_MSG_ID_83_CRC 82
+#define MAVLINK_MSG_ID_ATTITUDE_TARGET_CRC 22
+#define MAVLINK_MSG_ID_83_CRC 22
 
 #define MAVLINK_MSG_ATTITUDE_TARGET_FIELD_Q_LEN 4
 
@@ -30,31 +28,27 @@ typedef struct __mavlink_attitude_target_t {
 #define MAVLINK_MESSAGE_INFO_ATTITUDE_TARGET { \
     83, \
     "ATTITUDE_TARGET", \
-    9, \
+    7, \
     {  { "time_boot_ms", NULL, MAVLINK_TYPE_UINT32_T, 0, 0, offsetof(mavlink_attitude_target_t, time_boot_ms) }, \
-         { "type_mask", NULL, MAVLINK_TYPE_UINT8_T, 0, 40, offsetof(mavlink_attitude_target_t, type_mask) }, \
+         { "type_mask", NULL, MAVLINK_TYPE_UINT8_T, 0, 36, offsetof(mavlink_attitude_target_t, type_mask) }, \
          { "q", NULL, MAVLINK_TYPE_FLOAT, 4, 4, offsetof(mavlink_attitude_target_t, q) }, \
          { "body_roll_rate", NULL, MAVLINK_TYPE_FLOAT, 0, 20, offsetof(mavlink_attitude_target_t, body_roll_rate) }, \
          { "body_pitch_rate", NULL, MAVLINK_TYPE_FLOAT, 0, 24, offsetof(mavlink_attitude_target_t, body_pitch_rate) }, \
          { "body_yaw_rate", NULL, MAVLINK_TYPE_FLOAT, 0, 28, offsetof(mavlink_attitude_target_t, body_yaw_rate) }, \
          { "thrust", NULL, MAVLINK_TYPE_FLOAT, 0, 32, offsetof(mavlink_attitude_target_t, thrust) }, \
-         { "aviata_yaw_est", NULL, MAVLINK_TYPE_FLOAT, 0, 36, offsetof(mavlink_attitude_target_t, aviata_yaw_est) }, \
-         { "aviata_docking_slot", NULL, MAVLINK_TYPE_UINT8_T, 0, 41, offsetof(mavlink_attitude_target_t, aviata_docking_slot) }, \
          } \
 }
 #else
 #define MAVLINK_MESSAGE_INFO_ATTITUDE_TARGET { \
     "ATTITUDE_TARGET", \
-    9, \
+    7, \
     {  { "time_boot_ms", NULL, MAVLINK_TYPE_UINT32_T, 0, 0, offsetof(mavlink_attitude_target_t, time_boot_ms) }, \
-         { "type_mask", NULL, MAVLINK_TYPE_UINT8_T, 0, 40, offsetof(mavlink_attitude_target_t, type_mask) }, \
+         { "type_mask", NULL, MAVLINK_TYPE_UINT8_T, 0, 36, offsetof(mavlink_attitude_target_t, type_mask) }, \
          { "q", NULL, MAVLINK_TYPE_FLOAT, 4, 4, offsetof(mavlink_attitude_target_t, q) }, \
          { "body_roll_rate", NULL, MAVLINK_TYPE_FLOAT, 0, 20, offsetof(mavlink_attitude_target_t, body_roll_rate) }, \
          { "body_pitch_rate", NULL, MAVLINK_TYPE_FLOAT, 0, 24, offsetof(mavlink_attitude_target_t, body_pitch_rate) }, \
          { "body_yaw_rate", NULL, MAVLINK_TYPE_FLOAT, 0, 28, offsetof(mavlink_attitude_target_t, body_yaw_rate) }, \
          { "thrust", NULL, MAVLINK_TYPE_FLOAT, 0, 32, offsetof(mavlink_attitude_target_t, thrust) }, \
-         { "aviata_yaw_est", NULL, MAVLINK_TYPE_FLOAT, 0, 36, offsetof(mavlink_attitude_target_t, aviata_yaw_est) }, \
-         { "aviata_docking_slot", NULL, MAVLINK_TYPE_UINT8_T, 0, 41, offsetof(mavlink_attitude_target_t, aviata_docking_slot) }, \
          } \
 }
 #endif
@@ -68,16 +62,14 @@ typedef struct __mavlink_attitude_target_t {
  * @param time_boot_ms [ms] Timestamp (time since system boot).
  * @param type_mask  Bitmap to indicate which dimensions should be ignored by the vehicle.
  * @param q  Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
- * @param body_roll_rate [rad/s] Body roll rate
- * @param body_pitch_rate [rad/s] Body pitch rate
- * @param body_yaw_rate [rad/s] Body yaw rate
+ * @param body_roll_rate [rad] For AVIATA: Yaw estimate of the originator of this setpoint (not actually body_roll_rate)
+ * @param body_pitch_rate  For AVIATA: The docking slot of the originator of this setpoint (not actually body_pitch_rate)
+ * @param body_yaw_rate  Unused by AVIATA (not actually body_yaw_rate)
  * @param thrust  Collective thrust, normalized to 0 .. 1 (-1 .. 1 for vehicles capable of reverse trust)
- * @param aviata_yaw_est  For AVIATA: Yaw estimate of the originator of this setpoint (radians)
- * @param aviata_docking_slot  For AVIATA: The docking slot of the originator of this setpoint
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_attitude_target_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-                               uint32_t time_boot_ms, uint8_t type_mask, const float *q, float body_roll_rate, float body_pitch_rate, float body_yaw_rate, float thrust, float aviata_yaw_est, uint8_t aviata_docking_slot)
+                               uint32_t time_boot_ms, uint8_t type_mask, const float *q, float body_roll_rate, float body_pitch_rate, float body_yaw_rate, float thrust)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN];
@@ -86,9 +78,7 @@ static inline uint16_t mavlink_msg_attitude_target_pack(uint8_t system_id, uint8
     _mav_put_float(buf, 24, body_pitch_rate);
     _mav_put_float(buf, 28, body_yaw_rate);
     _mav_put_float(buf, 32, thrust);
-    _mav_put_float(buf, 36, aviata_yaw_est);
-    _mav_put_uint8_t(buf, 40, type_mask);
-    _mav_put_uint8_t(buf, 41, aviata_docking_slot);
+    _mav_put_uint8_t(buf, 36, type_mask);
     _mav_put_float_array(buf, 4, q, 4);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN);
 #else
@@ -98,9 +88,7 @@ static inline uint16_t mavlink_msg_attitude_target_pack(uint8_t system_id, uint8
     packet.body_pitch_rate = body_pitch_rate;
     packet.body_yaw_rate = body_yaw_rate;
     packet.thrust = thrust;
-    packet.aviata_yaw_est = aviata_yaw_est;
     packet.type_mask = type_mask;
-    packet.aviata_docking_slot = aviata_docking_slot;
     mav_array_memcpy(packet.q, q, sizeof(float)*4);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN);
 #endif
@@ -118,17 +106,15 @@ static inline uint16_t mavlink_msg_attitude_target_pack(uint8_t system_id, uint8
  * @param time_boot_ms [ms] Timestamp (time since system boot).
  * @param type_mask  Bitmap to indicate which dimensions should be ignored by the vehicle.
  * @param q  Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
- * @param body_roll_rate [rad/s] Body roll rate
- * @param body_pitch_rate [rad/s] Body pitch rate
- * @param body_yaw_rate [rad/s] Body yaw rate
+ * @param body_roll_rate [rad] For AVIATA: Yaw estimate of the originator of this setpoint (not actually body_roll_rate)
+ * @param body_pitch_rate  For AVIATA: The docking slot of the originator of this setpoint (not actually body_pitch_rate)
+ * @param body_yaw_rate  Unused by AVIATA (not actually body_yaw_rate)
  * @param thrust  Collective thrust, normalized to 0 .. 1 (-1 .. 1 for vehicles capable of reverse trust)
- * @param aviata_yaw_est  For AVIATA: Yaw estimate of the originator of this setpoint (radians)
- * @param aviata_docking_slot  For AVIATA: The docking slot of the originator of this setpoint
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_attitude_target_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
                                mavlink_message_t* msg,
-                                   uint32_t time_boot_ms,uint8_t type_mask,const float *q,float body_roll_rate,float body_pitch_rate,float body_yaw_rate,float thrust,float aviata_yaw_est,uint8_t aviata_docking_slot)
+                                   uint32_t time_boot_ms,uint8_t type_mask,const float *q,float body_roll_rate,float body_pitch_rate,float body_yaw_rate,float thrust)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN];
@@ -137,9 +123,7 @@ static inline uint16_t mavlink_msg_attitude_target_pack_chan(uint8_t system_id, 
     _mav_put_float(buf, 24, body_pitch_rate);
     _mav_put_float(buf, 28, body_yaw_rate);
     _mav_put_float(buf, 32, thrust);
-    _mav_put_float(buf, 36, aviata_yaw_est);
-    _mav_put_uint8_t(buf, 40, type_mask);
-    _mav_put_uint8_t(buf, 41, aviata_docking_slot);
+    _mav_put_uint8_t(buf, 36, type_mask);
     _mav_put_float_array(buf, 4, q, 4);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN);
 #else
@@ -149,9 +133,7 @@ static inline uint16_t mavlink_msg_attitude_target_pack_chan(uint8_t system_id, 
     packet.body_pitch_rate = body_pitch_rate;
     packet.body_yaw_rate = body_yaw_rate;
     packet.thrust = thrust;
-    packet.aviata_yaw_est = aviata_yaw_est;
     packet.type_mask = type_mask;
-    packet.aviata_docking_slot = aviata_docking_slot;
     mav_array_memcpy(packet.q, q, sizeof(float)*4);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN);
 #endif
@@ -170,7 +152,7 @@ static inline uint16_t mavlink_msg_attitude_target_pack_chan(uint8_t system_id, 
  */
 static inline uint16_t mavlink_msg_attitude_target_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_attitude_target_t* attitude_target)
 {
-    return mavlink_msg_attitude_target_pack(system_id, component_id, msg, attitude_target->time_boot_ms, attitude_target->type_mask, attitude_target->q, attitude_target->body_roll_rate, attitude_target->body_pitch_rate, attitude_target->body_yaw_rate, attitude_target->thrust, attitude_target->aviata_yaw_est, attitude_target->aviata_docking_slot);
+    return mavlink_msg_attitude_target_pack(system_id, component_id, msg, attitude_target->time_boot_ms, attitude_target->type_mask, attitude_target->q, attitude_target->body_roll_rate, attitude_target->body_pitch_rate, attitude_target->body_yaw_rate, attitude_target->thrust);
 }
 
 /**
@@ -184,7 +166,7 @@ static inline uint16_t mavlink_msg_attitude_target_encode(uint8_t system_id, uin
  */
 static inline uint16_t mavlink_msg_attitude_target_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_attitude_target_t* attitude_target)
 {
-    return mavlink_msg_attitude_target_pack_chan(system_id, component_id, chan, msg, attitude_target->time_boot_ms, attitude_target->type_mask, attitude_target->q, attitude_target->body_roll_rate, attitude_target->body_pitch_rate, attitude_target->body_yaw_rate, attitude_target->thrust, attitude_target->aviata_yaw_est, attitude_target->aviata_docking_slot);
+    return mavlink_msg_attitude_target_pack_chan(system_id, component_id, chan, msg, attitude_target->time_boot_ms, attitude_target->type_mask, attitude_target->q, attitude_target->body_roll_rate, attitude_target->body_pitch_rate, attitude_target->body_yaw_rate, attitude_target->thrust);
 }
 
 /**
@@ -194,16 +176,14 @@ static inline uint16_t mavlink_msg_attitude_target_encode_chan(uint8_t system_id
  * @param time_boot_ms [ms] Timestamp (time since system boot).
  * @param type_mask  Bitmap to indicate which dimensions should be ignored by the vehicle.
  * @param q  Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
- * @param body_roll_rate [rad/s] Body roll rate
- * @param body_pitch_rate [rad/s] Body pitch rate
- * @param body_yaw_rate [rad/s] Body yaw rate
+ * @param body_roll_rate [rad] For AVIATA: Yaw estimate of the originator of this setpoint (not actually body_roll_rate)
+ * @param body_pitch_rate  For AVIATA: The docking slot of the originator of this setpoint (not actually body_pitch_rate)
+ * @param body_yaw_rate  Unused by AVIATA (not actually body_yaw_rate)
  * @param thrust  Collective thrust, normalized to 0 .. 1 (-1 .. 1 for vehicles capable of reverse trust)
- * @param aviata_yaw_est  For AVIATA: Yaw estimate of the originator of this setpoint (radians)
- * @param aviata_docking_slot  For AVIATA: The docking slot of the originator of this setpoint
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_attitude_target_send(mavlink_channel_t chan, uint32_t time_boot_ms, uint8_t type_mask, const float *q, float body_roll_rate, float body_pitch_rate, float body_yaw_rate, float thrust, float aviata_yaw_est, uint8_t aviata_docking_slot)
+static inline void mavlink_msg_attitude_target_send(mavlink_channel_t chan, uint32_t time_boot_ms, uint8_t type_mask, const float *q, float body_roll_rate, float body_pitch_rate, float body_yaw_rate, float thrust)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN];
@@ -212,9 +192,7 @@ static inline void mavlink_msg_attitude_target_send(mavlink_channel_t chan, uint
     _mav_put_float(buf, 24, body_pitch_rate);
     _mav_put_float(buf, 28, body_yaw_rate);
     _mav_put_float(buf, 32, thrust);
-    _mav_put_float(buf, 36, aviata_yaw_est);
-    _mav_put_uint8_t(buf, 40, type_mask);
-    _mav_put_uint8_t(buf, 41, aviata_docking_slot);
+    _mav_put_uint8_t(buf, 36, type_mask);
     _mav_put_float_array(buf, 4, q, 4);
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_ATTITUDE_TARGET, buf, MAVLINK_MSG_ID_ATTITUDE_TARGET_MIN_LEN, MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN, MAVLINK_MSG_ID_ATTITUDE_TARGET_CRC);
 #else
@@ -224,9 +202,7 @@ static inline void mavlink_msg_attitude_target_send(mavlink_channel_t chan, uint
     packet.body_pitch_rate = body_pitch_rate;
     packet.body_yaw_rate = body_yaw_rate;
     packet.thrust = thrust;
-    packet.aviata_yaw_est = aviata_yaw_est;
     packet.type_mask = type_mask;
-    packet.aviata_docking_slot = aviata_docking_slot;
     mav_array_memcpy(packet.q, q, sizeof(float)*4);
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_ATTITUDE_TARGET, (const char *)&packet, MAVLINK_MSG_ID_ATTITUDE_TARGET_MIN_LEN, MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN, MAVLINK_MSG_ID_ATTITUDE_TARGET_CRC);
 #endif
@@ -240,7 +216,7 @@ static inline void mavlink_msg_attitude_target_send(mavlink_channel_t chan, uint
 static inline void mavlink_msg_attitude_target_send_struct(mavlink_channel_t chan, const mavlink_attitude_target_t* attitude_target)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    mavlink_msg_attitude_target_send(chan, attitude_target->time_boot_ms, attitude_target->type_mask, attitude_target->q, attitude_target->body_roll_rate, attitude_target->body_pitch_rate, attitude_target->body_yaw_rate, attitude_target->thrust, attitude_target->aviata_yaw_est, attitude_target->aviata_docking_slot);
+    mavlink_msg_attitude_target_send(chan, attitude_target->time_boot_ms, attitude_target->type_mask, attitude_target->q, attitude_target->body_roll_rate, attitude_target->body_pitch_rate, attitude_target->body_yaw_rate, attitude_target->thrust);
 #else
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_ATTITUDE_TARGET, (const char *)attitude_target, MAVLINK_MSG_ID_ATTITUDE_TARGET_MIN_LEN, MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN, MAVLINK_MSG_ID_ATTITUDE_TARGET_CRC);
 #endif
@@ -254,7 +230,7 @@ static inline void mavlink_msg_attitude_target_send_struct(mavlink_channel_t cha
   is usually the receive buffer for the channel, and allows a reply to an
   incoming message with minimum stack space usage.
  */
-static inline void mavlink_msg_attitude_target_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint32_t time_boot_ms, uint8_t type_mask, const float *q, float body_roll_rate, float body_pitch_rate, float body_yaw_rate, float thrust, float aviata_yaw_est, uint8_t aviata_docking_slot)
+static inline void mavlink_msg_attitude_target_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint32_t time_boot_ms, uint8_t type_mask, const float *q, float body_roll_rate, float body_pitch_rate, float body_yaw_rate, float thrust)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char *buf = (char *)msgbuf;
@@ -263,9 +239,7 @@ static inline void mavlink_msg_attitude_target_send_buf(mavlink_message_t *msgbu
     _mav_put_float(buf, 24, body_pitch_rate);
     _mav_put_float(buf, 28, body_yaw_rate);
     _mav_put_float(buf, 32, thrust);
-    _mav_put_float(buf, 36, aviata_yaw_est);
-    _mav_put_uint8_t(buf, 40, type_mask);
-    _mav_put_uint8_t(buf, 41, aviata_docking_slot);
+    _mav_put_uint8_t(buf, 36, type_mask);
     _mav_put_float_array(buf, 4, q, 4);
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_ATTITUDE_TARGET, buf, MAVLINK_MSG_ID_ATTITUDE_TARGET_MIN_LEN, MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN, MAVLINK_MSG_ID_ATTITUDE_TARGET_CRC);
 #else
@@ -275,9 +249,7 @@ static inline void mavlink_msg_attitude_target_send_buf(mavlink_message_t *msgbu
     packet->body_pitch_rate = body_pitch_rate;
     packet->body_yaw_rate = body_yaw_rate;
     packet->thrust = thrust;
-    packet->aviata_yaw_est = aviata_yaw_est;
     packet->type_mask = type_mask;
-    packet->aviata_docking_slot = aviata_docking_slot;
     mav_array_memcpy(packet->q, q, sizeof(float)*4);
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_ATTITUDE_TARGET, (const char *)packet, MAVLINK_MSG_ID_ATTITUDE_TARGET_MIN_LEN, MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN, MAVLINK_MSG_ID_ATTITUDE_TARGET_CRC);
 #endif
@@ -306,7 +278,7 @@ static inline uint32_t mavlink_msg_attitude_target_get_time_boot_ms(const mavlin
  */
 static inline uint8_t mavlink_msg_attitude_target_get_type_mask(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_uint8_t(msg,  40);
+    return _MAV_RETURN_uint8_t(msg,  36);
 }
 
 /**
@@ -322,7 +294,7 @@ static inline uint16_t mavlink_msg_attitude_target_get_q(const mavlink_message_t
 /**
  * @brief Get field body_roll_rate from attitude_target message
  *
- * @return [rad/s] Body roll rate
+ * @return [rad] For AVIATA: Yaw estimate of the originator of this setpoint (not actually body_roll_rate)
  */
 static inline float mavlink_msg_attitude_target_get_body_roll_rate(const mavlink_message_t* msg)
 {
@@ -332,7 +304,7 @@ static inline float mavlink_msg_attitude_target_get_body_roll_rate(const mavlink
 /**
  * @brief Get field body_pitch_rate from attitude_target message
  *
- * @return [rad/s] Body pitch rate
+ * @return  For AVIATA: The docking slot of the originator of this setpoint (not actually body_pitch_rate)
  */
 static inline float mavlink_msg_attitude_target_get_body_pitch_rate(const mavlink_message_t* msg)
 {
@@ -342,7 +314,7 @@ static inline float mavlink_msg_attitude_target_get_body_pitch_rate(const mavlin
 /**
  * @brief Get field body_yaw_rate from attitude_target message
  *
- * @return [rad/s] Body yaw rate
+ * @return  Unused by AVIATA (not actually body_yaw_rate)
  */
 static inline float mavlink_msg_attitude_target_get_body_yaw_rate(const mavlink_message_t* msg)
 {
@@ -360,26 +332,6 @@ static inline float mavlink_msg_attitude_target_get_thrust(const mavlink_message
 }
 
 /**
- * @brief Get field aviata_yaw_est from attitude_target message
- *
- * @return  For AVIATA: Yaw estimate of the originator of this setpoint (radians)
- */
-static inline float mavlink_msg_attitude_target_get_aviata_yaw_est(const mavlink_message_t* msg)
-{
-    return _MAV_RETURN_float(msg,  36);
-}
-
-/**
- * @brief Get field aviata_docking_slot from attitude_target message
- *
- * @return  For AVIATA: The docking slot of the originator of this setpoint
- */
-static inline uint8_t mavlink_msg_attitude_target_get_aviata_docking_slot(const mavlink_message_t* msg)
-{
-    return _MAV_RETURN_uint8_t(msg,  41);
-}
-
-/**
  * @brief Decode a attitude_target message into a struct
  *
  * @param msg The message to decode
@@ -394,9 +346,7 @@ static inline void mavlink_msg_attitude_target_decode(const mavlink_message_t* m
     attitude_target->body_pitch_rate = mavlink_msg_attitude_target_get_body_pitch_rate(msg);
     attitude_target->body_yaw_rate = mavlink_msg_attitude_target_get_body_yaw_rate(msg);
     attitude_target->thrust = mavlink_msg_attitude_target_get_thrust(msg);
-    attitude_target->aviata_yaw_est = mavlink_msg_attitude_target_get_aviata_yaw_est(msg);
     attitude_target->type_mask = mavlink_msg_attitude_target_get_type_mask(msg);
-    attitude_target->aviata_docking_slot = mavlink_msg_attitude_target_get_aviata_docking_slot(msg);
 #else
         uint8_t len = msg->len < MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN? msg->len : MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN;
         memset(attitude_target, 0, MAVLINK_MSG_ID_ATTITUDE_TARGET_LEN);
