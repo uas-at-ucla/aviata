@@ -35,6 +35,7 @@ jobs:
       - name: Stop Docker container
         run: docker-compose down
 
-      - name: Push Docker images
-        if: github.event_name == 'push'
-        run: ./docker_push.sh
+      # TODO Can't use secret from a private repo
+      # - name: Push Docker images
+      #   if: github.event_name == 'push'
+      #   run: ./docker_push.sh
