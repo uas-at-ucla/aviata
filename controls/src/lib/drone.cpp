@@ -116,7 +116,8 @@ void Drone::run()
         switch (_drone_state)
         {
             case DOCKED_FOLLOWER:
-                if (current_time - _last_setpoint_msg_time > 100) {
+                // TODO Make this a longer timeout and try to land instead of disarm
+                if (current_time - _last_setpoint_msg_time > 250) {
                     if (_armed) {
                         if (_px4_io.disarm() == 1) {
                             _armed = false;
@@ -154,8 +155,8 @@ void Drone::init_follower() {
         mavlink_set_attitude_target_t attitude_target;
         std::copy(std::begin(follower_setpoint->q), std::end(follower_setpoint->q), std::begin(attitude_target.q));
         attitude_target.thrust = follower_setpoint->thrust;
-        attitude_target.aviata_yaw_est = follower_setpoint->aviata_yaw_est;
-        attitude_target.aviata_docking_slot = follower_setpoint->aviata_docking_slot;
+        attitude_target.body_roll_rate = follower_setpoint->aviata_yaw_est; // body_roll_rate indicates aviata_yaw_est
+        attitude_target.body_pitch_rate = (float) follower_setpoint->aviata_docking_slot; // body_pitch_rate indicates aviata_docking_slot
         _px4_io.set_attitude_target(attitude_target);
 
         if (_flight_mode != mavsdk::Telemetry::FlightMode::Offboard) {
@@ -179,8 +180,8 @@ void Drone::init_leader() {
             aviata::msg::FollowerSetpoint follower_setpoint;
             std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(follower_setpoint.q));
             follower_setpoint.thrust = attitude_target.thrust;
-            follower_setpoint.aviata_yaw_est = attitude_target.aviata_yaw_est;
-            follower_setpoint.aviata_docking_slot = attitude_target.aviata_docking_slot;
+            follower_setpoint.aviata_yaw_est = attitude_target.body_roll_rate; // body_roll_rate indicates aviata_yaw_est
+            follower_setpoint.aviata_docking_slot = (uint8_t) attitude_target.body_pitch_rate; // body_pitch_rate indicates aviata_docking_slot
             follower_setpoint.leader_seq_num = _leader_seq_num;
             _network->publish<FOLLOWER_SETPOINT>(follower_setpoint);
         }
