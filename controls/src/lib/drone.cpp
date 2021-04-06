@@ -181,7 +181,7 @@ void Drone::init_leader() {
             std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(follower_setpoint.q));
             follower_setpoint.thrust = attitude_target.thrust;
             follower_setpoint.aviata_yaw_est = attitude_target.body_roll_rate; // body_roll_rate indicates aviata_yaw_est
-            follower_setpoint.aviata_docking_slot = (uint8_t) attitude_target.body_pitch_rate; // body_pitch_rate indicates aviata_docking_slot
+            follower_setpoint.aviata_docking_slot = (uint8_t) (attitude_target.body_pitch_rate+0.5f); // body_pitch_rate indicates aviata_docking_slot
             follower_setpoint.leader_seq_num = _leader_seq_num;
             _network->publish<FOLLOWER_SETPOINT>(follower_setpoint);
         }
