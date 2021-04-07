@@ -44,13 +44,17 @@ First, run this:
 * On Linux: `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"."`
 * On MacOS: `export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:"."`
 
-Next, run the `aviata_drone` executable from within the controls/build folder. For example, you can run these two commands in separate terminals if you are using multi-vehicle simulation:
+Next, run the `aviata_drone` executable from within the controls/build folder. The usage is `./aviata_drone <drone_id> <initial_state> [docking_slot] [connection_url]` (the docking slot number does not matter for simulation). For example, you can run these two commands in separate terminals if you are using multi-vehicle simulation:
 ```bash
-./aviata_drone follower follow udp://:14541
+./aviata_drone drone1 leader 0 udp://:14540
 ```
 ```bash
-./aviata_drone leader lead udp://:14540
+./aviata_drone drone2 follower 1 udp://:14541
 ```
+
+The drone that was initiated as the leader can be controlled from QGroundControl, and the follower should roughly copy it, although expect some deviations since the program expects the drones to be docked.
+
+The `aviata_ground` executable currently allows you to specify the leader drone name, and will tell the drone to hand off the leader role to another drone. The new leader can then be controlled from QGroundControl. The ground station is in progress, so more features to come.
 
 ## Build PX4-Autopilot for Pixhawk
 ```bash
