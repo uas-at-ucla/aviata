@@ -12,10 +12,7 @@ int main(/*int argc, char** argv */)
     drone.arm();
     drone.takeoff(4);
     drone.initiate_docking(1);
-    // drone.test1();
     // apriltag_test();
-
-    return 0;
 }
 
 
