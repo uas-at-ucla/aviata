@@ -14,7 +14,7 @@
 using namespace std::this_thread;
 using namespace std::chrono;
 
-PX4IO::PX4IO(std::string drone_id): drone_id(drone_id) {}
+PX4IO::PX4IO(std::string drone_id, DroneSettings drone_settings): drone_id(drone_id), drone_settings(drone_settings) {}
 
 //Discovering systems (the new way): https://mavsdk.mavlink.io/develop/en/cpp/api_changes.html
 //returns true if connection successful, false otherwise
@@ -72,8 +72,9 @@ bool PX4IO::connect_to_pixhawk(std::string connection_url, int timeout_seconds)
     return true;
 }
 
-void PX4IO::get_telemetry_ptr(std::shared_ptr<Telemetry> tlm)
-{   tlm = telemetry;    }
+std::shared_ptr<Telemetry> PX4IO::telemetry_ptr() {
+    return telemetry;
+}
 
 void PX4IO::call_queued_mavsdk_callbacks() {
     mavsdk_callback_manager.call_queued_mavsdk_callbacks();
@@ -82,40 +83,45 @@ void PX4IO::call_queued_mavsdk_callbacks() {
 // @return 1 if successful, 0 otherwise
 int PX4IO::arm_system()
 {
-    while (telemetry->health_all_ok() != true) {
+    if (telemetry->armed()) // if already armed
+        return 1;
+    while (!telemetry->health_all_ok())
+    {
         std::cout << drone_id << " is getting ready to arm." << std::endl;
-        sleep_for(seconds(1));
+        sleep_for(milliseconds(100));
     }
-
     // Arm vehicle
     std::cout << "Arming " << drone_id << "..." << std::endl;
     const Action::Result arm_result = action->arm();
-    if (arm_result != Action::Result::Success) {
+    if (arm_result != Action::Result::Success)
+    {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to arm: " << arm_result << NORMAL_CONSOLE_TEXT
                   << std::endl;
         return 0;
     }
-
-    while (!telemetry->armed()) {
-        sleep_for(seconds(1));
+    while (!telemetry->armed())
+    {
+        sleep_for(milliseconds(100));
     }
-
     return 1;
 }
 
 // @return 1 if successful, 0 otherwise
 int PX4IO::disarm_system()
 {
+    if (!telemetry->armed()) // if already disarmed
+        return 1;
     // Verify drone is on ground
-    while (telemetry->in_air() != true) {
+    while (telemetry->in_air() != true)
+    {
         std::cout << "Verifying " << drone_id << " is not in the air..." << std::endl;
-        sleep_for(seconds(1));
+        sleep_for(milliseconds(100));
     }
-
     // Disarm vehicle
     std::cout << "Disarming " << drone_id << "..." << std::endl;
     const Action::Result disarm_result = action->disarm();
-    if (disarm_result != Action::Result::Success) {
+    if (disarm_result != Action::Result::Success)
+    {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to disarm: " << disarm_result << NORMAL_CONSOLE_TEXT
                   << std::endl;
         return 0;
@@ -183,7 +189,7 @@ int PX4IO::set_hold_mode() {
 // @return 1 if successful, 0 otherwise
 int PX4IO::takeoff_system()
 {
-    if (telemetry->armed() != true){
+    if (!telemetry->armed()){
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " is not armed. Arm first before takeoff." 
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
@@ -209,13 +215,6 @@ int PX4IO::land_system()
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
     }
-
-    // // Check if vehicle is still in air
-    // while (telemetry->in_air()) {
-    //     std::cout << drone_id << " is landing..." << std::endl;
-    //     sleep_for(seconds(1));
-    // }
-    // std::cout << drone_id << " landed!" << std::endl;
     return 1;
 }
 
@@ -279,8 +278,8 @@ void PX4IO::unsubscribe_attitude_target()
 // @return 1 if successful, 0 otherwise
 int PX4IO::set_attitude_target(mavlink_set_attitude_target_t& att_target_struct)
 {
-    att_target_struct.body_roll_rate = 0;
-    att_target_struct.body_pitch_rate = 0;
+    // att_target_struct.body_roll_rate = 0;
+    // att_target_struct.body_pitch_rate = 0;
     att_target_struct.body_yaw_rate = 0;
     att_target_struct.type_mask = ATTITUDE_TARGET_TYPEMASK_BODY_ROLL_RATE_IGNORE | 
                                   ATTITUDE_TARGET_TYPEMASK_BODY_PITCH_RATE_IGNORE |
@@ -342,6 +341,10 @@ void PX4IO::unsubscribe_armed() {
 
 int PX4IO::dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing)
 {
+    if (!drone_settings.modify_px4_mixers) {
+        return 1;
+    }
+
     MavlinkPassthrough::CommandLong cmd;
     cmd.target_sysid = sys->get_system_id();
     cmd.target_compid = 0;
@@ -367,6 +370,10 @@ int PX4IO::dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing
 
 int PX4IO::undock()
 {
+    if (!drone_settings.modify_px4_mixers) {
+        return 1;
+    }
+
     MavlinkPassthrough::CommandLong cmd;
     cmd.target_sysid = sys->get_system_id();
     cmd.target_compid = 0;

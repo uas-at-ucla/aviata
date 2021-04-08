@@ -41,7 +41,7 @@ void ros2_test() {
     std::cout << "Starting ROS2 test" << std::endl;
     rclcpp::init(0, nullptr);
     std::shared_ptr<MinimalPublisher> node = std::make_shared<MinimalPublisher>();
-    while (node->get_count() < 2021) // arbitrary large number
+    while (node->get_count() < 10)
     {
         rclcpp::spin_some(node);
     }

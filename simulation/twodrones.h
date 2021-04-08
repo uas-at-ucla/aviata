@@ -14,6 +14,16 @@ static constexpr float _config_aviata_drone_angle[] {
 	 0.000000, // 0.0 degrees
 };
 
+static constexpr float _config_aviata_drone_angle_cos[] {
+	 1.000000,
+	 1.000000,
+};
+
+static constexpr float _config_aviata_drone_angle_sin[] {
+	 0.000000,
+	 0.000000,
+};
+
 enum class AviataMultirotorGeometry : MultirotorGeometryUnderlyingType {
 	AVIATA_MISSING_,               // AVIATA with these drones missing:  (text key aviata_missing_)
 
@@ -22,18 +32,18 @@ enum class AviataMultirotorGeometry : MultirotorGeometryUnderlyingType {
 
 namespace {
 static constexpr MultirotorMixer::Rotor _config_aviata_aviata_missing_[] {
-	{ -0.284915,  0.000000, -1.000000,  1.000000 },
-	{ -0.284915,  0.000000,  1.000000,  1.000000 },
-	{ -0.284915,  0.866025, -1.000000,  1.000000 },
-	{ -0.284915, -0.866025,  1.000000,  1.000000 },
-	{ -0.284915,  0.866025,  1.000000,  1.000000 },
-	{ -0.284915, -0.866025, -1.000000,  1.000000 },
-	{  0.284915,  0.000000, -1.000000,  1.000000 },
-	{  0.284915,  0.000000,  1.000000,  1.000000 },
-	{  0.284915,  0.866025, -1.000000,  1.000000 },
-	{  0.284915, -0.866025,  1.000000,  1.000000 },
-	{  0.284915,  0.866025,  1.000000,  1.000000 },
-	{  0.284915, -0.866025, -1.000000,  1.000000 },
+	{ -0.030069,  0.000000, -0.149920,  1.081320 },
+	{ -0.030069,  0.000000,  0.149920,  1.081320 },
+	{ -0.030069,  0.021088, -0.149920,  1.081320 },
+	{ -0.030069, -0.021088,  0.149920,  1.081320 },
+	{ -0.030069,  0.021088,  0.149920,  1.081320 },
+	{ -0.030069, -0.021088, -0.149920,  1.081320 },
+	{  0.030069, -0.000000, -0.149920,  1.081320 },
+	{  0.030069, -0.000000,  0.149920,  1.081320 },
+	{  0.030069,  0.021088, -0.149920,  1.081320 },
+	{  0.030069, -0.021088,  0.149920,  1.081320 },
+	{  0.030069,  0.021088,  0.149920,  1.081320 },
+	{  0.030069, -0.021088, -0.149920,  1.081320 },
 };
 
 static constexpr const MultirotorMixer::Rotor *_config_aviata_index[] {
@@ -44,6 +54,7 @@ static constexpr unsigned _config_aviata_rotor_count[] {
 	12, /* aviata_missing_ */
 };
 
+__attribute__((unused)) // Not really unused, but fixes compilation error
 const char* _config_aviata_key[] {
 	"aviata_missing_",	/* aviata_missing_ */
 };
@@ -51,3 +62,5 @@ const char* _config_aviata_key[] {
 } // anonymous namespace
 
 #endif /* _AVIATA_MIXER_MULTI_TABLES */
+
+

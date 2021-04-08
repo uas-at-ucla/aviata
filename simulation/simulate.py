@@ -10,10 +10,9 @@ from OpenGL.GLUT import *
 
 def mixer_test(): # test
     missing_drones = [] # 0 through 7
-    geometry_prime = config.generate_matrices.generate_aviata_matrices()
-    geometry = config.generate_matrices.generate_aviata_matrices(missing_drones, geometry_prime)
+    geometry = config.generate_matrices.generate_aviata_matrices(missing_drones)
     mixer = geometry['mix']['B_px_4dof']
-    actuator_effectiveness = geometry['mix']['A_4dof']
+    actuator_effectiveness = geometry['mix']['A']
 
     setpoint = np.matrix([0, 0, 0, 0.5]).T
     print("normalized forces (used by PX4):")
@@ -50,6 +49,7 @@ def pos_control_test():
 
     def keyPressed(key, mouse_x, mouse_y):
         nonlocal pos_setpoint
+        nonlocal yaw_setpoint
         nonlocal missing_drones
         fine_inc = 0.1
         coarse_inc = 1
@@ -78,6 +78,10 @@ def pos_control_test():
             pos_setpoint[2] -= coarse_inc
         elif key == b'f':
             pos_setpoint[2] += coarse_inc
+        elif key == b'z':
+            yaw_setpoint -= 0.1
+        elif key == b'x':
+            yaw_setpoint += 0.1
 
         for drone in range(8):
             # Drones 0-7 correlate with keys 1-8
@@ -95,6 +99,7 @@ def pos_control_test():
         world.leader_drone.set_pos_setpoint(pos_setpoint, yaw_setpoint)
         world.tick()
         GraphicsState.pos_target = pos_setpoint
+        GraphicsState.yaw_target = yaw_setpoint
         GraphicsState.pos = world.structure.pos
         GraphicsState.att = world.structure.att
         GraphicsState.rotors = world.structure.geometry['rotors']

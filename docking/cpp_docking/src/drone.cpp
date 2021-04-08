@@ -412,6 +412,13 @@ void Drone::stage2(int target_id)
         std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.4); //Gets velocities for errors
         log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
 
+        //Predicts where drone's minimum horizontal FOV after descending, and checks to make sure the tag will remain in frame
+        //Uses smaller vertical FOV instead of more specific FOV to guard against possible rotation
+        double safe_view=2*(errs.alt-velocities[2]*m_dt)*tan(to_radians(CAMERA_FOV_VERTICAL/2));
+        if(abs(errs.x)>=safe_view||abs(errs.y)>=safe_view){
+            velocities[2]=0;
+        }
+
         //Updates drone velocities
         Offboard::VelocityNedYaw change{};
         change.yaw_deg = errs.yaw;

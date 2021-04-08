@@ -11,6 +11,7 @@
 #include <mavsdk/plugins/mavlink_passthrough/mavlink_passthrough.h>
 
 #include "mavsdk_callback_manager.hpp"
+#include "dronestatus.hpp"
 
 #define ERROR_CONSOLE_TEXT "\033[31m" // Turn text on console red
 #define TELEMETRY_CONSOLE_TEXT "\033[34m" // Turn text on console blue
@@ -60,10 +61,10 @@ using namespace mavsdk;
 class PX4IO
 {
 public:
-    PX4IO(std::string drone_id);
+    PX4IO(std::string drone_id, DroneSettings drone_settings);
     
     bool connect_to_pixhawk(std::string connection_url, int timeout_seconds);
-    void get_telemetry_ptr(std::shared_ptr<Telemetry> tlm);
+    std::shared_ptr<Telemetry> telemetry_ptr();
 
     void call_queued_mavsdk_callbacks();
 
@@ -103,6 +104,7 @@ public:
 
 private:
     const std::string drone_id;
+    const DroneSettings drone_settings;
 
     Mavsdk mav;
     std::shared_ptr<System> sys;
