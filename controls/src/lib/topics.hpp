@@ -4,9 +4,12 @@
 #include "rclcpp/rclcpp.hpp"
 
 #include "std_msgs/msg/string.hpp"
+
 #include "aviata/msg/drone_status.hpp"
-#include "aviata/msg/follower_setpoint.hpp"
 #include "aviata/msg/drone_debug.hpp"
+#include "aviata/msg/empty.hpp"
+#include "aviata/msg/follower_setpoint.hpp"
+#include "aviata/msg/frame_setpoint.hpp"
 #include "aviata/srv/drone_command.hpp"
 
 // ROS topics that the drone/ground station can publish and subscribe to:
@@ -32,6 +35,7 @@ const rclcpp::QoS services_default_qos{rclcpp::QoSInitialization(rmw_qos_profile
 template <const std::string& ros_topic>
 struct RosTopicConfig{  };
 
+// DRONE
 template<> struct RosTopicConfig<DRONE_STATUS> {
     typedef aviata::msg::DroneStatus msg_type;
     typedef std::integral_constant<const rclcpp::QoS&, services_default_qos> qos;
@@ -39,6 +43,37 @@ template<> struct RosTopicConfig<DRONE_STATUS> {
 template<> struct RosTopicConfig<DRONE_DEBUG> {
     typedef aviata::msg::DroneDebug msg_type;
     typedef std::integral_constant<const rclcpp::QoS&, services_default_qos> qos;
+};
+
+// FRAME
+template<> struct RosTopicConfig<FRAME_ARM> {
+    typedef aviata::msg::Empty msg_type;
+    typedef std::integral_constant<const rclcpp::QoS&, services_default_qos> qos;
+};
+template<> struct RosTopicConfig<FRAME_DISARM> {
+    typedef aviata::msg::Empty msg_type;
+    typedef std::integral_constant<const rclcpp::QoS&, services_default_qos> qos;
+};
+template<> struct RosTopicConfig<FRAME_TAKEOFF> {
+    typedef aviata::msg::Empty msg_type;
+    typedef std::integral_constant<const rclcpp::QoS&, services_default_qos> qos;
+};
+template<> struct RosTopicConfig<FRAME_LAND> {
+    typedef aviata::msg::Empty msg_type;
+    typedef std::integral_constant<const rclcpp::QoS&, services_default_qos> qos;
+};
+template<> struct RosTopicConfig<FRAME_SETPOINT> {
+    typedef aviata::msg::FrameSetpoint msg_type;
+    typedef std::integral_constant<const rclcpp::QoS&, sensor_data_qos> qos;
+};
+// FOLLOWER
+template<> struct RosTopicConfig<FOLLOWER_ARM> {
+    typedef aviata::msg::Empty msg_type;
+    typedef std::integral_constant<const rclcpp::QoS&, sensor_data_qos> qos;
+};
+template<> struct RosTopicConfig<FOLLOWER_DISARM> {
+    typedef aviata::msg::Empty msg_type;
+    typedef std::integral_constant<const rclcpp::QoS&, sensor_data_qos> qos;
 };
 template<> struct RosTopicConfig<FOLLOWER_SETPOINT> {
     typedef aviata::msg::FollowerSetpoint msg_type;
