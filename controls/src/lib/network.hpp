@@ -89,7 +89,8 @@ public:
         std::get<PubSub<ros_topic>>(pubsubs).subscription = nullptr;
     }
 
-    void publish_drone_debug(const std::string & debug_msg);
+    void publish_drone_debug(const std::string & debug_msg, uint8_t code = 0);
+
 
     void init_drone_command_service(std::function<void(const aviata::srv::DroneCommand::Request::SharedPtr,
                                                        aviata::srv::DroneCommand::Response::SharedPtr)> callback); // https://index.ros.org/doc/ros2/Tutorials/Custom-ROS2-Interfaces/#test-the-new-interfaces
@@ -109,7 +110,17 @@ public:
 private:
     const std::string drone_id;
 
-    std::tuple<PubSub<DRONE_STATUS>, PubSub<DRONE_DEBUG>, PubSub<FOLLOWER_SETPOINT>> pubsubs;
+    std::tuple<PubSub<DRONE_STATUS>, 
+               PubSub<DRONE_DEBUG>,
+               PubSub<FRAME_ARM>,
+               PubSub<FRAME_DISARM>,
+               PubSub<FRAME_TAKEOFF>,
+               PubSub<FRAME_LAND>,
+               PubSub<FRAME_SETPOINT>,
+               PubSub<FOLLOWER_ARM>,
+               PubSub<FOLLOWER_DISARM>,
+               PubSub<FOLLOWER_SETPOINT>
+    > pubsubs;
 
     rclcpp::Service<aviata::srv::DroneCommand>::SharedPtr drone_command_service;
     std::map<std::string, rclcpp::Client<aviata::srv::DroneCommand>::SharedPtr> drone_command_clients;
