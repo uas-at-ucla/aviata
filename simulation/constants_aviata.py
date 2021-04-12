@@ -49,6 +49,7 @@ P_att = np.array([6.5, 6.5, 2.8]) # MC_ROLL_P, MC_PITCH_P, MC_YAW_P
 
 P_att_rate = np.array([6.492, 6.492, 2.906]) # MC_ROLLRATE_P, MC_PITCHRATE_P, MC_YAWRATE_P. Scaled due to mixer: np.array([0.15*43.28, 0.15*43.28, 0.2*14.53])
 I_att_rate = np.array([8.656, 8.656, 1.453]) # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I. Scaled due to mixer: np.array([0.2*43.28, 0.2*43.28, 0.1*14.53])
+I_lim_att_rate = np.array([12.984, 12.984, 4.359]) # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I. Scaled due to mixer: np.array([0.3*43.28, 0.3*43.28, 0.3*14.53])
 D_att_rate = np.array([0.12984, 0.12984, 0.0]) # MC_ROLLRATE_D, MC_PITCHRATE_D, MC_YAWRATE_D. Scaled due to mixer: np.array([0.003*43.28, 0.003*43.28, 0.0*14.53])
 # To scale all at once: MC_ROLLRATE_K, MC_PITCHRATE_K, MC_YAWRATE_K
 # Also relevant: MC_ROLLRATE_FF, MC_PITCHRATE_FF, MC_YAWRATE_FF; MC_RR_INT_LIM, MC_PR_INT_LIM, MC_YR_INT_LIM
@@ -75,6 +76,7 @@ max_att_rate = np.deg2rad(np.array([220.0, 220.0, 200.0])) # radians/s MC_ROLLRA
 
 # P_att_rate = np.array([6.492, 6.492, 2.906]) # MC_ROLLRATE_P, MC_PITCHRATE_P, MC_YAWRATE_P. Scaled due to mixer: np.array([0.15*43.28, 0.15*43.28, 0.2*14.53])
 # I_att_rate = np.array([8.656, 8.656, 1.453]) # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I. Scaled due to mixer: np.array([0.2*43.28, 0.2*43.28, 0.1*14.53])
+# I_lim_att_rate = np.array([12.984, 12.984, 4.359]) # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I. Scaled due to mixer: np.array([0.3*43.28, 0.3*43.28, 0.3*14.53])
 # D_att_rate = np.array([0.12984, 0.12984, 0.0]) # MC_ROLLRATE_D, MC_PITCHRATE_D, MC_YAWRATE_D. Scaled due to mixer: np.array([0.003*43.28, 0.003*43.28, 0.0*14.53])
 # # To scale all at once: MC_ROLLRATE_K, MC_PITCHRATE_K, MC_YAWRATE_K
 # # Also relevant: MC_ROLLRATE_FF, MC_PITCHRATE_FF, MC_YAWRATE_FF; MC_RR_INT_LIM, MC_PR_INT_LIM, MC_YR_INT_LIM
