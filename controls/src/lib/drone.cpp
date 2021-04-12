@@ -146,6 +146,9 @@ void Drone::run()
 void Drone::init_follower() {
     _last_setpoint_msg_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
+    //subscribe follower stuff
+    _network->subscribe<FOLLOWER_ARM>([this](const aviata::msg::Empty::SharedPtr follower_arm) {    arm_drone();    });
+    _network->subscribe<FOLLOWER_DISARM>([this](const aviata::msg::Empty::SharedPtr follower_disarm) {  disarm_drone();    });
     _network->subscribe<FOLLOWER_SETPOINT>([this](const aviata::msg::FollowerSetpoint::SharedPtr follower_setpoint) {
         if (!valid_leader_msg(follower_setpoint->leader_seq_num)) {
             return;
@@ -173,8 +176,19 @@ void Drone::init_follower() {
 }
 
 void Drone::init_leader() {
-    _network->init_publisher<FOLLOWER_SETPOINT>();
+    // init leader publishers
+    _network->init_publisher<FOLLOWER_ARM>();
+    _network->init_publisher<FOLLOWER_DISARM>();
+
+    // subscribe leader topics
+    _network->subscribe<FRAME_ARM>([this](const aviata::msg::Empty::SharedPtr frame_arm) {    arm_frame();    });
+    _network->subscribe<FRAME_DISARM>([this](const aviata::msg::Empty::SharedPtr frame_disarm) {    disarm_frame();    });
+    _network->subscribe<FRAME_TAKEOFF>([this](const aviata::msg::Empty::SharedPtr frame_takeoff) {    takeoff_frame();    });
+    _network->subscribe<FRAME_LAND>([this](const aviata::msg::Empty::SharedPtr frame_land) {    land_frame();    });    
+    _network->subscribe<FRAME_SETPOINT>([this](const aviata::msg::FrameSetpoint::SharedPtr frame_setpoint) {    /* TODO */    });    
+
     // send follower setpoints
+    _network->init_publisher<FOLLOWER_SETPOINT>();
     _px4_io.subscribe_attitude_target([this](const mavlink_attitude_target_t &attitude_target) {
         if (_armed && !_kill_switch_engaged) {
             aviata::msg::FollowerSetpoint follower_setpoint;
@@ -190,6 +204,14 @@ void Drone::init_leader() {
 
 void Drone::transition_leader_to_follower() {
     // deinit leader
+    _network->unsubscribe<FRAME_ARM>();
+    _network->unsubscribe<FRAME_DISARM>();
+    _network->unsubscribe<FRAME_TAKEOFF>();
+    _network->unsubscribe<FRAME_LAND>();
+    _network->unsubscribe<FRAME_SETPOINT>();
+
+    _network->deinit_publisher<FOLLOWER_ARM>();
+    _network->deinit_publisher<FOLLOWER_DISARM>();
     _network->deinit_publisher<FOLLOWER_SETPOINT>();
     _px4_io.unsubscribe_attitude_target();
 
@@ -199,6 +221,8 @@ void Drone::transition_leader_to_follower() {
 
 void Drone::transition_follower_to_leader() {
     // deinit follower
+    _network->unsubscribe<FOLLOWER_ARM>();
+    _network->unsubscribe<FOLLOWER_DISARM>();
     _network->unsubscribe<FOLLOWER_SETPOINT>();
 
     _drone_state = DOCKED_LEADER;
@@ -246,12 +270,15 @@ uint8_t Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
 {
     if (_drone_state == DOCKED_LEADER)
     {
+        aviata::msg::Empty arm;
+        _network->publish<FOLLOWER_ARM>(arm);
+        _network->publish_drone_debug("ARM FRAME");        
+        // TODO: check if all drones on frame have armed
+
         // _leader_follower_armed = _swarm.size();
         // _leader_follower_disarmed = 0;
-        for (const auto &[id, status] : _swarm)
-        {
-            // TODO publish FOLLOWER_ARM topic instead
-
+        // for (const auto &[id, status] : _swarm)
+        // {
             // send_drone_command(id, ARM, -1, "arm, " + _drone_id,
             //                    [this](uint8_t ack) {
             //                        if (ack == 1)
@@ -270,7 +297,7 @@ uint8_t Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
             //                        _network->publish_drone_debug("Arm Frame in progress: awaiting ack for = " + _leader_follower_armed);
 
             //                    });
-        }
+        // }
         return 1;
     }
     _network->publish_drone_debug("Arm Frame FAILED: leader improper DroneState = " + _drone_state);
@@ -291,10 +318,15 @@ uint8_t Drone::disarm_frame()
 {
     if (_drone_state == DOCKED_LEADER)
     {
+        aviata::msg::Empty disarm;
+        _network->publish<FOLLOWER_DISARM>(disarm);
+        _network->publish_drone_debug("DISARM FRAME");
+        // TODO: check if all drones on frame have disarmed
+        
         // _leader_follower_disarmed = _swarm.size();
         // _leader_follower_armed = 0;
-        for (const auto &[id, status] : _swarm)
-        {
+        // for (const auto &[id, status] : _swarm)
+        // {
             // TODO publish FOLLOWER_DISARM topic instead
 
             // send_drone_command(id, DISARM, -1, "disarm, " + _drone_id,
@@ -314,7 +346,7 @@ uint8_t Drone::disarm_frame()
             //                        _network->publish_drone_debug("Disarm Frame in progress: awaiting ack for = " + _leader_follower_disarmed);
 
             //                    });
-        }
+        // }
         return 1;
     }
     _network->publish_drone_debug("Disarm Frame FAILED: leader improper DroneState = " + _drone_state);
@@ -336,7 +368,6 @@ uint8_t Drone::takeoff_frame() // for DOCKED_LEADER (send attitude and thrust to
 {
     if (_drone_state == DOCKED_LEADER)
     {
-        // TODO: start setpoint following for followers
         _network->publish_drone_debug("Frame taking off");
         return _px4_io.takeoff_system();
     }

@@ -9,6 +9,7 @@
 
 #include <apriltag/apriltag.h>
 #include <apriltag/tag36h11.h>
+#include <apriltag/tag16h5.h>
 
 #include <string>
 #include <math.h>
@@ -18,15 +19,17 @@
 ImageAnalyzer::ImageAnalyzer()
 {
     tf = tag36h11_create();
+    // tf = tag16h5_create();
     m_tagDetector = apriltag_detector_create();
     m_tagDetector->nthreads = 4;
-    m_tagDetector->quad_decimate = 1; // default is 2.0, so this will hurt speed but increase detection rate
+    m_tagDetector->quad_decimate = 1.5; // default is 2.0, so this will hurt speed but increase detection rate
     apriltag_detector_add_family(m_tagDetector, tf);
 }
 ImageAnalyzer::~ImageAnalyzer()
 {
     apriltag_detector_destroy(m_tagDetector);
     tag36h11_destroy(tf);
+    // tag16h5_destroy(tf);
 }
 
 /**
@@ -143,26 +146,13 @@ bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags,
             {
                 incline_angle = 0;
             }
-            errs.yaw = incline_angle * -1 + yaw; //Finds rotational error from diagonal angle
+            errs.yaw = incline_angle * -1; //Finds rotational error from diagonal angle
 
-            //Finds the offset of the image location
-            float x_offset = center[0] - image_center.x;
-            float y_offset = image_center.y - center[1];
-            // float x_percent_offset = abs(x_offset / (img.cols / 2) * 100);
-            // float y_percent_offset = abs(y_offset / (img.rows / 2) * 100);
-            // errs.horiz_percentage_offset = sqrt(x_percent_offset * x_percent_offset + y_percent_offset * y_percent_offset);
 
             // 3. Calculate x/y error
-
-            float raw_x = x_offset * tag_pixel_ratio;
-            float raw_y = y_offset * tag_pixel_ratio;
-            float r = sqrt(raw_x * raw_x + raw_y * raw_y);
-            float theta = atan2(raw_y, raw_x);
-            theta += -1.0 * to_radians(yaw); // convert from body to ned coordinates
-            float real_x = r * cos(theta);
-            float real_y = r * sin(theta);
-            errs.x = real_x;
-            errs.y = real_y;
+            
+            errs.x = (center[0] - image_center.x) * tag_pixel_ratio;
+            errs.y = (image_center.y - center[1]) * tag_pixel_ratio;
 
             //Cleanup
             apriltag_detection_destroy(det);

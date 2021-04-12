@@ -254,8 +254,8 @@ bool Drone::stage1(int target_id)
         log("Docking", "Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
         offset_errors(errs, target_id); //Adjusts errors for stage 1 to stage 2 transition
         log("Docking", "Offset Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
-        std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.4); //Gets velocities for errors
-        log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
+        Velocities velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw,0.4); //Gets velocities for errors
+        log("Docking", "Velocities: east: " + std::to_string(velocities.x) + " north: " + std::to_string(velocities.y) + " down: " + std::to_string(velocities.alt) + " yaw: " + std::to_string(velocities.yaw));
 
         //Checks if drone within correct tolerance
         if (errs.x < STAGE_1_TOLERANCE && errs.x > -1.0 * STAGE_1_TOLERANCE && errs.y < STAGE_1_TOLERANCE && errs.y > -1.0 * STAGE_1_TOLERANCE &&
@@ -272,12 +272,12 @@ bool Drone::stage1(int target_id)
             break; //Stage 1 succesful
 
         //Updates drone velocities with calculated values
-        Offboard::VelocityNedYaw change{};
-        change.yaw_deg = errs.yaw;
-        change.north_m_s = velocities[1];
-        change.east_m_s = velocities[0];
-        change.down_m_s = velocities[2];
-        offboard.set_velocity_ned(change);
+        Offboard::VelocityBodyYawspeed change{};
+        change.yawspeed_deg_s = velocities.yaw;
+        change.forward_m_s = velocities.y;
+        change.right_m_s = velocities.x;
+        change.down_m_s = velocities.alt;
+        offboard.set_velocity_body(change);
 
         //Calculates how long to wait to keep refresh rate constant
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
@@ -409,22 +409,22 @@ void Drone::stage2(int target_id)
 
         log("Docking", "Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
 
-        std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.4); //Gets velocities for errors
-        log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
+        Velocities velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw,0.4); //Gets velocities for errors
+        log("Docking", "Velocities: east: " + std::to_string(velocities.x) + " north: " + std::to_string(velocities.y) + " down: " + std::to_string(velocities.alt));
 
         //Predicts where drone's minimum horizontal FOV after descending, and checks to make sure the tag will remain in frame
         //Uses smaller vertical FOV instead of more specific FOV to guard against possible rotation
-        double safe_view=2*(errs.alt-velocities[2]*m_dt)*tan(to_radians(CAMERA_FOV_VERTICAL/2));
+        double safe_view=2*(errs.alt-velocities.alt*m_dt)*tan(to_radians(CAMERA_FOV_VERTICAL/2));
         if(abs(errs.x)>=safe_view||abs(errs.y)>=safe_view){
-            velocities[2]=0;
+            velocities.alt=0;
         }
 
         //Updates drone velocities
         Offboard::VelocityNedYaw change{};
-        change.yaw_deg = errs.yaw;
-        change.north_m_s = velocities[1];
-        change.east_m_s = velocities[0];
-        change.down_m_s = velocities[2];
+        change.yaw_deg = 0;//errs.yaw;
+        change.north_m_s = velocities.y;
+        change.east_m_s = velocities.x;
+        change.down_m_s = velocities.alt;
         offboard.set_velocity_ned(change);
     }
 }
@@ -519,45 +519,21 @@ void Drone::offset_errors(Errors &errs, int id)
 
 void Drone::test0()
 {
-    bool arm_code = arm();
-    if (!arm_code)
-    {
-        log("Test 0", "Failed to arm");
-        return;
-    }
-    bool takeoff_code = takeoff(2);
-    if (!takeoff_code)
-    {
-        log("Test 0", "Failed to take off");
-        return;
-    }
-
-    log("Test 0", "Holding...");
-
-    int time_span = 0;
-    auto offboard = Offboard{m_system};
-    high_resolution_clock::time_point start = high_resolution_clock::now();
-    while (time_span < 1000 * 5)
-    {
-        Offboard::VelocityNedYaw stay{};
-        offboard.set_velocity_ned(stay);
-        high_resolution_clock::time_point now = high_resolution_clock::now();
-        duration<double, std::milli> d = (now - start);
-        time_span = d.count();
-    }
-    log("Test 0", "Done holding");
-    while (!land()) ;
 }
 
 void Drone::test1()
 {
+    log("Test 1", "Warming camera up...");
+    for (int count = 0; count < 60; count++) {
+        camera.update_current_image(0, 0, 5, 0, 0);
+    }
     bool arm_code = arm();
     if (!arm_code)
     {
         log("Test 1", "Failed to arm");
         return;
     }
-    bool takeoff_code = takeoff(3);
+    bool takeoff_code = takeoff(1);
     if (!takeoff_code)
     {
         log("Test 1", "Failed to take off");
@@ -585,6 +561,7 @@ void Drone::test1()
     PIDController pid(m_dt);
 
     Errors errs;
+    int n_missed_frames = 0;
     while (time_span < 10 * 1000 /* 10 seconds */)
     {
         high_resolution_clock::time_point f1 = high_resolution_clock::now();
@@ -593,29 +570,34 @@ void Drone::test1()
         duration<double, std::milli> c1 = (f2 - f1);
 
         high_resolution_clock::time_point f3 = high_resolution_clock::now();
-        bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags_detected, errs); //Detects apriltags and calculates errors
+        bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags_detected, errs);
         high_resolution_clock::time_point f4 = high_resolution_clock::now();
         duration<double, std::milli> c2 = (f4 - f3);
 
-        Offboard::VelocityNedYaw change{};
+        Offboard::VelocityBodyYawspeed change{};
         // change.down_m_s = -0.2;
         if (is_tag_detected)
         {
-            std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.1);
-            log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
+            Velocities velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw,0.4);
+            log(tag, "Apriltag found! " + std::to_string(time_span) + " camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
                          " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
-                         + " velocities: x=" + std::to_string(velocities[0]) + " y=" + std::to_string(velocities[1]) + " z=" + std::to_string(velocities[2]));
-            change.north_m_s = velocities[1]; // 3
-            change.east_m_s = velocities[0]; // 3
-            change.yaw_deg = errs.yaw; // 2
+                         + " velocities: x=" + std::to_string(velocities.x) + " y=" + std::to_string(velocities.y) + " z=" + std::to_string(velocities.alt) + " yaw_speed=" + std::to_string(velocities.yaw));
+            change.forward_m_s = velocities.y;
+            change.right_m_s = velocities.x;
+            change.yawspeed_deg_s = velocities.yaw;
+            // n_missed_frames = 0;
         } else {
-            log(tag, "Failed to find Apriltag");
-            change.yaw_deg = m_yaw; // 2
-            change.north_m_s = 0.0; // 3
-            change.east_m_s = 0.0; // 3
+            log(tag, "Failed to find Apriltag, number missed frames: " + std::to_string(n_missed_frames)); 
+
+            // if (n_missed_frames > 3) {
+                change.forward_m_s = 0.0;
+                change.right_m_s = 0.0;
+                change.yawspeed_deg_s = 0.0;
+            // }
+            // n_missed_frames++;
         }
 
-        offboard.set_velocity_ned(change);
+        offboard.set_velocity_body(change);
         // cv::imwrite("test"+ std::to_string(time_span) + ".png", img); // any (debug)
 
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
@@ -625,7 +607,7 @@ void Drone::test1()
     }
     Offboard::VelocityNedYaw hold{};
     offboard.set_velocity_ned(hold);
-    cv::imwrite("test.png", img);
+    if (!img.empty()) cv::imwrite("test.png", img);
     log(tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(count_frames));
     log(tag, "Average FPS: " + std::to_string(count_frames / (time_span / 1000)));
     land();
@@ -692,15 +674,15 @@ void Drone::simulation_test_moving_target() {
         log("Docking", "Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
         errs.alt -= 1;
         log("Docking", "Offset Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
-        std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.4); //Gets velocities for errors
-        log("Docking", "Velocities: east: " + std::to_string(velocities[0]) + " north: " + std::to_string(velocities[1]) + " down: " + std::to_string(velocities[2]));
+        Velocities velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw,0.4); //Gets velocities for errors
+        log("Docking", "Velocities: east: " + std::to_string(velocities.x) + " north: " + std::to_string(velocities.y) + " down: " + std::to_string(velocities.alt));
 
         //Updates drone velocities with calculated values
         Offboard::VelocityNedYaw change{};
         change.yaw_deg = errs.yaw;
-        change.north_m_s = velocities[1];
-        change.east_m_s = velocities[0];
-        change.down_m_s = velocities[2];
+        change.north_m_s = velocities.y;
+        change.east_m_s = velocities.x;
+        change.down_m_s = velocities.alt;
         offboard.set_velocity_ned(change);
 
         //Calculates how long to wait to keep refresh rate constant

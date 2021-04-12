@@ -5,15 +5,14 @@ void apriltag_test();
 int main(/*int argc, char** argv */)
 {
     Target t;
-    // t.yaw = 90;
-
+    t.yaw = 180;
+    
     Drone drone(t);
     drone.connect_gazebo();
     drone.arm();
-    drone.takeoff(2);
+    drone.takeoff(4);
     drone.initiate_docking(1);
-
-    return 0;
+    // apriltag_test();
 }
 
 
@@ -30,7 +29,7 @@ int main(/*int argc, char** argv */)
 
 // void apriltag_test() {
 //     ImageAnalyzer *ia = new ImageAnalyzer();
-//     std::string path = "/home/axel/Desktop/UAS/testing/02-24-2021-offboard-manual/7-images";
+//     std::string path = "/home/axel/Desktop/UAS/testing/03-26-2021-pid-tuning/2-images";
 //     int dets = 0;
 //     int nondets = 0;
 

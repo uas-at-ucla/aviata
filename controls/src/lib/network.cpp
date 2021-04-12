@@ -22,7 +22,7 @@ Network::Network(std::string drone_id) : Node(drone_id), drone_id(drone_id) {}
 
 
 // DRONE DEBUG
-void Network::publish_drone_debug(const std::string & debug_msg)
+void Network::publish_drone_debug(const std::string & debug_msg, uint8_t code)
 {
     std::cout << "Drone Debug: " << debug_msg << std::endl;
     if (std::get<PubSub<DRONE_DEBUG>>(pubsubs).publisher == nullptr)
@@ -32,6 +32,7 @@ void Network::publish_drone_debug(const std::string & debug_msg)
     aviata::msg::DroneDebug drone_debug;
     drone_debug.debug = debug_msg;
     drone_debug.drone_id = this->get_name(); // same as drone_id
+    drone_debug.code = code;
     publish<DRONE_DEBUG>(drone_debug);
 }
 
