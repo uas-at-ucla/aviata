@@ -460,7 +460,7 @@ uint8_t Drone::become_follower()
 {
     if (_drone_state == DOCKED_LEADER)
     {
-        float highest_batt = 0;
+        float highest_batt = -1;
         std::string highest_batt_drone = "";
         for (const auto& [id, status] : _swarm)
         {
