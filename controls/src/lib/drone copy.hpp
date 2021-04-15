@@ -4,14 +4,10 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <future>
-#include <memory>
 
 #include "../mavlink/v2.0/common/mavlink.h"
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
-#include <mavsdk/plugins/action/action.h>
-#include <mavsdk/plugins/offboard/offboard.h>
 
 #include "dronestatus.hpp"
 #include "dronetelemetry.hpp"
@@ -21,14 +17,6 @@
 #include "aviata/srv/drone_command.hpp"
 #include "aviata/msg/follower_setpoint.hpp"
 
-#include "image_analyzer.hpp"
-#include "util.hpp"
-#include "pid_controller.hpp"
-
-#include <opencv2/core.hpp>
-#include <opencv2/core/types.hpp>
-#include <opencv2/imgcodecs.hpp>
-
 #if USE_RASPI_CAMERA == 1
     #include "raspi_camera.hpp"
     typedef RaspiCamera Camera;
@@ -37,14 +25,10 @@
     typedef CameraSimulator Camera;
 #endif
 
-//Docking constant for altitude adjustment
-const float ALTITUDE_DISP = BOOM_LENGTH / 2 / tan(to_radians(CAMERA_FOV_VERTICAL / 2)) * 2;
-
-using namespace mavsdk;
 class Drone
 {
 public:
-    Drone(std::string drone_id, DroneSettings drone_settings, Target target);
+    Drone(std::string drone_id, DroneSettings drone_settings);
     ~Drone();
 
     bool init(DroneState initial_state, uint8_t docking_slot, std::string connection_url);
@@ -74,21 +58,6 @@ private:
     // uint8_t leader_follower_listened = 0; // keep track of how many followers acknowledged LISTEN_NEW_LEADER command
     // uint8_t _leader_follower_armed = 0;
     // uint8_t _leader_follower_disarmed = 0;
-
-    //Docking members
-    Mavsdk mavsdk;
-    Camera camera;
-    ImageAnalyzer image_analyzer;
-    Target m_target_info;
-    DockingStatus docking_status;
-
-    float m_north;
-    float m_east;
-    float m_down;
-    float m_yaw;
-    float m_dt; // docking loop cycle time, seconds
-
-    std::shared_ptr<mavsdk::System> m_system; // pointer to mavsdk connection to drone
 
     // Status of other drones
     std::map<std::string, DroneStatus> _swarm; // map by drone_id
@@ -126,15 +95,7 @@ private:
 
     uint8_t undock();
 
-    void initiate_stage1_docking();
-
-    void initiate_stage2_docking();
-
-    uint8_t dock_stage1(int target_id); 
-
-    uint8_t dock_stage2(int target_id);
-
-    void offset_errors(Errors &errs, int target_id); // Helper method for docking stage 1 error adjustment
+    uint8_t dock(int n); 
 
     uint8_t become_leader(uint8_t leader_seq_num);
 

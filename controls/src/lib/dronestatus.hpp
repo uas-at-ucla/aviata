@@ -1,6 +1,9 @@
 #ifndef DRONESTATUS_HPP
 #define DRONESTATUS_HPP
 
+class Mat;
+class PIDController;
+
 struct DroneSettings {
     bool sim;
     bool modify_px4_mixers;
@@ -9,12 +12,20 @@ struct DroneSettings {
 enum DroneState {
     STANDBY,
     ARRIVING,
-    DOCKING,
+    DOCKING_STAGE_1,
+    DOCKING_STAGE_2,
     DOCKED_FOLLOWER,
     DOCKED_LEADER,
     UNDOCKING,
     DEPARTING,
     NEEDS_SERVICE
+};
+
+enum DockingIterationResult{
+    DOCKING_SUCCESS,
+    DOCKING_FAILURE,
+    ITERATION_SUCCESS,
+    RESTART_DOCKING
 };
 
 struct DroneStatus {
@@ -38,6 +49,20 @@ struct DroneStatus_ {
     std::string drone_id;
 
 
+};
+
+class DockingStatus{
+    auto offboard=Offboard{m_system};
+    PIDController pid(m_dt);
+    std::string tags;
+    Mat img;
+
+    int failed_frames;
+    int successful_frames;
+    int docking_attempts;
+
+    bool prev_iter_detection;
+    bool has_centered;
 };
 
 #endif

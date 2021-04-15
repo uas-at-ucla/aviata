@@ -25,6 +25,8 @@ find_package(std_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 find_package(MAVSDK REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(apriltag REQUIRED)
 
 file(GLOB_RECURSE ROS_MESSAGES RELATIVE ${CMAKE_SOURCE_DIR}
     src/msg/*.msg
@@ -50,6 +52,9 @@ target_link_libraries(aviata_lib
     MAVSDK::mavsdk_telemetry
     MAVSDK::mavsdk_action
     MAVSDK::mavsdk_mavlink_passthrough
+    MAVSDK::mavsdk_offboard
+    ${OpenCV_LIBS}
+    apriltag
 )
 
 add_executable(aviata_drone src/aviata_drone.cpp)
