@@ -1,8 +1,15 @@
 #ifndef DRONESTATUS_HPP
 #define DRONESTATUS_HPP
 
-class Mat;
-class PIDController;
+#include "pid_controller.hpp"
+#include <opencv2/core.hpp>
+#include <opencv2/core/types.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include "../mavlink/v2.0/common/mavlink.h"
+#include <mavsdk/mavsdk.h>
+#include <mavsdk/plugins/telemetry/telemetry.h>
+#include <mavsdk/plugins/action/action.h>
+#include <mavsdk/plugins/offboard/offboard.h>
 
 struct DroneSettings {
     bool sim;
@@ -52,17 +59,28 @@ struct DroneStatus_ {
 };
 
 class DockingStatus{
-    auto offboard=Offboard{m_system};
-    PIDController pid(m_dt);
-    std::string tags;
-    Mat img;
+    public:
+        DockingStatus(float m_dt,std::shared_ptr<mavsdk::System> m_system):pid(m_dt),offboard(m_system){
+            //offboard=mavsdk::Offboard{m_system};
+            tags="";
+            failed_frames=0;
+            successful_frames=0;
+            docking_attempts=0;
+            prev_iter_detection=false;
+            has_centered=false;
+        }
 
-    int failed_frames;
-    int successful_frames;
-    int docking_attempts;
+        mavsdk::Offboard offboard;
+        PIDController pid;
+        std::string tags;
+        cv::Mat img;
 
-    bool prev_iter_detection;
-    bool has_centered;
+        int failed_frames;
+        int successful_frames;
+        int docking_attempts;
+
+        bool prev_iter_detection;
+        bool has_centered;
 };
 
 #endif

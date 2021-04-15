@@ -2,6 +2,8 @@
 #define PID_H
 
 #include <array>
+#include "util.hpp"
+class Velocities;
 
 //PID Controller class
 class PIDController

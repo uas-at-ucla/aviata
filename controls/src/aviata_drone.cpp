@@ -1,4 +1,5 @@
 #include "lib/drone.hpp"
+#include "lib/util.hpp"
 
 int main(int argc, char** argv) {
     if (argc < 3) {
@@ -39,7 +40,9 @@ int main(int argc, char** argv) {
         drone_settings.modify_px4_mixers = true; 
     }
 
-    Drone drone(drone_id, drone_settings);
+    Target t;
+
+    Drone drone(drone_id, drone_settings,t);
 
     if (!drone.init(initial_state, docking_slot, connection_url)) {
         return 1;
