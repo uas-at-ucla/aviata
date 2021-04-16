@@ -35,6 +35,8 @@
 #define LOG_CONSOLE_TEXT "\033[34m"   // Turn text on console blue
 #define NORMAL_CONSOLE_TEXT "\033[0m" // Restore normal console colour
 
+#define UNUSED(expr) do { (void)(expr); } while (0) // hack to make compiler think `expr` is used
+
 // Logs
 inline void log(const std::string &tag, const std::string msg, bool err = false)
 {

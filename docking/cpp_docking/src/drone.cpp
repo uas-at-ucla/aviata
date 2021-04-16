@@ -229,7 +229,7 @@ bool Drone::stage1(int target_id)
         high_resolution_clock::time_point t1 = high_resolution_clock::now();
         img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
         Errors errs;
-        bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags, errs); //Detects apriltags and calculates errors
+        bool is_tag_detected = image_analyzer.processImage(img, 0, tags, errs); //Detects apriltags and calculates errors
         log("Tags Detected", tags);
 
         if (!is_tag_detected) //Central target not found
@@ -314,7 +314,7 @@ void Drone::stage2(int target_id)
         //Update image and process for errors
         img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
         Errors errs;
-        bool is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
+        bool is_tag_detected = image_analyzer.processImage(img, target_id, tags, errs);
         log("Tags Detected", tags);
         int checked_frames = 0;
         int docking_attempts = 0;
@@ -339,7 +339,7 @@ void Drone::stage2(int target_id)
                     return;
                 }
                 img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-                is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
+                is_tag_detected = image_analyzer.processImage(img, target_id, tags, errs);
 
                 //Ascends until max height or until peripheral target detected
                 while (!is_tag_detected && m_down * -1.0 - m_target_info.alt < MAX_HEIGHT_STAGE_2)
@@ -349,7 +349,7 @@ void Drone::stage2(int target_id)
                     change.down_m_s = -0.2f;
                     offboard.set_velocity_body(change);
                     img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-                    is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
+                    is_tag_detected = image_analyzer.processImage(img, target_id, tags, errs);
                 }
                 if (is_tag_detected) //Peripheral target detected, continues with docking normally
                     break;
@@ -362,7 +362,7 @@ void Drone::stage2(int target_id)
                     change.down_m_s = -0.2f;
                     offboard.set_velocity_body(change);
                     img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-                    is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags, errs);
+                    is_tag_detected = image_analyzer.processImage(img, 0, tags, errs);
                 }
 
                 //Central target detected, re-attempt stage 1
@@ -371,7 +371,7 @@ void Drone::stage2(int target_id)
                     log("Docking", "Central target detected, re-attempting stage 1");
                     stage1(target_id);
                     img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-                    is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
+                    is_tag_detected = image_analyzer.processImage(img, target_id, tags, errs);
                     checked_frames = 0;
                 }
                 else //Maximum height exceeded, docking failure
@@ -383,7 +383,7 @@ void Drone::stage2(int target_id)
             }
             sleep_for(milliseconds((int)m_dt * 1000));
             img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-            is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
+            is_tag_detected = image_analyzer.processImage(img, target_id, tags, errs);
             log("Tags Detected", tags);
         }
 
@@ -543,7 +543,7 @@ void Drone::test1()
 
     log("Test 1", "Holding...");
 
-    // Mat img;
+    Mat img;
     std::string tag = "Test 1";
     std::string tags_detected = "";
 
@@ -577,7 +577,7 @@ void Drone::test1()
         duration<double, std::milli> c1 = (f2 - f1);
 
         high_resolution_clock::time_point f3 = high_resolution_clock::now();
-        bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags_detected, errs);
+        bool is_tag_detected = image_analyzer.processImage(img, 0, tags_detected, errs);
         high_resolution_clock::time_point f4 = high_resolution_clock::now();
         duration<double, std::milli> c2 = (f4 - f3);
 
@@ -678,7 +678,7 @@ void Drone::simulation_test_moving_target() {
         // camera.update_target(m_target_info);
         img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
         Errors errs;
-        image_analyzer.processImage(img, 0, m_yaw, tags, errs); //Detects apriltags and calculates errors
+        image_analyzer.processImage(img, 0, tags, errs); //Detects apriltags and calculates errors
         log("Tags Detected", tags);
 
         log("Docking", "Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
@@ -705,7 +705,7 @@ void Drone::simulation_test_moving_target() {
 
 void Drone::test_telemetry() {
     auto telemetry = Telemetry{m_system}; // 2 and 3
-    const Telemetry::Result set_rate_result_a = telemetry.set_rate_attitude(20);
+    telemetry.set_rate_attitude(20);
     telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
         set_yaw(e.yaw_deg);
     });
@@ -715,7 +715,7 @@ void Drone::test_telemetry() {
     std::string tags_detected = "";
 
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
-    int time_span = 0;
+    // int time_span = 0;
     int count_frames = 0;
     Errors errs;
     while (true)
@@ -726,7 +726,7 @@ void Drone::test_telemetry() {
         duration<double, std::milli> c1 = (f2 - f1);
 
         high_resolution_clock::time_point f3 = high_resolution_clock::now();
-        bool is_tag_detected = image_analyzer.processImage(img, 0, m_system, tags_detected, errs); //Detects apriltags and calculates errors
+        bool is_tag_detected = image_analyzer.processImage(img, 0, tags_detected, errs); //Detects apriltags and calculates errors
         high_resolution_clock::time_point f4 = high_resolution_clock::now();
         duration<double, std::milli> c2 = (f4 - f3);
 
@@ -741,7 +741,7 @@ void Drone::test_telemetry() {
 
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
         duration<double, std::milli> d = (t2 - t1);
-        time_span = d.count();
+        // time_span = d.count();
         count_frames++;
     }
 }

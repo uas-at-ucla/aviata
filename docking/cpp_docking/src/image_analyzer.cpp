@@ -49,7 +49,7 @@ ImageAnalyzer::~ImageAnalyzer()
  * @return true if target was detected, false otherwise (and errs remains unchanged if so)
  * 
  * */
-bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags, Errors &errs)
+bool ImageAnalyzer::processImage(Mat img, int ind, std::string &tags, Errors &errs)
 {
     Point2f image_center(img.cols / 2, img.rows / 2);
 
