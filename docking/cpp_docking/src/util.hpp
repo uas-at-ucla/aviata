@@ -12,7 +12,7 @@
 
 // Constants
 
-#define CENTRAL_TAG_SIZE 0.227 // to be changed according to actual target size
+#define CENTRAL_TAG_SIZE 0.135 // to be changed according to actual target size
 #define PERIPHERAL_TAG_SIZE 0.08 // likewise
 
 // Camera information for simulator, measured in degrees
@@ -61,6 +61,15 @@ inline double to_degrees(double radians)
     return radians * 180.0 / M_PI;
 }
 
+// cmath::abs() is only implemented for int, long int, or long long int
+inline float absolute_value(float val) {
+    if (val < 0.0) {
+        return -1.0 * val;
+    } else {
+        return val;
+    }
+}
+
 // Target type
 struct Target
 {
@@ -77,6 +86,14 @@ struct Errors
     float alt = 0;
     float yaw = 0;
     float horiz_percentage_offset = 0;
+};
+
+struct Velocities
+{
+    float x = 0;
+    float y = 0;
+    float alt = 0;
+    float yaw = 0;
 };
 
 #endif // UTIL_H_

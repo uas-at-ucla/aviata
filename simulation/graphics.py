@@ -13,6 +13,7 @@ H_CAMERA_DISTANCE = 8.0
 
 class GraphicsState:
     pos_target = np.array([0.0, 0.0, 0.0])
+    yaw_target = 0
     pos = np.array([0.0, 0.0, 0.0])
     att = Quaternion()
     rotors = []
@@ -81,7 +82,7 @@ def makeCube(pos, r):
     glEnd()
 
 
-def makeRotor(pos, power):
+def makeRotor(pos, axis, power):
     r = 0.05
     glLineWidth(1.0)
 
@@ -100,6 +101,12 @@ def makeRotor(pos, power):
 
     makeCube(pos, r)
 
+    # show axis of rotation
+    glBegin(GL_LINES)
+    glVertex3f(pos[0]-axis[0]*r*4, pos[1]-axis[1]*r*4, pos[2]-axis[2]*r*4)
+    glVertex3f(pos[0]+axis[0]*r*4, pos[1]+axis[1]*r*4, pos[2]+axis[2]*r*4)
+    glEnd()
+
 
 def makeStructure():
     # show center of mass
@@ -112,7 +119,7 @@ def makeStructure():
         rotor = GraphicsState.rotors[i]
         if rotor['Ct']:
             motor_input = GraphicsState.motor_inputs[i]
-            makeRotor(rotor['position'], motor_input)
+            makeRotor(rotor['position'], rotor['axis'], motor_input)
 
 
 def DrawGLScene():
@@ -123,11 +130,16 @@ def DrawGLScene():
 
     glLoadIdentity()
 
-    # show position target
+    # show position and yaw target
     glLineWidth(1.0)
     glColor3f(1, 0.647, 0)
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     makeCube(GraphicsState.pos_target, 0.05)
+    glBegin(GL_LINES)
+    glVertex3f(GraphicsState.pos_target[0], GraphicsState.pos_target[1], GraphicsState.pos_target[2])
+    heading = np.exp(1j * GraphicsState.yaw_target)
+    glVertex3f(GraphicsState.pos_target[0]+(np.real(heading)*0.25), GraphicsState.pos_target[1]+(np.imag(heading)*0.25), GraphicsState.pos_target[2])
+    glEnd()
 
     glTranslatef(pos[0], pos[1], pos[2])
     glRotatef(att.degrees, att.axis[0], att.axis[1], att.axis[2])

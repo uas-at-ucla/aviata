@@ -37,16 +37,22 @@ def parallel_axis_theorem(I, m, R):
     return I + m * (np.dot(R,R)*np.eye(3) - np.outer(R,R))
 
 
-def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
+def generate_aviata_matrices(missing_drones=[]):
     drone_rotors_sequential = []
-    CW = False
+    CW = False # as seen from above
     angle = (TWO_PI/constants.num_rotors) / 2
     for i in range(constants.num_rotors):
         rotor_pos = constants.r * np.exp(1j * angle)
+        rotor_axis = np.exp(1j * np.deg2rad(constants.rotor_angle))
+        rotor_axis_z = -np.real(rotor_axis)
+        rotor_axis_hor = np.imag(rotor_axis) * np.exp(1j * (angle + (-math.pi/2 if CW else math.pi/2)))
+        rotor_axis_x = np.real(rotor_axis_hor)
+        rotor_axis_y = np.imag(rotor_axis_hor)
+
         drone_rotors_sequential.append({
             'position': np.array([np.real(rotor_pos), np.imag(rotor_pos), 0]),
             'direction': 'CW' if CW else 'CCW',
-            'axis': np.array([0.0, 0.0, -1.0]),
+            'axis': np.array([rotor_axis_x, rotor_axis_y, rotor_axis_z]),
             'Ct': constants.Ct,
             'Cm': constants.Cm
         })
@@ -88,6 +94,7 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
                 drone_angles.append(drone_angle)
             drone_angle_rotation = Rotation.from_rotvec(np.array([0, 0, drone_angle]))
             rotor['position'] = drone_angle_rotation.apply(drone_rotors[j]['position']) + rotation.apply(np.array([constants.R, 0.0, 0.0]))
+            rotor['axis'] = drone_angle_rotation.apply(drone_rotors[j]['axis'])
             structure_rotors.append(rotor)
         angle += (TWO_PI/constants.num_drones)
 
@@ -109,23 +116,20 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
             I += parallel_axis_theorem(constants.I_drone, constants.M_drone, drone_pos - COM) # Currently assumes that drone moment of inertia is symmetric
         angle += (TWO_PI/constants.num_drones)
 
-    inertia = np.array([I[0,0], I[1,1], I[2,2], M, M, M]) # mass & moment of inertia values used to match acceleration scale between configurations
+    # Relation between angular/linear acceleration and torque/force (with the exception of angular velocity's effect on angular acceleration when I is not diagonal)
+    # Multiply mass by twice gravitational acceleration so that an input of 0.5 is 1g (hover)
+    # The input for roll/pitch/yaw is rad/s^2
+    inertia = np.row_stack((np.column_stack((I, np.zeros((3,3)))), np.column_stack((np.zeros((3,3)), np.diag((M*constants.g*2, M*constants.g*2, M*constants.g*2)))))) 
 
     geometry = {'rotors': structure_rotors}
-    A, B = px4_generate_mixer.geometry_to_mix(geometry) #TODO Work on the inverse step in this function
+    A, B = px4_generate_mixer.geometry_to_mix(geometry)
     B[abs(B) < 0.000001] = 0.0
-    A_4dof = np.delete(A, [3,4], 0)
-    if len(missing_drones) == 0:
-        B_px, B_norm = px4_generate_mixer.normalize_mix_px4(B)
-        acc_scale = 1 / (inertia * B_norm)
-        geometry['acc_scale_prime'] = acc_scale
-    else:
-        B_norm = 1 / (inertia * geometry_prime['acc_scale_prime'])
-        B_px = (B / B_norm)
+    # A_4dof = np.delete(A, [3,4], 0)
+    B_px = px4_generate_mixer.normalize_mix_px4(B, inertia)
     B_px_4dof = np.delete(B_px, [3,4], 1)
     B_px_4dof[:,3] *= -1
 
-    geometry['mix'] = {'A': A, 'A_4dof': A_4dof, 'B': B, 'B_px': B_px, 'B_px_4dof': np.matrix(B_px_4dof)}
+    geometry['mix'] = {'A': A, 'B': B, 'B_px': B_px, 'B_px_4dof': np.matrix(B_px_4dof)}
     name, description = geometry_name_desc(missing_drones)
     geometry['info'] = {}
     geometry['info']['key'] = name
@@ -133,7 +137,7 @@ def generate_aviata_matrices(missing_drones=[], geometry_prime=None):
     geometry['info']['description'] = description
 
     geometry['M'] = M
-    geometry['thr_hover'] = (M * constants.g) * B_norm[5]
+    geometry['thr_hover'] = 0.5
     geometry['I'] = I
     geometry['Iinv'] = np.linalg.inv(I)
 
@@ -172,15 +176,12 @@ def generate_aviata_permutations(max_missing_drones=0):
     for i in range(1, max_missing_drones+1):
         missing_drones_permutations += combinations(range(constants.num_drones), i)
 
-    geometry_prime = None
     combined_geometries = {}
     combined_geometries_list = []
     # drone_geometries = {}
     # drone_geometries_list = []
     for missing_drones in missing_drones_permutations:
-        geometry = generate_aviata_matrices(missing_drones, geometry_prime)
-        if len(missing_drones) == 0:
-            geometry_prime = geometry
+        geometry = generate_aviata_matrices(missing_drones)
         combined_geometries[geometry['info']['key']] = geometry
         combined_geometries_list.append(geometry)
         # for drone_geometry in geometries:
@@ -206,7 +207,7 @@ def main():
 
     print("Matrices for " + key, file=sys.stderr)
     print("actuator effectiveness:", file=sys.stderr)
-    print(combined_geometries[key]['mix']['A_4dof'], file=sys.stderr)
+    print(combined_geometries[key]['mix']['A'], file=sys.stderr)
     print("", file=sys.stderr)
     print("mixer:", file=sys.stderr)
     print(combined_geometries[key]['mix']['B_px_4dof'], file=sys.stderr)
@@ -214,12 +215,14 @@ def main():
     print(combined_geometries[key]['M'], file=sys.stderr)
     print("hover thrust:", file=sys.stderr)
     print(combined_geometries[key]['thr_hover'], file=sys.stderr)
-    print("maximum vertical thrust (relative to max thrust of full structure):", file=sys.stderr)
-    print(1/np.max(combined_geometries[key]['mix']['B_px_4dof'][:,3]), file=sys.stderr)
+    print("maximum vertical thrust (g's):", file=sys.stderr)
+    print(2 * 1/np.max(combined_geometries[key]['mix']['B_px_4dof'][:,3]), file=sys.stderr)
     print("max hover thrust percentage:", file=sys.stderr)
-    print(combined_geometries[key]['thr_hover'] / (1/np.max(combined_geometries[key]['mix']['B_px_4dof'][:,3])), file=sys.stderr)
+    print(np.max(combined_geometries[key]['mix']['B_px_4dof'][:,3]) * combined_geometries[key]['thr_hover'], file=sys.stderr)
     print("average hover thrust percentage:", file=sys.stderr)
-    print(combined_geometries[key]['thr_hover'] / (1/np.mean(combined_geometries[key]['mix']['B_px_4dof'][:,3][combined_geometries[key]['mix']['B_px_4dof'][:,3] > 1e-4])), file=sys.stderr)
+    print(np.sum(combined_geometries[key]['mix']['B_px_4dof'][:,3])/np.count_nonzero(combined_geometries[key]['mix']['A'][5]) * combined_geometries[key]['thr_hover'], file=sys.stderr)
+    print("max yaw torque:", file=sys.stderr)
+    print(1/np.max(combined_geometries[key]['mix']['B'][:,2]), file=sys.stderr)
     print("moment of inertia tensor:", file=sys.stderr)
     print(combined_geometries[key]['I'], file=sys.stderr)
     print("inverse of moment of inertia tensor:", file=sys.stderr)

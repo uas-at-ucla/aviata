@@ -7,9 +7,9 @@
 typedef struct __mavlink_set_attitude_target_t {
  uint32_t time_boot_ms; /*< [ms] Timestamp (time since system boot).*/
  float q[4]; /*<  Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)*/
- float body_roll_rate; /*< [rad/s] Body roll rate*/
- float body_pitch_rate; /*< [rad/s] Body pitch rate*/
- float body_yaw_rate; /*< [rad/s] Body yaw rate*/
+ float body_roll_rate; /*< [rad] For AVIATA: Yaw estimate of the originator of this setpoint (not actually body_roll_rate)*/
+ float body_pitch_rate; /*<  For AVIATA: The docking slot of the originator of this setpoint (not actually body_pitch_rate)*/
+ float body_yaw_rate; /*<  Unused by AVIATA (not actually body_yaw_rate)*/
  float thrust; /*<  Collective thrust, normalized to 0 .. 1 (-1 .. 1 for vehicles capable of reverse trust)*/
  uint8_t target_system; /*<  System ID*/
  uint8_t target_component; /*<  Component ID*/
@@ -70,9 +70,9 @@ typedef struct __mavlink_set_attitude_target_t {
  * @param target_component  Component ID
  * @param type_mask  Bitmap to indicate which dimensions should be ignored by the vehicle.
  * @param q  Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
- * @param body_roll_rate [rad/s] Body roll rate
- * @param body_pitch_rate [rad/s] Body pitch rate
- * @param body_yaw_rate [rad/s] Body yaw rate
+ * @param body_roll_rate [rad] For AVIATA: Yaw estimate of the originator of this setpoint (not actually body_roll_rate)
+ * @param body_pitch_rate  For AVIATA: The docking slot of the originator of this setpoint (not actually body_pitch_rate)
+ * @param body_yaw_rate  Unused by AVIATA (not actually body_yaw_rate)
  * @param thrust  Collective thrust, normalized to 0 .. 1 (-1 .. 1 for vehicles capable of reverse trust)
  * @return length of the message in bytes (excluding serial stream start sign)
  */
@@ -120,9 +120,9 @@ static inline uint16_t mavlink_msg_set_attitude_target_pack(uint8_t system_id, u
  * @param target_component  Component ID
  * @param type_mask  Bitmap to indicate which dimensions should be ignored by the vehicle.
  * @param q  Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
- * @param body_roll_rate [rad/s] Body roll rate
- * @param body_pitch_rate [rad/s] Body pitch rate
- * @param body_yaw_rate [rad/s] Body yaw rate
+ * @param body_roll_rate [rad] For AVIATA: Yaw estimate of the originator of this setpoint (not actually body_roll_rate)
+ * @param body_pitch_rate  For AVIATA: The docking slot of the originator of this setpoint (not actually body_pitch_rate)
+ * @param body_yaw_rate  Unused by AVIATA (not actually body_yaw_rate)
  * @param thrust  Collective thrust, normalized to 0 .. 1 (-1 .. 1 for vehicles capable of reverse trust)
  * @return length of the message in bytes (excluding serial stream start sign)
  */
@@ -196,9 +196,9 @@ static inline uint16_t mavlink_msg_set_attitude_target_encode_chan(uint8_t syste
  * @param target_component  Component ID
  * @param type_mask  Bitmap to indicate which dimensions should be ignored by the vehicle.
  * @param q  Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
- * @param body_roll_rate [rad/s] Body roll rate
- * @param body_pitch_rate [rad/s] Body pitch rate
- * @param body_yaw_rate [rad/s] Body yaw rate
+ * @param body_roll_rate [rad] For AVIATA: Yaw estimate of the originator of this setpoint (not actually body_roll_rate)
+ * @param body_pitch_rate  For AVIATA: The docking slot of the originator of this setpoint (not actually body_pitch_rate)
+ * @param body_yaw_rate  Unused by AVIATA (not actually body_yaw_rate)
  * @param thrust  Collective thrust, normalized to 0 .. 1 (-1 .. 1 for vehicles capable of reverse trust)
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
@@ -342,7 +342,7 @@ static inline uint16_t mavlink_msg_set_attitude_target_get_q(const mavlink_messa
 /**
  * @brief Get field body_roll_rate from set_attitude_target message
  *
- * @return [rad/s] Body roll rate
+ * @return [rad] For AVIATA: Yaw estimate of the originator of this setpoint (not actually body_roll_rate)
  */
 static inline float mavlink_msg_set_attitude_target_get_body_roll_rate(const mavlink_message_t* msg)
 {
@@ -352,7 +352,7 @@ static inline float mavlink_msg_set_attitude_target_get_body_roll_rate(const mav
 /**
  * @brief Get field body_pitch_rate from set_attitude_target message
  *
- * @return [rad/s] Body pitch rate
+ * @return  For AVIATA: The docking slot of the originator of this setpoint (not actually body_pitch_rate)
  */
 static inline float mavlink_msg_set_attitude_target_get_body_pitch_rate(const mavlink_message_t* msg)
 {
@@ -362,7 +362,7 @@ static inline float mavlink_msg_set_attitude_target_get_body_pitch_rate(const ma
 /**
  * @brief Get field body_yaw_rate from set_attitude_target message
  *
- * @return [rad/s] Body yaw rate
+ * @return  Unused by AVIATA (not actually body_yaw_rate)
  */
 static inline float mavlink_msg_set_attitude_target_get_body_yaw_rate(const mavlink_message_t* msg)
 {

@@ -2,51 +2,48 @@
 
 int main(int argc, char** argv) {
     if (argc < 3) {
-        std::cout << "Usage: ./aviata_drone <drone_id> <program> [connection_url]" << std::endl;
-        std::cout << "programs: lead, follow" << std::endl;
+        std::cout << "Usage: ./aviata_drone <drone_id> <initial_state> [docking_slot] [connection_url]" << std::endl;
+        std::cout << "initial states: follower, leader" << std::endl;
         return 1;
     }
-    std::string connection_url = "udp://:14540";
-    if (argc >= 4) {
-        connection_url = argv[3];
-    }
 
-    Drone drone(argv[1]);
-    if (strcmp(argv[2], "lead_test") == 0) {
-        drone.test_lead_att_target(connection_url);
-    } else if (strcmp(argv[2], "follow_test") == 0) {
-        drone.test_follow_att_target(connection_url);
-    } else if (strcmp(argv[2], "lead_s") == 0) {
-        drone.lead_standalone(connection_url);
-    } else if (strcmp(argv[2], "follow_s") == 0) {
-        drone.follow_standalone(connection_url);
-    } else if (strcmp(argv[2], "lead_0") == 0) {
-        drone.lead_as_0(connection_url);
-    } else if (strcmp(argv[2], "follow_1") == 0) {
-        drone.follow_as_1(connection_url);
+    std::string drone_id = argv[1];
+
+    DroneState initial_state;
+    if (strcmp(argv[2], "follower") == 0) {
+        initial_state = DOCKED_FOLLOWER;
+    } else if (strcmp(argv[2], "leader") == 0) {
+        initial_state = DOCKED_LEADER;
     } else {
-        std::cout << "Unkown program: " << argv[2] << std::endl;
+        std::cout << "Invalid initial state: " << argv[2] << std::endl;
+        return 1;
     }
 
-    // takeoff_and_land_test(argc, argv);
-    // ros2_test();
+    uint8_t docking_slot = 0;
+    if (argc >= 4) {
+        docking_slot = atoi(argv[3]);
+    }
 
-    // // Test Drone object
-    // Drone* test1 = new Drone("droneTest1", argv[1]);
+    std::string connection_url = "udp://:14540";
+    if (argc >= 5) {
+        connection_url = argv[4];
+    }
 
-    // test1->arm_drone();
-    // std::this_thread::sleep_for(std::chrono::seconds(3));
-    // test1->takeoff_drone();
-    // std::this_thread::sleep_for(std::chrono::seconds(9));
-    // test1->land_drone();
-    // test1->disarm_drone(); //disarm when landed
+    DroneSettings drone_settings;
+    if (connection_url.rfind("udp://", 0) == 0) { // if connection_url starts with "udp://"
+        // If using UDP, assume we're in the simulator that does not support physical docking.
+        drone_settings.sim = true;
+        drone_settings.modify_px4_mixers = false; 
+    } else  {
+        drone_settings.sim = false;
+        drone_settings.modify_px4_mixers = true; 
+    }
+
+    Drone drone(drone_id, drone_settings);
+
+    if (!drone.init(initial_state, docking_slot, connection_url)) {
+        return 1;
+    }
+
+    drone.run();
 }
-
-// Notes on subscribing to STATUS topics with different rates:
-// // undocked
-// unsubscribe_from_message("STATUS_10Hz");
-// handle = subscribe_to_message("STATUS_1Hz", callback);
-
-// // docked
-// unsubscribe_from_message("STATUS_1Hz");
-// subscribe_to_message("STATUS_10Hz", callback);

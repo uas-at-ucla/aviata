@@ -1,0 +1,2 @@
+# waypoint missions?
+# atitude control?

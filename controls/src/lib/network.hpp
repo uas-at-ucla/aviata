@@ -7,14 +7,9 @@
 #include <chrono>
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
-#include "aviata/msg/drone_status.hpp"
-#include "aviata/msg/follower_setpoint.hpp"
-#include "aviata/msg/drone_debug.hpp"
+#include "topics.hpp"
 
-#include "aviata/srv/drone_command.hpp"
-
-// define all command message types as enum constants
+// Commands that the drone/ground station can receive or send to an individual
 enum DroneCommand
 {
     // Inputs to Ground Station
@@ -26,16 +21,10 @@ enum DroneCommand
     UNDOCK,
     DOCK,
     CANCEL_DOCKING,
-    SETPOINT,
-    LEADER_SETPOINT,
-    // Anywhere to Drone, have different response if leader or follower
-    BECOME_LEADER,
     REQUEST_NEW_LEADER,
-    LISTEN_NEW_LEADER,
-    ARM,
-    DISARM,
-    TAKEOFF,
-    LAND
+    // From Drone to Drone
+    BECOME_LEADER,
+    // LISTEN_NEW_LEADER,
 };
 
 // struct to hold data about each drone_command request (ROS2 Service)
@@ -57,11 +46,6 @@ struct CommandRequest {
     std::chrono::high_resolution_clock::time_point timestamp_response;
 };
 
-// TOPICS
-#define FOLLOWER_SETPOINT "FOLLOWER_SETPOINT"
-#define DRONE_STATUS "DRONE_STATUS"
-#define DRONE_DEBUG "DRONE_DEBUG"
-
 class Network : public rclcpp::Node
 {
 public:
@@ -71,52 +55,79 @@ public:
 
     Network(std::string drone_id);
 
-    void init_follower_setpoint_publisher();
-    void deinit_follower_setpoint_publisher();
-    void publish_follower_setpoint(const aviata::msg::FollowerSetpoint &follower_setpoint);
-    void subscribe_follower_setpoint(std::function<void(const aviata::msg::FollowerSetpoint::SharedPtr)> callback);
-    void unsubscribe_follower_setpoint();
+    // generic publish/subscribe functions
+    template<const std::string& ros_topic>
+    void init_publisher()
+    {
+        std::get<PubSub<ros_topic>>(pubsubs).publisher = this->create_publisher<typename RosTopicConfig<ros_topic>::msg_type>(ros_topic, RosTopicConfig<ros_topic>::qos::value);
+    }
 
-    void init_drone_status_publisher();
-    void deinit_drone_status_publisher();
-    void publish_drone_status(const aviata::msg::DroneStatus &drone_status);
-    void subscribe_drone_status(std::function<void(aviata::msg::DroneStatus::SharedPtr)> callback);
-    void unsubscribe_drone_status();
+    template<const std::string& ros_topic>
+    void deinit_publisher()
+    {
+        std::get<PubSub<ros_topic>>(pubsubs).publisher = nullptr;
+    }
 
-    void init_drone_debug_publisher();
-    void deinit_drone_debug_publisher();
-    void publish_drone_debug(const std::string & debug_msg);
-    // subscribe functions only on groundstation?
-    void subscribe_drone_debug(std::function<void(aviata::msg::DroneDebug::SharedPtr)> callback);
-    void unsubscribe_drone_debug();
+    template<const std::string& ros_topic>
+    void publish(const typename RosTopicConfig<ros_topic>::msg_type& msg)
+    {
+        if (std::get<PubSub<ros_topic>>(pubsubs).publisher != nullptr)
+        {
+            std::get<PubSub<ros_topic>>(pubsubs).publisher->publish(msg);
+        }
+    }
 
-    // https://index.ros.org/doc/ros2/Tutorials/Custom-ROS2-Interfaces/#test-the-new-interfaces
+    template<const std::string& ros_topic>
+    void subscribe(std::function<void(const typename RosTopicConfig<ros_topic>::msg_type::SharedPtr)> callback)
+    {
+        std::get<PubSub<ros_topic>>(pubsubs).subscription = this->create_subscription<typename RosTopicConfig<ros_topic>::msg_type>(ros_topic, RosTopicConfig<ros_topic>::qos::value, callback);
+    }
+
+    template<const std::string& ros_topic>
+    void unsubscribe()
+    {
+        std::get<PubSub<ros_topic>>(pubsubs).subscription = nullptr;
+    }
+
+    void publish_drone_debug(const std::string & debug_msg, uint8_t code = 0);
+
+
     void init_drone_command_service(std::function<void(const aviata::srv::DroneCommand::Request::SharedPtr,
-                                                       aviata::srv::DroneCommand::Response::SharedPtr)> callback);
+                                                       aviata::srv::DroneCommand::Response::SharedPtr)> callback); // https://index.ros.org/doc/ros2/Tutorials/Custom-ROS2-Interfaces/#test-the-new-interfaces
     void deinit_drone_command_service();
 
-    void init_drone_command_client(std::string other_drone_id);
+    void init_drone_command_client_if_needed(std::string other_drone_id);
     void deinit_drone_command_client(std::string other_drone_id);
 
     std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> 
         send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int param = -1);
 
+    void send_drone_command(std::string other_drone_id, DroneCommand drone_command, int8_t param, std::string request_origin,
+                            std::function<void(uint8_t ack)> callback);
+
+    void check_command_requests();
+
 private:
     const std::string drone_id;
 
-    const rclcpp::QoS sensor_data_qos{rclcpp::QoSInitialization(rmw_qos_profile_sensor_data.history, rmw_qos_profile_sensor_data.depth), rmw_qos_profile_sensor_data};
-
-    rclcpp::Publisher<aviata::msg::FollowerSetpoint>::SharedPtr follower_setpoint_publisher;
-    rclcpp::Subscription<aviata::msg::FollowerSetpoint>::SharedPtr follower_setpoint_subscription;
-
-    rclcpp::Publisher<aviata::msg::DroneStatus>::SharedPtr drone_status_publisher;
-    rclcpp::Subscription<aviata::msg::DroneStatus>::SharedPtr drone_status_subscription;
-    
-    rclcpp::Publisher<aviata::msg::DroneDebug>::SharedPtr drone_debug_publisher;
-    rclcpp::Subscription<aviata::msg::DroneDebug>::SharedPtr drone_debug_subscription;
+    std::tuple<PubSub<DRONE_STATUS>, 
+               PubSub<DRONE_DEBUG>,
+               PubSub<FRAME_ARM>,
+               PubSub<FRAME_DISARM>,
+               PubSub<FRAME_TAKEOFF>,
+               PubSub<FRAME_LAND>,
+               PubSub<FRAME_SETPOINT>,
+               PubSub<FOLLOWER_ARM>,
+               PubSub<FOLLOWER_DISARM>,
+               PubSub<FOLLOWER_SETPOINT>
+    > pubsubs;
 
     rclcpp::Service<aviata::srv::DroneCommand>::SharedPtr drone_command_service;
     std::map<std::string, rclcpp::Client<aviata::srv::DroneCommand>::SharedPtr> drone_command_clients;
+
+    // Command Request Lists
+    std::vector<CommandRequest> drone_command_requests;
+    std::vector<CommandRequest> drone_command_responses; // TODO: log to file at end of flight?
 };
 
 #endif
