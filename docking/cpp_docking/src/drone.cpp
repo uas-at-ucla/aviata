@@ -569,7 +569,7 @@ void Drone::test1()
 
     Errors errs;
     int n_missed_frames = 0;
-    while (time_span < 30 * 1000 /* 30 seconds */)
+    while (time_span < 20 * 1000 /* 30 seconds */)
     {
         high_resolution_clock::time_point f1 = high_resolution_clock::now();
         img = camera.update_current_image(0, 0, 5, 0, 0); // this is blocking
@@ -583,29 +583,37 @@ void Drone::test1()
 
         Offboard::VelocityBodyYawspeed change{};
         // change.down_m_s = -0.2;
+        Velocities velocities; 
         if (is_tag_detected)
         {
-            Velocities velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw,0.4);
+            errs.alt -= 1.5;
+            velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw, 1);
             log(tag, "Apriltag found! " + std::to_string(time_span) + " camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
                          " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
                          + " velocities: x=" + std::to_string(velocities.x) + " y=" + std::to_string(velocities.y) + " z=" + std::to_string(velocities.alt) + " yaw_speed=" + std::to_string(velocities.yaw));
             change.forward_m_s = velocities.y;
             change.right_m_s = velocities.x;
-            change.yawspeed_deg_s = velocities.yaw;
-            // n_missed_frames = 0;
+            change.down_m_s = velocities.alt;
+            // change.yawspeed_deg_s = velocities.yaw;
+            n_missed_frames = 0;
         } else {
             log(tag, "Failed to find Apriltag, number missed frames: " + std::to_string(n_missed_frames)); 
 
-            // if (n_missed_frames > 3) {
+            if (n_missed_frames > 10) {
                 change.forward_m_s = 0.0;
                 change.right_m_s = 0.0;
-                change.yawspeed_deg_s = 0.0;
-            // }
-            // n_missed_frames++;
+                change.down_m_s = 0.0;
+                // change.yawspeed_deg_s = 0.0;
+            } else {
+                change.forward_m_s = velocities.y * 0.9;
+                change.right_m_s = velocities.x * 0.9;
+                change.down_m_s = velocities.alt * 0.9;
+            }
+            n_missed_frames++;
         }
 
         offboard.set_velocity_body(change);
-        // cv::imwrite("test"+ std::to_string(time_span) + ".png", img); // any (debug)
+        cv::imwrite("test"+ std::to_string(time_span) + ".png", img); // any (debug)
 
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
         duration<double, std::milli> d = (t2 - t1);

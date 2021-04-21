@@ -5,7 +5,7 @@ void apriltag_test();
 int main(/*int argc, char** argv */)
 {
     Target t;
-    t.yaw = 180;
+    // t.yaw = 180;
     
     Drone drone(t);
     drone.connect_gazebo();

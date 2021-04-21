@@ -32,12 +32,12 @@ Velocities PIDController::getVelocities(float x_err, float y_err, float alt_err,
     float kp_nv, kp_ev, kp_dv, kp_rv;
     float kd_nv, kd_ev, kd_dv, kd_rv;
 
-    kp_nv = 2;//0.6 * ku_nv;
-    kp_ev = 2;//0.6 * ku_ev;
+    kp_nv = 1;//0.6 * ku_nv;
+    kp_ev = 1;//0.6 * ku_ev;
     kp_dv = 0.6;// * ku_dv;
 
-    kd_nv = 0.0; //0.15;
-    kd_ev = 0.0; //0.15;
+    kd_nv = 0.2; //0.15;
+    kd_ev = 0.2; //0.15;
     kd_dv = 0.12;
 
     kp_rv = 1;
@@ -48,9 +48,9 @@ Velocities PIDController::getVelocities(float x_err, float y_err, float alt_err,
     float dv = alt_err * kp_dv + (alt_err - m_prev_errs.alt) * kd_dv;
     float rv = rot_err * kp_rv + (rot_err - m_prev_errs.yaw) * kd_rv;
 
-    if (absolute_value(dv) > max_speed) // use different max speed to funnel down
+    if (absolute_value(dv) > 0.5) // use different max speed to funnel down
     {
-        dv = max_speed * dv / absolute_value(dv);
+        dv = 0.5 * dv / absolute_value(dv);
     }
 
     if (absolute_value(ev) > max_speed)
