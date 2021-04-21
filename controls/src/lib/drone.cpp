@@ -117,7 +117,7 @@ void Drone::run()
         {
             case DOCKED_FOLLOWER:
                 // TODO Make this a longer timeout and try to land instead of disarm
-                if (current_time - _last_setpoint_msg_time > 250) {
+                if (current_time - _last_setpoint_msg_time > 250) { // TODO increase this time for the simulation
                     if (_armed) {
                         if (_px4_io.disarm() == 1) {
                             _armed = false;
