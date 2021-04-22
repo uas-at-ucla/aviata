@@ -25,7 +25,7 @@
 #define DRONE_RADIUS 1.1135 // measured in meters, 1m boom + half the central tag side length (possibly slightly off for corners but good enough)
 
 
-#define MARGIN 10 // apriltag detection margin
+#define MARGIN 80 // apriltag detection margin
 
 #define BOOM_LENGTH 1.00
 

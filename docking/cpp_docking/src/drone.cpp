@@ -552,17 +552,26 @@ void Drone::test1()
     int count_frames = 0;
 
     auto offboard = Offboard{m_system};
-    auto telemetry = Telemetry{m_system}; // 2 and 3
+    auto telemetry = Telemetry{m_system};
+
+    const Telemetry::Result set_rate_result_p = telemetry.set_rate_position_velocity_ned(20);
     const Telemetry::Result set_rate_result_a = telemetry.set_rate_attitude(20);
-    if (set_rate_result_a != Telemetry::Result::Success) std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
-    telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
-        set_yaw(e.yaw_deg);
-    });
-    telemetry.subscribe_position([this](Telemetry::Position position) {
-        if (position.relative_altitude_m > 5.0) {
-            log("TEST 1", "ALTITUDE TOO HIGH, MUST LAND. Altitude: " + std::to_string(position.relative_altitude_m), true);
+    if (set_rate_result_a != Telemetry::Result::Success || set_rate_result_p != Telemetry::Result::Success)
+    {
+        std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
+        std::cout << "Setting position rate possibly failed:" << set_rate_result_p << '\n';
+    }
+
+    // Subscribe to getting periodic telemetry updates with lambda function
+    telemetry.subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
+        // set_position(p.position.north_m, p.position.east_m, p.position.down_m);
+        if (p.position.down_m > 5.0) {
+            log("TEST 1", "ALTITUDE TOO HIGH, MUST LAND. Altitude: " + std::to_string(p.position.down_m), true);
             this->land();
         }
+    });
+    telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
+        set_yaw(e.yaw_deg);
     });
 
     PIDController pid(m_dt);
@@ -587,7 +596,7 @@ void Drone::test1()
         if (is_tag_detected)
         {
             errs.alt -= 1.5;
-            velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw, 1);
+            velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw, 1.5);
             log(tag, "Apriltag found! " + std::to_string(time_span) + " camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
                          " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
                          + " velocities: x=" + std::to_string(velocities.x) + " y=" + std::to_string(velocities.y) + " z=" + std::to_string(velocities.alt) + " yaw_speed=" + std::to_string(velocities.yaw));

@@ -65,7 +65,7 @@ bool ImageAnalyzer::processImage(Mat img, int ind, std::string &tags, Errors &er
         zarray_get(dets, i, &det);
         if (det->decision_margin >= MARGIN)
         {
-            tagsDetected += std::to_string(det->id) + " ";
+            tagsDetected += std::to_string(det->id) + "(" + std::to_string(det->decision_margin) + ") ";
         }
     }
     tags = tagsDetected;
