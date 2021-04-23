@@ -18,8 +18,11 @@
 
 ImageAnalyzer::ImageAnalyzer()
 {
-    tf = tag36h11_create();
-    // tf = tag16h5_create();
+    #if USE_RASPI_CAMERA == 1
+        tf = tag16h5_create();
+    #else
+        tf = tag36h11_create();
+    #endif
     m_tagDetector = apriltag_detector_create();
     m_tagDetector->nthreads = 4;
     m_tagDetector->quad_decimate = 1.5; // default is 2.0, so this will hurt speed but increase detection rate
@@ -28,8 +31,11 @@ ImageAnalyzer::ImageAnalyzer()
 ImageAnalyzer::~ImageAnalyzer()
 {
     apriltag_detector_destroy(m_tagDetector);
-    tag36h11_destroy(tf);
-    // tag16h5_destroy(tf);
+    #if USE_RASPI_CAMERA == 1
+        tag16h5_destroy(tf);
+    #else
+        tag36h11_destroy(tf);
+    #endif
 }
 
 /**
@@ -43,7 +49,7 @@ ImageAnalyzer::~ImageAnalyzer()
  * @return true if target was detected, false otherwise (and errs remains unchanged if so)
  * 
  * */
-bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags, Errors &errs)
+bool ImageAnalyzer::processImage(Mat img, int ind, std::string &tags, Errors &errs)
 {
     Point2f image_center(img.cols / 2, img.rows / 2);
 
@@ -59,7 +65,7 @@ bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags,
         zarray_get(dets, i, &det);
         if (det->decision_margin >= MARGIN)
         {
-            tagsDetected += std::to_string(det->id) + " ";
+            tagsDetected += std::to_string(det->id) + "(" + std::to_string(det->decision_margin) + ") ";
         }
     }
     tags = tagsDetected;

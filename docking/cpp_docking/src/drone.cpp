@@ -136,6 +136,7 @@ bool Drone::takeoff(int takeoff_alt)
     // Wait for the take off to be complete
     auto telemetry = Telemetry{m_system};
     telemetry.subscribe_landed_state([&in_air_promise, &telemetry, &tag](Telemetry::LandedState landed) {
+        std::cout << "LandedState: " << landed << std::endl;
         if (landed == Telemetry::LandedState::InAir)
         {
             telemetry.subscribe_landed_state(nullptr);
@@ -148,8 +149,8 @@ bool Drone::takeoff(int takeoff_alt)
 
     // Start offboard mode
     auto offboard = Offboard{m_system};
-    Offboard::VelocityNedYaw stay{};
-    offboard.set_velocity_ned(stay); // set initial setpoint
+    Offboard::VelocityBodyYawspeed stay{};
+    offboard.set_velocity_body(stay); // set initial setpoint
 
     Offboard::Result offboard_result = offboard.start();
     if (offboard_result != Offboard::Result::Success)
@@ -228,7 +229,7 @@ bool Drone::stage1(int target_id)
         high_resolution_clock::time_point t1 = high_resolution_clock::now();
         img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
         Errors errs;
-        bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags, errs); //Detects apriltags and calculates errors
+        bool is_tag_detected = image_analyzer.processImage(img, 0, tags, errs); //Detects apriltags and calculates errors
         log("Tags Detected", tags);
 
         if (!is_tag_detected) //Central target not found
@@ -313,7 +314,7 @@ void Drone::stage2(int target_id)
         //Update image and process for errors
         img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
         Errors errs;
-        bool is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
+        bool is_tag_detected = image_analyzer.processImage(img, target_id, tags, errs);
         log("Tags Detected", tags);
         int checked_frames = 0;
         int docking_attempts = 0;
@@ -338,7 +339,7 @@ void Drone::stage2(int target_id)
                     return;
                 }
                 img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-                is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
+                is_tag_detected = image_analyzer.processImage(img, target_id, tags, errs);
 
                 //Ascends until max height or until peripheral target detected
                 while (!is_tag_detected && m_down * -1.0 - m_target_info.alt < MAX_HEIGHT_STAGE_2)
@@ -348,7 +349,7 @@ void Drone::stage2(int target_id)
                     change.down_m_s = -0.2f;
                     offboard.set_velocity_body(change);
                     img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-                    is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
+                    is_tag_detected = image_analyzer.processImage(img, target_id, tags, errs);
                 }
                 if (is_tag_detected) //Peripheral target detected, continues with docking normally
                     break;
@@ -361,7 +362,7 @@ void Drone::stage2(int target_id)
                     change.down_m_s = -0.2f;
                     offboard.set_velocity_body(change);
                     img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-                    is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags, errs);
+                    is_tag_detected = image_analyzer.processImage(img, 0, tags, errs);
                 }
 
                 //Central target detected, re-attempt stage 1
@@ -370,7 +371,7 @@ void Drone::stage2(int target_id)
                     log("Docking", "Central target detected, re-attempting stage 1");
                     stage1(target_id);
                     img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-                    is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
+                    is_tag_detected = image_analyzer.processImage(img, target_id, tags, errs);
                     checked_frames = 0;
                 }
                 else //Maximum height exceeded, docking failure
@@ -382,7 +383,7 @@ void Drone::stage2(int target_id)
             }
             sleep_for(milliseconds((int)m_dt * 1000));
             img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
-            is_tag_detected = image_analyzer.processImage(img, target_id, m_yaw, tags, errs);
+            is_tag_detected = image_analyzer.processImage(img, target_id, tags, errs);
             log("Tags Detected", tags);
         }
 
@@ -533,7 +534,7 @@ void Drone::test1()
         log("Test 1", "Failed to arm");
         return;
     }
-    bool takeoff_code = takeoff(1);
+    bool takeoff_code = takeoff(3);
     if (!takeoff_code)
     {
         log("Test 1", "Failed to take off");
@@ -551,9 +552,24 @@ void Drone::test1()
     int count_frames = 0;
 
     auto offboard = Offboard{m_system};
-    auto telemetry = Telemetry{m_system}; // 2 and 3
+    auto telemetry = Telemetry{m_system};
+
+    const Telemetry::Result set_rate_result_p = telemetry.set_rate_position_velocity_ned(20);
     const Telemetry::Result set_rate_result_a = telemetry.set_rate_attitude(20);
-    if (set_rate_result_a != Telemetry::Result::Success) std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
+    if (set_rate_result_a != Telemetry::Result::Success || set_rate_result_p != Telemetry::Result::Success)
+    {
+        std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
+        std::cout << "Setting position rate possibly failed:" << set_rate_result_p << '\n';
+    }
+
+    // Subscribe to getting periodic telemetry updates with lambda function
+    telemetry.subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
+        // set_position(p.position.north_m, p.position.east_m, p.position.down_m);
+        if (p.position.down_m > 5.0) {
+            log("TEST 1", "ALTITUDE TOO HIGH, MUST LAND. Altitude: " + std::to_string(p.position.down_m), true);
+            this->land();
+        }
+    });
     telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
         set_yaw(e.yaw_deg);
     });
@@ -562,7 +578,7 @@ void Drone::test1()
 
     Errors errs;
     int n_missed_frames = 0;
-    while (time_span < 10 * 1000 /* 10 seconds */)
+    while (time_span < 30 * 1000 /* 30 seconds */)
     {
         high_resolution_clock::time_point f1 = high_resolution_clock::now();
         img = camera.update_current_image(0, 0, 5, 0, 0); // this is blocking
@@ -570,34 +586,49 @@ void Drone::test1()
         duration<double, std::milli> c1 = (f2 - f1);
 
         high_resolution_clock::time_point f3 = high_resolution_clock::now();
-        bool is_tag_detected = image_analyzer.processImage(img, 0, m_yaw, tags_detected, errs);
+        bool is_tag_detected = image_analyzer.processImage(img, 0, tags_detected, errs);
         high_resolution_clock::time_point f4 = high_resolution_clock::now();
         duration<double, std::milli> c2 = (f4 - f3);
 
         Offboard::VelocityBodyYawspeed change{};
         // change.down_m_s = -0.2;
+        Velocities velocities; 
         if (is_tag_detected)
         {
-            Velocities velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw,0.4);
+            errs.alt -= 0.35;
+            velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw, 1.5);
             log(tag, "Apriltag found! " + std::to_string(time_span) + " camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
                          " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
                          + " velocities: x=" + std::to_string(velocities.x) + " y=" + std::to_string(velocities.y) + " z=" + std::to_string(velocities.alt) + " yaw_speed=" + std::to_string(velocities.yaw));
+            
+            double safe_view = 2 * (errs.alt - velocities.alt * 0.1) * tan(to_radians(CAMERA_FOV_VERTICAL / 2));
+            if (abs(errs.x) >= safe_view || abs(errs.y) >= safe_view) {
+                velocities.alt = -0.1;
+            }
+            
             change.forward_m_s = velocities.y;
             change.right_m_s = velocities.x;
+            change.down_m_s = velocities.alt;
             change.yawspeed_deg_s = velocities.yaw;
-            // n_missed_frames = 0;
+            n_missed_frames = 0;
         } else {
             log(tag, "Failed to find Apriltag, number missed frames: " + std::to_string(n_missed_frames)); 
 
-            // if (n_missed_frames > 3) {
+            if (n_missed_frames > 10) {
                 change.forward_m_s = 0.0;
                 change.right_m_s = 0.0;
+                change.down_m_s = 0.0;
                 change.yawspeed_deg_s = 0.0;
-            // }
-            // n_missed_frames++;
+            } else {
+                change.forward_m_s = velocities.y * 0.9;
+                change.right_m_s = velocities.x * 0.9;
+                change.down_m_s = velocities.alt * 0.9;
+                change.yawspeed_deg_s = 0.0;
+            }
+            n_missed_frames++;
         }
 
-        offboard.set_velocity_body(change);
+        offboard.set_velocity_body(change); 
         // cv::imwrite("test"+ std::to_string(time_span) + ".png", img); // any (debug)
 
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
@@ -610,7 +641,10 @@ void Drone::test1()
     if (!img.empty()) cv::imwrite("test.png", img);
     log(tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(count_frames));
     log(tag, "Average FPS: " + std::to_string(count_frames / (time_span / 1000)));
-    land();
+    bool landed = false;
+    do {
+        landed = land();
+    } while (landed == false);
 }
 
 void Drone::simulation_test_moving_target() {
@@ -668,7 +702,7 @@ void Drone::simulation_test_moving_target() {
         // camera.update_target(m_target_info);
         img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
         Errors errs;
-        image_analyzer.processImage(img, 0, m_yaw, tags, errs); //Detects apriltags and calculates errors
+        image_analyzer.processImage(img, 0, tags, errs); //Detects apriltags and calculates errors
         log("Tags Detected", tags);
 
         log("Docking", "Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
@@ -695,7 +729,43 @@ void Drone::simulation_test_moving_target() {
 
 void Drone::test_telemetry() {
     auto telemetry = Telemetry{m_system}; // 2 and 3
+    telemetry.set_rate_attitude(20);
     telemetry.subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
-        log("Telemetry", "got telemetry: " + std::to_string(e.yaw_deg));
+        set_yaw(e.yaw_deg);
     });
+
+    Mat img;
+    std::string tag = "Test telem";
+    std::string tags_detected = "";
+
+    high_resolution_clock::time_point t1 = high_resolution_clock::now();
+    // int time_span = 0;
+    int count_frames = 0;
+    Errors errs;
+    while (true)
+    {
+        high_resolution_clock::time_point f1 = high_resolution_clock::now();
+        img = camera.update_current_image(0, 0, 5, 0, 0); // this is blocking
+        high_resolution_clock::time_point f2 = high_resolution_clock::now();
+        duration<double, std::milli> c1 = (f2 - f1);
+
+        high_resolution_clock::time_point f3 = high_resolution_clock::now();
+        bool is_tag_detected = image_analyzer.processImage(img, 0, tags_detected, errs); //Detects apriltags and calculates errors
+        high_resolution_clock::time_point f4 = high_resolution_clock::now();
+        duration<double, std::milli> c2 = (f4 - f3);
+
+        if (is_tag_detected)
+        {
+            log(tag, "Apriltag found! camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
+                         " errors: " + std::to_string(errs.x) + " " + std::to_string(errs.y) + " " + std::to_string(errs.alt) + " " + std::to_string(errs.yaw));
+            // std::array<float, 3> velocities = pid.getVelocities(errs.x, errs.y, errs.alt, 0.2);
+        } else {
+            log(tag, "Failed to find Apriltag");
+        }
+
+        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+        duration<double, std::milli> d = (t2 - t1);
+        // time_span = d.count();
+        count_frames++;
+    }
 }

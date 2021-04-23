@@ -7,8 +7,6 @@
 #include "util.hpp"
 #include "raspi_camera.hpp"
 
-#define UNUSED(expr) do { (void)(expr); } while (0) // hack to make compiler think `expr` is used
-
 using namespace cv;
 using namespace std;
 using namespace std::chrono;

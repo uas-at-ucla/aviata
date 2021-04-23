@@ -25,7 +25,7 @@
 #define DRONE_RADIUS 1.1135 // measured in meters, 1m boom + half the central tag side length (possibly slightly off for corners but good enough)
 
 
-#define MARGIN 10 // apriltag detection margin
+#define MARGIN 80 // apriltag detection margin
 
 #define BOOM_LENGTH 1.00
 
@@ -34,6 +34,8 @@
 #define ERROR_CONSOLE_TEXT "\033[31m" // Turn text on console red
 #define LOG_CONSOLE_TEXT "\033[34m"   // Turn text on console blue
 #define NORMAL_CONSOLE_TEXT "\033[0m" // Restore normal console colour
+
+#define UNUSED(expr) do { (void)(expr); } while (0) // hack to make compiler think `expr` is used
 
 // Logs
 inline void log(const std::string &tag, const std::string msg, bool err = false)

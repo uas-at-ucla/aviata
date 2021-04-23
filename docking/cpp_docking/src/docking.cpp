@@ -5,14 +5,14 @@ void apriltag_test();
 int main(/*int argc, char** argv */)
 {
     Target t;
-    t.yaw = 180;
     
     Drone drone(t);
     drone.connect_gazebo();
-    drone.arm();
-    drone.takeoff(4);
-    drone.initiate_docking(1);
+    // drone.arm();
+    // drone.takeoff(4);
+    // drone.initiate_docking(1);
     // apriltag_test();
+    drone.test1();
 }
 
 
@@ -29,7 +29,7 @@ int main(/*int argc, char** argv */)
 
 // void apriltag_test() {
 //     ImageAnalyzer *ia = new ImageAnalyzer();
-//     std::string path = "/home/axel/Desktop/UAS/testing/03-26-2021-pid-tuning/2-images";
+//     std::string path = "/home/axel/Desktop/UAS/testing/04-20-2021-pid-tuning/12-images";
 //     int dets = 0;
 //     int nondets = 0;
 
@@ -45,9 +45,10 @@ int main(/*int argc, char** argv */)
 //         cv::Mat img = cv::imread(img_name);
         
 //         Errors errs;
-//         bool found = ia->processImage(img, 0, 0, test, errs);
+//         bool found = ia->processImage(img, 0, test, errs);
 //         if (found) {
-//             log("test", "found: " + img_name + " ---------- " + std::to_string(errs.x) + " " + std::to_string(errs.y) + " " + std::to_string(errs.alt) + " " + std::to_string(errs.yaw));
+//             log("test", "found: " + img_name + " ---------- " + std::to_string(errs.x) + " " + std::to_string(errs.y) + 
+//                 " " + std::to_string(errs.alt) + " " + std::to_string(errs.yaw) + " " + test);
 //             dets++;
 //         } else {
 //             log("test", "not found: " + img_name, true);

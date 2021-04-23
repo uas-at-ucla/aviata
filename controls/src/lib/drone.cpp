@@ -4,10 +4,12 @@ using namespace std::chrono;
 using namespace mavsdk;
 using std::this_thread::sleep_for;
 
-Drone::Drone(std::string drone_id, DroneSettings drone_settings, Target t) : _drone_id(drone_id), _drone_settings(drone_settings), 
-                                                                   _px4_io(drone_id, drone_settings), _telem_values(_px4_io), camera(t), 
-                                                                   image_analyzer(),m_target_info(t), m_north(0), m_east(0), m_down(-5), m_yaw(0), 
-                                                                   m_dt(0.05), docking_status(m_dt,m_system)
+Drone::Drone(std::string drone_id, DroneSettings drone_settings) : 
+    _drone_id(drone_id), _drone_settings(drone_settings), 
+    _px4_io(drone_id, drone_settings), _telem_values(_px4_io), camera(t), 
+    image_analyzer(),m_target_info(t), m_north(0), m_east(0), m_down(-5), m_yaw(0), 
+    m_dt(0.05), docking_status(m_dt,m_system),
+    _follower_setpoint_timeout(drone_settings.sim ? 2000 : 250)
 {
     Network::init();
     _network = std::make_shared<Network>(drone_id);
@@ -121,7 +123,7 @@ void Drone::run()
         {
             case DOCKED_FOLLOWER:
                 // TODO Make this a longer timeout and try to land instead of disarm
-                if (current_time - _last_setpoint_msg_time > 250) {
+                if (current_time - _last_setpoint_msg_time > _follower_setpoint_timeout) { // Eventually this should be replaced with a land failsafe.
                     if (_armed) {
                         if (_px4_io.disarm() == 1) {
                             _armed = false;
