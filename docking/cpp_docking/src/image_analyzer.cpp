@@ -43,7 +43,6 @@ ImageAnalyzer::~ImageAnalyzer()
  * 
  * @param img image to analyze
  * @param ind index of the target we want to dock to
- * @param yaw current orientation of the drone (0 degrees = north, positive clockwise)
  * @param tags reference parameter which is set to a string of indices representing detected tags
  * @param errs reference parameter which is set to the errors detected by this analyzer (4 element array, x y z yaw errors in that order)
  * @return true if target was detected, false otherwise (and errs remains unchanged if so)
