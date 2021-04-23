@@ -3,7 +3,8 @@
 using namespace std::chrono;
 
 Drone::Drone(std::string drone_id, DroneSettings drone_settings) : _drone_id(drone_id), _drone_settings(drone_settings), 
-                                                                   _px4_io(drone_id, drone_settings), _telem_values(_px4_io)
+                                                                   _px4_io(drone_id, drone_settings), _telem_values(_px4_io),
+                                                                   _follower_setpoint_timeout(drone_settings.sim ? 2000 : 250)
 {
     Network::init();
     _network = std::make_shared<Network>(drone_id);
@@ -117,7 +118,7 @@ void Drone::run()
         {
             case DOCKED_FOLLOWER:
                 // TODO Make this a longer timeout and try to land instead of disarm
-                if (current_time - _last_setpoint_msg_time > 250) { // TODO increase this time for the simulation
+                if (current_time - _last_setpoint_msg_time > _follower_setpoint_timeout) { // Eventually this should be replaced with a land failsafe.
                     if (_armed) {
                         if (_px4_io.disarm() == 1) {
                             _armed = false;

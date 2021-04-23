@@ -29,6 +29,7 @@ public:
 private:
     const std::string _drone_id;
     const DroneSettings _drone_settings;
+    const int64_t _follower_setpoint_timeout;
 
     // APIs
     std::shared_ptr<Network> _network;
