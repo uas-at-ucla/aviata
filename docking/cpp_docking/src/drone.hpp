@@ -5,7 +5,11 @@
 #define MAX_HEIGHT 10
 #define MAX_HEIGHT_STAGE_2 3
 #define STAGE_1_TOLERANCE 0.2 // 0.10
-#define STAGE_2_TOLERANCE 0.1 // 0.05
+#define STAGE_2_TOLERANCE 0.2 // 0.05
+
+#define STAGE_1 1
+#define STAGE_2 2
+#define CENTRAL_TARGET_ID 0
 
 #if USE_RASPI_CAMERA == 1
     #include "raspi_camera.hpp"
@@ -58,8 +62,7 @@ private:
     void set_position(float n, float e, float d); // set position obtained from telemetry
     void set_yaw(float yaw);                      // set yaw angle obtained from telemetry
 
-    bool stage1(int target_id);
-    bool stage2(int target_id);
+    bool dock(int target_id, int stage);
     void offset_errors(Errors &errs, int target_id); // offset for stg 1->2 transition
 
     inline std::string get_landed_state_string(mavsdk::Telemetry::LandedState ls)

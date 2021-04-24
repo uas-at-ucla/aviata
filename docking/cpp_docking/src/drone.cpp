@@ -203,13 +203,13 @@ void Drone::initiate_docking(int target_id, bool full_docking)
 
     // begin docking
     if (full_docking) { // do complete 2-stage docking
-        bool stage1_success = stage1(target_id);
+        bool stage1_success = dock(target_id, STAGE_1);
         if (stage1_success)
         {
-            stage2(target_id);
+            dock(target_id, STAGE_2);
         }
     } else { // do 1-stage docking (used for testing)
-        stage2(0); // tag id = 0, central target
+        dock(CENTRAL_TARGET_ID, STAGE_2); // tag id = 0, central target
     }
 
     telemetry->subscribe_position_velocity_ned(nullptr);
@@ -219,23 +219,17 @@ void Drone::initiate_docking(int target_id, bool full_docking)
 }
 
 /**
- * There's currently 2 functions for each stage of docking. 
- * Both stages were different enough to warrant this during development on the simulation,
- * but for testing the 2-stage docking process on physical hardware I'm incorporating small
- * pieces at a time. Right now the functions are (almost) identical to allow for easier fine-tuning during 
- * physical flights; if it turns out we don't need parts
- * of what we used for simulation, it will make more sense to have 1 function that we call twice
- * with possibly different parameters to avoid code duplication.
- * */
-
-/**
- * Attempts stage 1 of docking process
+ * Attempts a particular stage of the docking process
+ * Previously used to have 1 function per stage, but code got too long/duplicated
+ * Easier to have 1 function with conditional separation of logic for small parts that are unique to a stage
+ * 
  * @param target_id is the target to dock to
+ * @param stage is which stage we're in
  * @return true if successful
  * */
-bool Drone::stage1(int target_id)
+bool Drone::dock(int target_id, int stage)
 {
-    std::string log_tag = "Stage 1";
+    std::string log_tag = "Stage " + std::to_string(stage);
     log(log_tag, "Docking Beginning");
 
     // Initialize all persistent variables
@@ -256,21 +250,24 @@ bool Drone::stage1(int target_id)
         std::string tags_detected = "";
 
         img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-        bool is_tag_detected = image_analyzer.processImage(img, 0, tags_detected, errs); // central target has id = 0
+        bool is_tag_detected = image_analyzer.processImage(img, stage == STAGE_1 ? 0 : target_id, tags_detected, errs); // central target has id = 0
 
-        if (is_tag_detected) //Central target not found
+        if (is_tag_detected)
         {
             failed_frames = 0;
-            offset_errors(errs, target_id); // adjusts errors for stage 1 to stage 2 transition
+            if (stage == STAGE_1) offset_errors(errs, target_id); // adjusts errors for stage 1 to stage 2 transition
+            else errs.alt -= 0.40;
             velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw, 1.5);
-            log(log_tag, "Apriltag found! " + std::to_string(time_span) +
+            log(log_tag, "Apriltag found! Timestamp: " + std::to_string(time_span) +
                          " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
-                         + " velocities: x=" + std::to_string(velocities.x) + " y=" + std::to_string(velocities.y) + " z=" + std::to_string(velocities.alt) + " yaw_speed=" + std::to_string(velocities.yaw));
-            
+                         + " velocities: x=" + std::to_string(velocities.x) + " y=" + std::to_string(velocities.y) + " z=" + std::to_string(velocities.alt) + 
+                         " yaw_speed=" + std::to_string(velocities.yaw) + " successful frames: " + std::to_string(successful_frames));
+
             // Check if we're centered enough to consider transitioning
-            if (errs.x < STAGE_1_TOLERANCE && errs.x > -1.0 * STAGE_1_TOLERANCE && 
-                errs.y < STAGE_1_TOLERANCE && errs.y > -1.0 * STAGE_1_TOLERANCE &&
-                errs.alt < STAGE_1_TOLERANCE && errs.alt > -1.0 * STAGE_1_TOLERANCE && 
+            float tolerance = stage == STAGE_1 ? STAGE_1_TOLERANCE : STAGE_2_TOLERANCE;
+            if (errs.x < tolerance && errs.x > -1.0 * tolerance && 
+                errs.y < tolerance && errs.y > -1.0 * tolerance &&
+                errs.alt < tolerance && errs.alt > -1.0 * tolerance && 
                 errs.yaw < 5.0 && errs.yaw > -5.0)
             {
                 successful_frames++;
@@ -322,7 +319,7 @@ bool Drone::stage1(int target_id)
         }
 
         offboard->set_velocity_body(change); 
-        // cv::imwrite("test_stage1"+ std::to_string(time_span) + ".png", img); // debug
+        // cv::imwrite("test_stage" + std::to_string(stage) + "_"+ std::to_string(time_span) + ".png", img); // debug
 
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
         duration<double, std::milli> d = (t2 - t1);
@@ -330,115 +327,13 @@ bool Drone::stage1(int target_id)
         total_frames++;
     }
 
-    Offboard::VelocityBodyYawspeed hold{};
-    offboard->set_velocity_body(hold);
-    log(log_tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(total_frames));
-    log(log_tag, "Average FPS: " + std::to_string(total_frames / (time_span / 1000)));
-    return success;
-}
-
-/**
- * Attempts stage 2 of docking
- * Will execute completely if successful, drone will safely land if failure
- */
-bool Drone::stage2(int target_id)
-{
-    std::string log_tag = "Stage 2";
-    log(log_tag, "Docking Beginning");
-
-    // Initialize all persistent variables
-    PIDController pid;
-    Mat img;
-    int failed_frames = 0;
-    int successful_frames = 0;
-    int time_span = 0;
-    int total_frames = 0;
-    Velocities velocities; 
-    high_resolution_clock::time_point t1 = high_resolution_clock::now();
-    bool success = false;
-
-    while (time_span < 30 * 1000)
-    {
-        Errors errs;
-        Offboard::VelocityBodyYawspeed change{};
-        std::string tags_detected = "";
-        
-        img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
-        bool is_tag_detected = image_analyzer.processImage(img, target_id, tags_detected, errs); 
-
-        if (is_tag_detected) {
-            errs.alt -= 0.50; // aim above the target
-            velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw, 1.5); //Gets velocities for errors
-            log(log_tag, "Apriltag found! Timestamp: " + std::to_string(time_span) +
-                         " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
-                         + " velocities: x=" + std::to_string(velocities.x) + " y=" + std::to_string(velocities.y) + " z=" + std::to_string(velocities.alt) + 
-                         " yaw_speed=" + std::to_string(velocities.yaw) + " successful frames: " + std::to_string(successful_frames));
-            
-            // Check if we're centered enough to consider transitioning
-            if (errs.x < STAGE_2_TOLERANCE && errs.x > -1.0 * STAGE_2_TOLERANCE && 
-                errs.y < STAGE_2_TOLERANCE && errs.y > -1.0 * STAGE_2_TOLERANCE &&
-                errs.alt < STAGE_2_TOLERANCE && errs.alt > -1.0 * STAGE_2_TOLERANCE && 
-                errs.yaw < 5.0 && errs.yaw > -5.0)
-            {
-                successful_frames++;
-            }
-            else
-            {
-                successful_frames = 0;
-            }
-
-            // Break to dock if sufficiently centered
-            if (successful_frames > 10) {
-                success = true;
-                break; // TODO: calculate FPS to determine real 1 second duration
-            }
-
-            // Dynamically adjust z velocity to only descend when close enough to being centered
-            double safe_view = 2 * (errs.alt - velocities.alt * 0.1) * tan(to_radians(CAMERA_FOV_VERTICAL / 2));
-            if (abs(errs.x) >= safe_view || abs(errs.y) >= safe_view) {
-                velocities.alt = -0.1;
-            }
-
-            change.forward_m_s = velocities.y;
-            change.right_m_s = velocities.x;
-            change.down_m_s = velocities.alt;
-            change.yawspeed_deg_s = velocities.yaw;
-            failed_frames = 0;
-        } else {
-            log(log_tag, "Failed to find Apriltag, number missed frames: " + std::to_string(failed_frames)); 
-
-            if (failed_frames > 10) {
-                change.forward_m_s = 0.0;
-                change.right_m_s = 0.0;
-                change.down_m_s = 0.0;
-                change.yawspeed_deg_s = 0.0;
-            } else {
-                change.forward_m_s = velocities.y * 0.8;
-                change.right_m_s = velocities.x * 0.8;
-                change.down_m_s = velocities.alt * 0.8;
-                change.yawspeed_deg_s = 0.0;
-            }
-            failed_frames++;
-        }
-
-        if (m_down > 5.0) {
-            log(log_tag, "Emergency land, too high! Altitude: " + std::to_string(m_down), true);
-            land(); // emergency land, too high
-            return false;
-        }
-
-        offboard->set_velocity_body(change); 
-        cv::imwrite("test_stage2"+ std::to_string(time_span) + ".png", img); // debug
-
-        high_resolution_clock::time_point t2 = high_resolution_clock::now();
-        duration<double, std::milli> d = (t2 - t1);
-        time_span = d.count();
-        total_frames++;
+    if (stage == STAGE_1) {
+        Offboard::VelocityBodyYawspeed hold{};
+        offboard->set_velocity_body(hold);
+    } else {
+        // attempt to engage docking mechanism
     }
 
-    // dock(); <-- should attempt to dock at this point
-    Offboard::VelocityBodyYawspeed hold{};
-    offboard->set_velocity_body(hold);
     log(log_tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(total_frames));
     log(log_tag, "Average FPS: " + std::to_string(total_frames / (time_span / 1000)));
     return success;
