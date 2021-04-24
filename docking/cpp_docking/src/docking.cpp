@@ -16,6 +16,7 @@ int main(/*int argc, char** argv */)
     drone.takeoff(3);
 
     drone.initiate_docking(0, false);
+    // drone.initiate_docking(1, true);
 
     // drone.test1();
 }

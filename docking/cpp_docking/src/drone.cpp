@@ -290,6 +290,7 @@ bool Drone::stage1(int target_id)
             double safe_view = 2 * (errs.alt - velocities.alt * 0.1) * tan(to_radians(CAMERA_FOV_VERTICAL / 2));
             if (abs(errs.x) >= safe_view || abs(errs.y) >= safe_view) {
                 velocities.alt = -0.1;
+                velocities.yaw = 0.0;
             }
             
             change.forward_m_s = velocities.y;
@@ -321,7 +322,7 @@ bool Drone::stage1(int target_id)
         }
 
         offboard->set_velocity_body(change); 
-        // cv::imwrite("test"+ std::to_string(time_span) + ".png", img); // debug
+        // cv::imwrite("test_stage1"+ std::to_string(time_span) + ".png", img); // debug
 
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
         duration<double, std::milli> d = (t2 - t1);
@@ -366,7 +367,7 @@ bool Drone::stage2(int target_id)
         bool is_tag_detected = image_analyzer.processImage(img, target_id, tags_detected, errs); 
 
         if (is_tag_detected) {
-            errs.alt -= 0.35; // aim above the target
+            errs.alt -= 0.50; // aim above the target
             velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw, 1.5); //Gets velocities for errors
             log(log_tag, "Apriltag found! Timestamp: " + std::to_string(time_span) +
                          " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
@@ -427,7 +428,7 @@ bool Drone::stage2(int target_id)
         }
 
         offboard->set_velocity_body(change); 
-        // cv::imwrite("test"+ std::to_string(time_span) + ".png", img); // debug
+        cv::imwrite("test_stage2"+ std::to_string(time_span) + ".png", img); // debug
 
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
         duration<double, std::milli> d = (t2 - t1);

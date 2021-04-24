@@ -5,7 +5,7 @@
 #define MAX_HEIGHT 10
 #define MAX_HEIGHT_STAGE_2 3
 #define STAGE_1_TOLERANCE 0.2 // 0.10
-#define STAGE_2_TOLERANCE 0.2 // 0.05
+#define STAGE_2_TOLERANCE 0.1 // 0.05
 
 #if USE_RASPI_CAMERA == 1
     #include "raspi_camera.hpp"
