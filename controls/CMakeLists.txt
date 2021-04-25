@@ -27,6 +27,7 @@ find_package(rosidl_default_generators REQUIRED)
 find_package(MAVSDK REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(apriltag REQUIRED)
+link_directories(/usr/local/lib)
 
 file(GLOB_RECURSE ROS_MESSAGES RELATIVE ${CMAKE_SOURCE_DIR}
     src/msg/*.msg
@@ -60,9 +61,13 @@ target_link_libraries(aviata_lib
 add_executable(aviata_drone src/aviata_drone.cpp)
 add_executable(aviata_ground src/aviata_ground.cpp)
 add_executable(aviata_test src/aviata_test.cpp)
+add_executable(demo_listener src/demo_listener.cpp)
+add_executable(demo_talker src/demo_talker.cpp)
 target_link_libraries(aviata_drone aviata_lib)
 target_link_libraries(aviata_ground aviata_lib)
 target_link_libraries(aviata_test aviata_lib)
+target_link_libraries(demo_listener aviata_lib)
+target_link_libraries(demo_talker aviata_lib)
 
 # install(TARGETS 
 #     aviata

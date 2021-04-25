@@ -4,10 +4,10 @@ using namespace std::chrono;
 using namespace mavsdk;
 using std::this_thread::sleep_for;
 
-Drone::Drone(std::string drone_id, DroneSettings drone_settings) : 
+Drone::Drone(std::string drone_id, DroneSettings drone_settings, Target t) : 
     _drone_id(drone_id), _drone_settings(drone_settings), 
     _px4_io(drone_id, drone_settings), _telem_values(_px4_io), camera(t), 
-    image_analyzer(),m_target_info(t), m_north(0), m_east(0), m_down(-5), m_yaw(0), 
+    image_analyzer(), m_target_info(t), m_north(0), m_east(0), m_down(-5), m_yaw(0), 
     m_dt(0.05), docking_status(m_dt,m_system),
     _follower_setpoint_timeout(drone_settings.sim ? 2000 : 250)
 {
