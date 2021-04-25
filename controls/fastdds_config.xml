@@ -35,11 +35,7 @@
         <use_default>FALSE</use_default>
 
         <consumer>
-            <class>StdoutErrConsumer</class>
-            <property>
-                <name>stderr_threshold</name>
-                <value>Log::Kind::Info</value>
-            </property>
+            <class>StdoutConsumer</class>
         </consumer>
     </log>
 </dds>
