@@ -2,6 +2,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <assert.h>
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
@@ -38,6 +39,7 @@ class MinimalPublisher : public rclcpp::Node
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
+  assert(rmw_set_log_severity(RMW_LOG_SEVERITY_DEBUG) == RMW_RET_OK);
   rclcpp::spin(std::make_shared<MinimalPublisher>());
   rclcpp::shutdown();
   return 0;
