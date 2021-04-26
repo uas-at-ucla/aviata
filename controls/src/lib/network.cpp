@@ -1,8 +1,10 @@
 #include "network.hpp"
+#include "fastdds_config.hpp"
 
 // static functions
 void Network::init()
 {
+    configure_fastdds();
     rclcpp::init(0, nullptr);
 }
 
@@ -114,7 +116,7 @@ void Network::check_command_requests()
 {
     for (auto it = drone_command_requests.begin(); it != drone_command_requests.end();)
     {
-        if (it->command_request.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
+        if (it->command_request.valid() && it->command_request.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
         {
             it->ack = it->command_request.get()->ack;
             it->timestamp_response = std::chrono::high_resolution_clock::now();

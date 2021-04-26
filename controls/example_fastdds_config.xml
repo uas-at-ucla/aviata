@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dds>
     <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+        <transport_descriptors>
+            <transport_descriptor>
+                <transport_id>udp_transport</transport_id>
+                <type>UDPv4</type>
+                <interfaceWhiteList>
+                    <address>10.10.0.2</address>
+                </interfaceWhiteList>
+            </transport_descriptor>
+        </transport_descriptors>
+
         <participant profile_name="participant_profile_ros2" is_default_profile="true">
             <rtps>
                 <name>profile_for_ros2_context</name>
+
+                <userTransports>
+                    <transport_id>udp_transport</transport_id>
+                </userTransports>
+                <useBuiltinTransports>false</useBuiltinTransports>
+
                 <builtin>
                     <metatrafficUnicastLocatorList>
                         <locator>
@@ -33,7 +49,6 @@
 
     <log>
         <use_default>FALSE</use_default>
-
         <consumer>
             <class>StdoutConsumer</class>
         </consumer>
