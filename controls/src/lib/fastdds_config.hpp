@@ -26,7 +26,7 @@ std::string get_ip_address() { // https://stackoverflow.com/a/265978/15685374
             // is a valid IPv4 Address on the selected interface
             tmpAddrPtr=&((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
             inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
-            printf("%s IP Address %s\n", ifa->ifa_name, addressBuffer); 
+            break;
         }
     }
     if (ifAddrStruct!=NULL) freeifaddrs(ifAddrStruct);
