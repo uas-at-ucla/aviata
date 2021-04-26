@@ -1,5 +1,6 @@
 #include <memory>
 #include <assert.h>
+#include "lib/fastdds_config.hpp"
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
@@ -25,6 +26,7 @@ class MinimalSubscriber : public rclcpp::Node
 
 int main(int argc, char * argv[])
 {
+  configure_fastdds();
   rclcpp::init(argc, argv);
   assert(rmw_set_log_severity(RMW_LOG_SEVERITY_DEBUG) == RMW_RET_OK);
   rclcpp::spin(std::make_shared<MinimalSubscriber>());
