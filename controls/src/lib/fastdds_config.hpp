@@ -8,7 +8,7 @@
 #include <netinet/in.h> 
 #include <arpa/inet.h>
 
-#define FAST_DDS_ENV_VAR "FASTRTPS_DEFAULT_PROFILES_FILE="
+#define FAST_DDS_ENV_VAR "FASTRTPS_DEFAULT_PROFILES_FILE"
 #define FAST_DDS_XML_FILE_NAME "fastdds_config.xml"
 #define NETWORK_INTERFACE "wlan1"
 #define NUM_PEERS 15
@@ -38,10 +38,6 @@ void configure_fastdds() {
     if (!(ip_address.rfind("10.10.0.", 0) == 0)) { // if not on the mesh network, don't configure
         return;
     }
-
-    char set_env_var[sizeof(FAST_DDS_ENV_VAR)-1 + sizeof(FAST_DDS_XML_FILE_NAME)-1 + 1];
-    strcpy(set_env_var, FAST_DDS_ENV_VAR);
-    strcat(set_env_var, FAST_DDS_XML_FILE_NAME);
 
     std::ofstream file;
     file.open(FAST_DDS_XML_FILE_NAME, std::ofstream::trunc);
@@ -104,5 +100,5 @@ void configure_fastdds() {
 
     file.close();
     
-    putenv(set_env_var);
+    setenv(FAST_DDS_ENV_VAR, FAST_DDS_XML_FILE_NAME, true);
 }
