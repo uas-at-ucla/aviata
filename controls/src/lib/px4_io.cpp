@@ -62,6 +62,7 @@ bool PX4IO::connect_to_pixhawk(std::string connection_url, int timeout_seconds)
 
     sys = system;
     telemetry = std::make_shared<Telemetry>(sys);
+    offboard = std::make_shared<Offboard>(sys);
     action = std::make_shared<Action>(sys);
     mavlink_passthrough = std::make_shared<MavlinkPassthrough>(sys);
     target_system = mavlink_passthrough->get_target_sysid();
@@ -74,6 +75,10 @@ bool PX4IO::connect_to_pixhawk(std::string connection_url, int timeout_seconds)
 
 std::shared_ptr<Telemetry> PX4IO::telemetry_ptr() {
     return telemetry;
+}
+
+std::shared_ptr<Offboard> PX4IO::offboard_ptr() {
+    return offboard;
 }
 
 void PX4IO::call_queued_mavsdk_callbacks() {

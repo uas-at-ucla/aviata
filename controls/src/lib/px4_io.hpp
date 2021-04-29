@@ -8,6 +8,7 @@
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/action/action.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
+#include <mavsdk/plugins/offboard/offboard.h>
 #include <mavsdk/plugins/mavlink_passthrough/mavlink_passthrough.h>
 
 #include "mavsdk_callback_manager.hpp"
@@ -65,6 +66,7 @@ public:
     
     bool connect_to_pixhawk(std::string connection_url, int timeout_seconds);
     std::shared_ptr<Telemetry> telemetry_ptr();
+    std::shared_ptr<Offboard> offboard_ptr();
 
     void call_queued_mavsdk_callbacks();
 
@@ -109,6 +111,7 @@ private:
     Mavsdk mav;
     std::shared_ptr<System> sys;
     std::shared_ptr<Telemetry> telemetry;
+    std::shared_ptr<Offboard> offboard;
     std::shared_ptr<Action> action;
     std::shared_ptr<MavlinkPassthrough> mavlink_passthrough;
     uint8_t target_system;

@@ -34,10 +34,10 @@ int main(int argc, char** argv) {
     if (connection_url.rfind("udp://", 0) == 0) { // if connection_url starts with "udp://"
         // If using UDP, assume we're in the simulator that does not support physical docking.
         drone_settings.sim = true;
-        drone_settings.modify_px4_mixers = false; 
+        drone_settings.modify_px4_mixers = false;
     } else  {
         drone_settings.sim = false;
-        drone_settings.modify_px4_mixers = true; 
+        drone_settings.modify_px4_mixers = true;
     }
 
     Target t;

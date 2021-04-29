@@ -8,7 +8,7 @@ Drone::Drone(std::string drone_id, DroneSettings drone_settings, Target t) :
     _drone_id(drone_id), _drone_settings(drone_settings), 
     _px4_io(drone_id, drone_settings), _telem_values(_px4_io), camera(t), 
     image_analyzer(), m_target_info(t), m_north(0), m_east(0), m_down(-5), m_yaw(0), 
-    m_dt(0.05), docking_status(m_dt,m_system),
+    m_dt(0.05), docking_status(m_dt),
     _follower_setpoint_timeout(drone_settings.sim ? 2000 : 250)
 {
     Network::init();
@@ -160,7 +160,7 @@ void Drone::run()
                 int stage_2_result=dock_stage2(_docking_slot);
                 switch(stage_2_result){
                     case DOCKING_SUCCESS:
-                        //Todo: what happens after successfully docking
+                        transition_docking_to_docked();
                         break;
                     case DOCKING_FAILURE:
                         land_drone();
@@ -252,6 +252,12 @@ void Drone::transition_leader_to_follower() {
     _network->deinit_publisher<FOLLOWER_SETPOINT>();
     _px4_io.unsubscribe_attitude_target();
 
+    _drone_state = DOCKED_FOLLOWER;
+    init_follower();
+}
+
+void Drone::transition_docking_to_docked() {
+    // TODO send MAVLink command and ROS announcment
     _drone_state = DOCKED_FOLLOWER;
     init_follower();
 }
@@ -449,7 +455,6 @@ uint8_t Drone::undock()
  **/
 void Drone::initiate_stage1_docking(){
     _drone_state=DOCKING_STAGE_1;
-    //docking_status.offboard=Offboard{m_system};
     docking_status.tags = "";
 
     docking_status.failed_frames = 0;
@@ -480,7 +485,7 @@ uint8_t Drone::dock_stage1(int target_id)
             log("Docking", "Ascending");
             Offboard::VelocityBodyYawspeed change{};
             change.down_m_s = -0.2f;
-            docking_status.offboard.set_velocity_body(change);
+            _px4_io.offboard_ptr()->set_velocity_body(change);
         }
         sleep_for(milliseconds((int)(1000 * m_dt)));
         return ITERATION_SUCCESS;
@@ -513,7 +518,7 @@ uint8_t Drone::dock_stage1(int target_id)
     change.forward_m_s = velocities.y;
     change.right_m_s = velocities.x;
     change.down_m_s = velocities.alt;
-    docking_status.offboard.set_velocity_body(change);
+    _px4_io.offboard_ptr()->set_velocity_body(change);
 
     //Calculates how long to wait to keep refresh rate constant
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
@@ -530,7 +535,6 @@ uint8_t Drone::dock_stage1(int target_id)
 //Setup for stage 2 of docking
 void Drone::initiate_stage2_docking(){
     _drone_state=DOCKING_STAGE_2;
-    //docking_status.offboard=Offboard{m_system};
     docking_status.tags="";
     PIDController temp(m_dt,true);
     docking_status.pid=temp;
@@ -557,7 +561,7 @@ uint8_t Drone::dock_stage2(int target_id)
 
         Offboard::VelocityBodyYawspeed change{}; //Ascends to try to find peripheral target
         change.down_m_s = -0.1f;
-        docking_status.offboard.set_velocity_body(change);
+        _px4_io.offboard_ptr()->set_velocity_body(change);
 
         if (docking_status.failed_frames > 1 / m_dt) //If not detected for one second,
         {
@@ -576,7 +580,7 @@ uint8_t Drone::dock_stage2(int target_id)
                 log("Docking", "Ascending for peripheral target");
                 Offboard::VelocityBodyYawspeed change{};
                 change.down_m_s = -0.2f;
-                docking_status.offboard.set_velocity_body(change);
+                _px4_io.offboard_ptr()->set_velocity_body(change);
                 docking_status.img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
                 is_tag_detected = image_analyzer.processImage(docking_status.img, target_id, m_yaw, docking_status.tags, errs);
             }
@@ -587,7 +591,7 @@ uint8_t Drone::dock_stage2(int target_id)
             {
                 Offboard::VelocityBodyYawspeed change{};
                 change.down_m_s = -0.2f;
-                docking_status.offboard.set_velocity_body(change);
+                _px4_io.offboard_ptr()->set_velocity_body(change);
                 docking_status.img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
                 is_tag_detected = image_analyzer.processImage(docking_status.img, 0, m_yaw, docking_status.tags, errs);
             }
@@ -649,7 +653,7 @@ uint8_t Drone::dock_stage2(int target_id)
     change.north_m_s = velocities.y;
     change.east_m_s = velocities.x;
     change.down_m_s = velocities.alt;
-    docking_status.offboard.set_velocity_ned(change);
+    _px4_io.offboard_ptr()->set_velocity_ned(change);
     
     return ITERATION_SUCCESS;
 }

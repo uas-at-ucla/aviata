@@ -89,8 +89,6 @@ private:
     float m_yaw;
     float m_dt; // docking loop cycle time, seconds
 
-    std::shared_ptr<mavsdk::System> m_system; // pointer to mavsdk connection to drone
-
     // Status of other drones
     std::map<std::string, DroneStatus> _swarm; // map by drone_id
 
@@ -99,6 +97,7 @@ private:
     void init_leader();
 
     // State transition functions
+    void transition_docking_to_docked();
     void transition_leader_to_follower();
     void transition_follower_to_leader();
 

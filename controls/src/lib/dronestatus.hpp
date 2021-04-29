@@ -18,7 +18,7 @@ struct DroneSettings {
 
 enum DroneState {
     STANDBY,
-    ARRIVING,
+    ARRIVING, // AKA Docking Stage 0
     DOCKING_STAGE_1,
     DOCKING_STAGE_2,
     DOCKED_FOLLOWER,
@@ -60,7 +60,7 @@ struct DroneStatus_ {
 
 class DockingStatus{
     public:
-        DockingStatus(float m_dt,std::shared_ptr<mavsdk::System> m_system):pid(m_dt),offboard(m_system){
+        DockingStatus(float m_dt): pid(m_dt) {
             //offboard=mavsdk::Offboard{m_system};
             tags="";
             failed_frames=0;
@@ -70,7 +70,6 @@ class DockingStatus{
             has_centered=false;
         }
 
-        mavsdk::Offboard offboard;
         PIDController pid;
         std::string tags;
         cv::Mat img;
