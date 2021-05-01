@@ -141,6 +141,11 @@ void Drone::run()
                     }
                 }
                 break;
+            case ARRIVING:
+                if(fly_to_central_target()){
+                    initiate_stage1_docking();
+                }
+                break;
             case DOCKING_STAGE_1:
             {
                 int stage_1_result=dock_stage1(_docking_slot);
@@ -449,6 +454,47 @@ uint8_t Drone::undock()
         return 1;
     }
     return 0;
+}
+
+//Safely fly to central target
+//Note that this DOES NOT include takeoff, needs to be handled separately
+bool Drone::fly_to_central_target(){
+    float swarm_alt=0.0f;
+    float swarm_lat=0.0f;
+    float swarm_lon=0.0f;
+    int swarm_size=0;
+    for (const auto& [id, status] : _swarm) //Calculate average location of swarm (approximates central target location)
+    {
+        if (status.drone_state == DOCKED_FOLLOWER || status.drone_state==DOCKED_LEADER)
+        {
+            swarm_size++;
+            swarm_alt+=status.gps_position[2];
+            swarm_lat+=status.gps_position[0];
+            swarm_lon+=status.gps_position[1];
+        }
+    }
+    swarm_alt/=swarm_size;
+    swarm_lat/=swarm_size;
+    swarm_lon/=swarm_size;
+
+    float* m_gps_position=_swarm[_drone_id].gps_position;
+
+    if(swarm_alt>=m_gps_position[2]+DOCKING_HEIGHT_PRECONDITION){ //Drone too low, needs to fly up
+        Offboard::VelocityBodyYawspeed change{};
+        change.down_m_s = -0.2f;
+        _px4_io.offboard_ptr()->set_velocity_body(change);
+    }
+    else if(swarm_lat-m_gps_position[0]<=PRECONDITION_TOLERANCE && swarm_lat-m_gps_position[0]>=-1.0*PRECONDITION_TOLERANCE &&  //Over central target
+        swarm_lon-m_gps_position[1]<=PRECONDITION_TOLERANCE && swarm_lon-m_gps_position[1]>=-1.0*PRECONDITION_TOLERANCE){
+        Offboard::VelocityBodyYawspeed change{};
+        change.down_m_s = 0.0f;
+        _px4_io.offboard_ptr()->set_velocity_body(change);
+        return true;
+    }
+    else{ //Drone high enough, needs to fly to central target GPS location
+        _px4_io.goto_gps_position(swarm_lat, swarm_lon, swarm_alt, 0.0);
+    }
+    return false;
 }
 
 /**Sets up docking status for start of stage 1 docking 

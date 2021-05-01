@@ -126,6 +126,8 @@ private:
 
     uint8_t undock();
 
+    bool fly_to_central_target();
+
     void initiate_stage1_docking();
 
     void initiate_stage2_docking();
