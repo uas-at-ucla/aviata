@@ -10,6 +10,8 @@
 #include "aviata/msg/empty.hpp"
 #include "aviata/msg/follower_setpoint.hpp"
 #include "aviata/msg/frame_setpoint.hpp"
+#include "aviata/msg/docking_info.hpp"
+
 #include "aviata/srv/drone_command.hpp"
 
 // ROS topics that the drone/ground station can publish and subscribe to:
@@ -26,6 +28,8 @@ const std::string FRAME_SETPOINT = "FRAME_SETPOINT";
 const std::string FOLLOWER_ARM = "FOLLOWER_ARM";
 const std::string FOLLOWER_DISARM = "FOLLOWER_DISARM";
 const std::string FOLLOWER_SETPOINT = "FOLLOWER_SETPOINT";
+// Broadcast from any drone that is arriving at/departing from the frame
+const std::string DOCKING_INFO = "DOCKING_INFO";
 
 // Qualities-of-service for ROS messages over the network (https://docs.ros.org/en/foxy/Concepts/About-Quality-of-Service-Settings.html)
 const rclcpp::QoS sensor_data_qos{rclcpp::QoSInitialization(rmw_qos_profile_sensor_data.history, rmw_qos_profile_sensor_data.depth), rmw_qos_profile_sensor_data}; // lossy, for high-rate data streams
@@ -65,6 +69,11 @@ template<> struct RosTopicConfig<FRAME_LAND> {
 template<> struct RosTopicConfig<FRAME_SETPOINT> {
     typedef aviata::msg::FrameSetpoint msg_type;
     typedef std::integral_constant<const rclcpp::QoS&, sensor_data_qos> qos;
+};
+
+template<> struct RosTopicConfig<DOCKING_INFO> {
+    typedef aviata::msg::DockingInfo msg_type;
+    typedef std::integral_constant<const rclcpp::QoS&, services_default_qos> qos;
 };
 
 // FOLLOWER

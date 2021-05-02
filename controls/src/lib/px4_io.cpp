@@ -344,7 +344,7 @@ void PX4IO::unsubscribe_armed() {
     telemetry->subscribe_armed(nullptr);
 }
 
-int PX4IO::dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing)
+int PX4IO::set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing)
 {
     if (!drone_settings.modify_px4_mixers) {
         return 1;
@@ -360,6 +360,9 @@ int PX4IO::dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing
     for (; i < n_missing && i < 6; i++) {
         *missing_drone_ptrs[i] = missing_drones[i];
     }
+    if (i == 6) // too many missing
+        return 1;
+    
     for (; i < 6; i++) {
         *missing_drone_ptrs[i] = NAN;
     }
@@ -373,7 +376,7 @@ int PX4IO::dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing
     return 1;
 }
 
-int PX4IO::undock()
+int PX4IO::set_mixer_undocked()
 {
     if (!drone_settings.modify_px4_mixers) {
         return 1;

@@ -80,7 +80,6 @@ public:
     int set_hold_mode();
 
     int takeoff_system();
-
     int land_system();
 
     // void goto_gps_position(double lat, double lon); // for DOCKED_LEADER (send attitude and thrust to followers)
@@ -99,8 +98,8 @@ public:
     void subscribe_armed(std::function<void(bool)> user_callback);
     void unsubscribe_armed();
 
-    int dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing);
-    int undock();
+    int set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing);
+    int set_mixer_undocked();
 
     int takeoff_and_land_test(int argc, char** argv);
 

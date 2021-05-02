@@ -27,7 +27,7 @@ bool Drone::init(DroneState initial_state, uint8_t docking_slot, std::string con
     }
 
     // Universal initialization
-    while (_px4_io.undock() != 1) {}
+    while (_px4_io.set_mixer_undocked() != 1) {}
 
     _telem_values.init_telem();
 
@@ -89,7 +89,7 @@ bool Drone::init(DroneState initial_state, uint8_t docking_slot, std::string con
 
     if (_drone_state == DOCKED_FOLLOWER || _drone_state == DOCKED_LEADER) {
         _docking_slot = docking_slot;
-        while (_px4_io.dock(_docking_slot, nullptr, 0) != 1) {} // TODO add missing_drones to init() and pass here
+        while (_px4_io.set_mixer_docked(_docking_slot, nullptr, 0) != 1) {} // TODO add missing_drones to init() and pass here
         std::cout << "Initial docking command sent successfully!" << std::endl;
     }
 
@@ -215,6 +215,27 @@ void Drone::init_follower() {
             }
         }
     });
+    _network->subscribe<DOCKING_INFO>([this](const aviata::msg::DockingInfo::SharedPtr docking_update) {
+        bool frame[8] = {false};
+        // get info from current frame
+        for (const auto &[id, status] : _swarm)
+            if (status.drone_state == DOCKED_FOLLOWER || status.drone_state == DOCKED_LEADER)
+                frame[status.docking_slot] = true;
+        // input update
+        frame[docking_update->docking_slot] = docking_update->arriving; // false if departing (missing)
+        // convert to array of empty docking slots
+        uint8_t n_missing = 0;
+        uint8_t missing_drones[6] = {};
+        for (uint8_t i = 0; i < 8; i++)
+            if (!frame[i])
+            {
+                missing_drones[n_missing] = i;
+                n_missing++;
+            }
+        if (n_missing > 6)
+            _network->publish_drone_debug("More than 6 missing drones on frame.");
+        _px4_io.set_mixer_docked(_docking_slot, missing_drones, n_missing);
+    });
 }
 
 void Drone::init_leader() {
@@ -264,6 +285,12 @@ void Drone::transition_leader_to_follower() {
 void Drone::transition_docking_to_docked() {
     // TODO send MAVLink command and ROS announcment
     _drone_state = DOCKED_FOLLOWER;
+
+    // publish position it is docked
+    aviata::msg::DockingInfo docked;
+    docked.docking_slot = _docking_slot;
+    docked.arriving = true;
+    _network->publish<DOCKING_INFO>(docked);
     init_follower();
 }
 
@@ -449,8 +476,16 @@ uint8_t Drone::undock()
 {
     if (_drone_state == DOCKED_FOLLOWER)
     {
-        // _drone_state = UNDOCKING; // TODO make function transition_follower_to_undocking()
+        _drone_state = UNDOCKING; // TODO make function transition_follower_to_undocking()
         // TODO implment control
+        _px4_io.set_mixer_undocked();
+        
+        // TODO move DockingInfo publish to transition_follower_to_undocking()
+        aviata::msg::DockingInfo undocked;
+        undocked.docking_slot = _docking_slot;
+        undocked.arriving = false;
+        _network->publish<DOCKING_INFO>(undocked);
+        _network->unsubscribe<DOCKING_INFO>(); 
         return 1;
     }
     return 0;

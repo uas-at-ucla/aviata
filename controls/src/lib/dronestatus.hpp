@@ -39,7 +39,7 @@ struct DroneStatus {
 // struct DroneStatus_Docked { // update naming convention?
     std::string drone_id;
     DroneState drone_state;
-    uint8_t docking_slot;
+    int8_t docking_slot;
 
     float battery_percent; 
     float gps_position[4];
