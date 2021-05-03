@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(aviata)
 
 # On Linux, need to run `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"."` to get project to execute
-# On MacOS, use DYLD_LIBRARY_PATH instead
+# On MacOS, use `export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:"."` instead
 
 if(NOT CMAKE_C_STANDARD)
     set(CMAKE_C_STANDARD 99)
@@ -13,7 +13,10 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_compile_options(-Wall -Wextra -Wpedantic)
+    add_compile_options(-Wall -Wextra -Wpedantic
+        # Disable warnings that occur in mavlink headers and ROS generated source files
+        -Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-deprecated-declarations 
+    )    
 endif()
 
 set(FastRTPS_INCLUDE_DIR /opt/ros/foxy/include) 
@@ -28,6 +31,18 @@ find_package(MAVSDK REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(apriltag REQUIRED)
 link_directories(/usr/local/lib)
+
+find_package(Qt5Widgets CONFIG)
+
+if(Qt5Widgets_FOUND)
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTORCC ON)
+    set(CMAKE_AUTOUIC ON)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    if (POLICY CMP0071)
+        cmake_policy(SET CMP0071 NEW)
+    endif()
+endif()
 
 file(GLOB_RECURSE ROS_MESSAGES RELATIVE ${CMAKE_SOURCE_DIR}
     src/msg/*.msg
@@ -58,16 +73,31 @@ target_link_libraries(aviata_lib
     apriltag
 )
 
+if(Qt5Widgets_FOUND)
+    file(GLOB_RECURSE LIB_GROUND_SOURCES RELATIVE ${CMAKE_SOURCE_DIR}
+        src/lib_ground/*.hpp
+        src/lib_ground/*.cpp
+    )
+    add_library(aviata_lib_ground ${LIB_GROUND_SOURCES})
+    target_link_libraries(aviata_lib_ground aviata_lib Qt5::Widgets)
+endif()
+
+include_directories(src ${CMAKE_BINARY_DIR}/aviata_lib_ground_autogen/include)
+
 add_executable(aviata_drone src/aviata_drone.cpp)
-add_executable(aviata_ground src/aviata_ground.cpp)
 add_executable(aviata_test src/aviata_test.cpp)
 add_executable(demo_listener src/demo_listener.cpp)
 add_executable(demo_talker src/demo_talker.cpp)
 target_link_libraries(aviata_drone aviata_lib)
-target_link_libraries(aviata_ground aviata_lib)
 target_link_libraries(aviata_test aviata_lib)
 target_link_libraries(demo_listener aviata_lib)
 target_link_libraries(demo_talker aviata_lib)
+
+# Build ground station if Qt is installed
+if(Qt5Widgets_FOUND)
+    add_executable(aviata_ground src/aviata_ground.cpp)
+    target_link_libraries(aviata_ground aviata_lib_ground)
+endif()
 
 # install(TARGETS 
 #     aviata
