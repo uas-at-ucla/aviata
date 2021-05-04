@@ -209,7 +209,7 @@ void Drone::initiate_docking(int target_id, bool full_docking)
             dock(target_id, STAGE_2);
         }
     } else { // do 1-stage docking (used for testing)
-        dock(CENTRAL_TARGET_ID, STAGE_2); // tag id = 0, central target
+        dock(target_id, STAGE_2); // tag id = 0, central target
     }
 
     telemetry->subscribe_position_velocity_ned(nullptr);
@@ -256,7 +256,7 @@ bool Drone::dock(int target_id, int stage)
         {
             failed_frames = 0;
             if (stage == STAGE_1) offset_errors(errs, target_id); // adjusts errors for stage 1 to stage 2 transition
-            else errs.alt -= 0.40;
+            else errs.alt -= 0.50;
             velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw, 1.5);
             log(log_tag, "Apriltag found! Timestamp: " + std::to_string(time_span) +
                          " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)

@@ -13,9 +13,9 @@ int main(/*int argc, char** argv */)
 
     drone.warm_camera();
     drone.arm();
-    drone.takeoff(3);
+    drone.takeoff(2);
 
-    drone.initiate_docking(0, false);
+    drone.initiate_docking(1, false);
     // drone.initiate_docking(1, true);
 
     // drone.test1();

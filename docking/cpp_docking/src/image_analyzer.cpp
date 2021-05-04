@@ -25,7 +25,7 @@ ImageAnalyzer::ImageAnalyzer()
     #endif
     m_tagDetector = apriltag_detector_create();
     m_tagDetector->nthreads = 4;
-    m_tagDetector->quad_decimate = 1.5; // default is 2.0, so this will hurt speed but increase detection rate
+    m_tagDetector->quad_decimate = 2; // default is 2.0, so this will hurt speed but increase detection rate
     apriltag_detector_add_family(m_tagDetector, tf);
 }
 ImageAnalyzer::~ImageAnalyzer()

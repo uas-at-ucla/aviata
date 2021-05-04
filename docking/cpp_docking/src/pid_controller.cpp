@@ -34,19 +34,32 @@ Velocities PIDController::getVelocities(float x_err, float y_err, float alt_err,
     float kd_nv, kd_ev, kd_dv, kd_rv;
     float ki_nv, ki_ev;
 
-    kp_nv = 0.7;//0.6 * ku_nv;
-    kp_ev = 0.7;//0.6 * ku_ev;
+    kp_nv = 0.65;//0.6 * ku_nv;
+    kp_ev = 0.65;//0.6 * ku_ev;
     kp_dv = 0.6;// * ku_dv;
 
-    kd_nv = 0.2;//5; //0.15;
-    kd_ev = 0.2;//5; //0.15;
+    kd_nv = 0.48;//5; //0.15;
+    kd_ev = 0.48;//5; //0.15;
     kd_dv = 0.12;
 
-    ki_ev = 0.00;
-    ki_nv = 0.00;
+    ki_ev = 0.01;
+    ki_nv = 0.01;
 
     kp_rv = 1;
     kd_rv = 1;
+
+    // if (x_err < 0.2 && y_err < 0.2) {
+    //     kd_nv *= 0.8;
+    //     kd_ev *= 0.8;
+    // }
+
+    // remove I term if we cross to aggressively stop overshooting
+    if (m_prev_errs.x / absolute_value(m_prev_errs.x) != x_err / absolute_value(x_err)) {
+        m_sums.x = 0;
+    }
+    if (m_prev_errs.y / absolute_value(m_prev_errs.y) != y_err / absolute_value(y_err)) {
+        m_sums.y = 0;
+    }
 
     float ev = x_err * kp_ev + (x_err - m_prev_errs.x) * kd_ev + m_sums.x * ki_ev;
     float nv = y_err * kp_nv + (y_err - m_prev_errs.y) * kd_nv + m_sums.y * ki_nv;
