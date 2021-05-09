@@ -13,15 +13,13 @@ jobs:
   # Build code, run tests, and upload Docker images.
   build_test_push:
     runs-on: ubuntu-latest
-
-    env:
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    env: 
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
 
     steps:
-      - uses: actions/checkout@v2
-
-#       - name: Force-build Docker container from scratch. Only required prior to first image upload.
-#         run: docker-compose build dev
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Start Docker container
         run: docker-compose up --build -d dev
@@ -35,7 +33,10 @@ jobs:
       - name: Stop Docker container
         run: docker-compose down
 
-      # TODO Can't use secret from a private repo
-      # - name: Push Docker images
-      #   if: github.event_name == 'push'
-      #   run: ./docker_push.sh
+      - name: Push Docker images
+        if: github.event_name == 'push'
+        run: |
+          docker-compose build prod
+          echo ${{secrets.GITHUB_TOKEN}} | docker login ghcr.io -u ${{github.repository_owner}} --password-stdin
+          docker-compose push dev
+          docker-compose push prod
