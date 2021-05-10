@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        
+      - name: Login to GitHub Container Registry
+        run: echo ${{secrets.GITHUB_TOKEN}} | docker login ghcr.io -u ${{github.repository_owner}} --password-stdin
 
       - name: Start Docker container
         run: docker-compose up --build -d dev
@@ -37,6 +40,5 @@ jobs:
         if: github.event_name == 'push'
         run: |
           docker-compose build prod
-          echo ${{secrets.GITHUB_TOKEN}} | docker login ghcr.io -u ${{github.repository_owner}} --password-stdin
           docker-compose push dev
           docker-compose push prod
