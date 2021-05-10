@@ -51,6 +51,7 @@ RUN apt-get install --no-install-recommends -y \
 RUN apt-get install --no-install-recommends -y \
   libcunit1-dev
 
+RUN mkdir -p /usr/share/man/man1
 RUN mkdir -p ~/ros2_foxy/src
 RUN cd ~/ros2_foxy \
     && wget https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos \
