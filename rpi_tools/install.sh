@@ -27,6 +27,11 @@ cmake --build build/default && \
 cd build/default && \
 sudo make install) || echo "Skipping MAVSDK"
 
+# apriltag
+cd ~
+(git clone https://github.com/AprilRobotics/apriltag.git && cd apriltag && \
+cmake . && sudo make install) || echo "Skipping apriltag"
+
 # OONF (custom fork)
 cd ~
 (git clone https://github.com/AusarYao/OONF.git && sudo apt install -y libnl-3-dev && \

@@ -4,10 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "../mavlink/v2.0/common/mavlink.h"
+#include "mavlink/v2.0/common/mavlink.h"
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/action/action.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
+#include <mavsdk/plugins/offboard/offboard.h>
 #include <mavsdk/plugins/mavlink_passthrough/mavlink_passthrough.h>
 
 #include "mavsdk_callback_manager.hpp"
@@ -65,6 +66,7 @@ public:
     
     bool connect_to_pixhawk(std::string connection_url, int timeout_seconds);
     std::shared_ptr<Telemetry> telemetry_ptr();
+    std::shared_ptr<Offboard> offboard_ptr();
 
     void call_queued_mavsdk_callbacks();
 
@@ -78,7 +80,6 @@ public:
     int set_hold_mode();
 
     int takeoff_system();
-
     int land_system();
 
     // void goto_gps_position(double lat, double lon); // for DOCKED_LEADER (send attitude and thrust to followers)
@@ -97,8 +98,8 @@ public:
     void subscribe_armed(std::function<void(bool)> user_callback);
     void unsubscribe_armed();
 
-    int dock(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing);
-    int undock();
+    int set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing);
+    int set_mixer_undocked();
 
     int takeoff_and_land_test(int argc, char** argv);
 
@@ -109,6 +110,7 @@ private:
     Mavsdk mav;
     std::shared_ptr<System> sys;
     std::shared_ptr<Telemetry> telemetry;
+    std::shared_ptr<Offboard> offboard;
     std::shared_ptr<Action> action;
     std::shared_ptr<MavlinkPassthrough> mavlink_passthrough;
     uint8_t target_system;

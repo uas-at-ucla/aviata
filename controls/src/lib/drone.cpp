@@ -1,10 +1,15 @@
 #include "drone.hpp"
 
 using namespace std::chrono;
+using namespace mavsdk;
+using std::this_thread::sleep_for;
 
-Drone::Drone(std::string drone_id, DroneSettings drone_settings) : _drone_id(drone_id), _drone_settings(drone_settings), 
-                                                                   _px4_io(drone_id, drone_settings), _telem_values(_px4_io),
-                                                                   _follower_setpoint_timeout(drone_settings.sim ? 2000 : 250)
+Drone::Drone(std::string drone_id, DroneSettings drone_settings, Target t) : 
+    _drone_id(drone_id), _drone_settings(drone_settings), 
+    _px4_io(drone_id, drone_settings), _telem_values(_px4_io), camera(t), 
+    image_analyzer(), m_target_info(t), m_north(0), m_east(0), m_down(-5), m_yaw(0), 
+    m_dt(0.05), docking_status(m_dt),
+    _follower_setpoint_timeout(drone_settings.sim ? 2000 : 250)
 {
     Network::init();
     _network = std::make_shared<Network>(drone_id);
@@ -22,7 +27,7 @@ bool Drone::init(DroneState initial_state, uint8_t docking_slot, std::string con
     }
 
     // Universal initialization
-    while (_px4_io.undock() != 1) {}
+    while (_px4_io.set_mixer_undocked() != 1) {}
 
     _telem_values.init_telem();
 
@@ -84,7 +89,7 @@ bool Drone::init(DroneState initial_state, uint8_t docking_slot, std::string con
 
     if (_drone_state == DOCKED_FOLLOWER || _drone_state == DOCKED_LEADER) {
         _docking_slot = docking_slot;
-        while (_px4_io.dock(_docking_slot, nullptr, 0) != 1) {} // TODO add missing_drones to init() and pass here
+        while (_px4_io.set_mixer_docked(_docking_slot, nullptr, 0) != 1) {} // TODO add missing_drones to init() and pass here
         std::cout << "Initial docking command sent successfully!" << std::endl;
     }
 
@@ -136,6 +141,42 @@ void Drone::run()
                     }
                 }
                 break;
+            case ARRIVING:
+                if(fly_to_central_target()){
+                    initiate_stage1_docking();
+                }
+                break;
+            case DOCKING_STAGE_1:
+            {
+                int stage_1_result=dock_stage1(_docking_slot);
+                switch (stage_1_result){
+                    case DOCKING_SUCCESS:
+                        initiate_stage2_docking();
+                        break;
+                    case DOCKING_FAILURE:
+                        land_drone();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            }
+            case DOCKING_STAGE_2:
+                int stage_2_result=dock_stage2(_docking_slot);
+                switch(stage_2_result){
+                    case DOCKING_SUCCESS:
+                        transition_docking_to_docked();
+                        break;
+                    case DOCKING_FAILURE:
+                        land_drone();
+                        break;
+                    case RESTART_DOCKING:
+                        initiate_stage1_docking();
+                        break;
+                    default:
+                        break;
+                }
+                break;
         }
 
         _px4_io.call_queued_mavsdk_callbacks();
@@ -173,6 +214,27 @@ void Drone::init_follower() {
                 _armed = true;
             }
         }
+    });
+    _network->subscribe<DOCKING_INFO>([this](const aviata::msg::DockingInfo::SharedPtr docking_update) {
+        bool frame[8] = {false};
+        // get info from current frame
+        for (const auto &[id, status] : _swarm)
+            if (status.drone_state == DOCKED_FOLLOWER || status.drone_state == DOCKED_LEADER)
+                frame[status.docking_slot] = true;
+        // input update
+        frame[docking_update->docking_slot] = docking_update->arriving; // false if departing (missing)
+        // convert to array of empty docking slots
+        uint8_t n_missing = 0;
+        uint8_t missing_drones[6] = {};
+        for (uint8_t i = 0; i < 8; i++)
+            if (!frame[i])
+            {
+                missing_drones[n_missing] = i;
+                n_missing++;
+            }
+        if (n_missing > 6)
+            _network->publish_drone_debug("More than 6 missing drones on frame.");
+        _px4_io.set_mixer_docked(_docking_slot, missing_drones, n_missing);
     });
 }
 
@@ -217,6 +279,18 @@ void Drone::transition_leader_to_follower() {
     _px4_io.unsubscribe_attitude_target();
 
     _drone_state = DOCKED_FOLLOWER;
+    init_follower();
+}
+
+void Drone::transition_docking_to_docked() {
+    // TODO send MAVLink command and ROS announcment
+    _drone_state = DOCKED_FOLLOWER;
+
+    // publish position it is docked
+    aviata::msg::DockingInfo docked;
+    docked.docking_slot = _docking_slot;
+    docked.arriving = true;
+    _network->publish<DOCKING_INFO>(docked);
     init_follower();
 }
 
@@ -402,18 +476,280 @@ uint8_t Drone::undock()
 {
     if (_drone_state == DOCKED_FOLLOWER)
     {
-        // _drone_state = UNDOCKING; // TODO make function transition_follower_to_undocking()
+        _drone_state = UNDOCKING; // TODO make function transition_follower_to_undocking()
         // TODO implment control
+        _px4_io.set_mixer_undocked();
+        
+        // TODO move DockingInfo publish to transition_follower_to_undocking()
+        aviata::msg::DockingInfo undocked;
+        undocked.docking_slot = _docking_slot;
+        undocked.arriving = false;
+        _network->publish<DOCKING_INFO>(undocked);
+        _network->unsubscribe<DOCKING_INFO>(); 
         return 1;
     }
     return 0;
 }
 
-// @param n frame position
-uint8_t Drone::dock(int n)
+//Safely fly to central target
+//Note that this DOES NOT include takeoff, needs to be handled separately
+bool Drone::fly_to_central_target(){
+    float swarm_alt=0.0f;
+    float swarm_lat=0.0f;
+    float swarm_lon=0.0f;
+    int swarm_size=0;
+    for (const auto& [id, status] : _swarm) //Calculate average location of swarm (approximates central target location)
+    {
+        if (status.drone_state == DOCKED_FOLLOWER || status.drone_state==DOCKED_LEADER)
+        {
+            swarm_size++;
+            swarm_alt+=status.gps_position[2];
+            swarm_lat+=status.gps_position[0];
+            swarm_lon+=status.gps_position[1];
+        }
+    }
+    swarm_alt/=swarm_size;
+    swarm_lat/=swarm_size;
+    swarm_lon/=swarm_size;
+
+    float* m_gps_position=_swarm[_drone_id].gps_position;
+
+    if(swarm_alt>=m_gps_position[2]+DOCKING_HEIGHT_PRECONDITION){ //Drone too low, needs to fly up
+        Offboard::VelocityBodyYawspeed change{};
+        change.down_m_s = -0.2f;
+        _px4_io.offboard_ptr()->set_velocity_body(change);
+    }
+    else if(swarm_lat-m_gps_position[0]<=PRECONDITION_TOLERANCE && swarm_lat-m_gps_position[0]>=-1.0*PRECONDITION_TOLERANCE &&  //Over central target
+        swarm_lon-m_gps_position[1]<=PRECONDITION_TOLERANCE && swarm_lon-m_gps_position[1]>=-1.0*PRECONDITION_TOLERANCE){
+        Offboard::VelocityBodyYawspeed change{};
+        change.down_m_s = 0.0f;
+        _px4_io.offboard_ptr()->set_velocity_body(change);
+        return true;
+    }
+    else{ //Drone high enough, needs to fly to central target GPS location
+        _px4_io.goto_gps_position(swarm_lat, swarm_lon, swarm_alt, 0.0);
+    }
+    return false;
+}
+
+/**Sets up docking status for start of stage 1 docking 
+ **/
+void Drone::initiate_stage1_docking(){
+    _drone_state=DOCKING_STAGE_1;
+    docking_status.tags = "";
+
+    docking_status.failed_frames = 0;
+    docking_status.successful_frames = 0;
+}
+
+/**Attempts one iteration of stage 1 docking algorithm
+ * @return result of iteration
+ **/
+uint8_t Drone::dock_stage1(int target_id)
 {
-    // TODO possibly integrate controls stuff through ROS here?
-    return 1;
+    high_resolution_clock::time_point t1 = high_resolution_clock::now();
+    docking_status.img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+    Errors errs;
+    bool is_tag_detected = image_analyzer.processImage(docking_status.img, 0, m_yaw, docking_status.tags, errs); //Detects apriltags and calculates errors
+    log("Tags Detected", docking_status.tags);
+
+    if (!is_tag_detected) //Central target not found
+    {
+        log("No Tag Detected, Failed Frames", std::to_string(docking_status.failed_frames) + "");
+        if (m_down * -1.0 - m_target_info.alt > MAX_HEIGHT) //Above maximum height, docking fails
+        {
+            log("Docking", "Error: above maximum height", true);
+            return DOCKING_FAILURE;
+        }
+        if (docking_status.failed_frames > 1 / m_dt) //Ascends to try to find central target
+        {
+            log("Docking", "Ascending");
+            Offboard::VelocityBodyYawspeed change{};
+            change.down_m_s = -0.2f;
+            _px4_io.offboard_ptr()->set_velocity_body(change);
+        }
+        sleep_for(milliseconds((int)(1000 * m_dt)));
+        return ITERATION_SUCCESS;
+    }
+
+    docking_status.failed_frames = 0;
+    log("Docking", "Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
+    offset_errors(errs, target_id); //Adjusts errors for stage 1 to stage 2 transition
+    log("Docking", "Offset Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
+    Velocities velocities = docking_status.pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw,0.4); //Gets velocities for errors
+    log("Docking", "Velocities: east: " + std::to_string(velocities.x) + " north: " + std::to_string(velocities.y) + " down: " + std::to_string(velocities.alt) + " yaw: " + std::to_string(velocities.yaw));
+
+    //Checks if drone within correct tolerance
+    if (errs.x < STAGE_1_TOLERANCE && errs.x > -1.0 * STAGE_1_TOLERANCE && errs.y < STAGE_1_TOLERANCE && errs.y > -1.0 * STAGE_1_TOLERANCE &&
+        errs.alt < STAGE_1_TOLERANCE && errs.alt > -1.0 * STAGE_1_TOLERANCE && errs.yaw < 2.0 && errs.yaw > -2.0)
+    {
+        docking_status.successful_frames++;
+    }
+    else
+    {
+        docking_status.successful_frames = 0;
+    }
+
+    if (docking_status.successful_frames >= 1 / m_dt)
+        return DOCKING_SUCCESS; //Stage 1 succesful
+
+    //Updates drone velocities with calculated values
+    Offboard::VelocityBodyYawspeed change{};
+    change.yawspeed_deg_s = velocities.yaw;
+    change.forward_m_s = velocities.y;
+    change.right_m_s = velocities.x;
+    change.down_m_s = velocities.alt;
+    _px4_io.offboard_ptr()->set_velocity_body(change);
+
+    //Calculates how long to wait to keep refresh rate constant
+    high_resolution_clock::time_point t2 = high_resolution_clock::now();
+    duration<double, std::milli> d = (t2 - t1);
+    int time_span = d.count();
+    log("Docking", "Iteration Time: " + std::to_string(time_span));
+    if (time_span < m_dt * 1000)
+    {
+        sleep_for(milliseconds((int)(m_dt * 1000 - time_span)));
+    }
+    return ITERATION_SUCCESS;    
+}
+
+//Setup for stage 2 of docking
+void Drone::initiate_stage2_docking(){
+    _drone_state=DOCKING_STAGE_2;
+    docking_status.tags="";
+    PIDController temp(m_dt,true);
+    docking_status.pid=temp;
+    docking_status.successful_frames=0;
+    docking_status.failed_frames=0;
+    docking_status.prev_iter_detection=false;
+    docking_status.has_centered=false;
+    docking_status.docking_attempts=0;
+}
+
+uint8_t Drone::dock_stage2(int target_id)
+{
+
+    //Update image and process for errors
+    docking_status.img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
+    Errors errs;
+    bool is_tag_detected = image_analyzer.processImage(docking_status.img, target_id, m_yaw, docking_status.tags, errs);
+    log("Tags Detected", docking_status.tags);
+
+    if (!is_tag_detected) //Target tag not detected
+    {
+        docking_status.failed_frames++;
+        log("No Tag Detected", "Checked Frames: " + std::to_string(docking_status.failed_frames) + "");
+
+        Offboard::VelocityBodyYawspeed change{}; //Ascends to try to find peripheral target
+        change.down_m_s = -0.1f;
+        _px4_io.offboard_ptr()->set_velocity_body(change);
+
+        if (docking_status.failed_frames > 1 / m_dt) //If not detected for one second,
+        {
+            docking_status.docking_attempts++;
+            if (docking_status.docking_attempts > MAX_ATTEMPTS) //Maximum attempts exceeded, docking failure
+            {
+                log("DOCKING FAILED", "Maximum Attempts Exceeded", true);
+                return DOCKING_FAILURE;
+            }
+            docking_status.img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
+            is_tag_detected = image_analyzer.processImage(docking_status.img, target_id, m_yaw, docking_status.tags, errs);
+
+            //Ascends until max height or until peripheral target detected
+            if (!is_tag_detected && m_down * -1.0 - m_target_info.alt < MAX_HEIGHT_STAGE_2)
+            {
+                log("Docking", "Ascending for peripheral target");
+                Offboard::VelocityBodyYawspeed change{};
+                change.down_m_s = -0.2f;
+                _px4_io.offboard_ptr()->set_velocity_body(change);
+                docking_status.img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
+                is_tag_detected = image_analyzer.processImage(docking_status.img, target_id, m_yaw, docking_status.tags, errs);
+            }
+
+            log("Docking", "Peripheral target not detected, ascending for central target");
+            //Peripheral target not detected, ascend until max height reached or central target detected
+            if (!is_tag_detected && m_down * -1.0 - m_target_info.alt < MAX_HEIGHT)
+            {
+                Offboard::VelocityBodyYawspeed change{};
+                change.down_m_s = -0.2f;
+                _px4_io.offboard_ptr()->set_velocity_body(change);
+                docking_status.img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+                is_tag_detected = image_analyzer.processImage(docking_status.img, 0, m_yaw, docking_status.tags, errs);
+            }
+
+            //Central target detected, re-attempt stage 1
+            if (is_tag_detected)
+            {
+                log("Docking", "Central target detected, re-attempting stage 1");
+                return RESTART_DOCKING;
+            }
+            else //Maximum height exceeded, docking failure
+            {
+                log("DOCKING FAILED", "Maximum Height Exceeded", true);
+                return DOCKING_FAILURE;
+            }
+        }
+        sleep_for(milliseconds((int)m_dt * 1000));
+        docking_status.img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, target_id);
+        is_tag_detected = image_analyzer.processImage(docking_status.img, target_id, m_yaw, docking_status.tags, errs);
+        log("Tags Detected", docking_status.tags);
+    }
+
+    errs.alt -= 0.05; //Adjusts altitude error for desired location
+
+    //Checks if within docking range
+    if (errs.alt < STAGE_2_TOLERANCE * 4 && errs.alt > -4 * STAGE_2_TOLERANCE && /*errs.yaw < 2.0 && errs.yaw > -2.0 &&*/ errs.x < STAGE_2_TOLERANCE && errs.x > -1.0 * STAGE_2_TOLERANCE && errs.y < STAGE_2_TOLERANCE && errs.y > -1.0 * STAGE_2_TOLERANCE)
+    {
+        docking_status.successful_frames++;
+    }
+    else
+    {
+        docking_status.successful_frames = 0;
+    }
+    if (docking_status.successful_frames > 1 / m_dt) //Docking success, within range for 1 second
+        return DOCKING_SUCCESS;
+
+    //Adjusts errors to prevent rotating out of frame
+    bool is_centered = errs.x < STAGE_1_TOLERANCE && errs.x > -1.0 * STAGE_1_TOLERANCE && errs.y < STAGE_1_TOLERANCE && errs.y > -1.0 * STAGE_1_TOLERANCE;
+    if (!is_centered && !docking_status.has_centered) {
+        errs.yaw -= 90;
+        docking_status.has_centered = true; // prevent rerotating away once we've done it once
+    }
+
+    log("Docking", "Errors: x_err: " + std::to_string(errs.x) + " y_err: " + std::to_string(errs.y) + " alt_err: " + std::to_string(errs.alt) + " rot_err: " + std::to_string(errs.yaw));
+
+    Velocities velocities = docking_status.pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw,0.4); //Gets velocities for errors
+    log("Docking", "Velocities: east: " + std::to_string(velocities.x) + " north: " + std::to_string(velocities.y) + " down: " + std::to_string(velocities.alt));
+
+    //Predicts where drone's minimum horizontal FOV after descending, and checks to make sure the tag will remain in frame
+    //Uses smaller vertical FOV instead of more specific FOV to guard against possible rotation
+    double safe_view=2*(errs.alt-velocities.alt*m_dt)*tan(to_radians(CAMERA_FOV_VERTICAL/2));
+    if(abs(errs.x)>=safe_view||abs(errs.y)>=safe_view){
+        velocities.alt=0;
+    }
+
+    //Updates drone velocities
+    Offboard::VelocityNedYaw change{};
+    change.yaw_deg = 0;//errs.yaw;
+    change.north_m_s = velocities.y;
+    change.east_m_s = velocities.x;
+    change.down_m_s = velocities.alt;
+    _px4_io.offboard_ptr()->set_velocity_ned(change);
+    
+    return ITERATION_SUCCESS;
+}
+
+//Utility method to adjust errors for stage 1
+void Drone::offset_errors(Errors &errs, int id)
+{
+    float target_offset = id <= 3 ? abs(id - 3) * 45 : (11 - id) * 45;
+    float x = errs.x + BOOM_LENGTH / 2 * cos(to_radians(target_offset - errs.yaw));
+    float y = errs.y + BOOM_LENGTH / 2 * sin(to_radians(target_offset - errs.yaw));
+    errs.alt -= ALTITUDE_DISP;
+    errs.x = x;
+    errs.y = y;
+    float yaw=errs.yaw+90-((id-1)*45);
+    errs.yaw=yaw;
 }
 
 uint8_t Drone::become_leader(uint8_t sending_leader_seq_num)

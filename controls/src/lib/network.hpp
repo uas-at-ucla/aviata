@@ -119,7 +119,8 @@ private:
                PubSub<FRAME_SETPOINT>,
                PubSub<FOLLOWER_ARM>,
                PubSub<FOLLOWER_DISARM>,
-               PubSub<FOLLOWER_SETPOINT>
+               PubSub<FOLLOWER_SETPOINT>,
+               PubSub<DOCKING_INFO>
     > pubsubs;
 
     rclcpp::Service<aviata::srv::DroneCommand>::SharedPtr drone_command_service;

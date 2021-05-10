@@ -1,3 +1,3 @@
-# Production Dockerfile. Should only be built in Travis after code is built.
-FROM uasatucla/aviata-dev
-COPY . /workspace
+# Production Dockerfile. Should only be built in CI after code is built.
+FROM ghcr.io/uas-at-ucla/aviata-dev
+COPY . /aviata
