@@ -243,7 +243,7 @@ bool Drone::dock(int target_id, int stage)
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     bool success = false;
 
-    while (time_span < 30 * 1000)
+    while (time_span < 60 * 1000)
     {
         Errors errs;
         Offboard::VelocityBodyYawspeed change{};
@@ -256,7 +256,7 @@ bool Drone::dock(int target_id, int stage)
         {
             failed_frames = 0;
             if (stage == STAGE_1) offset_errors(errs, target_id); // adjusts errors for stage 1 to stage 2 transition
-            else errs.alt -= 0.50;
+            else errs.alt -= 0.35;//0.30;
             velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw, 1.5);
             log(log_tag, "Apriltag found! Timestamp: " + std::to_string(time_span) +
                          " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
@@ -267,8 +267,8 @@ bool Drone::dock(int target_id, int stage)
             float tolerance = stage == STAGE_1 ? STAGE_1_TOLERANCE : STAGE_2_TOLERANCE;
             if (errs.x < tolerance && errs.x > -1.0 * tolerance && 
                 errs.y < tolerance && errs.y > -1.0 * tolerance &&
-                errs.alt < tolerance && errs.alt > -1.0 * tolerance && 
-                errs.yaw < 5.0 && errs.yaw > -5.0)
+                errs.alt < tolerance && errs.alt > -1.0 * tolerance)// && 
+                // errs.yaw < 5.0 && errs.yaw > -5.0)
             {
                 successful_frames++;
             }
@@ -284,8 +284,14 @@ bool Drone::dock(int target_id, int stage)
             }
 
             // Dynamically adjust z velocity to only descend when close enough to being centered
-            double safe_view = 2 * (errs.alt - velocities.alt * 0.1) * tan(to_radians(CAMERA_FOV_VERTICAL / 2));
-            if (abs(errs.x) >= safe_view || abs(errs.y) >= safe_view) {
+            // double safe_view = 2 * (errs.alt - velocities.alt * 0.1) * tan(to_radians(CAMERA_FOV_VERTICAL / 2));
+            // if (abs(errs.x) >= safe_view || abs(errs.y) >= safe_view) {
+            //     velocities.alt = -0.1;
+            //     velocities.yaw = 0.0;
+            // }
+            float frame_size_meters_x = 640 * errs.tag_pixel_ratio;
+            float frame_size_meters_y = 480 * errs.tag_pixel_ratio;
+            if (abs(errs.x) >= 0.5 * (frame_size_meters_x / 2) || abs(errs.y) >= 0.5 * (frame_size_meters_y / 2)) {
                 velocities.alt = -0.1;
                 velocities.yaw = 0.0;
             }
@@ -332,6 +338,13 @@ bool Drone::dock(int target_id, int stage)
         offboard->set_velocity_body(hold);
     } else {
         // attempt to engage docking mechanism
+
+        // land slowly
+        while (true) {
+            Offboard::VelocityBodyYawspeed hold{};
+            hold.down_m_s = 0.2;
+            offboard->set_velocity_body(hold);
+        }
     }
 
     log(log_tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(total_frames));

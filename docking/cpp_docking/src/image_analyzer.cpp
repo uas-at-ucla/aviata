@@ -156,8 +156,9 @@ bool ImageAnalyzer::processImage(Mat img, int ind, std::string &tags, Errors &er
 
             // 3. Calculate x/y error
             
-            errs.x = (center[0] - image_center.x) * tag_pixel_ratio;
-            errs.y = (image_center.y - center[1]) * tag_pixel_ratio;
+            errs.x = (center[0] - image_center.x) * tag_pixel_ratio * -1; // * -1 since camera rotated 180 from drone
+            errs.y = (image_center.y - center[1]) * tag_pixel_ratio * -1; // same ^
+            errs.tag_pixel_ratio = tag_pixel_ratio;
 
             //Cleanup
             apriltag_detection_destroy(det);

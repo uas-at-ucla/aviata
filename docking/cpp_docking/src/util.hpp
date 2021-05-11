@@ -87,7 +87,7 @@ struct Errors
     float y = 0;
     float alt = 0;
     float yaw = 0;
-    float horiz_percentage_offset = 0;
+    float tag_pixel_ratio = 0;
 };
 
 struct Velocities

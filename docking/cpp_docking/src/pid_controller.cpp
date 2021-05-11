@@ -54,12 +54,12 @@ Velocities PIDController::getVelocities(float x_err, float y_err, float alt_err,
     // }
 
     // remove I term if we cross to aggressively stop overshooting
-    if (m_prev_errs.x / absolute_value(m_prev_errs.x) != x_err / absolute_value(x_err)) {
-        m_sums.x = 0;
-    }
-    if (m_prev_errs.y / absolute_value(m_prev_errs.y) != y_err / absolute_value(y_err)) {
-        m_sums.y = 0;
-    }
+    // if (m_prev_errs.x / absolute_value(m_prev_errs.x) != x_err / absolute_value(x_err)) {
+    //     m_sums.x = 0;
+    // }
+    // if (m_prev_errs.y / absolute_value(m_prev_errs.y) != y_err / absolute_value(y_err)) {
+    //     m_sums.y = 0;
+    // }
 
     float ev = x_err * kp_ev + (x_err - m_prev_errs.x) * kd_ev + m_sums.x * ki_ev;
     float nv = y_err * kp_nv + (y_err - m_prev_errs.y) * kd_nv + m_sums.y * ki_nv;
