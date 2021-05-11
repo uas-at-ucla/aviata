@@ -13,7 +13,7 @@
 // Constants
 
 #define CENTRAL_TAG_SIZE 0.135 // to be changed according to actual target size
-#define PERIPHERAL_TAG_SIZE 0.08 // likewise
+#define PERIPHERAL_TAG_SIZE 0.06 // likewise
 
 // Camera information for simulator, measured in degrees
 #define CAMERA_FOV_VERTICAL 48.8
@@ -87,7 +87,7 @@ struct Errors
     float y = 0;
     float alt = 0;
     float yaw = 0;
-    float horiz_percentage_offset = 0;
+    float tag_pixel_ratio = 0;
 };
 
 struct Velocities

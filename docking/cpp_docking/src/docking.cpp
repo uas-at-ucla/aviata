@@ -5,14 +5,20 @@ void apriltag_test();
 int main(/*int argc, char** argv */)
 {
     Target t;
+    t.lat = 0.5;
+    t.lon = 0.5;
     
     Drone drone(t);
     drone.connect_gazebo();
-    // drone.arm();
-    // drone.takeoff(4);
-    // drone.initiate_docking(1);
-    // apriltag_test();
-    drone.test1();
+
+    drone.warm_camera();
+    drone.arm();
+    drone.takeoff(2.5);
+
+    drone.initiate_docking(1, false);
+    // drone.initiate_docking(1, true);
+
+    // drone.test1();
 }
 
 

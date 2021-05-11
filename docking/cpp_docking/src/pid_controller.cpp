@@ -5,10 +5,11 @@
 #include <algorithm>
 #include <string>
 
-PIDController::PIDController(float dt,bool overshoot)
-    : m_dt(dt), m_overshoot_adjust(overshoot)
+PIDController::PIDController(bool overshoot)
+    : m_overshoot_adjust(overshoot)
 {
     m_prev_errs = {0, 0, 0, 0};
+    m_sums = {0, 0, 0, 0};
 }
 
 PIDController::~PIDController()
@@ -17,7 +18,7 @@ PIDController::~PIDController()
 
 /**
  * Apply PID logic to calculated errors to determine appropriate velocity.
- * 
+ *  
  * @param x_err x (east) offset in meters
  * @param y_err y (north) offset in meters
  * @param alt_err z (altitude) offset in meters
@@ -31,20 +32,37 @@ Velocities PIDController::getVelocities(float x_err, float y_err, float alt_err,
 
     float kp_nv, kp_ev, kp_dv, kp_rv;
     float kd_nv, kd_ev, kd_dv, kd_rv;
+    float ki_nv, ki_ev;
 
-    kp_nv = 1;//0.6 * ku_nv;
-    kp_ev = 1;//0.6 * ku_ev;
+    kp_nv = 0.65;//0.6 * ku_nv;
+    kp_ev = 0.65;//0.6 * ku_ev;
     kp_dv = 0.6;// * ku_dv;
 
-    kd_nv = 0.1; //0.15;
-    kd_ev = 0.1; //0.15;
+    kd_nv = 0.48;//5; //0.15;
+    kd_ev = 0.48;//5; //0.15;
     kd_dv = 0.12;
+
+    ki_ev = 0.01;
+    ki_nv = 0.01;
 
     kp_rv = 1;
     kd_rv = 1;
 
-    float ev = x_err * kp_ev + (x_err - m_prev_errs.x) * kd_ev;
-    float nv = y_err * kp_nv + (y_err - m_prev_errs.y) * kd_nv;
+    // if (x_err < 0.2 && y_err < 0.2) {
+    //     kd_nv *= 0.8;
+    //     kd_ev *= 0.8;
+    // }
+
+    // remove I term if we cross to aggressively stop overshooting
+    // if (m_prev_errs.x / absolute_value(m_prev_errs.x) != x_err / absolute_value(x_err)) {
+    //     m_sums.x = 0;
+    // }
+    // if (m_prev_errs.y / absolute_value(m_prev_errs.y) != y_err / absolute_value(y_err)) {
+    //     m_sums.y = 0;
+    // }
+
+    float ev = x_err * kp_ev + (x_err - m_prev_errs.x) * kd_ev + m_sums.x * ki_ev;
+    float nv = y_err * kp_nv + (y_err - m_prev_errs.y) * kd_nv + m_sums.y * ki_nv;
     float dv = alt_err * kp_dv + (alt_err - m_prev_errs.alt) * kd_dv;
     float rv = rot_err * kp_rv + (rot_err - m_prev_errs.yaw) * kd_rv;
 
@@ -72,6 +90,9 @@ Velocities PIDController::getVelocities(float x_err, float y_err, float alt_err,
     m_prev_errs.y = y_err;
     m_prev_errs.alt = alt_err;
     m_prev_errs.yaw = rot_err;
+
+    m_sums.x += x_err;
+    m_sums.y += y_err;
 
     ans.x = ev;
     ans.y = nv;
