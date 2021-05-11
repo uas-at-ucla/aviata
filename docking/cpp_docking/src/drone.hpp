@@ -52,7 +52,6 @@ private:
     float m_east;
     float m_down;
     float m_yaw;
-    float m_dt; // loop cycle time, seconds
 
     std::shared_ptr<mavsdk::System> m_system; // pointer to mavsdk connection to drone
     std::shared_ptr<mavsdk::Telemetry> telemetry;

@@ -21,7 +21,7 @@ using namespace std::chrono;
 using std::this_thread::sleep_for;
 
 Drone::Drone(Target t)
-    : camera(t), image_analyzer(), m_target_info(t), m_north(0), m_east(0), m_down(-5), m_yaw(0), m_dt(0.05)
+    : camera(t), image_analyzer(), m_target_info(t), m_north(0), m_east(0), m_down(-5), m_yaw(0)
 {
 }
 
