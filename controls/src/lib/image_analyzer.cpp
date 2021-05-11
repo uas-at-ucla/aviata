@@ -22,7 +22,7 @@ ImageAnalyzer::ImageAnalyzer()
     // tf = tag16h5_create();
     m_tagDetector = apriltag_detector_create();
     m_tagDetector->nthreads = 4;
-    m_tagDetector->quad_decimate = 1.5; // default is 2.0, so this will hurt speed but increase detection rate
+    m_tagDetector->quad_decimate = 2; 
     apriltag_detector_add_family(m_tagDetector, tf);
 }
 ImageAnalyzer::~ImageAnalyzer()
@@ -37,13 +37,12 @@ ImageAnalyzer::~ImageAnalyzer()
  * 
  * @param img image to analyze
  * @param ind index of the target we want to dock to
- * @param yaw current orientation of the drone (0 degrees = north, positive clockwise)
  * @param tags reference parameter which is set to a string of indices representing detected tags
  * @param errs reference parameter which is set to the errors detected by this analyzer (4 element array, x y z yaw errors in that order)
  * @return true if target was detected, false otherwise (and errs remains unchanged if so)
  * 
  * */
-bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags, Errors &errs)
+bool ImageAnalyzer::processImage(Mat img, int ind, std::string &tags, Errors &errs)
 {
     Point2f image_center(img.cols / 2, img.rows / 2);
 
@@ -59,7 +58,7 @@ bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags,
         zarray_get(dets, i, &det);
         if (det->decision_margin >= MARGIN)
         {
-            tagsDetected += std::to_string(det->id) + " ";
+            tagsDetected += std::to_string(det->id) + "(" + std::to_string(det->decision_margin) + ") ";
         }
     }
     tags = tagsDetected;
@@ -151,8 +150,9 @@ bool ImageAnalyzer::processImage(Mat img, int ind, float yaw, std::string &tags,
 
             // 3. Calculate x/y error
             
-            errs.x = (center[0] - image_center.x) * tag_pixel_ratio;
-            errs.y = (image_center.y - center[1]) * tag_pixel_ratio;
+            errs.x = (center[0] - image_center.x) * tag_pixel_ratio * -1; // * -1 since camera rotated 180 from drone
+            errs.y = (image_center.y - center[1]) * tag_pixel_ratio * -1; // same ^
+            errs.tag_pixel_ratio = tag_pixel_ratio;
 
             //Cleanup
             apriltag_detection_destroy(det);

@@ -13,7 +13,7 @@ class ImageAnalyzer
 public:
     ImageAnalyzer();
     ~ImageAnalyzer();
-    bool processImage(Mat img, int ind, float yaw, std::string &tags, Errors &errs);
+    bool processImage(Mat img, int ind, std::string &tags, Errors &errs);
 
 private:
     apriltag_detector_t *m_tagDetector;

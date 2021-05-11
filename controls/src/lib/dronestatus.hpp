@@ -60,14 +60,13 @@ struct DroneStatus_ {
 
 class DockingStatus{
     public:
-        DockingStatus(float m_dt): pid(m_dt) {
-            //offboard=mavsdk::Offboard{m_system};
-            tags="";
-            failed_frames=0;
-            successful_frames=0;
-            docking_attempts=0;
-            prev_iter_detection=false;
-            has_centered=false;
+        DockingStatus() {
+            tags = "";
+            failed_frames = 0;
+            successful_frames = 0;
+            docking_attempts = 0;
+            prev_iter_detection = false;
+            has_centered = false;
         }
 
         PIDController pid;

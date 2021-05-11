@@ -44,6 +44,9 @@
 #define STAGE_1_TOLERANCE 0.10
 #define STAGE_2_TOLERANCE 0.05
 
+#define STAGE_1 1
+#define STAGE_2 2
+
 // Logs
 inline void log(const std::string &tag, const std::string msg, bool err = false)
 {
@@ -94,7 +97,7 @@ struct Errors
     float y = 0;
     float alt = 0;
     float yaw = 0;
-    float horiz_percentage_offset = 0;
+    float tag_pixel_ratio = 0;
 };
 
 struct Velocities

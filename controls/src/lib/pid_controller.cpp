@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <string>
 
-PIDController::PIDController(float dt,bool overshoot)
-    : m_dt(dt), m_overshoot_adjust(overshoot)
+PIDController::PIDController(bool overshoot)
+    : m_overshoot_adjust(overshoot)
 {
     m_prev_errs = {0, 0, 0, 0};
 }

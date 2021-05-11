@@ -9,7 +9,7 @@ class Velocities;
 class PIDController
 {
 public:
-    PIDController(float dt,bool overshoot=false);
+    PIDController(bool overshoot = false);
     ~PIDController();
     Velocities getVelocities(float x_err, float y_err, float alt_err, float rot_err, float max_speed);
 

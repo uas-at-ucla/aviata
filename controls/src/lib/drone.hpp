@@ -87,7 +87,6 @@ private:
     float m_east;
     float m_down;
     float m_yaw;
-    float m_dt; // docking loop cycle time, seconds
 
     // Status of other drones
     std::map<std::string, DroneStatus> _swarm; // map by drone_id
@@ -128,13 +127,13 @@ private:
 
     bool fly_to_central_target();
 
-    void initiate_stage1_docking();
+    void initiate_docking(int stage);
 
-    void initiate_stage2_docking();
+    void set_position(float north, float east, float down);
 
-    uint8_t dock_stage1(int target_id); 
+    void set_yaw(float yaw);
 
-    uint8_t dock_stage2(int target_id);
+    uint8_t dock(int target_id, int stage); 
 
     void offset_errors(Errors &errs, int target_id); // Helper method for docking stage 1 error adjustment
 
