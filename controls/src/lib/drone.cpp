@@ -489,98 +489,6 @@ uint8_t Drone::undock()
     }
     return 0;
 }
-
-//Safely fly to central target
-//Note that this DOES NOT include takeoff, needs to be handled separately
-bool Drone::fly_to_central_target(){
-    float swarm_alt=0.0f;
-    float swarm_lat=0.0f;
-    float swarm_lon=0.0f;
-    int swarm_size=0;
-    for (const auto& [id, status] : _swarm) //Calculate average location of swarm (approximates central target location)
-    {
-        if (status.drone_state == DOCKED_FOLLOWER || status.drone_state==DOCKED_LEADER)
-        {
-            swarm_size++;
-            swarm_alt+=status.gps_position[2];
-            swarm_lat+=status.gps_position[0];
-            swarm_lon+=status.gps_position[1];
-        }
-    }
-    swarm_alt/=swarm_size;
-    swarm_lat/=swarm_size;
-    swarm_lon/=swarm_size;
-
-    float* m_gps_position=_swarm[_drone_id].gps_position;
-
-    if(swarm_alt>=m_gps_position[2]+DOCKING_HEIGHT_PRECONDITION){ //Drone too low, needs to fly up
-        Offboard::VelocityBodyYawspeed change{};
-        change.down_m_s = -0.2f;
-        _px4_io.offboard_ptr()->set_velocity_body(change);
-    }
-    else if(swarm_lat-m_gps_position[0]<=PRECONDITION_TOLERANCE && swarm_lat-m_gps_position[0]>=-1.0*PRECONDITION_TOLERANCE &&  //Over central target
-        swarm_lon-m_gps_position[1]<=PRECONDITION_TOLERANCE && swarm_lon-m_gps_position[1]>=-1.0*PRECONDITION_TOLERANCE){
-        Offboard::VelocityBodyYawspeed change{};
-        change.down_m_s = 0.0f;
-        _px4_io.offboard_ptr()->set_velocity_body(change);
-        return true;
-    }
-    else{ //Drone high enough, needs to fly to central target GPS location
-        _px4_io.goto_gps_position(swarm_lat, swarm_lon, swarm_alt, 0.0);
-    }
-    return false;
-}
-
-// callback to support docking simulation
-void Drone::set_position(float north, float east, float down)
-{
-    m_north = north;
-    m_east = east;
-    m_down = down;
-}
-
-// callback to support docking simulation
-void Drone::set_yaw(float yaw)
-{
-    m_yaw = yaw;
-}
-
-/**
- * Sets up docking status for each stage of docking 
- * */
-void Drone::initiate_docking(int stage) {
-    // set up telemetry updates; happens in background through callbacks (required for docking simulation)
-    const Telemetry::Result set_rate_result_p = _px4_io.telemetry_ptr()->set_rate_position_velocity_ned(20);
-    const Telemetry::Result set_rate_result_a = _px4_io.telemetry_ptr()->set_rate_attitude(20);
-    if (set_rate_result_a != Telemetry::Result::Success || set_rate_result_p != Telemetry::Result::Success)
-    {
-        std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
-        std::cout << "Setting position rate possibly failed:" << set_rate_result_p << '\n';
-    }
-
-    // clear any existing callbacks, then subscribe to getting periodic telemetry updates with lambda function
-    // (required for docking simulation)
-    _px4_io.telemetry_ptr()->subscribe_position_velocity_ned(nullptr);
-    _px4_io.telemetry_ptr()->subscribe_attitude_euler(nullptr);
-
-    _px4_io.telemetry_ptr()->subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
-        set_position(p.position.north_m, p.position.east_m, p.position.down_m);
-    });
-    _px4_io.telemetry_ptr()->subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
-        set_yaw(e.yaw_deg);
-    });
-
-    _drone_state = stage == STAGE_1 ? DOCKING_STAGE_1 : DOCKING_STAGE_2;
-    PIDController temp;
-    docking_status.pid = temp;
-    docking_status.tags = "";
-    docking_status.failed_frames = 0;
-    docking_status.successful_frames = 0;
-    docking_status.prev_iter_detection = false;
-    docking_status.has_centered = false;
-    docking_status.docking_attempts = 0;
-}
-
 /**
  * Attempts a particular stage of the docking process
  * Previously used to have 1 function per stage, but code got too long/duplicated
@@ -679,19 +587,6 @@ uint8_t Drone::dock(int target_id, int stage)
     return ITERATION_SUCCESS;
 }
 
-//Utility method to adjust errors for stage 1
-void Drone::offset_errors(Errors &errs, int id)
-{
-    float target_offset = id <= 3 ? abs(id - 3) * 45 : (11 - id) * 45;
-    float x = errs.x + BOOM_LENGTH / 2 * cos(to_radians(target_offset - errs.yaw));
-    float y = errs.y + BOOM_LENGTH / 2 * sin(to_radians(target_offset - errs.yaw));
-    errs.alt -= ALTITUDE_DISP;
-    errs.x = x;
-    errs.y = y;
-    float yaw = errs.yaw + 90 - ((id - 1) * 45);
-    errs.yaw = yaw;
-}
-
 uint8_t Drone::become_leader(uint8_t sending_leader_seq_num)
 {
     if (!valid_leader_msg(sending_leader_seq_num)) {
@@ -770,6 +665,110 @@ uint8_t Drone::become_follower()
 
     _network->publish_drone_debug("Become Follower FAILED: improper DroneState = " + _drone_state);
     return 0;
+}
+
+//Safely fly to central target
+//Note that this DOES NOT include takeoff, needs to be handled separately
+bool Drone::fly_to_central_target(){
+    float swarm_alt=0.0f;
+    float swarm_lat=0.0f;
+    float swarm_lon=0.0f;
+    int swarm_size=0;
+    for (const auto& [id, status] : _swarm) //Calculate average location of swarm (approximates central target location)
+    {
+        if (status.drone_state == DOCKED_FOLLOWER || status.drone_state==DOCKED_LEADER)
+        {
+            swarm_size++;
+            swarm_alt+=status.gps_position[2];
+            swarm_lat+=status.gps_position[0];
+            swarm_lon+=status.gps_position[1];
+        }
+    }
+    swarm_alt/=swarm_size;
+    swarm_lat/=swarm_size;
+    swarm_lon/=swarm_size;
+
+    float* m_gps_position=_swarm[_drone_id].gps_position;
+
+    if(swarm_alt>=m_gps_position[2]+DOCKING_HEIGHT_PRECONDITION){ //Drone too low, needs to fly up
+        Offboard::VelocityBodyYawspeed change{};
+        change.down_m_s = -0.2f;
+        _px4_io.offboard_ptr()->set_velocity_body(change);
+    }
+    else if(swarm_lat-m_gps_position[0]<=PRECONDITION_TOLERANCE && swarm_lat-m_gps_position[0]>=-1.0*PRECONDITION_TOLERANCE &&  //Over central target
+        swarm_lon-m_gps_position[1]<=PRECONDITION_TOLERANCE && swarm_lon-m_gps_position[1]>=-1.0*PRECONDITION_TOLERANCE){
+        Offboard::VelocityBodyYawspeed change{};
+        change.down_m_s = 0.0f;
+        _px4_io.offboard_ptr()->set_velocity_body(change);
+        return true;
+    }
+    else{ //Drone high enough, needs to fly to central target GPS location
+        _px4_io.goto_gps_position(swarm_lat, swarm_lon, swarm_alt, 0.0);
+    }
+    return false;
+}
+
+// callback to support docking simulation
+void Drone::set_position(float north, float east, float down)
+{
+    m_north = north;
+    m_east = east;
+    m_down = down;
+}
+
+// callback to support docking simulation
+void Drone::set_yaw(float yaw)
+{
+    m_yaw = yaw;
+}
+
+/**
+ * Sets up docking status for each stage of docking 
+ * */
+void Drone::initiate_docking(int stage) {
+    // set up telemetry updates; happens in background through callbacks (required for docking simulation)
+    const Telemetry::Result set_rate_result_p = _px4_io.telemetry_ptr()->set_rate_position_velocity_ned(20);
+    const Telemetry::Result set_rate_result_a = _px4_io.telemetry_ptr()->set_rate_attitude(20);
+    if (set_rate_result_a != Telemetry::Result::Success || set_rate_result_p != Telemetry::Result::Success)
+    {
+        std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
+        std::cout << "Setting position rate possibly failed:" << set_rate_result_p << '\n';
+    }
+
+    // clear any existing callbacks, then subscribe to getting periodic telemetry updates with lambda function
+    // (required for docking simulation)
+    _px4_io.telemetry_ptr()->subscribe_position_velocity_ned(nullptr);
+    _px4_io.telemetry_ptr()->subscribe_attitude_euler(nullptr);
+
+    _px4_io.telemetry_ptr()->subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
+        set_position(p.position.north_m, p.position.east_m, p.position.down_m);
+    });
+    _px4_io.telemetry_ptr()->subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
+        set_yaw(e.yaw_deg);
+    });
+
+    _drone_state = stage == STAGE_1 ? DOCKING_STAGE_1 : DOCKING_STAGE_2;
+    PIDController temp;
+    docking_status.pid = temp;
+    docking_status.tags = "";
+    docking_status.failed_frames = 0;
+    docking_status.successful_frames = 0;
+    docking_status.prev_iter_detection = false;
+    docking_status.has_centered = false;
+    docking_status.docking_attempts = 0;
+}
+
+//Utility method to adjust errors for stage 1
+void Drone::offset_errors(Errors &errs, int id)
+{
+    float target_offset = id <= 3 ? abs(id - 3) * 45 : (11 - id) * 45;
+    float x = errs.x + BOOM_LENGTH / 2 * cos(to_radians(target_offset - errs.yaw));
+    float y = errs.y + BOOM_LENGTH / 2 * sin(to_radians(target_offset - errs.yaw));
+    errs.alt -= ALTITUDE_DISP;
+    errs.x = x;
+    errs.y = y;
+    float yaw = errs.yaw + 90 - ((id - 1) * 45);
+    errs.yaw = yaw;
 }
 
 // @brief to be used as callback for service server
