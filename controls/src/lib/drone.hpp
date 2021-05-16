@@ -108,38 +108,29 @@ private:
     void publish_drone_status();
 
     uint8_t arm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
-    
     uint8_t arm_frame(); // for DOCKED_LEADER (send arm_drone() to followers)
     
     uint8_t disarm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
-    
     uint8_t disarm_frame(); // for DOCKED_LEADER (send disarm_drone() to followers)
-
+    
     uint8_t takeoff_drone(); // for drones in STANDBY
-    
     uint8_t takeoff_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
-
+   
     uint8_t land_drone(); // for any undocked drone
-    
     uint8_t land_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
 
     uint8_t undock();
-
-    bool fly_to_central_target();
-
-    void initiate_docking(int stage);
-
-    void set_position(float north, float east, float down);
-
-    void set_yaw(float yaw);
-
     uint8_t dock(int target_id, int stage); 
 
-    void offset_errors(Errors &errs, int target_id); // Helper method for docking stage 1 error adjustment
-
     uint8_t become_leader(uint8_t leader_seq_num);
-
     uint8_t become_follower(); //for successful sender of request_new_leader
+
+    // docking integrated functions
+    bool fly_to_central_target();
+    void initiate_docking(int stage);
+    void set_position(float north, float east, float down);
+    void set_yaw(float yaw);
+    void offset_errors(Errors &errs, int target_id); // Helper method for docking stage 1 error adjustment
 
     void command_handler(const aviata::srv::DroneCommand::Request::SharedPtr request, 
                          aviata::srv::DroneCommand::Response::SharedPtr response);

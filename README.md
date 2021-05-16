@@ -71,7 +71,7 @@ make
 ```
 
 ## Disable Other Network Services
-If other network services are running on the machine and using the network interface for the mesh network, they may interfere with it. For example, if you have wpa_supplicant.conf configured, run `sudo systemctl stop wpa_supplicant` to stop the wpa_supplicant service.
+If other network services are running on the machine and using the network interface for the mesh network, they may interfere with it. For example, if you have wpa_supplicant.conf configured to connect to a WiFi network, run `wpa_cli terminate`, or alternatively comment out the contents of wpa_supplicant.conf and reboot.
 
 ## Run the code
 First go to build folder (mesh/OONF/build) and create a file with unique id (0 - 255), note that NO node in your network should have the same ID.

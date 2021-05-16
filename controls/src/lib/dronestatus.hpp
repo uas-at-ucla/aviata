@@ -28,13 +28,6 @@ enum DroneState {
     NEEDS_SERVICE
 };
 
-enum DockingIterationResult{
-    DOCKING_SUCCESS,
-    DOCKING_FAILURE,
-    ITERATION_SUCCESS,
-    RESTART_DOCKING
-};
-
 struct DroneStatus {
 // struct DroneStatus_Docked { // update naming convention?
     std::string drone_id;
@@ -46,17 +39,17 @@ struct DroneStatus {
     float yaw;
 };
 
-struct DroneStatus_Attitude {
-    std::string drone_id;
+// struct DroneStatus_Attitude {
+//     std::string drone_id;
 
 
-};
+// };
 
-struct DroneStatus_ {
-    std::string drone_id;
+// struct DroneStatus_ {
+//     std::string drone_id;
 
 
-};
+// };
 
 class DockingStatus{
     public:
@@ -79,6 +72,13 @@ class DockingStatus{
 
         bool prev_iter_detection;
         bool has_centered;
+};
+
+enum DockingIterationResult{
+    DOCKING_SUCCESS,
+    DOCKING_FAILURE,
+    ITERATION_SUCCESS,
+    RESTART_DOCKING
 };
 
 #endif
