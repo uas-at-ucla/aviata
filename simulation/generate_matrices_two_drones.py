@@ -72,12 +72,16 @@ def generate_aviata_matrices(missing_drones=[]):
     M = constants.M_structure_payload
     COM = constants.M_structure_payload * structpayload_pos
 
-    orientation_test = False # rotate drone 1 (left) by 45 degrees, while keeping drone 0 (right) facing forward
+    orientation_test = True # rotate drone 1 (left) by 45 degrees counterclockwise, while keeping drone 0 (right) facing forward
     drone_angles = []
 
     structure_rotors = []
     angle = (TWO_PI/constants.num_drones) / 2
     for i in range(constants.num_drones):
+        drone_angle = 0
+        if orientation_test and i == 1:
+            drone_angle = -math.pi/4
+        drone_angles.append(drone_angle)
         rotation = Rotation.from_rotvec(np.array([0, 0, angle]))
         if i not in missing_drones:
             M += constants.M_drone
@@ -87,19 +91,11 @@ def generate_aviata_matrices(missing_drones=[]):
             if i in missing_drones:
                 rotor['Ct'] = 0
                 rotor['Cm'] = 0
-            drone_angle = 0
-            if orientation_test and i == 1:
-                drone_angle = math.pi/4
-            if len(missing_drones) == 0:
-                drone_angles.append(drone_angle)
             drone_angle_rotation = Rotation.from_rotvec(np.array([0, 0, drone_angle]))
             rotor['position'] = drone_angle_rotation.apply(drone_rotors[j]['position']) + rotation.apply(np.array([constants.R, 0.0, 0.0]))
             rotor['axis'] = drone_angle_rotation.apply(drone_rotors[j]['axis'])
             structure_rotors.append(rotor)
         angle += (TWO_PI/constants.num_drones)
-
-    if len(missing_drones) == 0: # establish drone flight controller angles for initial geometry
-        drone_angles = [0, math.pi/4 if orientation_test else 0]
 
     # make the center of mass the reference point
     COM /= M
