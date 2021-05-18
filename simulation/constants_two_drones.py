@@ -53,12 +53,12 @@ P_vel = np.array([1.8*xy_vel_scale, 1.8*xy_vel_scale, 4.0]) # MPC_XY_VEL_P_ACC, 
 I_vel = np.array([0.4*xy_vel_scale*xy_vel_integral_scale, 0.4*xy_vel_scale*xy_vel_integral_scale, 2.0]) # MPC_XY_VEL_I_ACC, MPC_Z_VEL_I_ACC
 D_vel = np.array([0.2*xy_vel_scale, 0.2*xy_vel_scale, 0.0]) # MPC_XY_VEL_D_ACC, MPC_Z_VEL_D_ACC
 
-P_att = np.array([6.5*roll_pitch_scale, 6.5, 2.8*yaw_scale]) # MC_ROLL_P, MC_PITCH_P, MC_YAW_P
+P_att = np.array([6.5*roll_pitch_scale, 6.5*roll_pitch_scale, 2.8*yaw_scale]) # MC_ROLL_P, MC_PITCH_P, MC_YAW_P
 
-P_att_rate = np.array([6.492*rollrate_pitchrate_scale, 6.492, 2.906*yawrate_scale]) # MC_ROLLRATE_P, MC_PITCHRATE_P, MC_YAWRATE_P
-I_att_rate = np.array([8.656*rollrate_pitchrate_scale, 8.656, 1.453*yawrate_scale])*rate_integral_scale # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I
-I_lim_att_rate = np.array([12.984*rollrate_pitchrate_scale, 12.984, 4.359*yawrate_scale])*rate_integral_scale # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I. Scaled due to mixer: np.array([0.3*43.28, 0.3*43.28, 0.3*14.53])
-D_att_rate = np.array([0.12984*rollrate_pitchrate_scale, 0.12984, 0.0*yawrate_scale])*rate_derivative_scale # MC_ROLLRATE_D, MC_PITCHRATE_D, MC_YAWRATE_D
+P_att_rate = np.array([6.492*rollrate_pitchrate_scale, 6.492*rollrate_pitchrate_scale, 2.906*yawrate_scale]) # MC_ROLLRATE_P, MC_PITCHRATE_P, MC_YAWRATE_P
+I_att_rate = np.array([8.656*rollrate_pitchrate_scale, 8.656*rollrate_pitchrate_scale, 1.453*yawrate_scale])*rate_integral_scale # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I
+I_lim_att_rate = np.array([12.984*rollrate_pitchrate_scale, 12.984*rollrate_pitchrate_scale, 4.359*yawrate_scale])*rate_integral_scale # MC_ROLLRATE_I, MC_PITCHRATE_I, MC_YAWRATE_I. Scaled due to mixer: np.array([0.3*43.28, 0.3*43.28, 0.3*14.53])
+D_att_rate = np.array([0.12984*rollrate_pitchrate_scale, 0.12984*rollrate_pitchrate_scale, 0.0*yawrate_scale])*rate_derivative_scale # MC_ROLLRATE_D, MC_PITCHRATE_D, MC_YAWRATE_D
 # To scale all at once: MC_ROLLRATE_K, MC_PITCHRATE_K, MC_YAWRATE_K
 # Also relevant: MC_ROLLRATE_FF, MC_PITCHRATE_FF, MC_YAWRATE_FF; MC_RR_INT_LIM, MC_PR_INT_LIM, MC_YR_INT_LIM
 
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     print("MPC_XY_VEL_D_ACC =", D_vel[0])
 
     print("MC_ROLL_P =", P_att[0])
-    # print("MC_PITCH_P =", P_att[1])
+    print("MC_PITCH_P =", P_att[1])
     print("MC_YAW_P =", P_att[2])
 
     print("MC_ROLLRATE_P =", P_att_rate[0])
