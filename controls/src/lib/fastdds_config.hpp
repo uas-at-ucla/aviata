@@ -10,10 +10,10 @@
 
 #define FAST_DDS_ENV_VAR "FASTRTPS_DEFAULT_PROFILES_FILE"
 #define FAST_DDS_XML_FILE_NAME "fastdds_config.xml"
-#define NETWORK_INTERFACE "wlan1"
 #define NUM_PEERS 15
+#define MESH_IP_PREFIX "10.10.0."
 
-std::string get_ip_address() { // https://stackoverflow.com/a/265978/15685374
+std::string get_mesh_ip_address() { // https://stackoverflow.com/a/265978/15685374
     struct ifaddrs * ifAddrStruct=NULL;
     struct ifaddrs * ifa=NULL;
     void * tmpAddrPtr=NULL;
@@ -22,20 +22,22 @@ std::string get_ip_address() { // https://stackoverflow.com/a/265978/15685374
     getifaddrs(&ifAddrStruct);
 
     for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
-        if (std::string(ifa->ifa_name) == NETWORK_INTERFACE && ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET) {
-            // is a valid IPv4 Address on the selected interface
+        if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET) {
+            // is a valid IPv4 Address
             tmpAddrPtr=&((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
             inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
-            break;
+            if (std::string(addressBuffer).rfind(MESH_IP_PREFIX, 0) == 0) { // if this is a mesh network IP address
+                return addressBuffer;
+            }
         }
     }
     if (ifAddrStruct!=NULL) freeifaddrs(ifAddrStruct);
-    return addressBuffer;
+    return "";
 }
 
 void configure_fastdds() {
-    std::string ip_address = get_ip_address();
-    if (!(ip_address.rfind("10.10.0.", 0) == 0)) { // if not on the mesh network, don't configure
+    std::string ip_address = get_mesh_ip_address();
+    if (ip_address == "") { // if not on the mesh network, don't configure
         return;
     }
 
@@ -78,7 +80,7 @@ void configure_fastdds() {
     for (int i = 0; i < NUM_PEERS; i++) {
         file << "                        <locator>\n";
         file << "                            <udpv4>\n";
-        file << "                                <address>10.10.0." + std::to_string(i+1) + "</address>\n";
+        file << "                                <address>" MESH_IP_PREFIX + std::to_string(i+1) + "</address>\n";
         file << "                                <port>22223</port>\n";
         file << "                            </udpv4>\n";
         file << "                        </locator>\n";
