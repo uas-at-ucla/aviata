@@ -99,6 +99,9 @@ bool Drone::init(DroneState initial_state, uint8_t docking_slot, std::string con
         case DOCKED_LEADER:
             init_leader();
             break;
+        case STANDBY:
+            init_standby();
+            break;
         default:
             std::cout << "Invalid initial state: " << _drone_state << std::endl;
             return false;
@@ -141,7 +144,7 @@ void Drone::run()
                 }
                 break;
             case ARRIVING:
-                if(fly_to_central_target()){
+                if (fly_to_central_target()) {
                     initiate_docking(STAGE_1);
                 }
                 break;
@@ -262,6 +265,42 @@ void Drone::init_leader() {
             _network->publish<FOLLOWER_SETPOINT>(follower_setpoint);
         }
     });
+}
+
+void Drone::init_standby() {
+    // wait for docking command
+
+    // for now, just transition to  docking immediately
+    // eventually have callback here to listen for docking command
+    transition_standby_to_docking();
+}
+
+void Drone::transition_standby_to_docking() {
+    arm_drone();
+    takeoff_drone();
+
+    // wait until we're done taking off before proceeding
+    Telemetry::LandedState curr_state = _px4_io.telemetry_ptr()->landed_state();
+    _px4_io.telemetry_ptr()->subscribe_landed_state([this, &curr_state](Telemetry::LandedState landed_state) {
+        if (curr_state != landed_state) {
+            curr_state = landed_state;
+        }
+    });
+
+    while (curr_state != Telemetry::LandedState::InAir)
+    {
+        sleep_for(seconds(1));
+    }
+
+    _px4_io.telemetry_ptr()->subscribe_landed_state(nullptr);
+
+    while (_flight_mode != mavsdk::Telemetry::FlightMode::Offboard) {
+        if (_px4_io.set_offboard_mode() == 1) {
+            _flight_mode = mavsdk::Telemetry::FlightMode::Offboard;
+            break;
+        }
+    }
+    _drone_state = ARRIVING;
 }
 
 void Drone::transition_leader_to_follower() {
@@ -500,6 +539,46 @@ uint8_t Drone::undock()
  * */
 uint8_t Drone::dock(int target_id, int stage)
 {
+    // --- simulation-specific code
+
+    float swarm_alt = 0.0f;
+    float swarm_lat = 0.0f;
+    float swarm_lon = 0.0f;
+    int swarm_size = 0;
+    for (const auto& [id, status] : _swarm) //Calculate average location of swarm (approximates central target location)
+    {
+        if (status.drone_state == DOCKED_FOLLOWER || status.drone_state == DOCKED_LEADER)
+        {
+            swarm_size++;
+            swarm_alt += status.gps_position[2];
+            swarm_lat += status.gps_position[0];
+            swarm_lon += status.gps_position[1];
+        }
+    }
+    if (swarm_size == 0) {
+        return ITERATION_SUCCESS; // need to wait for valid coordinates
+    }
+    swarm_alt /= swarm_size;
+    swarm_lat /= swarm_size;
+    swarm_lon /= swarm_size;
+
+    geometry::CoordinateTransformation::GlobalCoordinate gc_2;
+    gc_2.latitude_deg = swarm_lat;
+    gc_2.longitude_deg = swarm_lon;
+    geometry::CoordinateTransformation::LocalCoordinate lc = docking_status.ct->local_from_global(gc_2);
+    float north = (float) lc.north_m;
+    float east = (float) lc.east_m;
+
+    Target t; 
+    t.lat = north; 
+    t.lon = east;
+    t.alt = swarm_alt;
+    t.yaw = 0.0; // yaw is 0 for now, will need to calculate
+    camera.update_target(t);
+
+    // --- end simulation-specific code
+
+
     std::string log_tag = "Stage " + std::to_string(stage);
     log(log_tag, "Docking Beginning");
 
@@ -667,42 +746,47 @@ uint8_t Drone::become_follower()
     return 0;
 }
 
-//Safely fly to central target
-//Note that this DOES NOT include takeoff, needs to be handled separately
-bool Drone::fly_to_central_target(){
-    float swarm_alt=0.0f;
-    float swarm_lat=0.0f;
-    float swarm_lon=0.0f;
-    int swarm_size=0;
+// Safely fly to central target
+// Note that this DOES NOT include takeoff, needs to be handled separately
+bool Drone::fly_to_central_target() {
+    float swarm_alt = 0.0f;
+    float swarm_lat = 0.0f;
+    float swarm_lon = 0.0f;
+    int swarm_size = 0;
     for (const auto& [id, status] : _swarm) //Calculate average location of swarm (approximates central target location)
     {
-        if (status.drone_state == DOCKED_FOLLOWER || status.drone_state==DOCKED_LEADER)
+        if (status.drone_state == DOCKED_FOLLOWER || status.drone_state == DOCKED_LEADER)
         {
             swarm_size++;
-            swarm_alt+=status.gps_position[2];
-            swarm_lat+=status.gps_position[0];
-            swarm_lon+=status.gps_position[1];
+            swarm_alt += status.gps_position[2];
+            swarm_lat += status.gps_position[0];
+            swarm_lon += status.gps_position[1];
         }
     }
-    swarm_alt/=swarm_size;
-    swarm_lat/=swarm_size;
-    swarm_lon/=swarm_size;
-
-    float* m_gps_position=_swarm[_drone_id].gps_position;
-
-    if(swarm_alt>=m_gps_position[2]+DOCKING_HEIGHT_PRECONDITION){ //Drone too low, needs to fly up
-        Offboard::VelocityBodyYawspeed change{};
-        change.down_m_s = -0.2f;
-        _px4_io.offboard_ptr()->set_velocity_body(change);
+    if (swarm_size == 0) {
+        return false; // need to wait for valid coordinates
     }
-    else if(swarm_lat-m_gps_position[0]<=PRECONDITION_TOLERANCE && swarm_lat-m_gps_position[0]>=-1.0*PRECONDITION_TOLERANCE &&  //Over central target
-        swarm_lon-m_gps_position[1]<=PRECONDITION_TOLERANCE && swarm_lon-m_gps_position[1]>=-1.0*PRECONDITION_TOLERANCE){
+    swarm_alt /= swarm_size;
+    swarm_lat /= swarm_size;
+    swarm_lon /= swarm_size;
+
+    // float* m_gps_position = _swarm[_drone_id].gps_position;
+    Telemetry::Position m_gps_position = _px4_io.telemetry_ptr()->position();
+    // std::cout << "Swarm is at: " << swarm_lat << " " << swarm_lon << " " << swarm_alt << std::endl;
+    // std::cout << "Drone is at: " << m_gps_position.latitude_deg << " " << m_gps_position.longitude_deg << " " << m_gps_position.absolute_altitude_m << std::endl;
+
+    if (swarm_alt >= m_gps_position.absolute_altitude_m - DOCKING_HEIGHT_PRECONDITION){ // Drone too low, needs to fly up
+        Offboard::VelocityBodyYawspeed change{};
+        change.down_m_s = -1.0f;
+        _px4_io.offboard_ptr()->set_velocity_body(change);
+    } else if (swarm_lat - m_gps_position.latitude_deg <= PRECONDITION_TOLERANCE && swarm_lat - m_gps_position.latitude_deg >= -1.0 * PRECONDITION_TOLERANCE &&
+               swarm_lon - m_gps_position.longitude_deg <= PRECONDITION_TOLERANCE && swarm_lon - m_gps_position.longitude_deg >= -1.0 * PRECONDITION_TOLERANCE){
+        // don't fly to target if already above it
         Offboard::VelocityBodyYawspeed change{};
         change.down_m_s = 0.0f;
         _px4_io.offboard_ptr()->set_velocity_body(change);
         return true;
-    }
-    else{ //Drone high enough, needs to fly to central target GPS location
+    } else { // Drone high enough, needs to fly to central target GPS location
         _px4_io.goto_gps_position(swarm_lat, swarm_lon, swarm_alt, 0.0);
     }
     return false;
@@ -740,8 +824,21 @@ void Drone::initiate_docking(int stage) {
     _px4_io.telemetry_ptr()->subscribe_position_velocity_ned(nullptr);
     _px4_io.telemetry_ptr()->subscribe_attitude_euler(nullptr);
 
-    _px4_io.telemetry_ptr()->subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
-        set_position(p.position.north_m, p.position.east_m, p.position.down_m);
+    // _px4_io.telemetry_ptr()->subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
+    //     set_position(p.position.north_m, p.position.east_m, m_down); // east and north
+    // });
+    Telemetry::Position current_gps_pos = _px4_io.telemetry_ptr()->position();
+    geometry::CoordinateTransformation::GlobalCoordinate gc;
+    gc.latitude_deg = current_gps_pos.latitude_deg;
+    gc.longitude_deg = current_gps_pos.longitude_deg;
+    docking_status.ct = new geometry::CoordinateTransformation(gc);
+
+    _px4_io.telemetry_ptr()->subscribe_position([this](Telemetry::Position p) {
+        geometry::CoordinateTransformation::GlobalCoordinate gc_2;
+        gc_2.latitude_deg = p.latitude_deg;
+        gc_2.longitude_deg = p.longitude_deg;
+        geometry::CoordinateTransformation::LocalCoordinate lc = docking_status.ct->local_from_global(gc_2);
+        set_position((float) lc.north_m, (float) lc.east_m, p.absolute_altitude_m * -1.0);
     });
     _px4_io.telemetry_ptr()->subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
         set_yaw(e.yaw_deg);

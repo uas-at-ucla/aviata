@@ -15,6 +15,8 @@ int main(int argc, char** argv) {
         initial_state = DOCKED_FOLLOWER;
     } else if (strcmp(argv[2], "leader") == 0) {
         initial_state = DOCKED_LEADER;
+    } else if (strcmp(argv[2], "standby") == 0) {
+        initial_state = STANDBY;
     } else {
         std::cout << "Invalid initial state: " << argv[2] << std::endl;
         return 1;
