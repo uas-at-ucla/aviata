@@ -9,6 +9,7 @@ This subsystem focuses on the docking portion of AVIATA - from the time a drone 
   * `drone`: handles communicating with the drone through MAVSDK and with the other modules
   * `pid_controller`: turns calculated errors from the latest camera frame into velocity commands to send to the drone
   * `raspi_camera`: interface for the camera on-board the drone. Replaces `camera_simulator` when run in physical testing
+  * `docking_detector`: controls GPIO pins for the circuit that enables the drone to know whether it is docked. This module is ignored if compiling for simulation.
   * `docking`: entrypoint
 * The rest of the folders are old code related to research during the proposal stage and preliminary designs
 
@@ -30,6 +31,17 @@ This subsystem focuses on the docking portion of AVIATA - from the time a drone 
   * To install on Raspberry Pi: https://qengineering.eu/install-opencv-4.5-on-raspberry-pi-4.html
 * AprilTag: https://github.com/AprilRobotics/apriltag
   * Clone the repository, then follow the README
+* `pigpio`, if running on Raspberry Pi. Ignore if running simulation only
+  * http://abyz.me.uk/rpi/pigpio/download.html
+  * Perform these steps in a directory where the files can safely live permanently (e.g. `~/Documents`)
+  * Using GPIO through this library unfortunately requires `sudo` - i.e., you'll have to run the docking code with `sudo ./docking-physical`
+```
+$ wget https://github.com/joan2937/pigpio/archive/master.zip
+$ unzip master.zip
+$ cd pigpio-master
+$ make
+$ sudo make install
+```
 
 ## Preparing and compiling the code
 
@@ -55,7 +67,8 @@ $ make docking_physical # compile
 ```
 General notes
   * You should only have to rerun `cmake ..` if `CMakeLists.txt` changes
-  * To run changes to the code itself, just run `make` followed by the executable (e.g. `./docking_simulation`)
+  * To run changes to the code itself, just run `make` followed by the executable (e.g. `docking_simulation`)
+
 ## Running the simulation
 1. Start Gazebo (from the directory in which you installed PX4)
 ```
@@ -73,17 +86,14 @@ $ cd build/
 $ ./docking_simulation
 ```
 
-## Shortcut scripts
+## Running on the Raspberry Pi
 
-Shortcut scripts to make compilation even easier. The especially important one is `run.sh`, as this includes a command that will save all log messages to a text file for future reference. This is very useful for testing on the Raspberry Pi, for saving flight logs.
-
-Defaults are set to compile and set everything up for simulation. To compile for the Raspberry Pi, you'll need to specify extra arguments.
-
+Superuser privileges are required due to use of GPIO pins and the way that `pigpio` is installed (using `sudo make install`, which adds the relevant files to `/usr/...`). I haven't explored this deeply enough yet to find a workaround, but one should be possible given that GPIO permissions are generally available to any normal user within the `gpio` group.
 ```
-$ cd cpp_docking
-$ ./generate_makefile.sh # to use debug mode
-$ ./generate_makefile.sh release # to use optimization
-$ ./compile.sh # to compile for simulation
-$ ./compile.sh docking_physical # to compile for the raspberry pi
-$ ./run.sh # run the program
+$ sudo ./docking-physical
+```
+
+Optional: save logs for later debrief with
+```
+$ sudo ./docking-physical | tee log.txt
 ```
