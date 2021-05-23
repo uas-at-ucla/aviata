@@ -75,28 +75,28 @@ max_acc_up = 4.0 # MPC_ACC_UP_MAX
 max_att_rate = np.deg2rad(np.array([220.0, 220.0, 200.0])) # radians/s MC_ROLLRATE_MAX, MC_PITCHRATE_MAX, MC_YAWRATE_MAX, MPC_YAWRAUTO_MAX
 
 if __name__ == '__main__':
-    print("MPC_XY_P =", P_pos[0])
-
-    print("MPC_XY_VEL_P_ACC =", P_vel[0])
-    print("MPC_XY_VEL_I_ACC =", I_vel[0])
-    print("MPC_XY_VEL_D_ACC =", D_vel[0])
-
-    print("MC_ROLL_P =", P_att[0])
-    # print("MC_PITCH_P =", P_att[1])
-    print("MC_YAW_P =", P_att[2])
-
-    print("MC_ROLLRATE_P =", P_att_rate[0])
-    print("MC_ROLLRATE_I =", I_att_rate[0])
-    print("MC_RR_INT_LIM =", I_lim_att_rate[0])
-    print("MC_ROLLRATE_D =", D_att_rate[0])
-    print("MC_PITCHRATE_P =", P_att_rate[1])
-    print("MC_PITCHRATE_I =", I_att_rate[1])
-    print("MC_PR_INT_LIM =", I_lim_att_rate[1])
-    print("MC_PITCHRATE_D =", D_att_rate[1])
-    print("MC_YAWRATE_P =", P_att_rate[2])
-    print("MC_YAWRATE_I =", I_att_rate[2])
-    print("MC_YR_INT_LIM =", I_lim_att_rate[2])
-    print("MC_YAWRATE_D =", D_att_rate[2])
+    print("param set MPC_XY_P", P_pos[0])
+    print()
+    print("param set MPC_XY_VEL_P_ACC", P_vel[0])
+    print("param set MPC_XY_VEL_I_ACC", I_vel[0])
+    print("param set MPC_XY_VEL_D_ACC", D_vel[0])
+    print()
+    print("param set MC_ROLL_P", P_att[0])
+    print("param set MC_PITCH_P", P_att[1])
+    print("param set MC_YAW_P", P_att[2])
+    print()
+    print("param set MC_ROLLRATE_P", P_att_rate[0])
+    print("param set MC_ROLLRATE_I", I_att_rate[0])
+    print("param set MC_RR_INT_LIM", I_lim_att_rate[0])
+    print("param set MC_ROLLRATE_D", D_att_rate[0])
+    print("param set MC_PITCHRATE_P", P_att_rate[1])
+    print("param set MC_PITCHRATE_I", I_att_rate[1])
+    print("param set MC_PR_INT_LIM", I_lim_att_rate[1])
+    print("param set MC_PITCHRATE_D", D_att_rate[1])
+    print("param set MC_YAWRATE_P", P_att_rate[2])
+    print("param set MC_YAWRATE_I", I_att_rate[2])
+    print("param set MC_YR_INT_LIM", I_lim_att_rate[2])
+    print("param set MC_YAWRATE_D", D_att_rate[2])
 
 # PX4 Defaults:
 # P_pos = np.array([0.95, 0.95, 1.0]) # MPC_XY_P, MPC_Z_P
