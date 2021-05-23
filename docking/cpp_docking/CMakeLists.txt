@@ -32,7 +32,7 @@ find_package(apriltag REQUIRED)
 
 include_directories(./src)
 
-add_executable(docking_simulation src/docking.cpp src/drone.cpp src/camera_simulator.cpp src/image_analyzer.cpp src/pid_controller.cpp)
+add_executable(docking_simulation src/main.cpp src/drone.cpp src/camera_simulator.cpp src/image_analyzer.cpp src/pid_controller.cpp)
 target_compile_definitions(docking_simulation PUBLIC -DUSE_RASPI_CAMERA=0)
 target_link_libraries(docking_simulation
     MAVSDK::mavsdk_action
@@ -43,7 +43,7 @@ target_link_libraries(docking_simulation
     apriltag
 )
 
-add_executable(docking_physical EXCLUDE_FROM_ALL src/docking.cpp src/drone.cpp src/raspi_camera.cpp src/image_analyzer.cpp src/pid_controller.cpp)
+add_executable(docking_physical EXCLUDE_FROM_ALL src/main.cpp src/drone.cpp src/raspi_camera.cpp src/image_analyzer.cpp src/pid_controller.cpp src/docking_detector.cpp)
 target_compile_definitions(docking_physical PUBLIC -DUSE_RASPI_CAMERA=1)
 target_link_libraries(docking_physical
     MAVSDK::mavsdk_action
@@ -51,6 +51,6 @@ target_link_libraries(docking_physical
     MAVSDK::mavsdk_telemetry
     MAVSDK::mavsdk
     ${OpenCV_LIBS}
-    # ${raspicam_CV_LIBS}
+    pigpio
     apriltag
 )

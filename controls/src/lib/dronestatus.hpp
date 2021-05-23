@@ -10,6 +10,7 @@
 #include <mavsdk/plugins/telemetry/telemetry.h>
 #include <mavsdk/plugins/action/action.h>
 #include <mavsdk/plugins/offboard/offboard.h>
+#include <mavsdk/geometry.h>
 
 struct DroneSettings {
     bool sim;
@@ -62,6 +63,7 @@ class DockingStatus{
             has_centered = false;
         }
 
+        mavsdk::geometry::CoordinateTransformation* ct;
         PIDController pid;
         std::string tags;
         cv::Mat img;

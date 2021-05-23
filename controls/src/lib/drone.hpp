@@ -12,6 +12,7 @@
 #include <mavsdk/plugins/telemetry/telemetry.h>
 #include <mavsdk/plugins/action/action.h>
 #include <mavsdk/plugins/offboard/offboard.h>
+#include <mavsdk/geometry.h>
 
 #include "dronestatus.hpp"
 #include "dronetelemetry.hpp"
@@ -94,8 +95,10 @@ private:
     // State helper functions
     void init_follower();
     void init_leader();
+    void init_standby();
 
     // State transition functions
+    void transition_standby_to_docking();
     void transition_docking_to_docked();
     void transition_leader_to_follower();
     void transition_follower_to_leader();

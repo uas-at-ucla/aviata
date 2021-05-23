@@ -339,12 +339,21 @@ bool Drone::dock(int target_id, int stage)
     } else {
         // attempt to engage docking mechanism
 
-        // land slowly
+        // land slowly for now instead of docking mechanism
+        Offboard::VelocityBodyYawspeed hold{};
+        hold.down_m_s = 0.2;
+        offboard->set_velocity_body(hold);
+
+        #if USE_RASPI_CAMERA == 1
         while (true) {
-            Offboard::VelocityBodyYawspeed hold{};
-            hold.down_m_s = 0.2;
-            offboard->set_velocity_body(hold);
+            if (docking_detector.is_docked()) {
+                log(log_tag, "Successfully docked!");
+                break;
+            } else {
+                sleep_for(milliseconds(500));
+            }
         }
+        #endif
     }
 
     log(log_tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(total_frames));

@@ -12,6 +12,7 @@
 #define CENTRAL_TARGET_ID 0
 
 #if USE_RASPI_CAMERA == 1
+    #include "docking_detector.hpp"
     #include "raspi_camera.hpp"
     typedef RaspiCamera Camera;
 #else
@@ -47,6 +48,10 @@ private:
     Camera camera;
     ImageAnalyzer image_analyzer;
     Target m_target_info;
+
+    #if USE_RASPI_CAMERA == 1
+    DockingDetector docking_detector;
+    #endif
 
     float m_north;
     float m_east;

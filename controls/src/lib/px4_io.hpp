@@ -6,6 +6,7 @@
 
 #include "mavlink/v2.0/common/mavlink.h"
 #include <mavsdk/mavsdk.h>
+#include <mavsdk/system.h>
 #include <mavsdk/plugins/action/action.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
 #include <mavsdk/plugins/offboard/offboard.h>
