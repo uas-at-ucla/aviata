@@ -79,7 +79,7 @@ private:
 
     //Docking members
     Mavsdk mavsdk;
-    // Camera camera;
+    Camera camera;
     ImageAnalyzer image_analyzer;
     Target m_target_info;
     DockingStatus docking_status;
