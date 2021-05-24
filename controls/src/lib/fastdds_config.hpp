@@ -80,7 +80,7 @@ void configure_fastdds() {
     for (int i = 0; i < NUM_PEERS; i++) {
         file << "                        <locator>\n";
         file << "                            <udpv4>\n";
-        file << "                                <address>" MESH_IP_PREFIX + std::to_string(i+1) + "</address>\n";
+        file << "                                <address>" MESH_IP_PREFIX + std::to_string(i) + "</address>\n";
         file << "                                <port>22223</port>\n";
         file << "                            </udpv4>\n";
         file << "                        </locator>\n";
