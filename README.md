@@ -9,6 +9,9 @@ Structure:
 * `mesh/` - mesh networking between drones
 * `ground/` - everything related to the ground station, including communication with drones and coordination/monitoring for swapping
 
+## Acknowledgement
+These results are based upon work supported by the NASA Aeronautics Research Mission Directorate under award number 80NSSC20K1452. This material is based upon a proposal tentatively selected by NASA for a grant award of $10,811, subject to successful crowdfunding. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of NASA.
+
 # Controls Code
 ## Building Controls Code
 Installation Requirements:
