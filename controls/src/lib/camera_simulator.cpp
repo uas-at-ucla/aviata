@@ -61,8 +61,8 @@ float CameraSimulator::get_view_scale_constant(float target_size)
  * */
 Mat CameraSimulator::update_current_image(float absLon, float absLat, float absAlt, float absYaw, int target_id)
 {
-    std::cout << "cmra sim" << absLon << " " << absLat << " " << absAlt << " " << std::endl;
-    std::cout << "cmra sim" << m_target.lon << " " << m_target.lat << " " << m_target.alt << std::endl;
+    // std::cout << "cmra sim" << absLon << " " << absLat << " " << absAlt << " " << std::endl;
+    // std::cout << "cmra sim" << m_target.lon << " " << m_target.lat << " " << m_target.alt << std::endl;
 
     // Converts from absolute to relative coordinates
     float target_lat = m_target.lat;

@@ -292,13 +292,16 @@ void Drone::transition_standby_to_docking() {
         sleep_for(seconds(1));
     }
 
+    std::cout << "Finished taking off" << std::endl;
+
     _px4_io.telemetry_ptr()->subscribe_landed_state(nullptr);
 
-    while (_flight_mode != mavsdk::Telemetry::FlightMode::Offboard) {
-        if (_px4_io.set_offboard_mode() == 1) {
-            _flight_mode = mavsdk::Telemetry::FlightMode::Offboard;
-            break;
-        }
+    Offboard::VelocityBodyYawspeed initial_setpoint{};
+    _px4_io.offboard_ptr()->set_velocity_body(initial_setpoint);
+    
+    if (_px4_io.set_offboard_mode() == 1) {
+        _flight_mode = mavsdk::Telemetry::FlightMode::Offboard;
+        std::cout << "Offboard successfully started for docking drone" << std::endl;
     }
     _drone_state = ARRIVING;
 }
@@ -580,7 +583,7 @@ uint8_t Drone::dock(int target_id, int stage)
 
 
     std::string log_tag = "Stage " + std::to_string(stage);
-    log(log_tag, "Docking Beginning");
+    log(log_tag, std::to_string(target_id));
 
     // Initialize vars
     Mat img;
@@ -589,7 +592,7 @@ uint8_t Drone::dock(int target_id, int stage)
     Offboard::VelocityBodyYawspeed change{};
     std::string tags_detected = "";
 
-    img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0);
+    img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, stage == STAGE_1 ? 0 : target_id);
     bool is_tag_detected = image_analyzer.processImage(img, stage == STAGE_1 ? 0 : target_id, docking_status.tags, errs); // central target has id = 0
 
     if (is_tag_detected)
@@ -770,10 +773,7 @@ bool Drone::fly_to_central_target() {
     swarm_lat /= swarm_size;
     swarm_lon /= swarm_size;
 
-    // float* m_gps_position = _swarm[_drone_id].gps_position;
     Telemetry::Position m_gps_position = _px4_io.telemetry_ptr()->position();
-    // std::cout << "Swarm is at: " << swarm_lat << " " << swarm_lon << " " << swarm_alt << std::endl;
-    // std::cout << "Drone is at: " << m_gps_position.latitude_deg << " " << m_gps_position.longitude_deg << " " << m_gps_position.absolute_altitude_m << std::endl;
 
     if (swarm_alt >= m_gps_position.absolute_altitude_m - DOCKING_HEIGHT_PRECONDITION){ // Drone too low, needs to fly up
         Offboard::VelocityBodyYawspeed change{};
