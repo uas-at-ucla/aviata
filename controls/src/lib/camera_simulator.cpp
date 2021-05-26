@@ -153,12 +153,16 @@ Mat CameraSimulator::update_current_image(float absLon, float absLat, float absA
         roi.width = background.cols - x;
     }
 
-    Mat crop = april_tag(roi);
+    try {
+        Mat crop = april_tag(roi);
 
-    if (x < background.cols && y < background.rows)
-    {
-        Mat roi2(background, Rect(x, y, crop.cols, crop.rows));
-        crop.copyTo(roi2);
+        if (x < background.cols && y < background.rows)
+        {
+            Mat roi2(background, Rect(x, y, crop.cols, crop.rows));
+            crop.copyTo(roi2);
+        }
+    } catch (const cv::Exception& e) {
+        std::cout << "Warning: target possibly out of FOV" << std::endl;
     }
 
     imshow("Test", background);

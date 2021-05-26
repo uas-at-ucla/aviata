@@ -62,6 +62,11 @@ Next, run the `aviata_drone` executable from within the controls/build folder. T
 
 The drone that was initiated as the leader can be controlled from QGroundControl, and the follower should roughly copy it, although expect some deviations since the program expects the drones to be docked.
 
+Drones can also be started in `standby` mode, meaning they are idle (presumably at the ground station). Currently, this mode immediately transitions to docking, so the drone will immediately take off, fly to the swarm, and begin the docking process, but eventually this transition will be triggered by an external command.
+```bash
+./aviata_drone drone2 standby 1 udp://:14541
+```
+
 The `aviata_ground` executable currently allows you to specify the leader drone name, and will tell the drone to hand off the leader role to another drone. The new leader can then be controlled from QGroundControl. The ground station is in progress, so more features to come.
 
 # Comms Code

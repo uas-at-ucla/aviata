@@ -100,6 +100,7 @@ bool Drone::init(DroneState initial_state, uint8_t docking_slot, std::string con
             init_leader();
             break;
         case STANDBY:
+            _docking_slot = docking_slot;
             init_standby();
             break;
         default:
@@ -150,7 +151,7 @@ void Drone::run()
                 break;
             case DOCKING_STAGE_1:
             {
-                int stage_1_result = dock(_docking_slot, STAGE_1);
+                int stage_1_result = dock(STAGE_1);
                 switch (stage_1_result){
                     case DOCKING_SUCCESS:
                         initiate_docking(STAGE_2);
@@ -164,7 +165,7 @@ void Drone::run()
                 break;
             }
             case DOCKING_STAGE_2:
-                int stage_2_result = dock(_docking_slot, STAGE_2);
+                int stage_2_result = dock(STAGE_2);
                 switch(stage_2_result){
                     case DOCKING_SUCCESS:
                         transition_docking_to_docked();
@@ -540,7 +541,7 @@ uint8_t Drone::undock()
  * @param stage is which stage we're in
  * @return true if successful
  * */
-uint8_t Drone::dock(int target_id, int stage)
+uint8_t Drone::dock(int stage)
 {
     // --- simulation-specific code
 
@@ -583,6 +584,7 @@ uint8_t Drone::dock(int target_id, int stage)
 
 
     std::string log_tag = "Stage " + std::to_string(stage);
+    uint8_t target_id = _docking_slot;
     log(log_tag, std::to_string(target_id));
 
     // Initialize vars
@@ -824,9 +826,6 @@ void Drone::initiate_docking(int stage) {
     _px4_io.telemetry_ptr()->subscribe_position_velocity_ned(nullptr);
     _px4_io.telemetry_ptr()->subscribe_attitude_euler(nullptr);
 
-    // _px4_io.telemetry_ptr()->subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
-    //     set_position(p.position.north_m, p.position.east_m, m_down); // east and north
-    // });
     Telemetry::Position current_gps_pos = _px4_io.telemetry_ptr()->position();
     geometry::CoordinateTransformation::GlobalCoordinate gc;
     gc.latitude_deg = current_gps_pos.latitude_deg;

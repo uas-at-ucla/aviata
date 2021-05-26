@@ -39,12 +39,12 @@ Velocities PIDController::getVelocities(float x_err, float y_err, float alt_err,
     float kp_nv, kp_ev, kp_dv, kp_rv;
     float kd_nv, kd_ev, kd_dv, kd_rv;
     if(!m_overshoot_adjust){ 
-        kp_nv = 2;//0.6 * ku_nv;
-        kp_ev = 2;//0.6 * ku_ev;
+        kp_nv = 0.6 * ku_nv;
+        kp_ev = 0.6 * ku_ev;
         kp_dv = 0.6 * ku_dv;
 
-        kd_nv = 0.0; //0.15;
-        kd_ev = 0.0; //0.15;
+        kd_nv = 0.15;
+        kd_ev = 0.15;
         kd_dv = 0.12;
     }
     else{
