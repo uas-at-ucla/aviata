@@ -7,6 +7,9 @@
 
 # param set MAV_SYS_ID 1 # Set to unique ID on each drone for multi-drone tests
 
+# Logging config
+param set SDLOG_PROFILE 91 # bits 0, 1, 3, 4, 6 (https://docs.px4.io/v1.11/en/advanced_config/parameter_reference.html#SDLOG_PROFILE)
+
 # Safety checks / failsafes
 param set CBRK_IO_SAFETY 22027
 param set COM_POWER_COUNT 0
@@ -25,22 +28,22 @@ param set GPS_UBX_DYNMODEL 6 # Default for multicopters
 
 param set SYS_AUTOSTART 6003 # Use 6003 for custom hex airframe with AUX outputs. For normal hex, use 6001.
 
-# Battery configuration (TODO configure for 4 drone test)
+# Battery configuration
+param set BAT1_N_CELLS 4
+param set BAT_N_CELLS 4
 param set BAT1_A_PER_V 15.391030311584473
-param set BAT1_N_CELLS 3
-param set BAT1_V_DIV 10.177939414978027
 param set BAT_A_PER_V 15.391030311584473
-param set BAT_N_CELLS 3
+param set BAT1_V_DIV 10.177939414978027
 param set BAT_V_DIV 10.177939414978027
 
-# Rangefinder config (TODO configure for 4 drone test)
+# Rangefinder config
 param set SENS_TFMINI_CFG 104 # Serial 4
 param set EKF2_RNG_AID 1
-param set EKF2_RNG_POS_X 0.0 # X position of range finder origin in body frame 
+param set EKF2_RNG_POS_X 1.262 # X position of range finder origin in body frame (meters)
     # (forward axis with origin relative to vehicle center of gravity)
-param set EKF2_RNG_POS_Y 0.578 # Y position of range finder origin in body frame 
+param set EKF2_RNG_POS_Y 0.0 # Y position of range finder origin in body frame (meters)
     # (right axis with origin relative to vehicle center of gravity)
-param set EKF2_RNG_POS_Z 0.0 # Z position of range finder origin in body frame 
+param set EKF2_RNG_POS_Z 0.04 # Z position of range finder origin in body frame (meters)
     # (down axis with origin relative to vehicle center of gravity)
 
 # PWM min and max
@@ -123,3 +126,27 @@ param set MC_YAWRATE_P 2.0342
 param set MC_YAWRATE_I 0.50855
 param set MC_YR_INT_LIM 1.52565
 param set MC_YAWRATE_D 0.0
+
+# Reset PID gains to defaults:
+# param reset MPC_XY_P
+
+# param reset MPC_XY_VEL_P_ACC
+# param reset MPC_XY_VEL_I_ACC
+# param reset MPC_XY_VEL_D_ACC
+
+# param reset MC_ROLL_P
+# param reset MC_PITCH_P
+# param reset MC_YAW_P
+
+# param reset MC_ROLLRATE_P
+# param reset MC_ROLLRATE_I
+# param reset MC_RR_INT_LIM
+# param reset MC_ROLLRATE_D
+# param reset MC_PITCHRATE_P
+# param reset MC_PITCHRATE_I
+# param reset MC_PR_INT_LIM
+# param reset MC_PITCHRATE_D
+# param reset MC_YAWRATE_P
+# param reset MC_YAWRATE_I
+# param reset MC_YR_INT_LIM
+# param reset MC_YAWRATE_D
