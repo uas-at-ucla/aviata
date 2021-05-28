@@ -33,6 +33,13 @@ make
 ```
 
 ## Running Controls Code
+### PX4 Firmware Version
+The controls code relies on the **release/1.11-aviata** branch of this fork of PX4-Autopilot: https://github.com/uas-at-ucla-dependencies/PX4-Autopilot.
+```
+git clone https://github.com/uas-at-ucla-dependencies/PX4-Autopilot.git
+git checkout release/1.11-aviata
+```
+
 ### Single Drone PX4 Simulation
 Run in the PX4-Autopilot folder:
 ```bash
