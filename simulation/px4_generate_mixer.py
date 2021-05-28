@@ -230,17 +230,53 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
     buf.write(u"#define AVIATA_MAX_MISSING_DRONES {}\n".format(max_missing_drones))
     buf.write(u"\n")
 
+    drone_angles = geometries_list[0]['drone_angles']
+    for i in range(len(drone_angles)):
+        while drone_angles[i] > np.pi:
+            drone_angles[i] -= 2*np.pi
+        while drone_angles[i] < -np.pi:
+            drone_angles[i] += 2*np.pi
+
     buf.write(u"static constexpr float _config_aviata_drone_angle[] {\n")
-    for drone_angle in geometries_list[0]['drone_angles']:
+    for drone_angle in drone_angles:
         buf.write(u"\t{:9f}, // {:.1f} degrees\n".format(drone_angle, np.rad2deg(drone_angle)))
     buf.write(u"};\n\n")
     buf.write(u"static constexpr float _config_aviata_drone_angle_cos[] {\n")
-    for drone_angle in geometries_list[0]['drone_angles']:
+    for drone_angle in drone_angles:
         buf.write(u"\t{:9f},\n".format(np.cos(drone_angle)))
     buf.write(u"};\n\n")
     buf.write(u"static constexpr float _config_aviata_drone_angle_sin[] {\n")
-    for drone_angle in geometries_list[0]['drone_angles']:
+    for drone_angle in drone_angles:
         buf.write(u"\t{:9f},\n".format(np.sin(drone_angle)))
+    buf.write(u"};\n\n")
+
+    buf.write(u"static constexpr float _config_aviata_relative_drone_angle[][{}] {{\n".format(len(drone_angles)))
+    for drone_angle in drone_angles:
+        buf.write(u"\t{ ")
+        for drone_angle_ref in drone_angles:
+            rel_angle = drone_angle - drone_angle_ref
+            while rel_angle > np.pi:
+                rel_angle -= 2*np.pi
+            while rel_angle < -np.pi:
+                rel_angle += 2*np.pi
+            buf.write(u"{:9f}, ".format(rel_angle))
+        buf.write(u"},\n")
+    buf.write(u"};\n\n")
+
+    buf.write(u"static constexpr float _config_aviata_relative_drone_angle_cos[][{}] {{\n".format(len(drone_angles)))
+    for drone_angle in drone_angles:
+        buf.write(u"\t{ ")
+        for drone_angle_ref in drone_angles:
+            buf.write(u"{:9f}, ".format(np.cos(drone_angle - drone_angle_ref)))
+        buf.write(u"},\n")
+    buf.write(u"};\n\n")
+
+    buf.write(u"static constexpr float _config_aviata_relative_drone_angle_sin[][{}] {{\n".format(len(drone_angles)))
+    for drone_angle in drone_angles:
+        buf.write(u"\t{ ")
+        for drone_angle_ref in drone_angles:
+            buf.write(u"{:9f}, ".format(np.sin(drone_angle - drone_angle_ref)))
+        buf.write(u"},\n")
     buf.write(u"};\n\n")
     
     # Print enum
