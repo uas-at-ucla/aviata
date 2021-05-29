@@ -298,9 +298,9 @@ void Drone::init_leader() {
 void Drone::init_standby() {
     // wait for docking command
 
-    // TOODOO for now, just transition to  docking immediately
+    // TODO for now, just transition to  docking immediately
     // eventually have callback here to listen for docking command
-    // transition_standby_to_docking();
+    transition_standby_to_docking();
 }
 
 void Drone::transition_standby_to_docking() {
