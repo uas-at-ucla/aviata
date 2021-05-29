@@ -39,7 +39,7 @@
 #endif
 
 //Docking constant for altitude adjustment
-const float ALTITUDE_DISP = BOOM_LENGTH / 2 / tan(to_radians(CAMERA_FOV_VERTICAL / 2)) * 2;
+const float ALTITUDE_DISP = BOOM_LENGTH / 2 / tan(to_radians(CAMERA_FOV_VERTICAL / 2)) * 1.4;
 
 using namespace mavsdk;
 class Drone
@@ -123,7 +123,7 @@ private:
     uint8_t land_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
 
     uint8_t undock();
-    uint8_t dock(int target_id, int stage); 
+    uint8_t dock(int stage); 
 
     uint8_t become_leader(uint8_t leader_seq_num);
     uint8_t become_follower(); //for successful sender of request_new_leader

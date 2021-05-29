@@ -61,8 +61,8 @@ float CameraSimulator::get_view_scale_constant(float target_size)
  * */
 Mat CameraSimulator::update_current_image(float absLon, float absLat, float absAlt, float absYaw, int target_id)
 {
-    std::cout << "cmra sim" << absLon << " " << absLat << " " << absAlt << " " << std::endl;
-    std::cout << "cmra sim" << m_target.lon << " " << m_target.lat << " " << m_target.alt << std::endl;
+    // std::cout << "cmra sim" << absLon << " " << absLat << " " << absAlt << " " << std::endl;
+    // std::cout << "cmra sim" << m_target.lon << " " << m_target.lat << " " << m_target.alt << std::endl;
 
     // Converts from absolute to relative coordinates
     float target_lat = m_target.lat;
@@ -153,12 +153,16 @@ Mat CameraSimulator::update_current_image(float absLon, float absLat, float absA
         roi.width = background.cols - x;
     }
 
-    Mat crop = april_tag(roi);
+    try {
+        Mat crop = april_tag(roi);
 
-    if (x < background.cols && y < background.rows)
-    {
-        Mat roi2(background, Rect(x, y, crop.cols, crop.rows));
-        crop.copyTo(roi2);
+        if (x < background.cols && y < background.rows)
+        {
+            Mat roi2(background, Rect(x, y, crop.cols, crop.rows));
+            crop.copyTo(roi2);
+        }
+    } catch (const cv::Exception& e) {
+        std::cout << "Warning: target possibly out of FOV" << std::endl;
     }
 
     imshow("Test", background);

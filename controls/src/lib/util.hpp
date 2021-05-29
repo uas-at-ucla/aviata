@@ -38,7 +38,7 @@
 //Drone-specific docking constants, measured in meters 
 #define MAX_ATTEMPTS 3
 #define MAX_HEIGHT 10
-#define DOCKING_HEIGHT_PRECONDITION 6.0
+#define DOCKING_HEIGHT_PRECONDITION 5.0
 #define MAX_HEIGHT_STAGE_2 3
 #define PRECONDITION_TOLERANCE 0.20
 #define STAGE_1_TOLERANCE 0.10
