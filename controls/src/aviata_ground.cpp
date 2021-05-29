@@ -86,6 +86,14 @@ int main(int argc, char** argv) {
         while (true) {
             Network::spin_some(network);
         }
+    } else if (strcmp(argv[1], "status") == 0) {
+        std::shared_ptr<Network> network = std::make_shared<Network>("ground_status");
+        network->subscribe<DRONE_STATUS>([](const aviata::msg::DroneStatus::SharedPtr status) {
+            std::cout << "[" << status->drone_id << ", " << status->ip_address << ", " << std::to_string(status->mavlink_sys_id) << "] state: " << std::to_string(status->drone_state) << ", docking_slot: " << std::to_string(status->docking_slot) << ", battery: " << std::to_string(status->battery_percent) << std::endl;
+        });
+        while (true) {
+            Network::spin_some(network);
+        }
     } else {
         std::cout << "Unrecognized command" << std::endl;
         return 1;

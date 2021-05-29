@@ -209,6 +209,7 @@ void Drone::init_docked() {
             _network->publish_drone_debug("MAVLink docking command failed, and that's pretty bad becuase there's no failsafe here!");
         }
     } else {
+        _network->publish_drone_debug("Not ready for docked flight - Need to discover more drones.");
         _need_to_discover_more_drones = true;
     }
 
