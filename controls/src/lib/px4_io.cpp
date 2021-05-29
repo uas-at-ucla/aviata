@@ -73,6 +73,10 @@ bool PX4IO::connect_to_pixhawk(std::string connection_url, int timeout_seconds)
     return true;
 }
 
+uint8_t PX4IO::drone_system_id() {
+    return target_system;
+}
+
 std::shared_ptr<Telemetry> PX4IO::telemetry_ptr() {
     return telemetry;
 }
@@ -86,7 +90,7 @@ void PX4IO::call_queued_mavsdk_callbacks() {
 }
 
 // @return 1 if successful, 0 otherwise
-int PX4IO::arm_system()
+int PX4IO::wait_for_arm()
 {
     if (telemetry->armed()) // if already armed
         return 1;
@@ -112,7 +116,7 @@ int PX4IO::arm_system()
 }
 
 // @return 1 if successful, 0 otherwise
-int PX4IO::disarm_system()
+int PX4IO::wait_for_disarm()
 {
     if (!telemetry->armed()) // if already disarmed
         return 1;
@@ -350,6 +354,10 @@ int PX4IO::set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8
         return 1;
     }
 
+    if (n_missing > 6) { // too many missing
+        return 0;
+    }
+
     MavlinkPassthrough::CommandLong cmd;
     cmd.target_sysid = sys->get_system_id();
     cmd.target_compid = 0;
@@ -360,8 +368,39 @@ int PX4IO::set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8
     for (; i < n_missing && i < 6; i++) {
         *missing_drone_ptrs[i] = missing_drones[i];
     }
-    if (i == 6) // too many missing
+    
+    for (; i < 6; i++) {
+        *missing_drone_ptrs[i] = NAN;
+    }
+    
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
+    if (result != MavlinkPassthrough::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send docking MAVLink command." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+int PX4IO::set_mixer_configuration(uint8_t* missing_drones, uint8_t n_missing)
+{
+    if (!drone_settings.modify_px4_mixers) {
         return 1;
+    }
+
+    if (n_missing > 6) { // too many missing
+        return 0;
+    }
+
+    MavlinkPassthrough::CommandLong cmd;
+    cmd.target_sysid = sys->get_system_id();
+    cmd.target_compid = 0;
+    cmd.command = MAV_CMD_AVIATA_SET_CONFIGURATION;
+    float* missing_drone_ptrs[] = {&cmd.param2, &cmd.param3, &cmd.param4, &cmd.param5, &cmd.param6, &cmd.param7};
+    uint8_t i = 0;
+    for (; i < n_missing && i < 6; i++) {
+        *missing_drone_ptrs[i] = missing_drones[i];
+    }
     
     for (; i < 6; i++) {
         *missing_drone_ptrs[i] = NAN;

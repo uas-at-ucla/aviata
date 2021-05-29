@@ -36,14 +36,14 @@ param set BAT_A_PER_V 15.391030311584473
 param set BAT1_V_DIV 10.177939414978027
 param set BAT_V_DIV 10.177939414978027
 
-# Rangefinder config
+# Rangefinder config (currently configured for 4-drone frame)
 param set SENS_TFMINI_CFG 104 # Serial 4
 param set EKF2_RNG_AID 1
 param set EKF2_RNG_POS_X 1.262 # X position of range finder origin in body frame (meters)
     # (forward axis with origin relative to vehicle center of gravity)
 param set EKF2_RNG_POS_Y 0.0 # Y position of range finder origin in body frame (meters)
     # (right axis with origin relative to vehicle center of gravity)
-param set EKF2_RNG_POS_Z 0.04 # Z position of range finder origin in body frame (meters)
+param set EKF2_RNG_POS_Z 0.0 # Z position of range finder origin in body frame (meters)
     # (down axis with origin relative to vehicle center of gravity)
 
 # PWM min and max

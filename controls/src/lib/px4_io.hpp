@@ -66,13 +66,14 @@ public:
     PX4IO(std::string drone_id, DroneSettings drone_settings);
     
     bool connect_to_pixhawk(std::string connection_url, int timeout_seconds);
+    uint8_t drone_system_id();
     std::shared_ptr<Telemetry> telemetry_ptr();
     std::shared_ptr<Offboard> offboard_ptr();
 
     void call_queued_mavsdk_callbacks();
 
-    int arm_system();
-    int disarm_system();
+    int wait_for_arm();
+    int wait_for_disarm();
 
     int arm();
     int disarm();
@@ -100,6 +101,7 @@ public:
     void unsubscribe_armed();
 
     int set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing);
+    int set_mixer_configuration(uint8_t* missing_drones, uint8_t n_missing);
     int set_mixer_undocked();
 
     int takeoff_and_land_test(int argc, char** argv);

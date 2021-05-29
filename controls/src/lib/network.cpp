@@ -76,7 +76,7 @@ void Network::deinit_drone_command_client(std::string other_drone_id)
 // @return shared_future object to response of service (check if valid with response.valid() (std::shared_future object))
 // https://en.cppreference.com/w/cpp/thread/shared_future
 std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> 
-    Network::send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int param)
+    Network::send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int8_t param1, int8_t param2)
 {
     std::string service_name = other_drone_id + "_SERVICE";
 
@@ -91,21 +91,23 @@ std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>>
 
     auto request = std::make_shared<aviata::srv::DroneCommand::Request>(); 
     request->command = drone_command;
-    request->param = param;
+    request->param1 = param1;
+    request->param2 = param2;
 
     return drone_command_clients[service_name]->async_send_request(request);
 }
 
 // @brief async, adds to list of command requests, call check_command_requests() to process
-void Network::send_drone_command(std::string other_drone_id, DroneCommand drone_command, int8_t param, std::string request_origin,
+void Network::send_drone_command(std::string other_drone_id, DroneCommand drone_command, int8_t param1, int8_t param2, std::string request_origin,
                                  std::function<void(uint8_t ack)> callback)
 {
     CommandRequest com;
     com.other_drone_id = other_drone_id;
     com.drone_command = drone_command;
-    com.param = param;
+    com.param1 = param2;
+    com.param1 = param2;
     com.callback = std::make_shared<std::function<void(uint8_t)>>(callback);
-    com.command_request = send_drone_command_async(other_drone_id, drone_command, param);
+    com.command_request = send_drone_command_async(other_drone_id, drone_command, param1, param2);
     com.request_origin = request_origin;
     com.timestamp_request = std::chrono::high_resolution_clock::now();
     drone_command_requests.push_back(com);

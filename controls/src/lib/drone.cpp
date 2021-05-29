@@ -1,4 +1,5 @@
 #include "drone.hpp"
+#include "fastdds_config.hpp"
 
 using namespace std::chrono;
 using namespace mavsdk;
@@ -8,7 +9,8 @@ Drone::Drone(std::string drone_id, DroneSettings drone_settings, Target t) :
     _drone_id(drone_id), _drone_settings(drone_settings), 
     _px4_io(drone_id, drone_settings), _telem_values(_px4_io), camera(t), 
     image_analyzer(), m_target_info(t), m_north(0), m_east(0), m_down(-5), m_yaw(0), 
-    _follower_setpoint_timeout(drone_settings.sim ? 2000 : 250)
+    _follower_setpoint_timeout(drone_settings.sim ? 2000 : 1000),
+    _docking_slot_is_occupied(drone_settings.n_docking_slots, false)
 {
     Network::init();
     _network = std::make_shared<Network>(drone_id);
@@ -20,7 +22,7 @@ Drone::~Drone()
     Network::shutdown();
 }
 
-bool Drone::init(DroneState initial_state, uint8_t docking_slot, std::string connection_url) {
+bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string connection_url) {
     if (_px4_io.connect_to_pixhawk(connection_url, 5) == false) {
         return false;
     }
@@ -33,11 +35,20 @@ bool Drone::init(DroneState initial_state, uint8_t docking_slot, std::string con
     _px4_io.subscribe_status_text([this](mavsdk::Telemetry::StatusText status_text) {
         if (status_text.text == "Kill-switch engaged")
             _kill_switch_engaged = true;
+            if (_drone_state == DOCKED_LEADER) {
+                aviata::msg::Empty disarm;
+                _network->publish<FOLLOWER_DISARM>(disarm);
+            }
         else if (status_text.text == "Kill-switch disengaged")
             _kill_switch_engaged = false;
     });
 
     _px4_io.subscribe_armed([this](bool is_armed) {
+        if (_drone_state == DOCKED_LEADER && _armed && !is_armed) {
+            // Disarm followers if leader was disarmed
+            aviata::msg::Empty disarm;
+            _network->publish<FOLLOWER_DISARM>(disarm);
+        }
         _armed = is_armed;
     });
 
@@ -46,35 +57,27 @@ bool Drone::init(DroneState initial_state, uint8_t docking_slot, std::string con
     });
 
     // init publishers
+    _network->init_publisher<FRAME_DISARM>(); // TODO Temporary failsafe option until we have something more robust
     _network->init_publisher<DRONE_STATUS>();
     _network->init_publisher<DRONE_DEBUG>();
     // subscribe drone status (also updates command clients)
-    _network->subscribe<DRONE_STATUS>([&](const aviata::msg::DroneStatus::SharedPtr ds_rec) {
+    _network->subscribe<DRONE_STATUS>([this](const aviata::msg::DroneStatus::SharedPtr ds_rec) {
         // Don't process own ID
-        if (_drone_id == ds_rec->drone_id) {
+        if (ds_rec->drone_id == _drone_id) {
             return;
         }
 
-        // // remove from swarm if leaving frame
-        // if ( static_cast<DroneState>(ds_rec->drone_state) == UNDOCKING )
-        // {
-        //     auto it = _swarm.find(ds_rec->drone_id);
-        //     _swarm.erase(it);
-        //     // but keeps service client
-        // }
-        // else
-        // {
-            DroneStatus rec;
-            rec.drone_id = ds_rec->drone_id;
-            rec.drone_state = static_cast<DroneState>(ds_rec->drone_state);
-            rec.docking_slot = ds_rec->docking_slot;
-            rec.battery_percent = ds_rec->battery_percent;
-            std::copy(std::begin(ds_rec->gps_position), std::end(ds_rec->gps_position), std::begin(rec.gps_position));
-            rec.yaw = ds_rec->yaw;
+        DroneStatus rec;
+        rec.drone_id = ds_rec->drone_id;
+        rec.ip_address = ds_rec->ip_address;
+        rec.mavlink_sys_id = ds_rec->mavlink_sys_id;
+        rec.drone_state = static_cast<DroneState>(ds_rec->drone_state);
+        rec.docking_slot = ds_rec->docking_slot;
+        rec.battery_percent = ds_rec->battery_percent;
+        std::copy(std::begin(ds_rec->gps_position), std::end(ds_rec->gps_position), std::begin(rec.gps_position));
+        rec.yaw = ds_rec->yaw;
 
-            _swarm[rec.drone_id] = rec;
-            _network->init_drone_command_client_if_needed(ds_rec->drone_id);
-        // }
+        receive_drone_status(rec);
     });
     
     // start drone command service
@@ -85,18 +88,15 @@ bool Drone::init(DroneState initial_state, uint8_t docking_slot, std::string con
 
     // State-specific initialization
     _drone_state = initial_state;
-
-    if (_drone_state == DOCKED_FOLLOWER || _drone_state == DOCKED_LEADER) {
-        _docking_slot = docking_slot;
-        while (_px4_io.set_mixer_docked(_docking_slot, nullptr, 0) != 1) {} // TODO add missing_drones to init() and pass here
-        std::cout << "Initial docking command sent successfully!" << std::endl;
-    }
+    _docking_slot = docking_slot;
 
     switch (_drone_state) {
         case DOCKED_FOLLOWER:
+            init_docked();
             init_follower();
             break;
         case DOCKED_LEADER:
+            init_docked();
             init_leader();
             break;
         case STANDBY:
@@ -125,9 +125,10 @@ void Drone::run()
         switch (_drone_state)
         {
             case DOCKED_FOLLOWER:
-                // TODO Make this a longer timeout and try to land instead of disarm
-                if (current_time - _last_setpoint_msg_time > _follower_setpoint_timeout) { // Eventually this should be replaced with a land failsafe.
+                if (current_time - _last_setpoint_msg_time > _follower_setpoint_timeout) {
                     if (_armed) {
+                        aviata::msg::Empty disarm;
+                        _network->publish<FRAME_DISARM>(disarm); // TODO Temporary failsafe option. Eventually, some sort of landing failsafe might be better than disarming. In this particular case, we have to plan for possible future network outages.
                         if (_px4_io.disarm() == 1) {
                             _armed = false;
                             _px4_io.set_hold_mode(); // Take out of offboard mode to prevent annoying failsafe beeps
@@ -151,7 +152,7 @@ void Drone::run()
                 break;
             case DOCKING_STAGE_1:
             {
-                int stage_1_result = dock(STAGE_1);
+                int stage_1_result = do_docking(STAGE_1);
                 switch (stage_1_result){
                     case DOCKING_SUCCESS:
                         initiate_docking(STAGE_2);
@@ -165,7 +166,7 @@ void Drone::run()
                 break;
             }
             case DOCKING_STAGE_2:
-                int stage_2_result = dock(STAGE_2);
+                int stage_2_result = do_docking(STAGE_2);
                 switch(stage_2_result){
                     case DOCKING_SUCCESS:
                         transition_docking_to_docked();
@@ -186,6 +187,52 @@ void Drone::run()
         Network::spin_some(_network);
         _network->check_command_requests();
     }
+}
+
+// in update and status subscriptions (do the status trick), update frame (make global frame variable), if frame changes and missing drones not too much, set config, or set docked if flag set
+
+void Drone::init_docked() {
+    // publish position it is docked
+    aviata::msg::DockingInfo docked;
+    docked.drone_id = _drone_id;
+    docked.docking_slot = _docking_slot;
+    docked.arriving = true;
+    _network->publish<DOCKING_INFO>(docked);
+
+    _docking_slot_is_occupied[_docking_slot] = true;
+
+    std::vector<uint8_t> missing_drones = generate_missing_drones_list();
+    if (missing_drones.size() <= _drone_settings.max_missing_drones) {
+        if (_px4_io.set_mixer_docked(_docking_slot, missing_drones.data(), missing_drones.size()) == 1) {
+            _network->publish_drone_debug("MAVLink docking command sent successfully!");
+        } else {
+            _network->publish_drone_debug("MAVLink docking command failed, and that's pretty bad becuase there's no failsafe here!");
+        }
+    } else {
+        _need_to_discover_more_drones = true;
+    }
+
+    _network->subscribe<DOCKING_INFO>([this](const aviata::msg::DockingInfo::SharedPtr docking_update) {
+        // Don't process own ID
+        if (docking_update->drone_id == _drone_id) {
+            return;
+        }
+        
+        DroneStatus rec;
+        if (_swarm.find(docking_update->drone_id) != _swarm.end()) {
+            DroneStatus rec = _swarm[docking_update->drone_id]; // update status of relevant drone
+        } else {
+            rec.drone_id = docking_update->drone_id;
+        }
+        rec.docking_slot = docking_update->docking_slot;
+        if (docking_update->arriving) {
+            rec.drone_state = DOCKED_FOLLOWER;
+        } else {
+            rec.drone_state = UNDOCKING;
+        }
+        
+        receive_drone_status(rec);
+    });
 }
 
 void Drone::init_follower() {
@@ -217,27 +264,6 @@ void Drone::init_follower() {
                 _armed = true;
             }
         }
-    });
-    _network->subscribe<DOCKING_INFO>([this](const aviata::msg::DockingInfo::SharedPtr docking_update) {
-        bool frame[8] = {false};
-        // get info from current frame
-        for (const auto &[id, status] : _swarm)
-            if (status.drone_state == DOCKED_FOLLOWER || status.drone_state == DOCKED_LEADER)
-                frame[status.docking_slot] = true;
-        // input update
-        frame[docking_update->docking_slot] = docking_update->arriving; // false if departing (missing)
-        // convert to array of empty docking slots
-        uint8_t n_missing = 0;
-        uint8_t missing_drones[6] = {};
-        for (uint8_t i = 0; i < 8; i++)
-            if (!frame[i])
-            {
-                missing_drones[n_missing] = i;
-                n_missing++;
-            }
-        if (n_missing > 6)
-            _network->publish_drone_debug("More than 6 missing drones on frame.");
-        _px4_io.set_mixer_docked(_docking_slot, missing_drones, n_missing);
     });
 }
 
@@ -271,9 +297,9 @@ void Drone::init_leader() {
 void Drone::init_standby() {
     // wait for docking command
 
-    // for now, just transition to  docking immediately
+    // TOODOO for now, just transition to  docking immediately
     // eventually have callback here to listen for docking command
-    transition_standby_to_docking();
+    // transition_standby_to_docking();
 }
 
 void Drone::transition_standby_to_docking() {
@@ -282,6 +308,7 @@ void Drone::transition_standby_to_docking() {
 
     // wait until we're done taking off before proceeding
     Telemetry::LandedState curr_state = _px4_io.telemetry_ptr()->landed_state();
+    //TODO update instances of _px4_io.telemetry_ptr()->subscribe... to use mavsdk_callback_manager.subscribe_mavsdk_callback() in px4_io.cpp.
     _px4_io.telemetry_ptr()->subscribe_landed_state([this, &curr_state](Telemetry::LandedState landed_state) {
         if (curr_state != landed_state) {
             curr_state = landed_state;
@@ -325,14 +352,8 @@ void Drone::transition_leader_to_follower() {
 }
 
 void Drone::transition_docking_to_docked() {
-    // TODO send MAVLink command and ROS announcment
     _drone_state = DOCKED_FOLLOWER;
-
-    // publish position it is docked
-    aviata::msg::DockingInfo docked;
-    docked.docking_slot = _docking_slot;
-    docked.arriving = true;
-    _network->publish<DOCKING_INFO>(docked);
+    init_docked();
     init_follower();
 }
 
@@ -351,6 +372,17 @@ void Drone::transition_follower_to_leader() {
     init_leader();
 }
 
+std::vector<uint8_t> Drone::generate_missing_drones_list() {
+    std::vector<uint8_t> missing_drones;
+    for (uint8_t i = 0; i < _docking_slot_is_occupied.size(); i++) {
+        if (!_docking_slot_is_occupied[i])
+        {
+            missing_drones.push_back(i);
+        }
+    }
+    return missing_drones;
+}
+
 bool Drone::valid_leader_msg(uint8_t sending_leader_seq_num) {
     // switch to this leader if its sequence number comes after the current sequence number, else only accept if the sequence number matches the current sequence number
     if ((int8_t) (sending_leader_seq_num - _leader_seq_num) > 0) { // utilize unsigned integer overflow, then cast to signed int8 to check order (because sequence numbers are mod 256)
@@ -366,6 +398,8 @@ void Drone::publish_drone_status()
 {
     aviata::msg::DroneStatus drone_status;
     drone_status.drone_id = _drone_id;
+    drone_status.ip_address = mesh_ip_address;
+    drone_status.mavlink_sys_id = _px4_io.drone_system_id();
     drone_status.drone_state = _drone_state;
     drone_status.docking_slot = _docking_slot;
     std::copy(std::begin(_telem_values.dronePosition), std::end(_telem_values.dronePosition), std::begin(drone_status.gps_position));
@@ -374,12 +408,57 @@ void Drone::publish_drone_status()
     _network->publish<DRONE_STATUS>(drone_status);
 }
 
+void Drone::receive_drone_status(const DroneStatus& rec) {
+    _swarm[rec.drone_id] = rec;
+    _network->init_drone_command_client_if_needed(rec.drone_id);
+
+    if (rec.docking_slot >= 0) {
+        bool docking_slot_is_occupied = rec.drone_state == DOCKED_FOLLOWER || rec.drone_state == DOCKED_LEADER;
+        if (!docking_slot_is_occupied) { // check if anyone else occupies the docking slot
+            for (const auto& [id, status] : _swarm) {
+                if (status.docking_slot == rec.docking_slot && (status.drone_state == DOCKED_FOLLOWER || status.drone_state == DOCKED_LEADER)) {
+                    docking_slot_is_occupied = true;
+                    break;
+                }
+            }
+        }
+
+        if (docking_slot_is_occupied != _docking_slot_is_occupied[rec.docking_slot]) { // if occupied state changed
+            _docking_slot_is_occupied[rec.docking_slot] = docking_slot_is_occupied;
+            std::vector<uint8_t> missing_drones = generate_missing_drones_list();
+
+            if (_need_to_discover_more_drones) {
+                if (missing_drones.size() <= _drone_settings.max_missing_drones) {
+                    if (_px4_io.set_mixer_docked(_docking_slot, missing_drones.data(), missing_drones.size()) == 1) {
+                        _network->publish_drone_debug("MAVLink docking command sent successfully!");
+                    } else {
+                        _network->publish_drone_debug("MAVLink docking command failed, and that's pretty bad becuase there's no failsafe here!");
+                    }
+                    _need_to_discover_more_drones = false;
+                }
+            } else {
+                if (missing_drones.size() <= _drone_settings.max_missing_drones) {
+                    _px4_io.set_mixer_configuration(missing_drones.data(), missing_drones.size());
+                } else {
+                    _network->publish_drone_debug("FATAL: Too many missing drones!");
+                    aviata::msg::Empty disarm;
+                    _network->publish<FRAME_DISARM>(disarm); // TODO Temporary failsafe option. Eventually, some sort of landing failsafe might be better than disarming.
+                }
+            }
+        }
+    }
+}
+
 uint8_t Drone::arm_drone() // for drones in STANDBY / DOCKED_FOLLOWER
 {
     if (_drone_state == STANDBY || _drone_state == DOCKED_FOLLOWER) {
-        return _px4_io.arm_system();
+        if (_need_to_discover_more_drones) {
+            _network->publish_drone_debug("Arm Drone FAILED: not enough docked drones discovered");
+            return 0;
+        }
+        return _px4_io.wait_for_arm();
     }
-    _network->publish_drone_debug("Arm Drone FAILED: improper DroneState = " + _drone_state);
+    _network->publish_drone_debug("Arm Drone FAILED: improper DroneState = " + std::to_string(_drone_state));
     return 0;
 }
 
@@ -408,7 +487,7 @@ uint8_t Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
             //                        }
             //                        if (_leader_follower_armed == 0) //last drone armed
             //                            {
-            //                                _px4_io.arm_system(); // arm itself last
+            //                                _px4_io.wait_for_arm(); // arm itself last
             //                                _network->publish_drone_debug("Arm Frame SUCCESS");
             //                            }
             //                        _network->publish_drone_debug("Arm Frame in progress: awaiting ack for = " + _leader_follower_armed);
@@ -417,17 +496,18 @@ uint8_t Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
         // }
         return 1;
     }
-    _network->publish_drone_debug("Arm Frame FAILED: leader improper DroneState = " + _drone_state);
+    _network->publish_drone_debug("Arm Frame FAILED: leader improper DroneState = " + std::to_string(_drone_state));
     return 0;
 }
 
 uint8_t Drone::disarm_drone() 
 {
     if (_drone_state == STANDBY || _drone_state == DOCKED_FOLLOWER || _drone_state == NEEDS_SERVICE) {
-        return _px4_io.disarm_system();
+        // return _px4_io.wait_for_disarm(); // waits for the drone to not be in the air
+        return _px4_io.disarm();
     }
 
-    _network->publish_drone_debug("Disarm Drone FAILED: improper DroneState = " + _drone_state);
+    _network->publish_drone_debug("Disarm Drone FAILED: improper DroneState = " + std::to_string(_drone_state));
     return 0;
 }
 
@@ -457,7 +537,7 @@ uint8_t Drone::disarm_frame()
             //                        }
             //                        if (_leader_follower_disarmed == 0) //last drone armed
             //                            {
-            //                                _px4_io.disarm_system(); // disarm itself last
+            //                                _px4_io.wait_for_disarm(); // disarm itself last
             //                                _network->publish_drone_debug("Disarm Frame SUCCESS");
             //                            }
             //                        _network->publish_drone_debug("Disarm Frame in progress: awaiting ack for = " + _leader_follower_disarmed);
@@ -466,7 +546,7 @@ uint8_t Drone::disarm_frame()
         // }
         return 1;
     }
-    _network->publish_drone_debug("Disarm Frame FAILED: leader improper DroneState = " + _drone_state);
+    _network->publish_drone_debug("Disarm Frame FAILED: leader improper DroneState = " + std::to_string(_drone_state));
     return 0;
 }
 
@@ -477,7 +557,7 @@ uint8_t Drone::takeoff_drone() // for drones in STANDBY or leader
     else if (_drone_state == DOCKED_LEADER)
         return takeoff_frame();
 
-    _network->publish_drone_debug("Takeoff Drone FAILED: improper DroneState = " + _drone_state);
+    _network->publish_drone_debug("Takeoff Drone FAILED: improper DroneState = " + std::to_string(_drone_state));
     return 0;
 }
 
@@ -488,7 +568,7 @@ uint8_t Drone::takeoff_frame() // for DOCKED_LEADER (send attitude and thrust to
         _network->publish_drone_debug("Frame taking off");
         return _px4_io.takeoff_system();
     }
-    _network->publish_drone_debug("Takeoff Frame FAILED: improper DroneState = " + _drone_state);
+    _network->publish_drone_debug("Takeoff Frame FAILED: improper DroneState = " + std::to_string(_drone_state));
     return 0;
 }
 
@@ -499,7 +579,7 @@ uint8_t Drone::land_drone() // for any undocked drone or leader
      else if (_drone_state == DOCKED_LEADER)
          return land_frame();
 
-    _network->publish_drone_debug("Land Drone FAILED: improper DroneState = " + _drone_state);
+    _network->publish_drone_debug("Land Drone FAILED: improper DroneState = " + std::to_string(_drone_state));
     return 0;
 }
 
@@ -510,7 +590,33 @@ uint8_t Drone::land_frame() // for DOCKED_LEADER (send attitude and thrust to fo
         _network->publish_drone_debug("Frame landing");
         return _px4_io.land_system();
     }
-    _network->publish_drone_debug("Land Frame FAILED: improper DroneState = " + _drone_state);
+    _network->publish_drone_debug("Land Frame FAILED: improper DroneState = " + std::to_string(_drone_state));
+    return 0;
+}
+
+uint8_t Drone::init_state(DroneState initial_state, int8_t docking_slot) {
+    if (_drone_state == STANDBY) {
+        switch (initial_state) {
+            case DOCKED_FOLLOWER:
+                init_docked();
+                init_follower();
+                break;
+            case DOCKED_LEADER:
+                init_docked();
+                init_leader();
+                break;
+            case STANDBY:
+                break;
+            default:
+                _network->publish_drone_debug("Invalid initial state: " + std::to_string(initial_state));
+                return 0;
+        }
+
+        _drone_state = initial_state;
+        _docking_slot = docking_slot;
+        return 1;
+    }
+    _network->publish_drone_debug("Init State FAILED: improper DroneState = " + std::to_string(_drone_state));
     return 0;
 }
 
@@ -519,11 +625,12 @@ uint8_t Drone::undock()
     if (_drone_state == DOCKED_FOLLOWER)
     {
         _drone_state = UNDOCKING; // TODO make function transition_follower_to_undocking()
-        // TODO implment control
         _px4_io.set_mixer_undocked();
+        _docking_slot_is_occupied[_docking_slot] = false;
         
         // TODO move DockingInfo publish to transition_follower_to_undocking()
         aviata::msg::DockingInfo undocked;
+        undocked.drone_id = _drone_id;
         undocked.docking_slot = _docking_slot;
         undocked.arriving = false;
         _network->publish<DOCKING_INFO>(undocked);
@@ -532,6 +639,87 @@ uint8_t Drone::undock()
     }
     return 0;
 }
+
+uint8_t Drone::dock(uint8_t docking_slot) {
+    if (_drone_state == STANDBY) {
+        _docking_slot = docking_slot;
+        transition_standby_to_docking();
+        return 1;
+    }
+
+    _network->publish_drone_debug("Begin Docking FAILED: improper DroneState = " + std::to_string(_drone_state));
+    return 0;
+}
+
+uint8_t Drone::become_leader(uint8_t sending_leader_seq_num)
+{
+    if (!valid_leader_msg(sending_leader_seq_num)) {
+        return 0;
+    }
+
+    // TODO: also check if battery % is above a certain threshold, and check if not about to undock
+    if (_drone_state == DOCKED_FOLLOWER) 
+    {
+        _leader_seq_num += (uint8_t) 1; // increment by 1, or wrap around to 0 if overflow
+        transition_follower_to_leader();
+        _network->publish_drone_debug("Become Leader SUCCESS");
+        return 1;
+    }
+
+    _network->publish_drone_debug("Become Leader FAILED: improper DroneState = " + std::to_string(_drone_state));
+    return 0;
+}
+
+uint8_t Drone::become_follower(int8_t new_leader_docking_slot)
+{
+    if (_drone_state == DOCKED_LEADER)
+    {
+        std::string new_leader_drone = "";
+
+        if (new_leader_docking_slot >= 0) {
+            for (const auto& [id, status] : _swarm) {
+                if (status.drone_state == DOCKED_FOLLOWER && status.docking_slot == new_leader_docking_slot) {
+                    new_leader_drone = id;
+                    break;
+                }
+            }
+        } else {
+            // If new leader not specified, find drone with highest battery
+            float highest_batt = -1;
+            for (const auto& [id, status] : _swarm)
+            {
+                // determine drone to become leader
+                if (status.drone_state == DOCKED_FOLLOWER && status.battery_percent > highest_batt)
+                {
+                    highest_batt = status.battery_percent;
+                    new_leader_drone = id;
+                }
+            }
+        }
+
+        if (new_leader_drone == "") {
+            _network->publish_drone_debug("Become Follower FAILED: Not aware of any other docked drones.");
+            return 0;
+        }
+        _network->publish_drone_debug("Identified new leader: drone_id = " + new_leader_drone);
+        
+        _network->send_drone_command(new_leader_drone, BECOME_LEADER, _leader_seq_num, -1, "become new leader, " + _drone_id,
+        [this](uint8_t ack) {
+            if (ack == 1) {
+                transition_leader_to_follower();
+                _network->publish_drone_debug("Become Follower SUCCESS");
+            } else {
+                // Note that BECOME_FOLLOWER will still respond with an ack=1 in this scenario.
+                _network->publish_drone_debug("Become Follower FAILED: Found suitable successor (and sent ack), but successor rejected the request.");
+            }
+        });
+        return 1;
+    }
+
+    _network->publish_drone_debug("Become Follower FAILED: improper DroneState = " + std::to_string(_drone_state));
+    return 0;
+}
+
 /**
  * Attempts a particular stage of the docking process
  * Previously used to have 1 function per stage, but code got too long/duplicated
@@ -541,7 +729,7 @@ uint8_t Drone::undock()
  * @param stage is which stage we're in
  * @return true if successful
  * */
-uint8_t Drone::dock(int stage)
+DockingIterationResult Drone::do_docking(int stage)
 {
     // --- simulation-specific code
 
@@ -671,86 +859,6 @@ uint8_t Drone::dock(int stage)
     return ITERATION_SUCCESS;
 }
 
-uint8_t Drone::become_leader(uint8_t sending_leader_seq_num)
-{
-    if (!valid_leader_msg(sending_leader_seq_num)) {
-        return 0;
-    }
-
-    // TODO: also check if battery % is above a certain threshold, and check if not about to undock
-    if (_drone_state == DOCKED_FOLLOWER) 
-    {
-        _leader_seq_num += (uint8_t) 1; // increment by 1, or wrap around to 0 if overflow
-        transition_follower_to_leader();
-        _network->publish_drone_debug("Become Leader SUCCESS");
-
-        // // Tell all drones to listen for new leader
-        // leader_follower_listened = swarm.size();
-        // for (const auto &[id, status] : swarm)
-        // {
-        //     send_drone_command(id, LISTEN_NEW_LEADER, leader_seq_num_next, "listen new leader, " + drone_id,
-        //                        [this](uint8_t ack) { //
-        //                            if (ack == 1)
-        //                                leader_follower_listened--;
-        //                            if (leader_follower_listened == 0) //last follower acknowledged
-        //                            {
-        //                                drone_state = DOCKED_LEADER;
-        //                                leader_seq_num = leader_seq_num_next;
-        //                                network->publish_drone_debug("Become Leader SUCCESS");
-
-        //                                // TODO: Start Leader stuff
-        //                                init_leader();
-                                       
-        //                            }
-        //                            network->publish_drone_debug("Become Leader in progress: awaiting ack for = " + leader_follower_listened);
-        //                        });
-        // }
-        return 1;
-    }
-
-    _network->publish_drone_debug("Become Leader FAILED: improper DroneState = " + _drone_state);
-    return 0;
-}
-
-uint8_t Drone::become_follower()
-{
-    if (_drone_state == DOCKED_LEADER)
-    {
-        float highest_batt = -1;
-        std::string highest_batt_drone = "";
-        for (const auto& [id, status] : _swarm)
-        {
-            // determine drone to become leader
-            if (status.drone_state == DOCKED_FOLLOWER && status.battery_percent > highest_batt)
-            {
-                highest_batt = status.battery_percent;
-                highest_batt_drone = id;
-            }
-        }
-
-        if (highest_batt_drone == "") {
-            _network->publish_drone_debug("Become Follower FAILED: Not aware of any other docked drones.");
-            return 0;
-        }
-        _network->publish_drone_debug("Identified new leader: drone_id = " + highest_batt_drone);
-        
-        _network->send_drone_command(highest_batt_drone, BECOME_LEADER, _leader_seq_num, "become new leader, " + _drone_id,
-        [this](uint8_t ack) {
-            if (ack == 1) {
-                transition_leader_to_follower();
-                _network->publish_drone_debug("Become Follower SUCCESS");
-            } else {
-                // Note that BECOME_FOLLOWER will still respond with an ack=1 in this scenario.
-                _network->publish_drone_debug("Become Follower FAILED: Found suitable successor (and sent ack), but successor rejected the request.");
-            }
-        });
-        return 1;
-    }
-
-    _network->publish_drone_debug("Become Follower FAILED: improper DroneState = " + _drone_state);
-    return 0;
-}
-
 // Safely fly to central target
 // Note that this DOES NOT include takeoff, needs to be handled separately
 bool Drone::fly_to_central_target() {
@@ -873,37 +981,23 @@ void Drone::command_handler(const aviata::srv::DroneCommand::Request::SharedPtr 
 {
     switch (request->command)
     {
-    case DroneCommand::REQUEST_SWAP:
-
-        break;
-    case DroneCommand::REQUEST_UNDOCK:
-
-        break;
-    case DroneCommand::REQUEST_DOCK:
-
-        break;
-    case DroneCommand::TERMINATE_FLIGHT:
-
-        break;
+    case DroneCommand::INIT_STATE:
+        response->ack = init_state(static_cast<DroneState>(request->param1), request->param2);
     case DroneCommand::UNDOCK:
-
+        response->ack = undock();
         break;
     case DroneCommand::DOCK:
-
+        response->ack = dock(request->param1);
         break;
     case DroneCommand::CANCEL_DOCKING:
-
+        // TODO
         break;
     case DroneCommand::REQUEST_NEW_LEADER:
-        response->ack = become_follower();
+        response->ack = become_follower(request->param1);
         break;
     case DroneCommand::BECOME_LEADER:
-        response->ack = become_leader(request->param);
+        response->ack = become_leader(request->param1);
         break;
-    // case DroneCommand::LISTEN_NEW_LEADER:
-    //     _leader_seq_num_next = request->param;
-    //     response->ack = 1;
-    //     break;
     default:
         response->ack = 0;
     }

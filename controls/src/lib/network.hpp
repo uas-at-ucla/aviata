@@ -18,13 +18,13 @@ enum DroneCommand
     REQUEST_DOCK,
     TERMINATE_FLIGHT,
     // From Ground Station to a Drone
+    INIT_STATE,
     UNDOCK,
     DOCK,
     CANCEL_DOCKING,
     REQUEST_NEW_LEADER,
     // From Drone to Drone
-    BECOME_LEADER,
-    // LISTEN_NEW_LEADER,
+    BECOME_LEADER
 };
 
 // struct to hold data about each drone_command request (ROS2 Service)
@@ -33,7 +33,8 @@ struct CommandRequest {
     // Request
     std::string other_drone_id;
     DroneCommand drone_command;
-    int param;
+    int8_t param1;
+    int8_t param2;
 
     // Response
     std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> command_request;
@@ -59,7 +60,9 @@ public:
     template<const std::string& ros_topic>
     void init_publisher()
     {
-        std::get<PubSub<ros_topic>>(pubsubs).publisher = this->create_publisher<typename RosTopicConfig<ros_topic>::msg_type>(ros_topic, RosTopicConfig<ros_topic>::qos::value);
+        if (std::get<PubSub<ros_topic>>(pubsubs).publisher == nullptr) {
+            std::get<PubSub<ros_topic>>(pubsubs).publisher = this->create_publisher<typename RosTopicConfig<ros_topic>::msg_type>(ros_topic, RosTopicConfig<ros_topic>::qos::value);
+        }
     }
 
     template<const std::string& ros_topic>
@@ -100,9 +103,9 @@ public:
     void deinit_drone_command_client(std::string other_drone_id);
 
     std::shared_future<std::shared_ptr<aviata::srv::DroneCommand::Response>> 
-        send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int param = -1);
+        send_drone_command_async(std::string other_drone_id, DroneCommand drone_command, int8_t param1 = -1, int8_t param2 = -1);
 
-    void send_drone_command(std::string other_drone_id, DroneCommand drone_command, int8_t param, std::string request_origin,
+    void send_drone_command(std::string other_drone_id, DroneCommand drone_command, int8_t param1, int8_t param2, std::string request_origin,
                             std::function<void(uint8_t ack)> callback);
 
     void check_command_requests();

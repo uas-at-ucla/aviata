@@ -30,6 +30,27 @@ static constexpr float _config_aviata_drone_angle_sin[] {
 	-0.707107,
 };
 
+static constexpr float _config_aviata_relative_drone_angle[][4] {
+	{  0.000000, -1.570796,  3.141593,  1.570796, },
+	{  1.570796,  0.000000, -1.570796,  3.141593, },
+	{ -3.141593,  1.570796,  0.000000, -1.570796, },
+	{ -1.570796, -3.141593,  1.570796,  0.000000, },
+};
+
+static constexpr float _config_aviata_relative_drone_angle_cos[][4] {
+	{  1.000000,  0.000000, -1.000000,  0.000000, },
+	{  0.000000,  1.000000, -0.000000, -1.000000, },
+	{ -1.000000, -0.000000,  1.000000,  0.000000, },
+	{  0.000000, -1.000000,  0.000000,  1.000000, },
+};
+
+static constexpr float _config_aviata_relative_drone_angle_sin[][4] {
+	{  0.000000, -1.000000,  0.000000,  1.000000, },
+	{  1.000000,  0.000000, -1.000000,  0.000000, },
+	{ -0.000000,  1.000000,  0.000000, -1.000000, },
+	{ -1.000000, -0.000000,  1.000000,  0.000000, },
+};
+
 enum class AviataMultirotorGeometry : MultirotorGeometryUnderlyingType {
 	AVIATA_MISSING_,               // AVIATA with these drones missing:  (text key aviata_missing_)
 

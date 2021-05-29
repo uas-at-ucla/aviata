@@ -48,7 +48,7 @@ public:
     Drone(std::string drone_id, DroneSettings drone_settings, Target target);
     ~Drone();
 
-    bool init(DroneState initial_state, uint8_t docking_slot, std::string connection_url);
+    bool init(DroneState initial_state, int8_t docking_slot, std::string connection_url);
     void run();
     
 private:
@@ -65,7 +65,7 @@ private:
     DroneState _drone_state;
 
     // More state information
-    uint8_t _docking_slot;
+    int8_t _docking_slot;
     bool _kill_switch_engaged = false;
     bool _armed = false;
     mavsdk::Telemetry::FlightMode _flight_mode = mavsdk::Telemetry::FlightMode::Unknown;
@@ -73,9 +73,8 @@ private:
     int64_t _last_status_publish_time = 0;
     int64_t _last_setpoint_msg_time;
     bool _need_to_enter_hold_mode = false; // used when transitioning from follower to leader
-    // uint8_t leader_follower_listened = 0; // keep track of how many followers acknowledged LISTEN_NEW_LEADER command
-    // uint8_t _leader_follower_armed = 0;
-    // uint8_t _leader_follower_disarmed = 0;
+    bool _need_to_discover_more_drones = false;
+    std::vector<bool> _docking_slot_is_occupied;
 
     //Docking members
     Mavsdk mavsdk;
@@ -93,6 +92,7 @@ private:
     std::map<std::string, DroneStatus> _swarm; // map by drone_id
 
     // State helper functions
+    void init_docked();
     void init_follower();
     void init_leader();
     void init_standby();
@@ -103,13 +103,15 @@ private:
     void transition_leader_to_follower();
     void transition_follower_to_leader();
 
-    void basic_lead();
-    void basic_follow();
+    std::vector<uint8_t> generate_missing_drones_list();
 
     bool valid_leader_msg(uint8_t leader_seq_num);
 
     void publish_drone_status();
 
+    void receive_drone_status(const DroneStatus& rec);
+
+    // Functions that respond to commands
     uint8_t arm_drone(); // for drones in STANDBY / DOCKED_FOLLOWER
     uint8_t arm_frame(); // for DOCKED_LEADER (send arm_drone() to followers)
     
@@ -122,13 +124,14 @@ private:
     uint8_t land_drone(); // for any undocked drone
     uint8_t land_frame(); // for DOCKED_LEADER (send attitude and thrust to followers)
 
+    uint8_t init_state(DroneState state, int8_t docking_slot);
     uint8_t undock();
-    uint8_t dock(int stage); 
-
+    uint8_t dock(uint8_t docking_slot);
     uint8_t become_leader(uint8_t leader_seq_num);
-    uint8_t become_follower(); //for successful sender of request_new_leader
+    uint8_t become_follower(int8_t new_leader_docking_slot); //for successful sender of request_new_leader
 
     // docking integrated functions
+    DockingIterationResult do_docking(int stage); 
     bool fly_to_central_target();
     void initiate_docking(int stage);
     void set_position(float north, float east, float down);
