@@ -124,7 +124,7 @@ For more instructions and troubleshooting, see: https://docs.google.com/document
 5. The parameters have been set! Now remove power from the Pixhawk. Once you power it back on, you're all set!
 6. Next time you want to update some parameters, you can skip step 3, as well as step 5 depending on which parameters are changed.
 
-Tip: Use `param reset` in the MAVLink Console if you want to start fresh and reset all parameters to their defaults. Unfortunately, you cannot reset individual parameters this way, but you can look up the defaults in the [parameter reference](https://docs.px4.io/v1.11/en/advanced_config/parameter_reference.html). Documentation for the `param` command can be found at https://dev.px4.io/v1.11_noredirect/en/middleware/modules_command.html#param. Note that this is specific to PX4 v1.11.
+Tip: Use `param reset` in the MAVLink Console if you want to start fresh and reset all parameters to their defaults, or `param reset CAL_* SENS_BOARD_* EKF2_MAG_DECL` to keep sensor calibration. Unfortunately, you cannot reset individual parameters this way, but you can look up the defaults in the [parameter reference](https://docs.px4.io/v1.11/en/advanced_config/parameter_reference.html). Documentation for the `param` command can be found at https://dev.px4.io/v1.11_noredirect/en/middleware/modules_command.html#param. Note that this is specific to PX4 v1.11.
 
 ## Building and Flashing PX4 Firmware (only needed for cooperative controls tests)
 1. Retrieve the code from https://github.com/uas-at-ucla-dependencies/PX4-Autopilot/tree/release/1.11-aviata (use the **release/1.11-aviata** branch).
