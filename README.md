@@ -117,14 +117,14 @@ For more instructions and troubleshooting, see: https://docs.google.com/document
 9. To run the comms code and/or controls code on startup, use `crontab -e` and add the line: `@reboot <command_goes_here> &`.
 
 ## Setting PX4 Params
-1. Connect a drone via any means to QGroundControl.
+1. Connect a drone via USB to QGroundControl.
 2. Change, add, or remove parameters in **set_px4_params.sh** as necessary (in the root folder of this project).
 3. Either in **set_px4_params.sh** or QGroundControl itself, set MAV_SYS_ID to an appropriate unique ID (only needed if testing multiple drones simultaneously).
 4. Copy all or part of the contents of **set_px4_params.sh** and paste in QGroundControl -> Analyze Tools -> MAVLink Console.
 5. The parameters have been set! Now remove power from the Pixhawk. Once you power it back on, you're all set!
 6. Next time you want to update some parameters, you can skip step 3, as well as step 5 depending on which parameters are changed.
 
-Tip: Use `param reset_all` in the MAVLink Console if you want to start fresh and reset all parameters to their defaults. In addition, `param reset <PARAM_NAME>` will reset specific parameters. Documentation for the `param` command can be found at https://dev.px4.io/master/en/middleware/modules_command.html#param.
+Tip: Use `param reset` in the MAVLink Console if you want to start fresh and reset all parameters to their defaults. Unfortunately, you cannot reset individual parameters this way, but you can look up the defaults in the [parameter reference](https://docs.px4.io/v1.11/en/advanced_config/parameter_reference.html). Documentation for the `param` command can be found at https://dev.px4.io/v1.11_noredirect/en/middleware/modules_command.html#param. Note that this is specific to PX4 v1.11.
 
 ## Building and Flashing PX4 Firmware (only needed for cooperative controls tests)
 1. Retrieve the code from https://github.com/uas-at-ucla-dependencies/PX4-Autopilot/tree/release/1.11-aviata (use the **release/1.11-aviata** branch).
