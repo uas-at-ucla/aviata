@@ -28,9 +28,6 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
     }
 
     // Universal initialization
-    while (_px4_io.set_mixer_undocked() != 1) {}
-    _network->publish_drone_debug("Initialized PX4 mixer to undocked.");
-
     _telem_values.init_telem();
 
     _px4_io.subscribe_status_text([this](mavsdk::Telemetry::StatusText status_text) {
@@ -86,6 +83,9 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
                                                aviata::srv::DroneCommand::Response::SharedPtr response) {
         command_handler(request, response);
     });
+
+    while (_px4_io.set_mixer_undocked() != 1) {}
+    _network->publish_drone_debug("Initialized PX4 mixer to undocked.");
 
     // State-specific initialization
     _drone_state = initial_state;

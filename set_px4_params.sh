@@ -7,8 +7,8 @@
 
 # param set MAV_SYS_ID 1 # Set to unique ID on each drone for multi-drone tests
 
-# Logging config
-param set SDLOG_PROFILE 91 # bits 0, 1, 3, 4, 6 (https://docs.px4.io/v1.11/en/advanced_config/parameter_reference.html#SDLOG_PROFILE)
+# Logging config (https://docs.px4.io/v1.11/en/advanced_config/parameter_reference.html#SDLOG_PROFILE)
+param set SDLOG_PROFILE 91 # bits 0, 1, 3, 4, 6 
 
 # Safety checks / failsafes
 param set CBRK_IO_SAFETY 22027
@@ -33,23 +33,23 @@ param set BAT1_N_CELLS 4
 param set BAT_N_CELLS 4
 param set BAT1_A_PER_V 15.391030311584473
 param set BAT_A_PER_V 15.391030311584473
-param set BAT1_V_DIV 10.177939414978027
-param set BAT_V_DIV 10.177939414978027
+param set BAT1_V_DIV 10.177939414978027 # 21.58755302 for Krispy
+param set BAT_V_DIV 10.177939414978027 # 21.58755302 for Krispy
 
-# Rangefinder config (currently configured for 4-drone frame)
-param set SENS_TFMINI_CFG 104 # Serial 4
-param set EKF2_RNG_AID 1
-param set EKF2_RNG_POS_X 1.262 # X position of range finder origin in body frame (meters)
-    # (forward axis with origin relative to vehicle center of gravity)
-param set EKF2_RNG_POS_Y 0.0 # Y position of range finder origin in body frame (meters)
-    # (right axis with origin relative to vehicle center of gravity)
-param set EKF2_RNG_POS_Z 0.0 # Z position of range finder origin in body frame (meters)
-    # (down axis with origin relative to vehicle center of gravity)
+# # Rangefinder config (currently configured for 4-drone frame)
+# param set SENS_TFMINI_CFG 104 # Serial 4
+# param set EKF2_RNG_AID 1
+# param set EKF2_RNG_POS_X 1.262 # X position of range finder origin in body frame (meters)
+#     # (forward axis with origin relative to vehicle center of gravity)
+# param set EKF2_RNG_POS_Y 0.0 # Y position of range finder origin in body frame (meters)
+#     # (right axis with origin relative to vehicle center of gravity)
+# param set EKF2_RNG_POS_Z 0.0 # Z position of range finder origin in body frame (meters)
+#     # (down axis with origin relative to vehicle center of gravity)
 
 # PWM min and max
-param set PWM_MIN 1100
+param set PWM_MIN 1075
 param set PWM_MAX 2000
-param set PWM_AUX_MIN 1100
+param set PWM_AUX_MIN 1075
 param set PWM_AUX_MAX 2000
 
 # Other PWM config
@@ -104,49 +104,29 @@ param set RC_MAP_YAW 4
 param set IMU_DGYRO_CUTOFF 20.0
 param set IMU_GYRO_CUTOFF 30.0
 
-param set MPC_XY_P 0.513
+param set MPC_THR_HOVER 0.4 # always 0.5 for AVIATA frame
 
-param set MPC_XY_VEL_P_ACC 1.215
-param set MPC_XY_VEL_I_ACC 0.135
-param set MPC_XY_VEL_D_ACC 0.135
+# param set MPC_XY_P 0.513
 
-param set MC_ROLL_P 4.3875
-param set MC_PITCH_P 4.3875
-param set MC_YAW_P 1.5679999999999998
+# param set MPC_XY_VEL_P_ACC 1.215
+# param set MPC_XY_VEL_I_ACC 0.135
+# param set MPC_XY_VEL_D_ACC 0.135
 
-param set MC_ROLLRATE_P 4.869
-param set MC_ROLLRATE_I 3.2460000000000004
-param set MC_RR_INT_LIM 4.869
-param set MC_ROLLRATE_D 0.073035
-param set MC_PITCHRATE_P 4.869
-param set MC_PITCHRATE_I 3.2460000000000004
-param set MC_PR_INT_LIM 4.869
-param set MC_PITCHRATE_D 0.073035
-param set MC_YAWRATE_P 2.0342
-param set MC_YAWRATE_I 0.50855
-param set MC_YR_INT_LIM 1.52565
-param set MC_YAWRATE_D 0.0
+# param set MC_ROLL_P 4.3875
+# param set MC_PITCH_P 4.3875
+# param set MC_YAW_P 1.5679999999999998
 
-# Reset PID gains to defaults:
-# param reset MPC_XY_P
+# param set MC_ROLLRATE_P 4.869
+# param set MC_ROLLRATE_I 3.2460000000000004
+# param set MC_RR_INT_LIM 4.869
+# param set MC_ROLLRATE_D 0.073035
+# param set MC_PITCHRATE_P 4.869
+# param set MC_PITCHRATE_I 3.2460000000000004
+# param set MC_PR_INT_LIM 4.869
+# param set MC_PITCHRATE_D 0.073035
+# param set MC_YAWRATE_P 2.0342
+# param set MC_YAWRATE_I 0.50855
+# param set MC_YR_INT_LIM 1.52565
+# param set MC_YAWRATE_D 0.0
 
-# param reset MPC_XY_VEL_P_ACC
-# param reset MPC_XY_VEL_I_ACC
-# param reset MPC_XY_VEL_D_ACC
-
-# param reset MC_ROLL_P
-# param reset MC_PITCH_P
-# param reset MC_YAW_P
-
-# param reset MC_ROLLRATE_P
-# param reset MC_ROLLRATE_I
-# param reset MC_RR_INT_LIM
-# param reset MC_ROLLRATE_D
-# param reset MC_PITCHRATE_P
-# param reset MC_PITCHRATE_I
-# param reset MC_PR_INT_LIM
-# param reset MC_PITCHRATE_D
-# param reset MC_YAWRATE_P
-# param reset MC_YAWRATE_I
-# param reset MC_YR_INT_LIM
-# param reset MC_YAWRATE_D
+# TODO add commands to set PID params to defaults
