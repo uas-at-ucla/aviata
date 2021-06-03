@@ -47,9 +47,9 @@ param set BAT_V_DIV 10.177939414978027 # 21.58755302 for Krispy
 #     # (down axis with origin relative to vehicle center of gravity)
 
 # PWM min and max
-param set PWM_MIN 1075
+param set PWM_MIN 1100
 param set PWM_MAX 2000
-param set PWM_AUX_MIN 1075
+param set PWM_AUX_MIN 1100
 param set PWM_AUX_MAX 2000
 
 # Other PWM config
@@ -104,29 +104,29 @@ param set RC_MAP_YAW 4
 param set IMU_DGYRO_CUTOFF 20.0
 param set IMU_GYRO_CUTOFF 30.0
 
-param set MPC_THR_HOVER 0.4 # always 0.5 for AVIATA frame
+param set MPC_THR_HOVER 0.5 # always 0.5 for AVIATA frame
 
-# param set MPC_XY_P 0.513
+param set MPC_XY_P 0.513
 
-# param set MPC_XY_VEL_P_ACC 1.215
-# param set MPC_XY_VEL_I_ACC 0.135
-# param set MPC_XY_VEL_D_ACC 0.135
+param set MPC_XY_VEL_P_ACC 1.215
+param set MPC_XY_VEL_I_ACC 0.135
+param set MPC_XY_VEL_D_ACC 0.135
 
-# param set MC_ROLL_P 4.3875
-# param set MC_PITCH_P 4.3875
-# param set MC_YAW_P 1.5679999999999998
+param set MC_ROLL_P 4.3875
+param set MC_PITCH_P 4.3875
+param set MC_YAW_P 1.5679999999999998
 
-# param set MC_ROLLRATE_P 4.869
-# param set MC_ROLLRATE_I 3.2460000000000004
-# param set MC_RR_INT_LIM 4.869
-# param set MC_ROLLRATE_D 0.073035
-# param set MC_PITCHRATE_P 4.869
-# param set MC_PITCHRATE_I 3.2460000000000004
-# param set MC_PR_INT_LIM 4.869
-# param set MC_PITCHRATE_D 0.073035
-# param set MC_YAWRATE_P 2.0342
-# param set MC_YAWRATE_I 0.50855
-# param set MC_YR_INT_LIM 1.52565
-# param set MC_YAWRATE_D 0.0
+param set MC_ROLLRATE_P 4.869
+param set MC_ROLLRATE_I 3.2460000000000004
+param set MC_RR_INT_LIM 4.869
+param set MC_ROLLRATE_D 0.073035
+param set MC_PITCHRATE_P 4.869
+param set MC_PITCHRATE_I 3.2460000000000004
+param set MC_PR_INT_LIM 4.869
+param set MC_PITCHRATE_D 0.073035
+param set MC_YAWRATE_P 2.0342
+param set MC_YAWRATE_I 0.50855
+param set MC_YR_INT_LIM 1.52565
+param set MC_YAWRATE_D 0.0
 
 # TODO add commands to set PID params to defaults

@@ -46,11 +46,11 @@ drone_prop_height = 0.047 # vertical distance between a drone's propellers and i
 # Control Constants
 # TODO PID tuning
 rollrate_pitchrate_scale = 1
-yawrate_scale = 1
+yawrate_scale = 0.7
 rate_derivative_scale = 1
 rate_integral_scale = 1
 roll_pitch_scale = rollrate_pitchrate_scale * 1
-yaw_scale = yawrate_scale * 1
+yaw_scale = yawrate_scale * 0.8
 xy_vel_scale = roll_pitch_scale
 xy_vel_integral_scale = 1
 xy_pos_scale = xy_vel_scale * 1
