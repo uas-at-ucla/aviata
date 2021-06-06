@@ -105,7 +105,7 @@ For more instructions and troubleshooting, see: https://docs.google.com/document
 
 # Initial Software/Electronics Setup
 ## Raspberry Pi Setup
-1. Flash the SD Card for the Pi with Raspberry Pi OS Lite.
+1. Flash the SD card for the Pi with Raspberry Pi OS Lite. Alternatively, flash the SD card with the image found [here](https://drive.google.com/drive/folders/1fEZcg9KM-0HYnhAGj0O6zzIIuNJPQ3S6?usp=sharing) which has many things already set up, and skip to step 6.
 2. SSH into the Pi and give it internet access either directly or via sharing on your computer. You may need to run `sudo rfkill unblock all` to allow wireless communication.
 3. Install git: `sudo apt-get update && sudo apt-get install -y git`
 3. Clone this repository: `git clone https://github.com/uas-at-ucla/aviata.git`
