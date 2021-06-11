@@ -105,6 +105,7 @@ param set IMU_DGYRO_CUTOFF 20.0
 param set IMU_GYRO_CUTOFF 30.0
 
 param set MPC_THR_HOVER 0.5 # always 0.5 for AVIATA frame
+param set MPC_THR_MAX 1.2916548681500528 # for 4-drone frame
 
 param set MPC_XY_P 0.513
 
