@@ -137,7 +137,7 @@ To connect multiple drones to one laptop, we configure the telemetry radios with
 1. Download **radio~hm_trp.ihx** from https://drive.google.com/drive/folders/1yd3WoalLU3xQads8v3oJmjZb5dtD86ct?usp=sharing
 2. Retrieve the code from https://github.com/RFDesign/SiK. In particular, you only need the file **Firmware/tools/uploader.py**.
 3. Follow the instructions [here](https://risc.readthedocs.io/2-multi-point-telemetry.html#upload-firmware-to-the-radio) (starting with "Upload Firmware to the radio") to configure each radio. Note that **uploader.py** is written in Python 2.
-4. If you plan to fly around other RC pilots, choose a single network ID number and set it on each radio (the **NETID** parameter). By choosing a NETID other than the default (25), you will mitigate possible interference with other radios. The NETID can be any unsigned 32-bit integer. For AVIATA, one ID we've been using is 284282 (spells AVIATA on a phone keypad).
+4. If you plan to fly around other RC pilots, choose a single network ID number and set it on each radio (the **NETID** parameter). By choosing a NETID other than the default (25), you will mitigate possible interference with other radios. The NETID can be any unsigned 32-bit integer.
 
 ## Pixhawk Wiring
 Here is some general info on Pixhawk wiring: https://docs.px4.io/master/en/assembly/quick_start_pixhawk.html
