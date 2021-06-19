@@ -115,7 +115,7 @@ param set MPC_XY_VEL_D_ACC 0.135
 
 param set MC_ROLL_P 4.3875
 param set MC_PITCH_P 4.3875
-param set MC_YAW_P 1.5679999999999998
+param set MC_YAW_P 1.365
 
 param set MC_ROLLRATE_P 4.869
 param set MC_ROLLRATE_I 3.2460000000000004
@@ -125,9 +125,9 @@ param set MC_PITCHRATE_P 4.869
 param set MC_PITCHRATE_I 3.2460000000000004
 param set MC_PR_INT_LIM 4.869
 param set MC_PITCHRATE_D 0.073035
-param set MC_YAWRATE_P 2.0342
-param set MC_YAWRATE_I 0.50855
-param set MC_YR_INT_LIM 1.52565
+param set MC_YAWRATE_P 1.8889000000000002
+param set MC_YAWRATE_I 0.47222500000000006
+param set MC_YR_INT_LIM 1.4166750000000001
 param set MC_YAWRATE_D 0.0
 
 # TODO add commands to set PID params to defaults
