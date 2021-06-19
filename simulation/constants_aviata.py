@@ -44,16 +44,15 @@ structpayload_drone_height = (M_structure * structure_drone_height + M_payload *
 drone_prop_height = 0.047 # vertical distance between a drone's propellers and its center of mass (meters)
 
 # Control Constants
-# TODO PID tuning
-rollrate_pitchrate_scale = 1
-yawrate_scale = 1
-rate_derivative_scale = 1
-rate_integral_scale = 1
-roll_pitch_scale = rollrate_pitchrate_scale * 1
-yaw_scale = yawrate_scale * 1
+rollrate_pitchrate_scale = 0.75
+yawrate_scale = 0.65
+rate_derivative_scale = 0.75
+rate_integral_scale = 0.5
+roll_pitch_scale = rollrate_pitchrate_scale * 0.9
+yaw_scale = yawrate_scale * 0.75
 xy_vel_scale = roll_pitch_scale
-xy_vel_integral_scale = 1
-xy_pos_scale = xy_vel_scale * 1
+xy_vel_integral_scale = 0.5
+xy_pos_scale = xy_vel_scale * 0.8
 
 P_pos = np.array([0.95*xy_pos_scale, 0.95*xy_pos_scale, 1.0]) # MPC_XY_P, MPC_Z_P
 

@@ -193,11 +193,13 @@ def geometry_to_mix(geometry):
     Am = geometry_to_torque_matrix(geometry)
     A = np.vstack([Am, At])
 
+    # Choose one of the methods below (pseudoinverse or optimize for minimal saturation)
+
     # Mix matrix computed as pseudoinverse of A
-    # B = np.linalg.pinv(A)
+    B = np.linalg.pinv(A)
 
     # Optimal inverse to minimize motor saturation:
-    B = optimize_saturation.optimal_inverse(A)
+    # B = optimize_saturation.optimal_inverse(A)
 
     return A, B
 

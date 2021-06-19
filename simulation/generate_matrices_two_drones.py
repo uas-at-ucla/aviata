@@ -211,6 +211,8 @@ def main():
     print(combined_geometries[key]['M'], file=sys.stderr)
     print("hover thrust:", file=sys.stderr)
     print(combined_geometries[key]['thr_hover'], file=sys.stderr)
+    print("maximum thrust value:", file=sys.stderr)
+    print(1/np.max(combined_geometries[key]['mix']['B_px_4dof'][:,3]), file=sys.stderr)
     print("maximum vertical thrust (g's):", file=sys.stderr)
     print(2 * 1/np.max(combined_geometries[key]['mix']['B_px_4dof'][:,3]), file=sys.stderr)
     print("max hover thrust percentage:", file=sys.stderr)
