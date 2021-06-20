@@ -13,7 +13,7 @@ Structure:
 These results are based upon work supported by the NASA Aeronautics Research Mission Directorate under award number 80NSSC20K1452. This material is based upon a proposal tentatively selected by NASA for a grant award of $10,811, subject to successful crowdfunding. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of NASA.
 
 # Python Simulation
-Documentation for the Python simulation is coming soon!
+The code in the **simulation** folder is used for bare-bones, ideal physics simulations of varius multi-vehicle configurations. To demonstrate flight, position control is implemented using a simplified version of the controllers used in PX4. Simulations are run using `python3 simulate.py`. The position target can be moved around in the horizontal plane with the WASD keys, as well as up and down with R and F. The yaw setpoint can be rotated with Z and X. For airframes that are flyable with undocked drones, the number keys (0-9) will toggle the presence of a drone in the corresponding docking slot.
 
 # Controls Code
 ## Building Controls Code
