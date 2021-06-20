@@ -79,7 +79,7 @@ def generate_aviata_matrices(missing_drones=[]):
     # moment of inertia
     I = constants.I_drone
 
-    # Relation between angular/linear acceleration and torque/force (with the exception of angular velocity's effect on angular acceleration when I is not diagonal)
+    # Relation between angular/linear acceleration and torque/force (with the exception of angular velocity's effect on angular acceleration)
     # Multiply mass by twice gravitational acceleration so that an input of 0.5 is 1g (hover)
     # The input for roll/pitch/yaw is rad/s^2
     inertia = np.row_stack((np.column_stack((I, np.zeros((3,3)))), np.column_stack((np.zeros((3,3)), np.diag((M*constants.g*2, M*constants.g*2, M*constants.g*2)))))) 
