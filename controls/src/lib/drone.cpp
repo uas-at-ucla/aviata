@@ -31,14 +31,15 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
     _telem_values.init_telem();
 
     _px4_io.subscribe_status_text([this](mavsdk::Telemetry::StatusText status_text) {
-        if (status_text.text == "Kill-switch engaged")
+        if (status_text.text == "Kill-switch engaged") {
             _kill_switch_engaged = true;
             if (_drone_state == DOCKED_LEADER) {
                 aviata::msg::Empty disarm;
                 _network->publish<FOLLOWER_DISARM>(disarm);
             }
-        else if (status_text.text == "Kill-switch disengaged")
+        } else if (status_text.text == "Kill-switch disengaged") {
             _kill_switch_engaged = false;
+        }
     });
 
     _px4_io.subscribe_armed([this](bool is_armed) {
@@ -101,7 +102,6 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
             init_leader();
             break;
         case STANDBY:
-            _docking_slot = docking_slot;
             init_standby();
             break;
         default:
@@ -598,6 +598,11 @@ uint8_t Drone::land_frame() // for DOCKED_LEADER (send attitude and thrust to fo
 
 uint8_t Drone::init_state(DroneState initial_state, int8_t docking_slot) {
     if (_drone_state == STANDBY) {
+        DroneState prev_drone_state = _drone_state;
+        int8_t prev_docking_slot = _docking_slot;
+        _drone_state = initial_state;
+        _docking_slot = docking_slot;
+
         switch (initial_state) {
             case DOCKED_FOLLOWER:
                 init_docked();
@@ -611,11 +616,10 @@ uint8_t Drone::init_state(DroneState initial_state, int8_t docking_slot) {
                 break;
             default:
                 _network->publish_drone_debug("Invalid initial state: " + std::to_string(initial_state));
+                _drone_state = prev_drone_state;
+                _docking_slot = prev_docking_slot;
                 return 0;
         }
-
-        _drone_state = initial_state;
-        _docking_slot = docking_slot;
         return 1;
     }
     _network->publish_drone_debug("Init State FAILED: improper DroneState = " + std::to_string(_drone_state));
