@@ -13,7 +13,20 @@ Structure:
 These results are based upon work supported by the NASA Aeronautics Research Mission Directorate under award number 80NSSC20K1452. This material is based upon a proposal tentatively selected by NASA for a grant award of $10,811, subject to successful crowdfunding. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of NASA.
 
 # Python Simulation
-The code in the **simulation** folder is used for bare-bones, ideal physics simulations of varius multi-vehicle configurations. To demonstrate flight, position control is implemented using a simplified version of the controllers used in PX4. Simulations are run using `python3 simulate.py`. The position target can be moved around in the horizontal plane with the WASD keys, as well as up and down with R and F. The yaw setpoint can be rotated with Z and X. For airframes that are flyable with undocked drones, the number keys (0-9) will toggle the presence of a drone in the corresponding docking slot.
+## Overview
+The code in the **simulation** folder is used for bare-bones, ideal physics simulations of varius multi-vehicle configurations, utilizing PyOpenGL graphics. To demonstrate flight, position control is implemented using a simplified version of the controllers used in PX4. Simulations are run using `python3 simulate.py`. The position target can be moved around in the horizontal plane with the WASD keys, as well as up and down with R and F. The yaw setpoint can be rotated with Z and X. For airframes that are flyable with undocked drones, the number keys (0-9) will toggle the presence of a drone in the corresponding docking slot.
+
+## Physics and Controller
+The physics code can be found in the `tick()` function in **drones.py**. The controller code can be found in the `control_loop()` function of the `Drone` class also in **drones.py**, with comments referencing the relevant parts of the PX4 codebase. As part of the controller, **px4_mixer_multirotor.py** is utilizied, which mainly takes care of motor desaturation, and is [taken from the PX4 codebase](https://github.com/PX4/PX4-Autopilot/blob/release/1.11/src/lib/mixer/MultirotorMixer/mixer_multirotor.py).
+
+## Airframe Configuration
+Python files that start with **constants_** define physical properties and controller parameters for various airframes. Files that start with **generate_matrices_** generate the specific rotor configuration(s) and corresponding mixer(s) for the airframe. The file **config.py** determines which of these files get used when running `python3 simulate.py`.
+
+## Mixers & Configuring PX4
+The **generate_matrices_** files can be executed as python scripts to show information about the frame and export the mixer(s) to a C header file to be used in PX4. To use a certain airframe in PX4, copy the contents of this header file to **PX4-Autopilot/src/lib/mixer_module/aviata_mixers.h** (see [PX4 Firmware Version](#px4-firmware-version) for more info about our modified version of PX4). The **generate_matrices_** files contain a parameter called `max_missing_drones`, which is the maximum number of drones that can be missing from the frame. Additionally, the **constants_** file used when running as a script is configured at the top of the `main()` function.
+
+## Mixer Generation Methods
+To generate the mixers and header files, **px4_generate_mixer.py** is utilized, which is [taken from the PX4 codebase](https://github.com/PX4/Firmware/blob/release/1.11/src/lib/mixer/MultirotorMixer/geometries/tools/px_generate_mixers.py). It calculates the dynamics of an airframe with some configuration of rotors, and then determines an inverse of these dynamics to generate the mixer. Originally, the Moore-Penrose Pseudoinverse was used, but there is an additional option to use **optimize_saturation.py** instead, which determines the inverse that can achieve the highest thrust and torque before saturating the motors (in typical circumstances). The desired method is chosen in `geometry_to_mix()` in **px4_generate_mixer.py**.
 
 # Controls Code
 ## Building Controls Code
