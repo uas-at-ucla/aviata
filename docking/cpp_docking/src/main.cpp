@@ -9,7 +9,7 @@ int main(/*int argc, char** argv */)
     t.lon = 0.5;
     
     Drone drone(t);
-    drone.connect_gazebo();
+    drone.connect_px4();
 
     drone.warm_camera();
     drone.arm();

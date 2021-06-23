@@ -24,6 +24,9 @@
 #define TARGET_SIZE 234
 #define DRONE_RADIUS 1.1135 // measured in meters, 1m boom + half the central tag side length (possibly slightly off for corners but good enough)
 
+// for determining whether we're running on a computer or on the drone
+#define RASPBERRY_PI 1
+#define SIMULATION 0
 
 #define MARGIN 80 // apriltag detection margin
 

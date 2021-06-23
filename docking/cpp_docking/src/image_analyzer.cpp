@@ -18,7 +18,7 @@
 
 ImageAnalyzer::ImageAnalyzer()
 {
-    #if USE_RASPI_CAMERA == 1
+    #if PLATFORM == RASPBERRY_PI
         tf = tag16h5_create();
     #else
         tf = tag36h11_create();
@@ -31,7 +31,7 @@ ImageAnalyzer::ImageAnalyzer()
 ImageAnalyzer::~ImageAnalyzer()
 {
     apriltag_detector_destroy(m_tagDetector);
-    #if USE_RASPI_CAMERA == 1
+    #if PLATFORM == RASPBERRY_PI
         tag16h5_destroy(tf);
     #else
         tag36h11_destroy(tf);

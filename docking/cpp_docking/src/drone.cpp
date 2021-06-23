@@ -31,12 +31,12 @@ Drone::Drone(Target t)
  * 
  * @return true if connection succeeded, false otherwise
  * */
-bool Drone::connect_gazebo()
+bool Drone::connect_px4()
 {
     std::string tag = "Connecting";
 
     std::string connection_url;
-    #if USE_RASPI_CAMERA == 1
+    #if PLATFORM == RASPBERRY_PI
         connection_url = "serial:///dev/ttyAMA0:921600";
     #else
         connection_url = "udp://:14540";
@@ -344,7 +344,7 @@ bool Drone::dock(int target_id, int stage)
         hold.down_m_s = 0.2;
         offboard->set_velocity_body(hold);
 
-        #if USE_RASPI_CAMERA == 1
+        #if PLATFORM == RASPBERRY_PI
         while (true) {
             if (docking_detector.is_docked()) {
                 log(log_tag, "Successfully docked!");

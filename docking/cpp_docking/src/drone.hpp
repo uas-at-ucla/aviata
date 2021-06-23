@@ -11,7 +11,14 @@
 #define STAGE_2 2
 #define CENTRAL_TARGET_ID 0
 
-#if USE_RASPI_CAMERA == 1
+#include "image_analyzer.hpp"
+#include "util.hpp"
+#include <mavsdk/mavsdk.h>
+#include <mavsdk/plugins/telemetry/telemetry.h>
+#include <mavsdk/plugins/action/action.h>
+#include <mavsdk/plugins/offboard/offboard.h>
+
+#if PLATFORM == RASPBERRY_PI
     #include "docking_detector.hpp"
     #include "raspi_camera.hpp"
     typedef RaspiCamera Camera;
@@ -20,12 +27,6 @@
     typedef CameraSimulator Camera;
 #endif
 
-#include "image_analyzer.hpp"
-#include <mavsdk/mavsdk.h>
-#include <mavsdk/plugins/telemetry/telemetry.h>
-#include <mavsdk/plugins/action/action.h>
-#include <mavsdk/plugins/offboard/offboard.h>
-
 using namespace mavsdk;
 const float ALTITUDE_DISP = BOOM_LENGTH / 2 / tan(to_radians(CAMERA_FOV_VERTICAL / 2)) * 1.5; // ~ 1.12 meters
 class Drone
@@ -33,7 +34,7 @@ class Drone
 
 public:
     Drone(Target t);
-    bool connect_gazebo();
+    bool connect_px4();
     bool arm();
     bool takeoff(int takeoff_alt);
     void initiate_docking(int target_id, bool full_docking);
@@ -49,7 +50,7 @@ private:
     ImageAnalyzer image_analyzer;
     Target m_target_info;
 
-    #if USE_RASPI_CAMERA == 1
+    #if PLATFORM == RASPBERRY_PI
     DockingDetector docking_detector;
     #endif
 
