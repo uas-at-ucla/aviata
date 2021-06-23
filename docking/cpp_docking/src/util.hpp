@@ -12,7 +12,7 @@
 
 // Constants
 
-#define CENTRAL_TAG_SIZE 0.135 // to be changed according to actual target size
+#define CENTRAL_TAG_SIZE 0.135   // to be changed according to actual target size
 #define PERIPHERAL_TAG_SIZE 0.06 // likewise
 
 // Camera information for simulator, measured in degrees
@@ -38,20 +38,24 @@
 #define LOG_CONSOLE_TEXT "\033[34m"   // Turn text on console blue
 #define NORMAL_CONSOLE_TEXT "\033[0m" // Restore normal console colour
 
-#define UNUSED(expr) do { (void)(expr); } while (0) // hack to make compiler think `expr` is used
+#define UNUSED(expr)  \
+    do                \
+    {                 \
+        (void)(expr); \
+    } while (0) // hack to make compiler think `expr` is used
 
 // Logs
 inline void log(const std::string &tag, const std::string msg, bool err = false)
 {
     std::time_t t = std::time(nullptr);
-    std::cout << (err ? ERROR_CONSOLE_TEXT : LOG_CONSOLE_TEXT) 
-              << "[" 
+    std::cout << (err ? ERROR_CONSOLE_TEXT : LOG_CONSOLE_TEXT)
+              << "["
               << std::put_time(std::localtime(&t), "%r")
               << "|"
-              << tag 
-              << "] " 
-              << NORMAL_CONSOLE_TEXT 
-              << msg 
+              << tag
+              << "] "
+              << NORMAL_CONSOLE_TEXT
+              << msg
               << std::endl;
 }
 
@@ -67,10 +71,14 @@ inline double to_degrees(double radians)
 }
 
 // cmath::abs() is only implemented for int, long int, or long long int
-inline float absolute_value(float val) {
-    if (val < 0.0) {
+inline float absolute_value(float val)
+{
+    if (val < 0.0)
+    {
         return -1.0 * val;
-    } else {
+    }
+    else
+    {
         return val;
     }
 }

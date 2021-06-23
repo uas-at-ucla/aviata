@@ -4,7 +4,7 @@
 #define MAX_ATTEMPTS 3
 #define MAX_HEIGHT 10
 #define MAX_HEIGHT_STAGE_2 3
-#define STAGE_1_TOLERANCE 0.1 // 0.10
+#define STAGE_1_TOLERANCE 0.1  // 0.10
 #define STAGE_2_TOLERANCE 0.05 // 0.05
 
 #define STAGE_1 1
@@ -19,12 +19,12 @@
 #include <mavsdk/plugins/offboard/offboard.h>
 
 #if PLATFORM == RASPBERRY_PI
-    #include "docking_detector.hpp"
-    #include "raspi_camera.hpp"
-    typedef RaspiCamera Camera;
+#include "docking_detector.hpp"
+#include "raspi_camera.hpp"
+typedef RaspiCamera Camera;
 #else
-    #include "camera_simulator.hpp"
-    typedef CameraSimulator Camera;
+#include "camera_simulator.hpp"
+typedef CameraSimulator Camera;
 #endif
 
 using namespace mavsdk;
@@ -41,18 +41,15 @@ public:
     bool land();
     void warm_camera();
 
-    // testing functions
-    void test1();
-
 private:
     Mavsdk mavsdk;
     Camera camera;
     ImageAnalyzer image_analyzer;
     Target m_target_info;
 
-    #if PLATFORM == RASPBERRY_PI
+#if PLATFORM == RASPBERRY_PI
     DockingDetector docking_detector;
-    #endif
+#endif
 
     float m_north;
     float m_east;
@@ -74,11 +71,16 @@ private:
     {
         switch (ls)
         {
-            case Telemetry::LandedState::OnGround: return "On ground";
-            case Telemetry::LandedState::TakingOff: return "Taking off";
-            case Telemetry::LandedState::Landing: return "Landing";
-            case Telemetry::LandedState::InAir: return "In air";
-            default: return "UNKNOWN";
+        case Telemetry::LandedState::OnGround:
+            return "On ground";
+        case Telemetry::LandedState::TakingOff:
+            return "Taking off";
+        case Telemetry::LandedState::Landing:
+            return "Landing";
+        case Telemetry::LandedState::InAir:
+            return "In air";
+        default:
+            return "UNKNOWN";
         }
     }
 };

@@ -14,7 +14,7 @@ using std::this_thread::sleep_for;
 
 RaspiCamera::RaspiCamera(Target target)
 {
-    UNUSED(target); // unused but kept to match CameraSimulator constructor
+    UNUSED(target);   // unused but kept to match CameraSimulator constructor
     int deviceID = 0; // 0 = open default camera
     camera.open(deviceID, cv::CAP_V4L2);
     log("width", std::to_string(camera.set(cv::CAP_PROP_FRAME_WIDTH, 640 * 1))); // more resolution doesn't hurt performance too much and pic is SO much better

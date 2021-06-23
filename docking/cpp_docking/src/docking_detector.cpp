@@ -16,12 +16,16 @@
  * This file is only compiled if running on the Raspberry Pi
  * */
 
-DockingDetector::DockingDetector() {
+DockingDetector::DockingDetector()
+{
     std::string tag = "GPIO Initialize";
-    if (gpioInitialise() < 0) {
+    if (gpioInitialise() < 0)
+    {
         _gpio_initialized = false;
         log(tag, "Fatal error; proceeding without GPIO functionality", true);
-    } else {
+    }
+    else
+    {
         _gpio_initialized = true;
         log(tag, "Successfully initialized");
 
@@ -48,7 +52,8 @@ DockingDetector::DockingDetector() {
         */
         int ret1 = gpioSetMode(INPUT_PIN, PI_INPUT);
         int ret2 = gpioSetMode(OUTPUT_PIN, PI_OUTPUT);
-        if (ret1 != 0 || ret2 != 0) {
+        if (ret1 != 0 || ret2 != 0)
+        {
             log(tag, "Failed to set input or output pin", true);
             gpioTerminate();
             _gpio_initialized = false;
@@ -58,7 +63,8 @@ DockingDetector::DockingDetector() {
     }
 }
 
-DockingDetector::~DockingDetector() {
+DockingDetector::~DockingDetector()
+{
     gpioTerminate();
 }
 
@@ -68,17 +74,24 @@ DockingDetector::~DockingDetector() {
  * @param signal is the value to write (HIGH/1 or LOW/0)
  * @return true if successful, false if an error occurred
  * */
-bool DockingDetector::output_signal(unsigned signal) {
-    if (_gpio_initialized) {
-        if (gpioWrite(OUTPUT_PIN, signal) != 0) {
+bool DockingDetector::output_signal(unsigned signal)
+{
+    if (_gpio_initialized)
+    {
+        if (gpioWrite(OUTPUT_PIN, signal) != 0)
+        {
             log("GPIO", "Failed to write 1 to output pin", true);
             gpioTerminate();
             _gpio_initialized = false;
             return false;
-        } else {
+        }
+        else
+        {
             return true;
         }
-    } else {
+    }
+    else
+    {
         return false;
     }
 }
@@ -88,18 +101,25 @@ bool DockingDetector::output_signal(unsigned signal) {
  * 
  * @return -1 if an error occurred, or the value that was read (HIGH/1 or LOW/0)
  * */
-int DockingDetector::read_signal() {
-    if (_gpio_initialized) {
+int DockingDetector::read_signal()
+{
+    if (_gpio_initialized)
+    {
         int val = gpioRead(INPUT_PIN);
-        if (val != 0 && val != 1) {
+        if (val != 0 && val != 1)
+        {
             log("GPIO", "Failed to read from input pin", true);
             gpioTerminate();
             _gpio_initialized = false;
             return -1;
-        } else {
+        }
+        else
+        {
             return val;
         }
-    } else {
+    }
+    else
+    {
         return false;
     }
 }
@@ -109,17 +129,23 @@ int DockingDetector::read_signal() {
  * 
  * @return true if docked, false otherwise
  * */
-bool DockingDetector::is_docked() {
-    if (_gpio_initialized) {
-        if (!output_signal(1)) return false;
+bool DockingDetector::is_docked()
+{
+    if (_gpio_initialized)
+    {
+        if (!output_signal(1))
+            return false;
 
         int val = read_signal();
-        if (val == -1) return false;
+        if (val == -1)
+            return false;
 
         output_signal(0);
 
         return val == 1;
-    } else {
+    }
+    else
+    {
         log("GPIO", "Unable to determine docking status due to improperly initialized GPIO pins", true);
         return false;
     }

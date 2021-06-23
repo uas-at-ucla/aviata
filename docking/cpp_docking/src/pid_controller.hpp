@@ -14,6 +14,6 @@ public:
 private:
     bool m_overshoot_adjust;
     Errors m_prev_errs;
-    Errors m_sums; 
+    Errors m_sums;
 };
 #endif //PID_H

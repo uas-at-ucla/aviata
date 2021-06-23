@@ -18,11 +18,11 @@
 
 ImageAnalyzer::ImageAnalyzer()
 {
-    #if PLATFORM == RASPBERRY_PI
-        tf = tag16h5_create();
-    #else
-        tf = tag36h11_create();
-    #endif
+#if PLATFORM == RASPBERRY_PI
+    tf = tag16h5_create();
+#else
+    tf = tag36h11_create();
+#endif
     m_tagDetector = apriltag_detector_create();
     m_tagDetector->nthreads = 4;
     m_tagDetector->quad_decimate = 2; // default is 2.0, so this will hurt speed but increase detection rate
@@ -31,11 +31,11 @@ ImageAnalyzer::ImageAnalyzer()
 ImageAnalyzer::~ImageAnalyzer()
 {
     apriltag_detector_destroy(m_tagDetector);
-    #if PLATFORM == RASPBERRY_PI
-        tag16h5_destroy(tf);
-    #else
-        tag36h11_destroy(tf);
-    #endif
+#if PLATFORM == RASPBERRY_PI
+    tag16h5_destroy(tf);
+#else
+    tag36h11_destroy(tf);
+#endif
 }
 
 /**
@@ -153,9 +153,8 @@ bool ImageAnalyzer::processImage(Mat img, int ind, std::string &tags, Errors &er
             }
             errs.yaw = incline_angle * -1; //Finds rotational error from diagonal angle
 
-
             // 3. Calculate x/y error
-            
+
             errs.x = (center[0] - image_center.x) * tag_pixel_ratio * -1; // * -1 since camera rotated 180 from drone
             errs.y = (image_center.y - center[1]) * tag_pixel_ratio * -1; // same ^
             errs.tag_pixel_ratio = tag_pixel_ratio;
