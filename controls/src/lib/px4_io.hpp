@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "mavlink/v2.0/common/mavlink.h"
+#include "mavlink/aviata_subset.h"
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/system.h>
 #include <mavsdk/plugins/action/action.h>
@@ -124,7 +124,7 @@ private:
     MavsdkCallbackManager mavsdk_callback_manager;
 
     void usage(std::string bin_name);
-    void component_discovered(ComponentType component_type);
+    void component_discovered(mavsdk::System::ComponentType component_type);
 };
 
 #endif
