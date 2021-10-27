@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import numpy as np
 
 g = 9.81 # m/s^2
