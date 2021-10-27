@@ -131,7 +131,7 @@ For more instructions and troubleshooting, see: https://docs.google.com/document
 8. Decide on a unique mesh network ID. See [Comms Code](#comms-code) for details.
 9. To run the comms code and/or controls code on startup, use `crontab -e` and add the line: `@reboot <command_goes_here> &`.
   * e.g. to enable the mesh network: `@reboot cd ~/OONF && ./run.sh wlan1 &`
-  * e.g. to wait for the mesh network then start the controls code: `@reboot bash -c "export PATH="$PATH:/usr/sbin" && cd ~/aviata/controls/build && source ../../rpi_tools/env_setup.sh && ../../rpi_tools/wait_for_mesh_network.sh && ./aviata_drone &>aviata_drone.out &"`
+  * e.g. to wait for the mesh network then start the controls code: `@reboot bash -c "export PATH="$PATH:/usr/sbin" && cd ~/aviata/controls/build && source ../../rpi_tools/env_setup.sh && ../../rpi_tools/wait_for_mesh_network.sh && ./aviata_drone <drone_name> &>aviata_drone.out &"`
 
 ### Current Status
 Four drones' RPi's have been setup with these mesh network IP addresses and hostnames:
