@@ -130,6 +130,16 @@ For more instructions and troubleshooting, see: https://docs.google.com/document
 7. Choose a unique name for this drone. Using `sudo raspi-config` -> System Options -> Hostname, set the hostname to **rpi-<NAME>**. Note that only alphanumeric characters and hyphens are allowed.
 8. Decide on a unique mesh network ID. See [Comms Code](#comms-code) for details.
 9. To run the comms code and/or controls code on startup, use `crontab -e` and add the line: `@reboot <command_goes_here> &`.
+  * e.g. to enable the mesh network: `@reboot cd ~/OONF && ./run.sh wlan1 &`
+  * e.g. to wait for the mesh network then start the controls code: `@reboot cd ~/aviata/controls/build && source ../../rpi_tools/env_setup.sh && ../../rpi_tools/wait_for_mesh_network.sh && ./aviata_drone &>aviata_drone.out &`
+
+### Current Status
+Four drones' RPi's have been setup with these mesh network IP addresses and hostnames:
+* 10.10.0.1: rpi-Bryan-Sun
+* 10.10.0.2: rpi-DN
+* 10.10.0.3: rpi-Hopper
+* 10.10.0.4: rpi-Krispy
+The ground station just needs to have it's own unique mesh network ID, and it will be able to connect to all the drones. Not sure if an ID of 0 is allowed.
 
 ## Setting PX4 Params
 1. Connect a drone via USB to QGroundControl.
@@ -154,6 +164,9 @@ To connect multiple drones to one laptop, we configure the telemetry radios with
 3. Follow the instructions [here](https://risc.readthedocs.io/2-multi-point-telemetry.html#upload-firmware-to-the-radio) (starting with "Upload Firmware to the radio") to configure each radio. Note that **uploader.py** is written in Python 2.
 4. If you plan to fly around other RC pilots, choose a single network ID number and set it on each radio (the **NETID** parameter). By choosing a NETID other than the default (25), you will mitigate possible interference with other radios. The NETID can be any unsigned 32-bit integer.
 
+### Current Status
+A ground station radio and four drones' radios have been setup with the above steps, with drone IDs 1-4. The NETID has been left at 25 for now.
+    
 ## Pixhawk Wiring
 Here is some general info on Pixhawk wiring: https://docs.px4.io/master/en/assembly/quick_start_pixhawk.html
 
