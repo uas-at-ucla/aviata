@@ -3,6 +3,10 @@ FROM debian:buster-slim@sha256:9f1ca3f1ac7b3c291363c27cab3472777e882ab5f2c8823a8
 
 RUN apt-get update && apt-get install -y wget cmake net-tools iputils-ping git build-essential
 
+RUN wget https://github.com/mavlink/MAVSDK/releases/download/v0.34.0/mavsdk_0.34.0_ubuntu18.04_amd64.deb \
+    && dpkg -i mavsdk_0.34.0_ubuntu18.04_amd64.deb \
+    && rm mavsdk_0.34.0_ubuntu18.04_amd64.deb
+
 #ROS2
 RUN apt-get update && apt-get install -y locales
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
@@ -70,7 +74,8 @@ RUN git clone https://github.com/AprilRobotics/apriltag.git \
     && cd apriltag && cmake . \
     && make install
 
-# MAVSDK
+# MAVSDK (uninstall old version, install new version). Old version is kept to avoid re-building the Docker image.
+RUN dpkg --remove mavsdk
 RUN wget https://github.com/mavlink/MAVSDK/releases/download/v0.44.0/mavsdk_0.44.0_ubuntu18.04_amd64.deb \
     && dpkg -i mavsdk_0.44.0_ubuntu18.04_amd64.deb \
     && rm mavsdk_0.44.0_ubuntu18.04_amd64.deb
