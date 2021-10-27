@@ -23,8 +23,7 @@ cd MAVSDK && \
 git submodule update --init --recursive && \
 cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -Bbuild/default -H. -DCMAKE_CXX_STANDARD_LIBRARIES="-latomic" && \
 cmake --build build/default && \
-cd build/default && \
-sudo make install) || echo "Skipping MAVSDK"
+sudo cmake --build build/default --target install) || echo "Skipping MAVSDK"
 
 # apriltag
 cd ~

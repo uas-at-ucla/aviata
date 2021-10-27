@@ -449,7 +449,7 @@ void PX4IO::usage(std::string bin_name)
               << "For example, to connect to the simulator use URL: udp://:14540" << std::endl;
 }
 
-void PX4IO::component_discovered(mavsdk::System::ComponentType component_type)
+void PX4IO::component_discovered(ComponentType component_type)
 {
     std::cout << NORMAL_CONSOLE_TEXT << "Discovered a component with type "
               << unsigned(component_type) << std::endl;
@@ -503,7 +503,7 @@ int PX4IO::takeoff_and_land_test(int argc, char** argv)
 
     // Register a callback so we get told when components (camera, gimbal) etc
     // are found.
-    system->register_component_discovered_callback([this](mavsdk::System::ComponentType component_type){ component_discovered(component_type); });
+    system->register_component_discovered_callback([this](ComponentType component_type){ component_discovered(component_type); });
 
     auto telemetry = std::make_shared<Telemetry>(system);
     auto action = std::make_shared<Action>(system);
