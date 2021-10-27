@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "mavlink/aviata_subset.h"
+#include "mavlink/mav_cmd.h"
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/system.h>
 #include <mavsdk/plugins/action/action.h>
