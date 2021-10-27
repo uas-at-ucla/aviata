@@ -165,7 +165,7 @@ To connect multiple drones to one laptop, we configure the telemetry radios with
 4. If you plan to fly around other RC pilots, choose a single network ID number and set it on each radio (the **NETID** parameter). By choosing a NETID other than the default (25), you will mitigate possible interference with other radios. The NETID can be any unsigned 32-bit integer.
 
 ### Current Status
-A ground station radio and four drones' radios have been setup with the above steps, with drone IDs 1-4. The NETID has been left at 25 for now.
+A ground station radio and four drones' radios have been setup with the above steps, with drone IDs 1-4. The NETID has been left at 25 for now. **Unfortunately, the radios have a hard time maintaining a connection when all 4 are in use. Solutions may include reducing the amount of data sent in PX4 or buying more capable radios.**
     
 ## Pixhawk Wiring
 Here is some general info on Pixhawk wiring: https://docs.px4.io/master/en/assembly/quick_start_pixhawk.html
