@@ -250,7 +250,10 @@ void Drone::init_follower() {
         
         _last_setpoint_msg_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
         mavlink_set_attitude_target_t attitude_target;
-        std::copy(std::begin(follower_setpoint->q), std::end(follower_setpoint->q), std::begin(attitude_target.q));
+        attitude_target.q[0] = follower_setpoint->q[0];
+        attitude_target.q[1] = follower_setpoint->q[1];
+        attitude_target.q[2] = follower_setpoint->q[2];
+        attitude_target.q[3] = follower_setpoint->q[3];
         attitude_target.thrust = follower_setpoint->thrust;
         attitude_target.body_roll_rate = follower_setpoint->aviata_yaw_est; // body_roll_rate indicates aviata_yaw_est
         attitude_target.body_pitch_rate = (float) follower_setpoint->aviata_docking_slot; // body_pitch_rate indicates aviata_docking_slot
@@ -286,7 +289,10 @@ void Drone::init_leader() {
     _px4_io.subscribe_attitude_target([this](const mavlink_attitude_target_t &attitude_target) {
         if (_armed && !_kill_switch_engaged) {
             aviata::msg::FollowerSetpoint follower_setpoint;
-            std::copy(std::begin(attitude_target.q), std::end(attitude_target.q), std::begin(follower_setpoint.q));
+            follower_setpoint.q[0] = attitude_target.q[0];
+            follower_setpoint.q[1] = attitude_target.q[1];
+            follower_setpoint.q[2] = attitude_target.q[2];
+            follower_setpoint.q[3] = attitude_target.q[3];
             follower_setpoint.thrust = attitude_target.thrust;
             follower_setpoint.aviata_yaw_est = attitude_target.body_roll_rate; // body_roll_rate indicates aviata_yaw_est
             follower_setpoint.aviata_docking_slot = (uint8_t) (attitude_target.body_pitch_rate+0.5f); // body_pitch_rate indicates aviata_docking_slot
