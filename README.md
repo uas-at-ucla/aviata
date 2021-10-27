@@ -74,7 +74,7 @@ Source your ROS2 setup script, then run this:
 
 A shortcut for these things on RPi is `./rpi_tools/env_setup.sh`.
 
-Next, run the `aviata_drone` executable from within the controls/build folder. The usage is `./aviata_drone <drone_id> <initial_state> [docking_slot] [connection_url]` (the docking slot number does not matter for simulation). For example, you can run these two commands in separate terminals if you are using multi-vehicle simulation:
+Next, run the `aviata_drone` executable from within the controls/build folder. The usage is `./aviata_drone [drone_id] [initial_state] [docking_slot] [connection_url]` (With defaults - `drone_id`: derived from machine hostname; `initial_state`: standby; `docking_slot`: -1 (invalid); `connection_url`: serial:///dev/ttyAMA0:921600). For example, you can run these two commands in separate terminals if you are using multi-vehicle simulation:
 ```bash
 ./aviata_drone drone1 leader 0 udp://:14540
 ```
@@ -84,7 +84,7 @@ Next, run the `aviata_drone` executable from within the controls/build folder. T
 
 The drone that was initiated as the leader can be controlled from QGroundControl, and the follower should roughly copy it, although expect some deviations since the program expects the drones to be docked.
 
-Drones can also be started in `standby` mode, meaning they are idle (presumably at the ground station). Currently, this mode immediately transitions to docking, so the drone will immediately take off, fly to the swarm, and begin the docking process, but eventually this transition will be triggered by an external command.
+Drones can also be started in `standby` mode, meaning they are idle (presumably at the ground station). While we do not have real-life docking, drones can be transitioned from STANDBY to a new state by sending an INIT_STATE command to the drone's DroneCommand ROS service.
 ```bash
 ./aviata_drone drone2 standby 1 udp://:14541
 ```
