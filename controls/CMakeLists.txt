@@ -14,9 +14,10 @@ endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -Wpedantic
-        # Disable warnings that occur in mavlink headers and ROS generated source files
-        -Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-deprecated-declarations -Wno-pedantic
-    )    
+        # Disable warnings that occur in ROS generated source files
+        -Wno-deprecated-declarations
+        # Occurred in mavlink headers: -Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-pedantic
+    )
 endif()
 
 set(FastRTPS_INCLUDE_DIR /opt/ros/foxy/include) 
