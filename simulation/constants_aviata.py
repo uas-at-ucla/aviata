@@ -44,6 +44,7 @@ payload_structure_height = 0 # TODO vertical distance between the structure cent
 structure_drone_height = 0.06 # vertical distance between a drone's center of mass and the structure center of mass (meters)
 structpayload_drone_height = (M_structure * structure_drone_height + M_payload * (payload_structure_height + structure_drone_height)) / M_structure_payload  # vertical distance between a drone's center of mass and the structure+payload center of mass (meters)
 drone_prop_height = 0.047 # vertical distance between a drone's propellers and its center of mass (meters)
+docking_attachment_offset = 0.06 # vertical distance between a drone's propellers and the approximate center of the docking attachment (meters)
 
 # Control Constants
 rollrate_pitchrate_scale = 0.75

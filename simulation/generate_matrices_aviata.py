@@ -52,7 +52,7 @@ def generate_aviata_matrices(missing_drones=[]):
         rotor_axis_y = np.imag(rotor_axis_hor)
 
         drone_rotors_sequential.append({
-            'position': np.array([np.real(rotor_pos) + constants.R, np.imag(rotor_pos), 0]),
+            'position': np.array([np.real(rotor_pos), np.imag(rotor_pos), 0]),
             'direction': 'CW' if CW else 'CCW',
             'axis': np.array([rotor_axis_x, rotor_axis_y, rotor_axis_z]),
             'Ct': constants.Ct,
@@ -97,7 +97,7 @@ def generate_aviata_matrices(missing_drones=[]):
             if i in missing_drones:
                 rotor['Ct'] = 0
                 rotor['Cm'] = 0
-            rotor['position'] = rotation.apply(drone_rotors[j]['position'])
+            rotor['position'] = rotation.apply(drone_rotors[j]['position'] + np.array([constants.R, 0, 0]))
             rotor['axis'] = rotation.apply(drone_rotors[j]['axis'])
             structure_rotors.append(rotor)
         angle += (TWO_PI/constants.num_drones)
@@ -123,7 +123,10 @@ def generate_aviata_matrices(missing_drones=[]):
     inertia = np.row_stack((np.column_stack((I, np.zeros((3,3)))), np.column_stack((np.zeros((3,3)), np.diag((M*constants.g*2, M*constants.g*2, M*constants.g*2)))))) 
 
     geometry = {'rotors': structure_rotors}
-    A, B = px4_generate_mixer.geometry_to_mix(geometry)
+    for i in range(constants.num_rotors):
+        drone_rotors[i]['position'] -= np.array([0.0, 0.0, constants.docking_attachment_offset])
+    single_drone_geometry = {'rotors': drone_rotors}
+    A, B = px4_generate_mixer.geometry_to_mix(geometry, single_drone_geometry)
     B[abs(B) < 0.000001] = 0.0
     # A_4dof = np.delete(A, [3,4], 0)
     B_px = px4_generate_mixer.normalize_mix_px4(B, inertia)
