@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Derived from https://github.com/PX4/Firmware/blob/release/1.11/src/lib/mixer/MultirotorMixer/mixer_multirotor.py

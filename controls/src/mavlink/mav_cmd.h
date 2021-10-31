@@ -3,6 +3,7 @@
 
 // MAV_CMD enum with AVIATA commands copied from mavlink generated headers: generated/include/mavlink/v2.0/common/common.h
 // Using aviata branch of https://github.com/uas-at-ucla-dependencies/mavlink
+// Also includes ATTITUDE_TARGET_TYPEMASK because some older versions of MAVSDK use a version of mavlink where it does not exist
 
 /** @brief Commands to be executed by the MAV. They can be executed on user request, or as part of a mission script. If the action is used in a mission, the parameter mapping to the waypoint/mission message is as follows: Param 1, Param 2, Param 3, Param 4, X: Param 5, Y:Param 6, Z:Param 7. This command list is similar what ARINC 424 is for commercial aircraft: A data format how to interpret waypoint/mission data. NaN and INT32_MAX may be used in float/integer params (respectively) to indicate optional/default values (e.g. to use the component's current yaw or latitude rather than a specific value). See https://mavlink.io/en/guide/xml_schema.html#MAV_CMD for information about the structure of the MAV_CMD entries */
 #ifndef HAVE_ENUM_MAV_CMD
@@ -178,6 +179,20 @@ typedef enum MAV_CMD
    MAV_CMD_AVIATA_SET_STANDALONE=43003, /* Set mixer and parameters back to the values for a standalone drone. |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  */
    MAV_CMD_ENUM_END=43004, /*  | */
 } MAV_CMD;
+#endif
+
+/** @brief Bitmap to indicate which dimensions should be ignored by the vehicle: a value of 0b00000000 indicates that none of the setpoint dimensions should be ignored. */
+#ifndef HAVE_ENUM_ATTITUDE_TARGET_TYPEMASK
+#define HAVE_ENUM_ATTITUDE_TARGET_TYPEMASK
+typedef enum ATTITUDE_TARGET_TYPEMASK
+{
+   ATTITUDE_TARGET_TYPEMASK_BODY_ROLL_RATE_IGNORE=1, /* Ignore body roll rate | */
+   ATTITUDE_TARGET_TYPEMASK_BODY_PITCH_RATE_IGNORE=2, /* Ignore body pitch rate | */
+   ATTITUDE_TARGET_TYPEMASK_BODY_YAW_RATE_IGNORE=4, /* Ignore body yaw rate | */
+   ATTITUDE_TARGET_TYPEMASK_THROTTLE_IGNORE=64, /* Ignore throttle | */
+   ATTITUDE_TARGET_TYPEMASK_ATTITUDE_IGNORE=128, /* Ignore attitude | */
+   ATTITUDE_TARGET_TYPEMASK_ENUM_END=129, /*  | */
+} ATTITUDE_TARGET_TYPEMASK;
 #endif
 
 #endif

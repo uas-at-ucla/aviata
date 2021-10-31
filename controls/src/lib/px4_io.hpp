@@ -54,6 +54,12 @@ enum PX4_CUSTOM_SUB_MODE_AUTO {
 	PX4_CUSTOM_SUB_MODE_AUTO_PRECLAND
 };
 
+#ifdef OLD_MAVSDK
+typedef mavsdk::ComponentType ComponentType;
+#else
+typedef mavsdk::System::ComponentType ComponentType;
+#endif
+
 using namespace mavsdk;
 
 // mavlink message id's https://github.com/mavlink/mavlink/blob/master/message_definitions/v1.0/common.xml
@@ -124,7 +130,7 @@ private:
     MavsdkCallbackManager mavsdk_callback_manager;
 
     void usage(std::string bin_name);
-    void component_discovered(mavsdk::System::ComponentType component_type);
+    void component_discovered(ComponentType component_type);
 };
 
 #endif

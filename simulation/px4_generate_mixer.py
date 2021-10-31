@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Derived from https://github.com/PX4/Firmware/blob/release/1.11/src/lib/mixer/MultirotorMixer/geometries/tools/px_generate_mixers.py
 
@@ -177,7 +177,7 @@ def geometry_to_thrust_matrix(geometry):
 
     return At
 
-def geometry_to_mix(geometry):
+def geometry_to_mix(geometry, single_drone_geometry=None):
     '''
     Compute combined torque & thrust matrix A and mix matrix B from geometry dictionnary
 
@@ -196,10 +196,13 @@ def geometry_to_mix(geometry):
     # Choose one of the methods below (pseudoinverse or optimize for minimal saturation)
 
     # Mix matrix computed as pseudoinverse of A
-    B = np.linalg.pinv(A)
+    # B = np.linalg.pinv(A)
 
     # Optimal inverse to minimize motor saturation:
-    # B = optimize_saturation.optimal_inverse(A)
+    single_drone_torque_matrix = None
+    if single_drone_geometry is not None:
+        single_drone_torque_matrix = geometry_to_torque_matrix(single_drone_geometry)
+    B = optimize_saturation.optimal_inverse(A, single_drone_torque_matrix)
 
     return A, B
 
