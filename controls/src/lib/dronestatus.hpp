@@ -86,4 +86,13 @@ enum DockingIterationResult{
     RESTART_DOCKING
 };
 
+struct SetupOptions {
+    std::string drone_id;
+    DroneState state;
+    int8_t docking_slot;
+    std::string connection_url;
+    int8_t num_drones;
+    int8_t max_missing_drones;
+};
+
 #endif
