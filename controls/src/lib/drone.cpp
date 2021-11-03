@@ -820,8 +820,8 @@ DockingIterationResult Drone::do_docking(int stage)
             docking_status.successful_frames = 0;
         }
 
-        // Transition if we've been centered for over 1 second
-        if (docking_status.successful_frames > 10) {
+        // Transition if we've been centered for over 1 second (stage 1) or docking detected (stage 2)
+        if ((stage == STAGE_1 && docking_status.successful_frames > 10) || (stage == STAGE_2 && docking_detector.is_docked())) {
             return DOCKING_SUCCESS;
         }
 

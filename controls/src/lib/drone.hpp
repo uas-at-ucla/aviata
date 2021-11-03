@@ -23,6 +23,7 @@
 
 #include "image_analyzer.hpp"
 #include "util.hpp"
+#include "docking_detector.hpp"
 #include "pid_controller.hpp"
 
 #include <opencv2/core.hpp>
@@ -81,6 +82,7 @@ private:
     ImageAnalyzer image_analyzer;
     Target m_target_info;
     DockingStatus docking_status;
+    DockingDetector docking_detector;
 
     float m_north;
     float m_east;
