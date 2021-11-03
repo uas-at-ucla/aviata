@@ -35,6 +35,9 @@ Installation Requirements:
 * cmake
 * https://mavsdk.mavlink.io/develop/en/getting_started/installation.html
 * ROS2
+* OpenCV
+* apriltag
+* pigpio
 
 Build:
 ```bash
