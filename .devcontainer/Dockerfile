@@ -81,10 +81,10 @@ RUN wget https://github.com/mavlink/MAVSDK/releases/download/v0.44.0/mavsdk_0.44
     && rm mavsdk_0.44.0_ubuntu18.04_amd64.deb
     
 # pigpio
-RUN apt install unzip
-RUN wget https://github.com/joan2937/pigpio/archive/master.zip
-    && unzip master.zip
-    && cd pigpio-master
-    && make
-    && sudo make install
+RUN apt install unzip -y 
+RUN wget https://github.com/joan2937/pigpio/archive/master.zip \
+    && unzip master.zip \
+    && cd pigpio-master \
+    && make \
+    && sudo make install 
 
