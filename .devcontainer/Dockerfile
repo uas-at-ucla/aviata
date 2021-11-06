@@ -74,12 +74,11 @@ RUN git clone https://github.com/AprilRobotics/apriltag.git \
     && cd apriltag && cmake . \
     && make install
 
-# MAVSDK (uninstall old version, install new version). Old version is kept to avoid re-building the Docker image.
-RUN dpkg --remove mavsdk
-RUN wget https://github.com/mavlink/MAVSDK/releases/download/v0.44.0/mavsdk_0.44.0_ubuntu18.04_amd64.deb \
-    && dpkg -i mavsdk_0.44.0_ubuntu18.04_amd64.deb \
-    && rm mavsdk_0.44.0_ubuntu18.04_amd64.deb
-    
+# Newer version of MAVSDK (not needed for now)
+# RUN wget https://github.com/mavlink/MAVSDK/releases/download/v0.44.0/mavsdk_0.44.0_ubuntu18.04_amd64.deb \
+#     && dpkg -i mavsdk_0.44.0_ubuntu18.04_amd64.deb \
+#     && rm mavsdk_0.44.0_ubuntu18.04_amd64.deb
+
 # pigpio
 RUN apt install unzip -y 
 RUN wget https://github.com/joan2937/pigpio/archive/master.zip \
