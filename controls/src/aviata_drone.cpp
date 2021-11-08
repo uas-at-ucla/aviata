@@ -4,9 +4,15 @@
 #include <algorithm>
 
 int print_use_guide() {
-    std::cout << "Usage: ./aviata_drone [drone_id] [initial_state] [docking_slot] [connection_url]" << std::endl;
-    std::cout << "    Initial states: standby, follower, leader" << std::endl;
-    std::cout << "    With no arguments, this starts a drone in STANDBY with ID based on the machine hostname, and connects to the RPi serial port." << std::endl;
+    std::cout << "Usage: ./aviata_drone [options]" << std::endl;
+    std::cout << "Options: " << std::endl;
+    std::cout << "  --id (-i): Drone ID, defaults to hostname with rpi- stripped" << std::endl;
+    std::cout << "  --state (-s): Initial state (standby, follower, leader), defaults to standby" << std::endl;
+    std::cout << "  --docking-slot (-d): Docking slot" << std::endl;
+    std::cout << "  --connection-url (-c): Defaults to RPi serial port" << std::endl;
+    std::cout << "  --num-drones (-n): Total number of drones in the frame, defaults to 4" << std::endl;
+    std::cout << "  --max-missing (-m): Number of drones in the frame missing to still fly, defaults to 0" << std::endl;
+    std::cout << "  With no arguments, this starts a drone in STANDBY with ID based on the machine hostname, and connects to the RPi serial port." << std::endl;
     return EINVAL;
 }
 
