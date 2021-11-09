@@ -22,7 +22,7 @@ char *get_command_string(const std::string *commands, int num_commands)
     return cstr;
 }
 
-int execute_commands(ssh_session session, const char **hosts, const int num_nodes, const std::string release)
+int execute_commands(ssh_session session, const char **hosts, const int num_nodes, std::string release)
 {
     ssh_channel channel;
     int rc;
@@ -85,14 +85,18 @@ int execute_commands(ssh_session session, const char **hosts, const int num_node
     return SSH_OK;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    std::string release = "0.0.3";
+    if(argc > 1){
+        std::string release(argv[1]);
+    }
+
     ssh_session my_ssh_session;
     int rc;
     const char password[] = "password";
     const char connection_string[] = "localhost";
     const char *hosts[] = {"localhost", "localhost", "localhost", "localhost"};
-    const std::string release = "0.0.2";
     const int num_nodes = 4;
 
     my_ssh_session = ssh_new();
