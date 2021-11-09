@@ -40,14 +40,14 @@ int execute_commands(ssh_session session, const char **hosts, const int num_node
 
     const std::string commands[] = {"cd ~",
                               "rm -rf " + release + ".zip",
-                              "rm -rf release-test-" + release,
-                              "wget https://github.com/chirag-singh1/release-test/archive/refs/tags/" + release + ".zip",
+                              "rm -rf aviata-rpi-node-" + release,
+                              "wget https://github.com/chirag-singh1/aviata-rpi-node/archive/refs/tags/" + release + ".zip",
                               "unzip " + release + ".zip",
-                              "cd release-test-" + release,
-                              "chmod +x test.sh",
-                              "./test.sh ",
+                              "cd aviata-rpi-node-" + release,
+                              "chmod +x run.sh",
+                              "./run.sh ",
                               "rm -rf " + release + ".zip",
-                              "rm -rf release-test-" + release};
+                              "rm -rf aviata-rpi-node-" + release};
     rc = ssh_channel_request_exec(channel, get_command_string(commands, sizeof(commands)/sizeof(commands[0])));
     if (rc != SSH_OK)
     {
