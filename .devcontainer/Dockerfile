@@ -85,5 +85,5 @@ RUN wget https://github.com/joan2937/pigpio/archive/master.zip \
     && unzip master.zip \
     && cd pigpio-master \
     && make \
-    && sudo make install 
-
+    && sudo make install \
+    && cd .. && rm -rf pigpio-master

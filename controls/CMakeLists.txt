@@ -48,7 +48,7 @@ if(Qt5Widgets_FOUND)
     endif()
 endif()
 
-find_package(pigpio MODULE)
+find_package(pigpio CONFIG)
 if(pigpio_FOUND)
     add_compile_definitions(USE_PIGPIO)
 endif()
