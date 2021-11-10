@@ -2,14 +2,14 @@
 
 void apriltag_test();
 
-int main(/*int argc, char** argv */)
+int main()
 {
     Target t;
     t.lat = 0.5;
     t.lon = 0.5;
-    
+
     Drone drone(t);
-    drone.connect_gazebo();
+    drone.connect_px4();
 
     drone.warm_camera();
     drone.arm();
@@ -17,10 +17,7 @@ int main(/*int argc, char** argv */)
 
     drone.initiate_docking(1, false);
     // drone.initiate_docking(1, true);
-
-    // drone.test1();
 }
-
 
 // #include "image_analyzer.hpp"
 // #include <opencv2/core.hpp>
@@ -49,11 +46,11 @@ int main(/*int argc, char** argv */)
 //     for (const auto img_name : filenames) {
 //         std::string test = " ";
 //         cv::Mat img = cv::imread(img_name);
-        
+
 //         Errors errs;
 //         bool found = ia->processImage(img, 0, test, errs);
 //         if (found) {
-//             log("test", "found: " + img_name + " ---------- " + std::to_string(errs.x) + " " + std::to_string(errs.y) + 
+//             log("test", "found: " + img_name + " ---------- " + std::to_string(errs.x) + " " + std::to_string(errs.y) +
 //                 " " + std::to_string(errs.alt) + " " + std::to_string(errs.yaw) + " " + test);
 //             dets++;
 //         } else {

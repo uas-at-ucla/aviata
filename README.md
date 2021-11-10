@@ -24,6 +24,7 @@ Python files that start with **constants_** define physical properties and contr
 
 ## Mixers & Configuring PX4
 The **generate_matrices_** files can be executed as python scripts to show information about the frame and export the mixer(s) to a C header file to be used in PX4. To use a certain airframe in PX4, copy the contents of this header file to **PX4-Autopilot/src/lib/mixer_module/aviata_mixers.h** (see [PX4 Firmware Version](#px4-firmware-version) for more info about our modified version of PX4). The **generate_matrices_** files contain a parameter called `max_missing_drones`, which is the maximum number of drones that can be missing from the frame. Additionally, the **constants_** file used when running as a script is configured at the top of the `main()` function.
+* Note that "docking slot" numbers are determined by the order of drones in the mixer matrix, and are zero-indexed. For generate_matrices_aviata.py, the convention is that you start with the body forward axis, and count up from 0 as you move clockwise (looking from above the vehicle). The math is done in the NED coordinate frame with the vehicle facing north.
 
 ## Mixer Generation Methods
 To generate the mixers and header files, **px4_generate_mixer.py** is utilized, which is [taken from the PX4 codebase](https://github.com/PX4/Firmware/blob/release/1.11/src/lib/mixer/MultirotorMixer/geometries/tools/px_generate_mixers.py). It calculates the dynamics of an airframe with some configuration of rotors, and then determines an inverse of these dynamics to generate the mixer. Originally, the Moore-Penrose Pseudoinverse was used, but there is an additional option to use **optimize_saturation.py** instead, which determines the inverse that can achieve the highest thrust and torque before saturating the motors (in typical circumstances). The desired method is chosen in `geometry_to_mix()` in **px4_generate_mixer.py**.
@@ -34,6 +35,9 @@ Installation Requirements:
 * cmake
 * https://mavsdk.mavlink.io/develop/en/getting_started/installation.html
 * ROS2
+* OpenCV
+* apriltag
+* pigpio
 
 Build:
 ```bash
@@ -73,7 +77,7 @@ Source your ROS2 setup script, then run this:
 
 A shortcut for these things on RPi is `./rpi_tools/env_setup.sh`.
 
-Next, run the `aviata_drone` executable from within the controls/build folder. The usage is `./aviata_drone <drone_id> <initial_state> [docking_slot] [connection_url]` (the docking slot number does not matter for simulation). For example, you can run these two commands in separate terminals if you are using multi-vehicle simulation:
+Next, run the `aviata_drone` executable from within the controls/build folder. The usage is `./aviata_drone [drone_id] [initial_state] [docking_slot] [connection_url]` (With defaults - `drone_id`: derived from machine hostname; `initial_state`: standby; `docking_slot`: -1 (invalid); `connection_url`: serial:///dev/ttyAMA0:921600). For example, you can run these two commands in separate terminals if you are using multi-vehicle simulation:
 ```bash
 ./aviata_drone drone1 leader 0 udp://:14540
 ```
@@ -83,7 +87,7 @@ Next, run the `aviata_drone` executable from within the controls/build folder. T
 
 The drone that was initiated as the leader can be controlled from QGroundControl, and the follower should roughly copy it, although expect some deviations since the program expects the drones to be docked.
 
-Drones can also be started in `standby` mode, meaning they are idle (presumably at the ground station). Currently, this mode immediately transitions to docking, so the drone will immediately take off, fly to the swarm, and begin the docking process, but eventually this transition will be triggered by an external command.
+Drones can also be started in `standby` mode, meaning they are idle (presumably at the ground station). While we do not have real-life docking, drones can be transitioned from STANDBY to a new state by sending an INIT_STATE command to the drone's DroneCommand ROS service.
 ```bash
 ./aviata_drone drone2 standby 1 udp://:14541
 ```
@@ -129,6 +133,16 @@ For more instructions and troubleshooting, see: https://docs.google.com/document
 7. Choose a unique name for this drone. Using `sudo raspi-config` -> System Options -> Hostname, set the hostname to **rpi-<NAME>**. Note that only alphanumeric characters and hyphens are allowed.
 8. Decide on a unique mesh network ID. See [Comms Code](#comms-code) for details.
 9. To run the comms code and/or controls code on startup, use `crontab -e` and add the line: `@reboot <command_goes_here> &`.
+  * e.g. to enable the mesh network: `@reboot cd ~/OONF && ./run.sh wlan1 &`
+  * e.g. to wait for the mesh network then start the controls code: `@reboot bash -c "export PATH="$PATH:/usr/sbin" && cd ~/aviata/controls/build && source ../../rpi_tools/env_setup.sh && ../../rpi_tools/wait_for_mesh_network.sh && ./aviata_drone &>aviata_drone.out &"`
+
+### Current Status
+Four drones' RPi's have been setup with these mesh network IP addresses and hostnames:
+* 10.10.0.1: rpi-Bryan-Sun
+* 10.10.0.2: rpi-DN
+* 10.10.0.3: rpi-Hopper
+* 10.10.0.4: rpi-Krispy
+The ground station just needs to have it's own unique mesh network ID, and it will be able to connect to all the drones. Not sure if an ID of 0 is allowed.
 
 ## Setting PX4 Params
 1. Connect a drone via USB to QGroundControl.
@@ -152,6 +166,11 @@ To connect multiple drones to one laptop, we configure the telemetry radios with
 2. Retrieve the code from https://github.com/RFDesign/SiK. In particular, you only need the file **Firmware/tools/uploader.py**.
 3. Follow the instructions [here](https://risc.readthedocs.io/2-multi-point-telemetry.html#upload-firmware-to-the-radio) (starting with "Upload Firmware to the radio") to configure each radio. Note that **uploader.py** is written in Python 2.
 4. If you plan to fly around other RC pilots, choose a single network ID number and set it on each radio (the **NETID** parameter). By choosing a NETID other than the default (25), you will mitigate possible interference with other radios. The NETID can be any unsigned 32-bit integer.
+
+### Current Status
+A ground station radio and four drones' radios have been setup with the above steps, with drone IDs 1-4. The NETID has been left at 25 for now. **Unfortunately, the radios are in general very slow, and have a hard time maintaining a connection when all 4 are in use.** Solutions may include reducing the amount of data sent in PX4 or buying more capable radios. There is als talk about other causes online, for example: https://discuss.px4.io/t/sik-radio-telemetry-very-slow-removing-ecc-made-big-difference/5528.
+
+As the AVIATA ground station gains more features, the radios will become more obsolete.
 
 ## Pixhawk Wiring
 Here is some general info on Pixhawk wiring: https://docs.px4.io/master/en/assembly/quick_start_pixhawk.html

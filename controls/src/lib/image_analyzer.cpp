@@ -18,8 +18,8 @@
 
 ImageAnalyzer::ImageAnalyzer()
 {
-    tf = tag36h11_create();
-    // tf = tag16h5_create();
+    //tf = tag36h11_create();
+    tf = tag16h5_create();
     m_tagDetector = apriltag_detector_create();
     m_tagDetector->nthreads = 4;
     m_tagDetector->quad_decimate = 1; 
@@ -28,8 +28,8 @@ ImageAnalyzer::ImageAnalyzer()
 ImageAnalyzer::~ImageAnalyzer()
 {
     apriltag_detector_destroy(m_tagDetector);
-    tag36h11_destroy(tf);
-    // tag16h5_destroy(tf);
+    //tag36h11_destroy(tf);
+    tag16h5_destroy(tf);
 }
 
 /**

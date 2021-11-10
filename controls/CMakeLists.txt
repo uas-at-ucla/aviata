@@ -74,6 +74,7 @@ target_link_libraries(aviata_lib
     MAVSDK::mavsdk_mavlink_passthrough
     MAVSDK::mavsdk_offboard
     ${OpenCV_LIBS}
+    pigpio
     apriltag
 )
 

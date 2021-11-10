@@ -31,16 +31,16 @@ Drone::Drone(Target t)
  * 
  * @return true if connection succeeded, false otherwise
  * */
-bool Drone::connect_gazebo()
+bool Drone::connect_px4()
 {
     std::string tag = "Connecting";
 
     std::string connection_url;
-    #if USE_RASPI_CAMERA == 1
-        connection_url = "serial:///dev/ttyAMA0:921600";
-    #else
-        connection_url = "udp://:14540";
-    #endif
+#if PLATFORM == RASPBERRY_PI
+    connection_url = "serial:///dev/ttyAMA0:921600";
+#else
+    connection_url = "udp://:14540";
+#endif
 
     ConnectionResult connection_result = mavsdk.add_any_connection(connection_url);
 
@@ -55,15 +55,16 @@ bool Drone::connect_gazebo()
     std::promise<void> discover_promise;
     auto discover_future = discover_promise.get_future();
 
-    mavsdk.subscribe_on_new_system([&mavsdk = mavsdk, &discover_promise, &tag]() {
-        const auto system = mavsdk.systems().at(0);
+    mavsdk.subscribe_on_new_system([&mavsdk = mavsdk, &discover_promise, &tag]()
+                                   {
+                                       const auto system = mavsdk.systems().at(0);
 
-        if (system->is_connected())
-        {
-            log(tag, "Discovered system");
-            discover_promise.set_value();
-        }
-    });
+                                       if (system->is_connected())
+                                       {
+                                           log(tag, "Discovered system");
+                                           discover_promise.set_value();
+                                       }
+                                   });
 
     discover_future.wait();
 
@@ -134,15 +135,16 @@ bool Drone::takeoff(int takeoff_alt)
     log(tag, "Taking off");
 
     // Wait for the take off to be complete
-    telemetry->subscribe_landed_state([&in_air_promise, this, &tag](Telemetry::LandedState landed) {
-        std::cout << "LandedState: " << landed << std::endl;
-        if (landed == Telemetry::LandedState::InAir)
-        {
-            telemetry->subscribe_landed_state(nullptr);
-            in_air_promise.set_value();
-            log(tag, "Take off successful");
-        }
-    });
+    telemetry->subscribe_landed_state([&in_air_promise, this, &tag](Telemetry::LandedState landed)
+                                      {
+                                          std::cout << "LandedState: " << landed << std::endl;
+                                          if (landed == Telemetry::LandedState::InAir)
+                                          {
+                                              telemetry->subscribe_landed_state(nullptr);
+                                              in_air_promise.set_value();
+                                              log(tag, "Take off successful");
+                                          }
+                                      });
 
     in_air_future.wait(); // wait for the asynchronous call to be finished (when in_air_promise resolves)
 
@@ -175,9 +177,11 @@ void Drone::set_yaw(float yaw)
     m_yaw = yaw;
 }
 
-void Drone::warm_camera() {
+void Drone::warm_camera()
+{
     log("Drone Pre-flight", "Warming camera up...");
-    for (int count = 0; count < 60; count++) {
+    for (int count = 0; count < 60; count++)
+    {
         camera.update_current_image(0, 0, 5, 0, 0);
     }
 }
@@ -194,21 +198,22 @@ void Drone::initiate_docking(int target_id, bool full_docking)
     }
 
     // Subscribe to getting periodic telemetry updates with lambda function
-    telemetry->subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
-        set_position(p.position.north_m, p.position.east_m, p.position.down_m);
-    });
-    telemetry->subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
-        set_yaw(e.yaw_deg);
-    });
+    telemetry->subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p)
+                                               { set_position(p.position.north_m, p.position.east_m, p.position.down_m); });
+    telemetry->subscribe_attitude_euler([this](Telemetry::EulerAngle e)
+                                        { set_yaw(e.yaw_deg); });
 
     // begin docking
-    if (full_docking) { // do complete 2-stage docking
+    if (full_docking)
+    { // do complete 2-stage docking
         bool stage1_success = dock(target_id, STAGE_1);
         if (stage1_success)
         {
             dock(target_id, STAGE_2);
         }
-    } else { // do 1-stage docking (used for testing)
+    }
+    else
+    {                             // do 1-stage docking (used for testing)
         dock(target_id, STAGE_2); // tag id = 0, central target
     }
 
@@ -239,7 +244,7 @@ bool Drone::dock(int target_id, int stage)
     int successful_frames = 0;
     int time_span = 0;
     int total_frames = 0;
-    Velocities velocities; 
+    Velocities velocities;
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     bool success = false;
 
@@ -255,20 +260,21 @@ bool Drone::dock(int target_id, int stage)
         if (is_tag_detected)
         {
             failed_frames = 0;
-            if (stage == STAGE_1) offset_errors(errs, target_id); // adjusts errors for stage 1 to stage 2 transition
-            else errs.alt -= 0.35;//0.30;
+            if (stage == STAGE_1)
+                offset_errors(errs, target_id); // adjusts errors for stage 1 to stage 2 transition
+            else
+                errs.alt -= 0.35; //0.30;
             velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw, 1.5);
             log(log_tag, "Apriltag found! Timestamp: " + std::to_string(time_span) +
-                         " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
-                         + " velocities: x=" + std::to_string(velocities.x) + " y=" + std::to_string(velocities.y) + " z=" + std::to_string(velocities.alt) + 
-                         " yaw_speed=" + std::to_string(velocities.yaw) + " successful frames: " + std::to_string(successful_frames));
+                             " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw) + " velocities: x=" + std::to_string(velocities.x) + " y=" + std::to_string(velocities.y) + " z=" + std::to_string(velocities.alt) +
+                             " yaw_speed=" + std::to_string(velocities.yaw) + " successful frames: " + std::to_string(successful_frames));
 
             // Check if we're centered enough to consider transitioning
             float tolerance = stage == STAGE_1 ? STAGE_1_TOLERANCE : STAGE_2_TOLERANCE;
-            if (errs.x < tolerance && errs.x > -1.0 * tolerance && 
+            if (errs.x < tolerance && errs.x > -1.0 * tolerance &&
                 errs.y < tolerance && errs.y > -1.0 * tolerance &&
-                errs.alt < tolerance && errs.alt > -1.0 * tolerance)// && 
-                // errs.yaw < 5.0 && errs.yaw > -5.0)
+                errs.alt < tolerance && errs.alt > -1.0 * tolerance) // &&
+            // errs.yaw < 5.0 && errs.yaw > -5.0)
             {
                 successful_frames++;
             }
@@ -278,7 +284,8 @@ bool Drone::dock(int target_id, int stage)
             }
 
             // Transition if we've been centered for over 1 second
-            if (successful_frames > 10) {
+            if (successful_frames > 10)
+            {
                 success = true;
                 break; // TODO: calculate FPS to determine real 1 second duration
             }
@@ -289,27 +296,36 @@ bool Drone::dock(int target_id, int stage)
             //     velocities.alt = -0.1;
             //     velocities.yaw = 0.0;
             // }
+
+            // Dynamic adjustment wasn't working great, but the following seemed to work better
+            // Prevent the drone from descending if the target is farther than 50% of the way to the edge of the frame from the center in x or y
             float frame_size_meters_x = 640 * errs.tag_pixel_ratio;
             float frame_size_meters_y = 480 * errs.tag_pixel_ratio;
-            if (abs(errs.x) >= 0.5 * (frame_size_meters_x / 2) || abs(errs.y) >= 0.5 * (frame_size_meters_y / 2)) {
+            if (abs(errs.x) >= 0.5 * (frame_size_meters_x / 2) || abs(errs.y) >= 0.5 * (frame_size_meters_y / 2))
+            {
                 velocities.alt = -0.1;
                 velocities.yaw = 0.0;
             }
-            
+
             change.forward_m_s = velocities.y;
             change.right_m_s = velocities.x;
             change.down_m_s = velocities.alt;
             change.yawspeed_deg_s = velocities.yaw;
             failed_frames = 0;
-        } else {
-            log(log_tag, "Failed to find Apriltag, number missed frames: " + std::to_string(failed_frames)); 
+        }
+        else
+        {
+            log(log_tag, "Failed to find Apriltag, number missed frames: " + std::to_string(failed_frames));
 
-            if (failed_frames > 10) {
+            if (failed_frames > 10)
+            {
                 change.forward_m_s = 0.0;
                 change.right_m_s = 0.0;
                 change.down_m_s = 0.0;
                 change.yawspeed_deg_s = 0.0;
-            } else {
+            }
+            else
+            {
                 change.forward_m_s = velocities.y * 0.8;
                 change.right_m_s = velocities.x * 0.8;
                 change.down_m_s = velocities.alt * 0.8;
@@ -318,14 +334,15 @@ bool Drone::dock(int target_id, int stage)
             failed_frames++;
         }
 
-        if (m_down > 5.0) {
+        if (m_down > 5.0)
+        {
             log(log_tag, "Emergency land, too high! Altitude: " + std::to_string(m_down), true);
             land(); // emergency land, too high
             return false;
         }
 
-        offboard->set_velocity_body(change); 
-        // cv::imwrite("test_stage" + std::to_string(stage) + "_"+ std::to_string(time_span) + ".png", img); // debug
+        offboard->set_velocity_body(change);
+        // cv::imwrite("test_stage" + std::to_string(stage) + "_"+ std::to_string(time_span) + ".png", img); // save frame as png for debug
 
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
         duration<double, std::milli> d = (t2 - t1);
@@ -333,27 +350,35 @@ bool Drone::dock(int target_id, int stage)
         total_frames++;
     }
 
-    if (stage == STAGE_1) {
+    if (stage == STAGE_1)
+    {
         Offboard::VelocityBodyYawspeed hold{};
         offboard->set_velocity_body(hold);
-    } else {
+    }
+    else
+    {
         // attempt to engage docking mechanism
+        // Todo (spin servo)
 
         // land slowly for now instead of docking mechanism
         Offboard::VelocityBodyYawspeed hold{};
         hold.down_m_s = 0.2;
         offboard->set_velocity_body(hold);
 
-        #if USE_RASPI_CAMERA == 1
-        while (true) {
-            if (docking_detector.is_docked()) {
+#if PLATFORM == RASPBERRY_PI
+        while (true)
+        {
+            if (docking_detector.is_docked())
+            {
                 log(log_tag, "Successfully docked!");
                 break;
-            } else {
+            }
+            else
+            {
                 sleep_for(milliseconds(500));
             }
         }
-        #endif
+#endif
     }
 
     log(log_tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(total_frames));
@@ -361,7 +386,7 @@ bool Drone::dock(int target_id, int stage)
     return success;
 }
 
-//Lands and disarms drone
+// Lands and disarms drone
 bool Drone::land()
 {
     log("Landing", "Landing");
@@ -380,22 +405,24 @@ bool Drone::land()
         land_result = action->land();
     }
 
-    // subscribe to telemetry updates to monitor
+    // subscribe to telemetry updates to monitor landing progress
     const Telemetry::Result set_rate_result = telemetry->set_rate_position(1.0);
-    if (set_rate_result != Telemetry::Result::Success) {
+    if (set_rate_result != Telemetry::Result::Success)
+    {
         log("Landing", "Telemetry Error", true);
     }
-    telemetry->subscribe_position([](Telemetry::Position position) {
-        log("Landing", "Current altitude: " + std::to_string(position.relative_altitude_m));
-    });
+    telemetry->subscribe_position([](Telemetry::Position position)
+                                  { log("Landing", "Current altitude: " + std::to_string(position.relative_altitude_m)); });
     Telemetry::LandedState curr_state = telemetry->landed_state();
     log("Landing", "Current landed state: " + get_landed_state_string(curr_state));
-    telemetry->subscribe_landed_state([this, &curr_state](Telemetry::LandedState landed_state) {
-        if (curr_state != landed_state) {
-            curr_state = landed_state;
-            log("Landing", "Current landed state: " + get_landed_state_string(curr_state));
-        }
-    });
+    telemetry->subscribe_landed_state([this, &curr_state](Telemetry::LandedState landed_state)
+                                      {
+                                          if (curr_state != landed_state)
+                                          {
+                                              curr_state = landed_state;
+                                              log("Landing", "Current landed state: " + get_landed_state_string(curr_state));
+                                          }
+                                      });
 
     // wait for landing to be complete
     while (curr_state != Telemetry::LandedState::OnGround)
@@ -410,13 +437,14 @@ bool Drone::land()
     {
         log("Landing", "Disarming failed", true);
         std::cout << "Code: " << disarm_result << std::endl;
-        return false;;
+        return false;
+        ;
     }
     log("Landing", "Disarmed successfully");
     return true;
 }
 
-//Utility method to adjust errors for stage 1
+// Utility method to adjust errors for stage 1
 void Drone::offset_errors(Errors &errs, int id)
 {
     float target_offset = id <= 3 ? abs(id - 3) * 45 : (11 - id) * 45;
@@ -427,128 +455,4 @@ void Drone::offset_errors(Errors &errs, int id)
     errs.y = y;
     float yaw = errs.yaw + 90 - ((id - 1) * 45);
     errs.yaw = yaw;
-}
-
-/////////////// Testing functions
-
-void Drone::test1()
-{
-    log("Test 1", "Warming camera up...");
-    for (int count = 0; count < 60; count++) {
-        camera.update_current_image(0, 0, 5, 0, 0);
-    }
-    bool arm_code = arm();
-    if (!arm_code)
-    {
-        log("Test 1", "Failed to arm");
-        return;
-    }
-    bool takeoff_code = takeoff(3);
-    if (!takeoff_code)
-    {
-        log("Test 1", "Failed to take off");
-        return;
-    }
-
-    log("Test 1", "Holding...");
-
-    Mat img;
-    std::string tag = "Test 1";
-    std::string tags_detected = "";
-
-    high_resolution_clock::time_point t1 = high_resolution_clock::now();
-    int time_span = 0;
-    int count_frames = 0;
-
-    const Telemetry::Result set_rate_result_p = telemetry->set_rate_position_velocity_ned(20);
-    const Telemetry::Result set_rate_result_a = telemetry->set_rate_attitude(20);
-    if (set_rate_result_a != Telemetry::Result::Success || set_rate_result_p != Telemetry::Result::Success)
-    {
-        std::cout << "Setting attitude rate possibly failed:" << set_rate_result_a << '\n';
-        std::cout << "Setting position rate possibly failed:" << set_rate_result_p << '\n';
-    }
-
-    // Subscribe to getting periodic telemetry updates with lambda function
-    telemetry->subscribe_position_velocity_ned([this](Telemetry::PositionVelocityNed p) {
-        set_position(p.position.north_m, p.position.east_m, p.position.down_m);
-        if (p.position.down_m > 5.0) {
-            log("TEST 1", "ALTITUDE TOO HIGH, MUST LAND. Altitude: " + std::to_string(p.position.down_m), true);
-            this->land();
-        }
-    });
-    telemetry->subscribe_attitude_euler([this](Telemetry::EulerAngle e) {
-        set_yaw(e.yaw_deg);
-    });
-
-    PIDController pid;
-
-    Errors errs;
-    int n_missed_frames = 0;
-    while (time_span < 30 * 1000 /* 30 seconds */)
-    {
-        high_resolution_clock::time_point f1 = high_resolution_clock::now();
-        img = camera.update_current_image(m_east, m_north, m_down * -1.0, m_yaw, 0); // this is blocking
-        high_resolution_clock::time_point f2 = high_resolution_clock::now();
-        duration<double, std::milli> c1 = (f2 - f1);
-
-        high_resolution_clock::time_point f3 = high_resolution_clock::now();
-        bool is_tag_detected = image_analyzer.processImage(img, 0, tags_detected, errs);
-        high_resolution_clock::time_point f4 = high_resolution_clock::now();
-        duration<double, std::milli> c2 = (f4 - f3);
-
-        Offboard::VelocityBodyYawspeed change{};
-        // change.down_m_s = -0.2;
-        Velocities velocities; 
-        if (is_tag_detected)
-        {
-            errs.alt -= 0.35;
-            velocities = pid.getVelocities(errs.x, errs.y, errs.alt, errs.yaw, 1.5);
-            log(tag, "Apriltag found! " + std::to_string(time_span) + " camera: " + std::to_string(c1.count()) + " detector: " + std::to_string(c2.count()) +
-                         " errors: x=" + std::to_string(errs.x) + " y=" + std::to_string(errs.y) + " z=" + std::to_string(errs.alt) + " yaw=" + std::to_string(errs.yaw)
-                         + " velocities: x=" + std::to_string(velocities.x) + " y=" + std::to_string(velocities.y) + " z=" + std::to_string(velocities.alt) + " yaw_speed=" + std::to_string(velocities.yaw));
-            
-            double safe_view = 2 * (errs.alt - velocities.alt * 0.1) * tan(to_radians(CAMERA_FOV_VERTICAL / 2));
-            if (abs(errs.x) >= safe_view || abs(errs.y) >= safe_view) {
-                velocities.alt = -0.1;
-            }
-            
-            change.forward_m_s = velocities.y;
-            change.right_m_s = velocities.x;
-            change.down_m_s = velocities.alt;
-            change.yawspeed_deg_s = velocities.yaw;
-            n_missed_frames = 0;
-        } else {
-            log(tag, "Failed to find Apriltag, number missed frames: " + std::to_string(n_missed_frames)); 
-
-            if (n_missed_frames > 10) {
-                change.forward_m_s = 0.0;
-                change.right_m_s = 0.0;
-                change.down_m_s = 0.0;
-                change.yawspeed_deg_s = 0.0;
-            } else {
-                change.forward_m_s = velocities.y * 0.9;
-                change.right_m_s = velocities.x * 0.9;
-                change.down_m_s = velocities.alt * 0.9;
-                change.yawspeed_deg_s = 0.0;
-            }
-            n_missed_frames++;
-        }
-
-        offboard->set_velocity_body(change); 
-        // cv::imwrite("test"+ std::to_string(time_span) + ".png", img); // any (debug)
-
-        high_resolution_clock::time_point t2 = high_resolution_clock::now();
-        duration<double, std::milli> d = (t2 - t1);
-        time_span = d.count();
-        count_frames++;
-    }
-    Offboard::VelocityNedYaw hold{};
-    offboard->set_velocity_ned(hold);
-    if (!img.empty()) cv::imwrite("test.png", img);
-    log(tag, "Number of frames processed in " + std::to_string(time_span) + " ms: " + std::to_string(count_frames));
-    log(tag, "Average FPS: " + std::to_string(count_frames / (time_span / 1000)));
-    bool landed = false;
-    do {
-        landed = land();
-    } while (landed == false);
 }

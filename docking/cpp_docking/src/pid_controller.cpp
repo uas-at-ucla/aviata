@@ -34,12 +34,12 @@ Velocities PIDController::getVelocities(float x_err, float y_err, float alt_err,
     float kd_nv, kd_ev, kd_dv, kd_rv;
     float ki_nv, ki_ev;
 
-    kp_nv = 0.65;//0.6 * ku_nv;
-    kp_ev = 0.65;//0.6 * ku_ev;
-    kp_dv = 0.6;// * ku_dv;
+    kp_nv = 0.65; //0.6 * ku_nv;
+    kp_ev = 0.65; //0.6 * ku_ev;
+    kp_dv = 0.6;  // * ku_dv;
 
-    kd_nv = 0.48;//5; //0.15;
-    kd_ev = 0.48;//5; //0.15;
+    kd_nv = 0.48; //5; //0.15;
+    kd_ev = 0.48; //5; //0.15;
     kd_dv = 0.12;
 
     ki_ev = 0.01;
@@ -81,7 +81,7 @@ Velocities PIDController::getVelocities(float x_err, float y_err, float alt_err,
         nv = max_speed * nv / absolute_value(nv);
     }
 
-    if (absolute_value(rv) > 45) 
+    if (absolute_value(rv) > 45)
     {
         rv = 45 * rv / absolute_value(rv); // max = 45 degrees / second
     }
