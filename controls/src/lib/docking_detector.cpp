@@ -3,7 +3,10 @@
 
 #include <string>
 
+#ifdef USE_PIGPIO
 #include "pigpio.h"
+this doesn't compile whoops // TODO remove once we know this works
+#endif
 
 /**
  * Safely read from GPIO to determine docking status
@@ -19,6 +22,8 @@
 DockingDetector::DockingDetector()
 {
     std::string tag = "GPIO Initialize";
+
+    #ifdef USE_PIGPIO
     if (gpioInitialise() < 0)
     {
         _gpio_initialized = false;
@@ -61,11 +66,14 @@ DockingDetector::DockingDetector()
         }
         output_signal(0);
     }
+    #endif
 }
 
 DockingDetector::~DockingDetector()
 {
+    #ifdef USE_GPIO
     gpioTerminate();
+    #endif
 }
 
 /**
@@ -76,6 +84,7 @@ DockingDetector::~DockingDetector()
  * */
 bool DockingDetector::output_signal(unsigned signal)
 {
+    #ifdef USE_PIGPIO
     if (_gpio_initialized)
     {
         if (gpioWrite(OUTPUT_PIN, signal) != 0)
@@ -90,10 +99,9 @@ bool DockingDetector::output_signal(unsigned signal)
             return true;
         }
     }
-    else
-    {
-        return false;
-    }
+    #endif
+
+    return false;
 }
 
 /**
@@ -103,6 +111,7 @@ bool DockingDetector::output_signal(unsigned signal)
  * */
 int DockingDetector::read_signal()
 {
+    #ifdef USE_GPIO
     if (_gpio_initialized)
     {
         int val = gpioRead(INPUT_PIN);
@@ -118,10 +127,9 @@ int DockingDetector::read_signal()
             return val;
         }
     }
-    else
-    {
-        return false;
-    }
+    #endif
+
+    return false;
 }
 
 /**

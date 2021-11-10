@@ -48,6 +48,11 @@ if(Qt5Widgets_FOUND)
     endif()
 endif()
 
+find_package(pigpio CONFIG)
+if(pigpio_FOUND)
+    add_compile_definitions(USE_PIGPIO)
+endif()
+
 file(GLOB_RECURSE ROS_MESSAGES RELATIVE ${CMAKE_SOURCE_DIR}
     src/msg/*.msg
 )
@@ -74,9 +79,12 @@ target_link_libraries(aviata_lib
     MAVSDK::mavsdk_mavlink_passthrough
     MAVSDK::mavsdk_offboard
     ${OpenCV_LIBS}
-    pigpio
     apriltag
 )
+
+if(pigpio_FOUND)
+    target_link_libraries(aviata_lib pigpio)
+endif()
 
 if(Qt5Widgets_FOUND)
     file(GLOB_RECURSE LIB_GROUND_SOURCES RELATIVE ${CMAKE_SOURCE_DIR}
