@@ -49,7 +49,7 @@ if(Qt5Widgets_FOUND)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "/pigpio-master/util") # For Docker. TODO for RPi.
-find_package(pigpio MODULE)
+find_package(pigpio)
 if(pigpio_FOUND)
     add_compile_definitions(USE_PIGPIO)
 endif()

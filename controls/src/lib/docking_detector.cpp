@@ -5,7 +5,6 @@
 
 #ifdef USE_PIGPIO
 #include "pigpio.h"
-this doesn't compile whoops // TODO remove once we know this works
 #endif
 
 /**
