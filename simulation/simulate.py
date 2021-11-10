@@ -44,7 +44,7 @@ def pos_control_test():
     yaw_setpoint = 0
 
     world = PhysicalWorld(config.constants.num_drones, sample_period_ms)
-    world.set_missing_drones(missing_drones)
+    assert(world.set_missing_drones(missing_drones) == True)
     world.leader_drone.set_pos_setpoint(pos_setpoint, yaw_setpoint)
 
     def keyPressed(key, mouse_x, mouse_y):
@@ -83,14 +83,19 @@ def pos_control_test():
         elif key == b'x':
             yaw_setpoint += 0.1
 
-        for drone in range(8):
-            # Drones 0-7 correlate with keys 1-8
-            if key == bytes(str(drone+1), encoding='utf-8'):
-                if drone in missing_drones:
-                    missing_drones.remove(drone)
-                else:
-                    missing_drones.append(drone)
-                world.set_missing_drones(missing_drones)
+        else:
+            for drone in range(8):
+                # Drones 0-7 correlate with keys 1-8
+                if key == bytes(str(drone+1), encoding='utf-8'):
+                    new_missing_drones = missing_drones.copy()
+                    
+                    if drone in missing_drones:
+                        new_missing_drones.remove(drone)
+                    else:
+                        new_missing_drones.append(drone)
+                    
+                    if world.set_missing_drones(new_missing_drones) == True:
+                        missing_drones = new_missing_drones
 
     def loop(GraphicsState):
         nonlocal world

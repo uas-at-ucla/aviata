@@ -208,6 +208,13 @@ class PhysicalWorld:
 
     def set_missing_drones(self, missing_drones):
         # Logic of assigning drones to locations is not important to the simulation, so we just put it here.
+        geometry_name = config.generate_matrices.geometry_name(missing_drones)
+
+        if geometry_name not in combined_geometries:
+            return False
+
+        self.structure.geometry = combined_geometries[geometry_name]
+
         # Detach drones that should be missing:
         for drone in self.drones:
             if drone.drone_pos in missing_drones:
@@ -235,8 +242,7 @@ class PhysicalWorld:
                     break
 
         self.network.broadcast(Drone.configure_mixer, missing_drones)
-
-        self.structure.geometry = combined_geometries[config.generate_matrices.geometry_name(missing_drones)]
+        return True
 
     def tick(self):
         prev_att_rate = self.structure.att_rate

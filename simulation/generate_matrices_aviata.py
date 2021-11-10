@@ -175,7 +175,10 @@ def generate_aviata_matrices(missing_drones=[]):
     return geometry
 
 
-def generate_aviata_permutations(max_missing_drones=0): # TODO can increase max_missing_drones for 8-drone frame.
+def generate_aviata_permutations(max_missing_drones=None):
+    if max_missing_drones is None:
+        max_missing_drones = constants.num_drones - 4
+
     missing_drones_permutations = [[]]
     for i in range(1, max_missing_drones+1):
         missing_drones_permutations += combinations(range(constants.num_drones), i)
