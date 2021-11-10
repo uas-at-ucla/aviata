@@ -175,6 +175,7 @@ def main(loopFunc=lambda g: None, loop_period=1000, keyPressedFunc=lambda k,x,y:
         if delay < 0:
             if delay < -loop_period*5: # print warning if we're 5 loop_periods behind
                 print("Warning: trouble keeping up with loop_period")
+                target_time = glutGet(GLUT_ELAPSED_TIME) # reset target time to current time so we don't fall too far behind it
             delay = 0
         glutTimerFunc(delay, loopWrapperFunc, 0)
 
