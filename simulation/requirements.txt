@@ -2,7 +2,10 @@ numpy
 scipy
 matplotlib
 pyquaternion
-PyOpenGL
-PyOpenGL_accelerate
 toml
 cvxpy
+pandas
+pyulog
+
+PyOpenGL
+PyOpenGL_accelerate

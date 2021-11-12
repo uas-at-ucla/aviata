@@ -177,7 +177,7 @@ def geometry_to_thrust_matrix(geometry):
 
     return At
 
-def geometry_to_mix(geometry, single_drone_geometry=None):
+def geometry_to_mix(geometry, single_drone_geometry=None, optimize=True):
     '''
     Compute combined torque & thrust matrix A and mix matrix B from geometry dictionnary
 
@@ -193,16 +193,15 @@ def geometry_to_mix(geometry, single_drone_geometry=None):
     Am = geometry_to_torque_matrix(geometry)
     A = np.vstack([Am, At])
 
-    # Choose one of the methods below (pseudoinverse or optimize for minimal saturation)
-
-    # Mix matrix computed as pseudoinverse of A
-    # B = np.linalg.pinv(A)
-
-    # Optimal inverse to minimize motor saturation:
-    single_drone_torque_matrix = None
-    if single_drone_geometry is not None:
-        single_drone_torque_matrix = geometry_to_torque_matrix(single_drone_geometry)
-    B = optimize_saturation.optimal_inverse(A, single_drone_torque_matrix)
+    if optimize:
+        # Optimal inverse to minimize motor saturation:
+        single_drone_torque_matrix = None
+        if single_drone_geometry is not None:
+            single_drone_torque_matrix = geometry_to_torque_matrix(single_drone_geometry)
+        B = optimize_saturation.optimal_inverse(A, single_drone_torque_matrix)
+    else:
+        # Mix matrix computed as pseudoinverse of A
+        B = np.linalg.pinv(A)
 
     return A, B
 

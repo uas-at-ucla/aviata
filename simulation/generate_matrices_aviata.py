@@ -37,7 +37,7 @@ def parallel_axis_theorem(I, m, R):
     return I + m * (np.dot(R,R)*np.eye(3) - np.outer(R,R))
 
 
-def generate_aviata_matrices(missing_drones=[]):
+def generate_aviata_matrices(missing_drones=[], optimize=True):
     drone_rotors_sequential = []
     CW = False # as seen from above
     angle = (TWO_PI/constants.num_rotors) / 2
@@ -126,7 +126,7 @@ def generate_aviata_matrices(missing_drones=[]):
     for i in range(constants.num_rotors):
         drone_rotors[i]['position'] -= np.array([0.0, 0.0, constants.docking_attachment_offset])
     single_drone_geometry = {'rotors': drone_rotors}
-    A, B = px4_generate_mixer.geometry_to_mix(geometry, single_drone_geometry)
+    A, B = px4_generate_mixer.geometry_to_mix(geometry, single_drone_geometry, optimize=optimize)
     B[abs(B) < 0.000001] = 0.0
     # A_4dof = np.delete(A, [3,4], 0)
     B_px = px4_generate_mixer.normalize_mix_px4(B, inertia)

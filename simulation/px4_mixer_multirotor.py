@@ -309,35 +309,35 @@ def run_tests(mixer_cb, P, test_mixer_binary, test_index=None):
         print(result)
         raise Exception('Test failed')
 
-parser = ArgumentParser(description=__doc__)
-parser.add_argument('--test', action='store_true', default=False, help='Run tests')
-parser.add_argument("--mixer-multirotor-binary",
-                  help="select test_mixer_multirotor binary file name",
-                  default='./test_mixer_multirotor')
-parser.add_argument("--mode", "-m", dest="mode",
-                help="mixer mode: none, rp, rpy", default=None)
-parser.add_argument("-i", dest="index", type=int,
-                  help="Select a single test to run (starting at 1)", default=None)
-
-args = parser.parse_args()
-mixer_mode = args.mode
-
-if args.test:
-    mixer_binary = args.mixer_multirotor_binary
-    test_index = args.index
-    if test_index is not None: test_index -= 1
-    for mode_idx, (airmode, mixer_cb) in enumerate([
-            ('none', normal_mode),
-            ('rp', airmode_rp),
-            ('rpy', airmode_rpy)]):
-        if mixer_mode is not None and mixer_mode != airmode:
-            continue
-        print('Testing mode: '+airmode)
-        for P in P_tests:
-            run_tests(mixer_cb, P, mixer_binary, test_index)
-    exit(0)
-
 if __name__ == '__main__':
+    parser = ArgumentParser(description=__doc__)
+    parser.add_argument('--test', action='store_true', default=False, help='Run tests')
+    parser.add_argument("--mixer-multirotor-binary",
+                    help="select test_mixer_multirotor binary file name",
+                    default='./test_mixer_multirotor')
+    parser.add_argument("--mode", "-m", dest="mode",
+                    help="mixer mode: none, rp, rpy", default=None)
+    parser.add_argument("-i", dest="index", type=int,
+                    help="Select a single test to run (starting at 1)", default=None)
+
+    args = parser.parse_args()
+    mixer_mode = args.mode
+
+    if args.test:
+        mixer_binary = args.mixer_multirotor_binary
+        test_index = args.index
+        if test_index is not None: test_index -= 1
+        for mode_idx, (airmode, mixer_cb) in enumerate([
+                ('none', normal_mode),
+                ('rp', airmode_rp),
+                ('rpy', airmode_rpy)]):
+            if mixer_mode is not None and mixer_mode != airmode:
+                continue
+            print('Testing mode: '+airmode)
+            for P in P_tests:
+                run_tests(mixer_cb, P, mixer_binary, test_index)
+        exit(0)
+
     # --------------------------------------------------
     # Prototyping and corner case testing playground
     # --------------------------------------------------
