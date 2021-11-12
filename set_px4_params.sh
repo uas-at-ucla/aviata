@@ -59,6 +59,9 @@ param set PWM_RATE 400
 param set PWM_AUX_DISARMED 900
 param set PWM_AUX_RATE 400
 
+# PWM to thrust model (https://docs.google.com/spreadsheets/d/12upSBi8bS4yahCvrpQccim8VE1XJlFd29tWcrnQW7OE/edit?usp=sharing)
+param set THR_MDL_FAC 0.28
+
 
 #############################
 ### USER DEPENDENT PARAMS ###
