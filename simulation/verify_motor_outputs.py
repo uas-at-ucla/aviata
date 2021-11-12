@@ -42,9 +42,9 @@ if __name__ == '__main__':
         setpoint[0] = roll_command * np.cos(geometry['drone_angles'][this_drone_docking_slot]) - pitch_command * np.sin(geometry['drone_angles'][this_drone_docking_slot])
         setpoint[1] = roll_command * np.sin(geometry['drone_angles'][this_drone_docking_slot]) + pitch_command * np.cos(geometry['drone_angles'][this_drone_docking_slot])
 
-        u, u_final = px4_mixer_multirotor.normal_mode(setpoint, mixer, 0.0, 1.0)
+        u, u_final = px4_mixer_multirotor.normal_mode(setpoint, mixer[rotor_index_start:rotor_index_end,:], 0.0, 1.0)
         # u_final = mixer@setpoint # Use this to test without desaturation
-        outputs = np.squeeze(np.array(u_final[rotor_index_start:rotor_index_end]))
+        outputs = np.squeeze(np.array(u_final))
         for i in range(config.constants.num_rotors):
             # See https://github.com/PX4/PX4-Autopilot/blob/release/1.11/src/lib/mixer/MultirotorMixer/MultirotorMixer.cpp#L373
             if THR_MDL_FAC > 0:

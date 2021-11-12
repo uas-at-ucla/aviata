@@ -158,10 +158,10 @@ class Drone:
                 self.forces_setpoint[:3,0] = torque_sp[:, np.newaxis]
                 self.forces_setpoint[3,0] = self.thrust_setpoint
 
-            u, u_final = px4_normal_mode(self.forces_setpoint, self.mixer)
+            u, u_final = px4_normal_mode(self.forces_setpoint, self.mixer[self.rotor_start_index:self.rotor_end_index,:])
             # u_final = np.dot(self.mixer, self.forces_setpoint)
             # u_final = constrain(u_final, 0, 1)
-            self.motor_inputs = u_final[self.rotor_start_index:self.rotor_end_index]
+            self.motor_inputs = u_final
 
 
 class Network:
