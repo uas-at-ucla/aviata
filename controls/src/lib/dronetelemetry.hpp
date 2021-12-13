@@ -2,8 +2,8 @@
 #define DRONETELEMETRY_HPP
 
 #include <string>
-#include <mavsdk/mavsdk.h>
-#include <mavsdk/plugins/telemetry/telemetry.h>
+#include "MAVSDK/src/core/mavsdk.h"
+#include "MAVSDK/src/plugins/telemetry/include/plugins/telemetry/telemetry.h"
 #include "px4_io.hpp"
 
 using namespace mavsdk;

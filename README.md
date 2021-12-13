@@ -33,7 +33,6 @@ To generate the mixers and header files, **px4_generate_mixer.py** is utilized, 
 ## Building Controls Code
 Installation Requirements:
 * cmake
-* https://mavsdk.mavlink.io/develop/en/getting_started/installation.html
 * ROS2
 * OpenCV
 * apriltag
@@ -42,6 +41,7 @@ Installation Requirements:
 Build:
 ```bash
 # source your ROS2 setup script
+git submodule update --init --recursive # download MAVSDK submodule
 cd controls
 mkdir build
 cd build

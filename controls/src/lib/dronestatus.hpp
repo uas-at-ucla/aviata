@@ -5,11 +5,11 @@
 #include <opencv2/core.hpp>
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <mavsdk/mavsdk.h>
-#include <mavsdk/plugins/telemetry/telemetry.h>
-#include <mavsdk/plugins/action/action.h>
-#include <mavsdk/plugins/offboard/offboard.h>
-#include <mavsdk/geometry.h>
+#include "MAVSDK/src/core/mavsdk.h"
+#include "MAVSDK/src/plugins/telemetry/include/plugins/telemetry/telemetry.h"
+#include "MAVSDK/src/plugins/action/include/plugins/action/action.h"
+#include "MAVSDK/src/plugins/offboard/include/plugins/offboard/offboard.h"
+#include "MAVSDK/src/core/geometry.h"
 
 struct DroneSettings {
     bool sim;

@@ -28,10 +28,6 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
-find_package(MAVSDK REQUIRED)
-if(MAVSDK_VERSION VERSION_LESS "0.39.0")
-    add_compile_definitions(OLD_MAVSDK)
-endif()
 find_package(OpenCV REQUIRED)
 find_package(apriltag REQUIRED)
 link_directories(/usr/local/lib)
@@ -73,15 +69,26 @@ file(GLOB_RECURSE LIB_SOURCES RELATIVE ${CMAKE_SOURCE_DIR}
 add_library(aviata_lib ${LIB_SOURCES})
 ament_target_dependencies(aviata_lib rclcpp std_msgs)
 rosidl_target_interfaces(aviata_lib ${PROJECT_NAME} "rosidl_typesupport_cpp")
+
+function(configure_mavsdk)
+    set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+    set(CMAKE_BUILD_TYPE Release)
+    set(BUILD_SHARED_LIBS ON)
+    set(BUILD_TESTS OFF)
+    set(SUPERBUILD OFF)
+    add_subdirectory(src/MAVSDK EXCLUDE_FROM_ALL)
+endfunction()
+configure_mavsdk()
 target_link_libraries(aviata_lib
-    MAVSDK::mavsdk
-    MAVSDK::mavsdk_telemetry
-    MAVSDK::mavsdk_action
-    MAVSDK::mavsdk_mavlink_passthrough
-    MAVSDK::mavsdk_offboard
+    mavsdk
+    mavsdk_telemetry
+    mavsdk_action
+    mavsdk_mavlink_passthrough
+    mavsdk_offboard
     ${OpenCV_LIBS}
     apriltag
 )
+target_include_directories(aviata_lib PUBLIC ${CMAKE_SOURCE_DIR}/src/MAVSDK/src/third_party/mavlink/include)
 
 if(pigpio_FOUND)
     target_link_libraries(aviata_lib pigpio)
@@ -96,7 +103,7 @@ if(Qt5Widgets_FOUND)
     target_link_libraries(aviata_lib_ground aviata_lib Qt5::Widgets)
 endif()
 
-include_directories(src ${CMAKE_BINARY_DIR}/aviata_lib_ground_autogen/include)
+include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR}/aviata_lib_ground_autogen/include)
 
 add_executable(aviata_drone src/aviata_drone.cpp)
 add_executable(aviata_test src/aviata_test.cpp)

@@ -7,11 +7,11 @@
 #include <future>
 #include <memory>
 
-#include <mavsdk/mavsdk.h>
-#include <mavsdk/plugins/telemetry/telemetry.h>
-#include <mavsdk/plugins/action/action.h>
-#include <mavsdk/plugins/offboard/offboard.h>
-#include <mavsdk/geometry.h>
+#include "MAVSDK/src/core/mavsdk.h"
+#include "MAVSDK/src/plugins/telemetry/include/plugins/telemetry/telemetry.h"
+#include "MAVSDK/src/plugins/action/include/plugins/action/action.h"
+#include "MAVSDK/src/plugins/offboard/include/plugins/offboard/offboard.h"
+#include "MAVSDK/src/core/geometry.h"
 
 #include "dronestatus.hpp"
 #include "dronetelemetry.hpp"

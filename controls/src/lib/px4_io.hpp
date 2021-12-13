@@ -4,13 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "mavlink/mav_cmd.h"
-#include <mavsdk/mavsdk.h>
-#include <mavsdk/system.h>
-#include <mavsdk/plugins/action/action.h>
-#include <mavsdk/plugins/telemetry/telemetry.h>
-#include <mavsdk/plugins/offboard/offboard.h>
-#include <mavsdk/plugins/mavlink_passthrough/mavlink_passthrough.h>
+#include "MAVSDK/src/core/mavsdk.h"
+#include "MAVSDK/src/core/system.h"
+#include "MAVSDK/src/plugins/action/include/plugins/action/action.h"
+#include "MAVSDK/src/plugins/telemetry/include/plugins/telemetry/telemetry.h"
+#include "MAVSDK/src/plugins/offboard/include/plugins/offboard/offboard.h"
+#include "MAVSDK/src/plugins/mavlink_passthrough/include/plugins/mavlink_passthrough/mavlink_passthrough.h"
 
 #include "mavsdk_callback_manager.hpp"
 #include "dronestatus.hpp"
@@ -54,11 +53,11 @@ enum PX4_CUSTOM_SUB_MODE_AUTO {
 	PX4_CUSTOM_SUB_MODE_AUTO_PRECLAND
 };
 
-#ifdef OLD_MAVSDK
-typedef mavsdk::ComponentType ComponentType;
-#else
+// #ifdef OLD_MAVSDK // prior to version 0.39.0
+// typedef mavsdk::ComponentType ComponentType;
+// #else
 typedef mavsdk::System::ComponentType ComponentType;
-#endif
+// #endif
 
 using namespace mavsdk;
 
