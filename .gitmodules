@@ -1,3 +1,6 @@
 [submodule "mesh/OONF"]
 	path = mesh/OONF
 	url = https://github.com/AusarYao/OONF
+[submodule "controls/src/MAVSDK"]
+	path = controls/src/MAVSDK
+	url = https://github.com/uas-at-ucla-dependencies/MAVSDK.git
