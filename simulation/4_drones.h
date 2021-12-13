@@ -30,7 +30,7 @@ static constexpr float _config_aviata_drone_angle_sin[] {
 	-0.707107,
 };
 
-static constexpr float _config_aviata_relative_drone_angle[][4] {
+static constexpr float _config_aviata_relative_drone_angle[][4] { // Indexed by [to_drone_angle][from_drone_angle]
 	{  0.000000, -1.570796,  3.141593,  1.570796, },
 	{  1.570796,  0.000000, -1.570796,  3.141593, },
 	{ -3.141593,  1.570796,  0.000000, -1.570796, },

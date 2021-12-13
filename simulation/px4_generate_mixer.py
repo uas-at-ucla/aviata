@@ -254,7 +254,7 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
         buf.write(u"\t{:9f},\n".format(np.sin(drone_angle)))
     buf.write(u"};\n\n")
 
-    buf.write(u"static constexpr float _config_aviata_relative_drone_angle[][{}] {{\n".format(len(drone_angles)))
+    buf.write(u"static constexpr float _config_aviata_relative_drone_angle[][{}] {{ // Indexed by [to_drone_angle][from_drone_angle]\n".format(len(drone_angles)))
     for drone_angle in drone_angles:
         buf.write(u"\t{ ")
         for drone_angle_ref in drone_angles:
