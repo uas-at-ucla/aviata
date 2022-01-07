@@ -11,6 +11,7 @@
 #include "aviata/msg/follower_setpoint.hpp"
 #include "aviata/msg/frame_setpoint.hpp"
 #include "aviata/msg/docking_info.hpp"
+#include "aviata/msg/reference_attitude.hpp"
 
 #include "aviata/srv/drone_command.hpp"
 
@@ -28,6 +29,7 @@ const std::string FRAME_SETPOINT = "FRAME_SETPOINT";
 const std::string FOLLOWER_ARM = "FOLLOWER_ARM";
 const std::string FOLLOWER_DISARM = "FOLLOWER_DISARM";
 const std::string FOLLOWER_SETPOINT = "FOLLOWER_SETPOINT";
+const std::string REFERENCE_ATTITUDE = "REFERENCE_ATTITUDE";
 // Broadcast from any drone that is arriving at/departing from the frame
 const std::string DOCKING_INFO = "DOCKING_INFO";
 
@@ -87,6 +89,10 @@ template<> struct RosTopicConfig<FOLLOWER_DISARM> {
 };
 template<> struct RosTopicConfig<FOLLOWER_SETPOINT> {
     typedef aviata::msg::FollowerSetpoint msg_type;
+    typedef std::integral_constant<const rclcpp::QoS&, sensor_data_qos> qos;
+};
+template<> struct RosTopicConfig<REFERENCE_ATTITUDE> {
+    typedef aviata::msg::ReferenceAttitude msg_type;
     typedef std::integral_constant<const rclcpp::QoS&, sensor_data_qos> qos;
 };
 
