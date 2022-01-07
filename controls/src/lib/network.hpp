@@ -123,7 +123,8 @@ private:
                PubSub<FOLLOWER_ARM>,
                PubSub<FOLLOWER_DISARM>,
                PubSub<FOLLOWER_SETPOINT>,
-               PubSub<DOCKING_INFO>
+               PubSub<DOCKING_INFO>,
+               PubSub<REFERENCE_ATTITUDE>
     > pubsubs;
 
     rclcpp::Service<aviata::srv::DroneCommand>::SharedPtr drone_command_service;
