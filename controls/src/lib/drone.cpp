@@ -270,6 +270,7 @@ void Drone::init_follower() {
             }
         }
     });
+    _network->subscribe<REFERENCE_ATTITUDE>([this](const aviata::msg::ReferenceAttitude::SharedPtr reference_attitude) {  });
 }
 
 void Drone::init_leader() {
@@ -300,6 +301,7 @@ void Drone::init_leader() {
             _network->publish<FOLLOWER_SETPOINT>(follower_setpoint);
         }
     });
+    _network->init_publisher<REFERENCE_ATTITUDE>();
 }
 
 void Drone::init_standby() {
@@ -354,6 +356,7 @@ void Drone::transition_leader_to_follower() {
     _network->deinit_publisher<FOLLOWER_DISARM>();
     _network->deinit_publisher<FOLLOWER_SETPOINT>();
     _px4_io.unsubscribe_attitude_target();
+    _network->deinit_publisher<REFERENCE_ATTITUDE>();
 
     _drone_state = DOCKED_FOLLOWER;
     init_follower();
@@ -370,6 +373,7 @@ void Drone::transition_follower_to_leader() {
     _network->unsubscribe<FOLLOWER_ARM>();
     _network->unsubscribe<FOLLOWER_DISARM>();
     _network->unsubscribe<FOLLOWER_SETPOINT>();
+    _network->unsubscribe<REFERENCE_ATTITUDE>();
 
     _drone_state = DOCKED_LEADER;
     _need_to_enter_hold_mode = true;
