@@ -109,6 +109,8 @@ public:
     int set_mixer_configuration(uint8_t* missing_drones, uint8_t n_missing);
     int set_mixer_undocked();
 
+    int set_attitude_offset(Telemetry::Quaternion att_offset);
+
     int takeoff_and_land_test(int argc, char** argv);
 
 private:

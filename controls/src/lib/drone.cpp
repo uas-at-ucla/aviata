@@ -270,7 +270,16 @@ void Drone::init_follower() {
             }
         }
     });
-    _network->subscribe<REFERENCE_ATTITUDE>([this](const aviata::msg::ReferenceAttitude::SharedPtr reference_attitude) {  });
+
+    _network->subscribe<REFERENCE_ATTITUDE>([this](const aviata::msg::ReferenceAttitude::SharedPtr reference_attitude) {
+        // Get this drone's attitude from MAVSDK
+        mavsdk::Telemetry::Quaternion = _px4_io->telemetry_ptr()->attitude_quaternion();
+
+        // TODO Use this drone's attitude & the received reference_attitude to calculate attitude_offset
+        float attitude_offset[4];
+
+        _px4_io->set_attitude_offset(attitude_offset); // TODO finish implementing this function
+    });
 }
 
 void Drone::init_leader() {
@@ -302,6 +311,9 @@ void Drone::init_leader() {
         }
     });
     _network->init_publisher<REFERENCE_ATTITUDE>();
+
+    // TODO create ROS2 timer that publishes this drone's attitude to the REFERENCE_ATTITUDE publisher.
+    // You could write a helper function in network.cpp e.g. "start_timer()"
 }
 
 void Drone::init_standby() {
