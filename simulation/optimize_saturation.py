@@ -3,7 +3,7 @@
 import numpy as np
 import cvxpy as cvx
 
-def maximize_setpoint(A, single_drone_torque_matrix, i, b, lower_bounds, upper_bounds, negative=False):
+def maximize_setpoint(A, single_drone_torque_matrix, constants, i, b, lower_bounds, upper_bounds, negative=False):
     # m = A.shape[0] # number of rows of A (setpoints)
     n = A.shape[1] # number of columns of A (rotors)
 
@@ -33,6 +33,8 @@ def maximize_setpoint(A, single_drone_torque_matrix, i, b, lower_bounds, upper_b
     # Note: drone_roll_torque_limit is the most important, because roll torque causes the booms to twist and is a side effect of yaw contol if left unchecked.
     # TODO these limits can be adjusted as needed
     drone_roll_torque_limit = 0.4 # Nm
+    if constants and hasattr(constants, 'drone_roll_torque_limit'):
+        drone_roll_torque_limit = constants.drone_roll_torque_limit # override default
     drone_pitch_torque_limit = 1.0 # Nm
     drone_yaw_torque_limit = 1.0 # Nm
 
@@ -62,11 +64,11 @@ def maximize_setpoint(A, single_drone_torque_matrix, i, b, lower_bounds, upper_b
     # The optimal value for x is stored in x.value.
     return x.value
 
-def optimal_inverse(A, single_drone_torque_matrix=None):
+def optimal_inverse(A, single_drone_torque_matrix=None, constants=None):
     m = A.shape[0] # number of rows of A (setpoints)
     n = A.shape[1] # number of columns of A (rotors)
     B = np.zeros([n, m])
-    thrust_sol = maximize_setpoint(A, single_drone_torque_matrix, 5, np.zeros(m), np.zeros(n), np.ones(n), negative=True)
+    thrust_sol = maximize_setpoint(A, single_drone_torque_matrix, constants, 5, np.zeros(m), np.zeros(n), np.ones(n), negative=True)
     max_thrust = A[5] @ thrust_sol
     B[:,5] = thrust_sol / max_thrust
 
@@ -77,7 +79,7 @@ def optimal_inverse(A, single_drone_torque_matrix=None):
     torque_contraints = np.minimum(hover_thrust_vals, inverse_hover_thrust_vals)
 
     for i in [0,1,2]:
-        torque_sol = maximize_setpoint(A, single_drone_torque_matrix, i, np.zeros(m), -torque_contraints, torque_contraints)
+        torque_sol = maximize_setpoint(A, single_drone_torque_matrix, constants, i, np.zeros(m), -torque_contraints, torque_contraints)
         max_torque = A[i] @ torque_sol
         B[:,i] = torque_sol / max_torque
     

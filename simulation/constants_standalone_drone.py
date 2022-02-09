@@ -2,6 +2,8 @@
 
 import numpy as np
 
+name = "aviata_1"
+
 g = 9.81 # m/s^2
 
 # AVIATA CONSTANTS
@@ -11,6 +13,7 @@ num_rotors = 6 # Number of rotors on a single drone
 rotor_angle = 10 # Canted motor angle (degrees)
 r = 0.550 / 2 # Distance of each rotor from the center the drone (meters)
 num_drones = 1
+max_missing_drones = 0
 
 M_drone = 1.8 # mass of a single drone in kg
 

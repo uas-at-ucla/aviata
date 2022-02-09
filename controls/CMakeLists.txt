@@ -16,7 +16,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -Wpedantic
         # Disable warnings that occur in ROS generated source files
         -Wno-deprecated-declarations
-        # Occurred in mavlink headers: -Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-pedantic
     )
 endif()
 
@@ -88,7 +87,7 @@ target_link_libraries(aviata_lib
     ${OpenCV_LIBS}
     apriltag
 )
-target_include_directories(aviata_lib PUBLIC ${CMAKE_SOURCE_DIR}/src/MAVSDK/src/third_party/mavlink/include)
+target_include_directories(aviata_lib SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/src/MAVSDK/src/third_party/mavlink/include)
 
 if(pigpio_FOUND)
     target_link_libraries(aviata_lib pigpio)

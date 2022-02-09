@@ -177,7 +177,7 @@ def geometry_to_thrust_matrix(geometry):
 
     return At
 
-def geometry_to_mix(geometry, single_drone_geometry=None, optimize=True):
+def geometry_to_mix(geometry, single_drone_geometry=None, constants=None, optimize=True):
     '''
     Compute combined torque & thrust matrix A and mix matrix B from geometry dictionnary
 
@@ -198,7 +198,7 @@ def geometry_to_mix(geometry, single_drone_geometry=None, optimize=True):
         single_drone_torque_matrix = None
         if single_drone_geometry is not None:
             single_drone_torque_matrix = geometry_to_torque_matrix(single_drone_geometry)
-        B = optimize_saturation.optimal_inverse(A, single_drone_torque_matrix)
+        B = optimize_saturation.optimal_inverse(A, single_drone_torque_matrix, constants)
     else:
         # Mix matrix computed as pseudoinverse of A
         B = np.linalg.pinv(A)
@@ -212,7 +212,7 @@ def normalize_mix_px4(B, inertia):
     '''
     return B @ inertia
 
-def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, use_6dof=False, constants=None, max_missing_drones=0):
+def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, use_6dof=False, constants_list=[]):
     '''
     Generate C header file with same format as multi_tables.py
     TODO: rewrite using templates (see generation of uORB headers)
@@ -228,61 +228,38 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
     buf.write(u"#ifndef _AVIATA_MIXER_MULTI_TABLES\n")
     buf.write(u"#define _AVIATA_MIXER_MULTI_TABLES\n")
     buf.write(u"\n")
-    if constants:
-        buf.write(u"#define AVIATA_NUM_DRONES {}\n".format(constants.num_drones))
-        buf.write(u"#define AVIATA_NUM_ROTORS {}\n".format(constants.num_rotors))
-    buf.write(u"#define AVIATA_MAX_MISSING_DRONES {}\n".format(max_missing_drones))
+
+    max_num_drones = 0
+    max_num_rotors = 0
+    for constants in constants_list:
+        if constants.num_drones > max_num_drones:
+            max_num_drones = constants.num_drones
+        if constants.num_rotors > max_num_rotors:
+            max_num_rotors = constants.num_rotors
+
+    buf.write(u"#define AVIATA_MAX_NUM_DRONES {}\n".format(max_num_drones))
+    buf.write(u"#define AVIATA_MAX_NUM_ROTORS {}\n".format(max_num_rotors))
     buf.write(u"\n")
 
-    drone_angles = geometries_list[0]['drone_angles']
-    for i in range(len(drone_angles)):
-        while drone_angles[i] > np.pi:
-            drone_angles[i] -= 2*np.pi
-        while drone_angles[i] < -np.pi:
-            drone_angles[i] += 2*np.pi
-
-    buf.write(u"static constexpr float _config_aviata_drone_angle[] {\n")
-    for drone_angle in drone_angles:
-        buf.write(u"\t{:9f}, // {:.1f} degrees\n".format(drone_angle, np.rad2deg(drone_angle)))
-    buf.write(u"};\n\n")
-    buf.write(u"static constexpr float _config_aviata_drone_angle_cos[] {\n")
-    for drone_angle in drone_angles:
-        buf.write(u"\t{:9f},\n".format(np.cos(drone_angle)))
-    buf.write(u"};\n\n")
-    buf.write(u"static constexpr float _config_aviata_drone_angle_sin[] {\n")
-    for drone_angle in drone_angles:
-        buf.write(u"\t{:9f},\n".format(np.sin(drone_angle)))
+    buf.write(u"enum AviataAirframe {\n")
+    for constants in constants_list:
+        buf.write(u"\t{},\n".format(constants.name.upper()))
+    buf.write(u"\tAVIATA_NUM_AIRFRAMES\n")
     buf.write(u"};\n\n")
 
-    buf.write(u"static constexpr float _config_aviata_relative_drone_angle[][{}] {{ // Indexed by [to_drone_angle][from_drone_angle]\n".format(len(drone_angles)))
-    for drone_angle in drone_angles:
-        buf.write(u"\t{ ")
-        for drone_angle_ref in drone_angles:
-            rel_angle = drone_angle - drone_angle_ref
-            while rel_angle > np.pi:
-                rel_angle -= 2*np.pi
-            while rel_angle < -np.pi:
-                rel_angle += 2*np.pi
-            buf.write(u"{:9f}, ".format(rel_angle))
-        buf.write(u"},\n")
+    buf.write(u"struct AviataFrameInfo {\n")
+    buf.write(u"\tuint32_t start_index;\n")
+    buf.write(u"\tuint8_t num_drones;\n")
+    buf.write(u"\tuint8_t num_rotors;\n")
+    buf.write(u"\tuint8_t max_missing_drones;\n")
+    buf.write(u"\tfloat drone_angle[AVIATA_MAX_NUM_DRONES];\n")
+    buf.write(u"\tfloat drone_angle_cos[AVIATA_MAX_NUM_DRONES];\n")
+    buf.write(u"\tfloat drone_angle_sin[AVIATA_MAX_NUM_DRONES];\n")
+    buf.write(u"\tfloat relative_drone_angle[AVIATA_MAX_NUM_DRONES][AVIATA_MAX_NUM_DRONES];\n")
+    buf.write(u"\tfloat relative_drone_angle_cos[AVIATA_MAX_NUM_DRONES][AVIATA_MAX_NUM_DRONES];\n")
+    buf.write(u"\tfloat relative_drone_angle_sin[AVIATA_MAX_NUM_DRONES][AVIATA_MAX_NUM_DRONES];\n")
     buf.write(u"};\n\n")
 
-    buf.write(u"static constexpr float _config_aviata_relative_drone_angle_cos[][{}] {{\n".format(len(drone_angles)))
-    for drone_angle in drone_angles:
-        buf.write(u"\t{ ")
-        for drone_angle_ref in drone_angles:
-            buf.write(u"{:9f}, ".format(np.cos(drone_angle - drone_angle_ref)))
-        buf.write(u"},\n")
-    buf.write(u"};\n\n")
-
-    buf.write(u"static constexpr float _config_aviata_relative_drone_angle_sin[][{}] {{\n".format(len(drone_angles)))
-    for drone_angle in drone_angles:
-        buf.write(u"\t{ ")
-        for drone_angle_ref in drone_angles:
-            buf.write(u"{:9f}, ".format(np.sin(drone_angle - drone_angle_ref)))
-        buf.write(u"},\n")
-    buf.write(u"};\n\n")
-    
     # Print enum
     buf.write(u"enum class AviataMultirotorGeometry : MultirotorGeometryUnderlyingType {\n")
     for i, geometry in enumerate(geometries_list):
@@ -291,6 +268,66 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
             geometry['info']['description'], geometry['info']['key']))
     buf.write(u"\n\tMAX_GEOMETRY\n")
     buf.write(u"}; // enum class AviataMultirotorGeometry\n\n")
+
+    buf.write(u"static constexpr AviataFrameInfo _config_aviata_frame_info[AVIATA_NUM_AIRFRAMES] {\n")
+    for constants in constants_list:
+        buf.write(u"\t[{}] = {{\n".format(constants.name.upper()))
+        buf.write(u"\t\t.start_index = (uint32_t) AviataMultirotorGeometry::{}_MISSING_,\n".format(constants.name.upper()))
+        buf.write(u"\t\t.num_drones = {},\n".format(constants.num_drones))
+        buf.write(u"\t\t.num_rotors = {},\n".format(constants.num_rotors))
+        buf.write(u"\t\t.max_missing_drones = {},\n".format(constants.max_missing_drones))
+
+        drone_angles = next((g['drone_angles'] for g in geometries_list if g['info']['key'] == "{}_missing_".format(constants.name)), None)
+        for i in range(len(drone_angles)):
+            while drone_angles[i] > np.pi:
+                drone_angles[i] -= 2*np.pi
+            while drone_angles[i] < -np.pi:
+                drone_angles[i] += 2*np.pi
+
+        buf.write(u"\t\t.drone_angle = {\n")
+        for drone_angle in drone_angles:
+            buf.write(u"\t\t\t{:9f}, // {:.1f} degrees\n".format(drone_angle, np.rad2deg(drone_angle)))
+        buf.write(u"\t\t},\n")
+        buf.write(u"\t\t.drone_angle_cos = {\n")
+        for drone_angle in drone_angles:
+            buf.write(u"\t\t\t{:9f},\n".format(np.cos(drone_angle)))
+        buf.write(u"\t\t},\n")
+        buf.write(u"\t\t.drone_angle_sin = {\n")
+        for drone_angle in drone_angles:
+            buf.write(u"\t\t\t{:9f},\n".format(np.sin(drone_angle)))
+        buf.write(u"\t\t},\n")
+
+        buf.write(u"\t\t.relative_drone_angle = {\n")
+        for drone_angle in drone_angles:
+            buf.write(u"\t\t\t{ ")
+            for drone_angle_ref in drone_angles:
+                rel_angle = drone_angle - drone_angle_ref
+                while rel_angle > np.pi:
+                    rel_angle -= 2*np.pi
+                while rel_angle < -np.pi:
+                    rel_angle += 2*np.pi
+                buf.write(u"{:9f}, ".format(rel_angle))
+            buf.write(u"},\n")
+        buf.write(u"\t\t},\n")
+
+        buf.write(u"\t\t.relative_drone_angle_cos = {\n")
+        for drone_angle in drone_angles:
+            buf.write(u"\t\t\t{ ")
+            for drone_angle_ref in drone_angles:
+                buf.write(u"{:9f}, ".format(np.cos(drone_angle - drone_angle_ref)))
+            buf.write(u"},\n")
+        buf.write(u"\t\t},\n")
+
+        buf.write(u"\t\t.relative_drone_angle_sin = {\n")
+        for drone_angle in drone_angles:
+            buf.write(u"\t\t\t{ ")
+            for drone_angle_ref in drone_angles:
+                buf.write(u"{:9f}, ".format(np.sin(drone_angle - drone_angle_ref)))
+            buf.write(u"},\n")
+        buf.write(u"\t\t},\n")
+
+        buf.write(u"\t},\n")
+    buf.write(u"};\n\n")
 
     # Print mixer gains
     buf.write(u"namespace {\n")

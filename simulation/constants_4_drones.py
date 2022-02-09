@@ -2,6 +2,8 @@
 
 import numpy as np
 
+name = "aviata_4"
+
 g = 9.81 # m/s^2
 
 # AVIATA CONSTANTS
@@ -13,6 +15,7 @@ rotor_angle = 10 # Canted motor angle (degrees)
 r = 0.550 / 2 # Distance of each rotor from the center the drone (meters)
 R = 1.193 # Distance between the center of a drone and the center of the structure (meters)
 num_drones = 4 # Maximum number of drones on the structure
+max_missing_drones = 0 # Maximum number of drones that are allowed to be missing from the structure
 drones_face_inward = False # True if the front of each drone faces inward when docked, False if they face outward
 
 M_drone = 1.562 + 0.518 # mass of a single drone in kg (drone + battery)

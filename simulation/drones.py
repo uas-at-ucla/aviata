@@ -5,7 +5,7 @@ import config
 import px4_mixer_multirotor
 from pid import PID
 
-combined_geometries, combined_geometries_list, max_missing_drones = config.generate_matrices.generate_aviata_permutations()
+combined_geometries, combined_geometries_list = config.generate_matrices.generate_aviata_permutations()
 
 
 def constrain(val, min, max):
