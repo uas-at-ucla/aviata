@@ -17,11 +17,11 @@ def configure_constants(constants_selection):
 TWO_PI = math.pi * 2
 
 def geometry_name(missing_drones=[]):
-    return 'aviata_missing_' + '_'.join(map(str, sorted(missing_drones)))
+    return constants.name + '_missing_' + '_'.join(map(str, sorted(missing_drones)))
 
 def geometry_name_desc(missing_drones=[]):
     name = geometry_name(missing_drones)
-    description = "AVIATA with these drones missing: " + ", ".join(map(str, sorted(missing_drones)))
+    description = constants.name + " with these drones missing: " + ", ".join(map(str, sorted(missing_drones)))
     return name, description
 
 # def mixer_name(drone_pos, missing_drones=[]):
@@ -126,7 +126,7 @@ def generate_aviata_matrices(missing_drones=[], optimize=True):
     for i in range(constants.num_rotors):
         drone_rotors[i]['position'] -= np.array([0.0, 0.0, constants.docking_attachment_offset])
     single_drone_geometry = {'rotors': drone_rotors}
-    A, B = px4_generate_mixer.geometry_to_mix(geometry, single_drone_geometry, optimize=optimize)
+    A, B = px4_generate_mixer.geometry_to_mix(geometry, single_drone_geometry, constants, optimize=optimize)
     B[abs(B) < 0.000001] = 0.0
     # A_4dof = np.delete(A, [3,4], 0)
     B_px = px4_generate_mixer.normalize_mix_px4(B, inertia)
@@ -175,12 +175,9 @@ def generate_aviata_matrices(missing_drones=[], optimize=True):
     return geometry
 
 
-def generate_aviata_permutations(max_missing_drones=None):
-    if max_missing_drones is None:
-        max_missing_drones = constants.num_drones - 4
-
+def generate_aviata_permutations():
     missing_drones_permutations = [[]]
-    for i in range(1, max_missing_drones+1):
+    for i in range(1, constants.max_missing_drones+1):
         missing_drones_permutations += combinations(range(constants.num_drones), i)
 
     combined_geometries = {}
@@ -194,20 +191,19 @@ def generate_aviata_permutations(max_missing_drones=None):
         # for drone_geometry in geometries:
         #     drone_geometries[drone_geometry['info']['key']] = drone_geometry
         # drone_geometries_list += geometries
-    return combined_geometries, combined_geometries_list, max_missing_drones
+    return combined_geometries, combined_geometries_list
 
 
 def main():
-    import constants_aviata
-    configure_constants(constants_aviata)
+    import constants_4_drones
+    configure_constants(constants_4_drones)
 
-    combined_geometries, combined_geometries_list, max_missing_drones = generate_aviata_permutations()
+    combined_geometries, combined_geometries_list = generate_aviata_permutations()
 
     header = px4_generate_mixer.generate_mixer_multirotor_header(combined_geometries_list,
                                                                  use_normalized_mix=True,
                                                                  use_6dof=False,
-                                                                 constants=constants,
-                                                                 max_missing_drones=max_missing_drones)
+                                                                 constants_list=[constants])
     print(header)
 
     key = geometry_name(missing_drones=[]) # change this to print info for a specific configuration

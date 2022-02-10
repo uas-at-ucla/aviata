@@ -17,11 +17,11 @@ def configure_constants(constants_selection):
 TWO_PI = math.pi * 2
 
 def geometry_name(missing_drones=[]):
-    return 'aviata_missing_' + '_'.join(map(str, sorted(missing_drones)))
+    return constants.name + '_missing_' + '_'.join(map(str, sorted(missing_drones)))
 
 def geometry_name_desc(missing_drones=[]):
     name = geometry_name(missing_drones)
-    description = "AVIATA with these drones missing: " + ", ".join(map(str, sorted(missing_drones)))
+    description = constants.name + " with these drones missing: " + ", ".join(map(str, sorted(missing_drones)))
     return name, description
 
 # def mixer_name(drone_pos, missing_drones=[]):
@@ -110,9 +110,9 @@ def generate_aviata_matrices(missing_drones=[]):
     return geometry
 
 
-def generate_aviata_permutations(max_missing_drones=0):
+def generate_aviata_permutations():
     missing_drones_permutations = [[]]
-    for i in range(1, max_missing_drones+1):
+    for i in range(1, constants.max_missing_drones+1):
         missing_drones_permutations += combinations(range(constants.num_drones), i)
 
     combined_geometries = {}
@@ -121,20 +121,19 @@ def generate_aviata_permutations(max_missing_drones=0):
         geometry = generate_aviata_matrices(missing_drones)
         combined_geometries[geometry['info']['key']] = geometry
         combined_geometries_list.append(geometry)
-    return combined_geometries, combined_geometries_list, max_missing_drones
+    return combined_geometries, combined_geometries_list
 
 
 def main():
     import constants_standalone_drone
     configure_constants(constants_standalone_drone)
 
-    combined_geometries, combined_geometries_list, max_missing_drones = generate_aviata_permutations()
+    combined_geometries, combined_geometries_list = generate_aviata_permutations()
 
     header = px4_generate_mixer.generate_mixer_multirotor_header(combined_geometries_list,
                                                                  use_normalized_mix=True,
                                                                  use_6dof=False,
-                                                                 constants=constants,
-                                                                 max_missing_drones=max_missing_drones)
+                                                                 constants_list=[constants])
     print(header)
 
     key = geometry_name(missing_drones=[])
