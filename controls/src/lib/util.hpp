@@ -9,6 +9,7 @@
 #include <cmath>
 #include <ctime>
 #include <iomanip>
+#include <Eigen/Dense>
 
 // Constants
 
@@ -80,6 +81,31 @@ inline float absolute_value(float val) {
     } else {
         return val;
     }
+}
+
+inline float heading_from_att_q(const Eigen::Quaternionf& q) {
+    // The heading vector (x,y) is the first two entries of the body X vector, or X column of the rotation matrix.
+    // So this is equivalent to `Eigen::Vector3f body_x = q.toRotationMatrix().col(0); return atan2f(body_x(1), body_x(0));`
+    float a = q.w();
+    float b = q.x();
+    float c = q.y();
+    float d = q.z();
+    float body_x_0 = a*a + b*b - c*c - d*d;
+    float body_x_1 = 2 * (b*c + a*d);
+    return atan2f(body_x_1, body_x_0);
+}
+
+inline Eigen::Vector3f body_z_from_att_q(const Eigen::Quaternionf& q) {
+    // Equivalent to `return q.toRotationMatrix().col(2);`
+    float a = q.w();
+    float b = q.x();
+    float c = q.y();
+    float d = q.z();
+    return Eigen::Vector3f(
+        2 * (a * c + b * d),
+        2 * (c * d - a * b),
+        a * a - b * b - c * c + d * d
+    );
 }
 
 // Target type

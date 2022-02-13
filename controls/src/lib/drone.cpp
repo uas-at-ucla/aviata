@@ -278,13 +278,34 @@ void Drone::init_follower() {
     });
 
     _network->subscribe<REFERENCE_ATTITUDE>([this](const aviata::msg::ReferenceAttitude::SharedPtr reference_attitude) {
-        const Telemetry::Quaternion& q = _px4_telem.att_q;
-        Eigen::Quaternionf att_est(q.w, q.x, q.y, q.z); // global -> drone
+        // Get this drone's attitude estimate
+        Eigen::Quaternionf att_est(_px4_telem.att_q.w, _px4_telem.att_q.x, _px4_telem.att_q.y, _px4_telem.att_q.z);
 
-        // TODO Use this drone's attitude & the received reference_attitude to calculate attitude_offset
-        float attitude_offset[4];
+        // Represent this drone's attitude in terms of the AVIATA frame axes
+        float docking_angle = _frame_info.drone_angle[_docking_slot];
+        Eigen::Vector3f body_z = body_z_from_att_q(att_est);
+        att_est = Eigen::Quaternionf(Eigen::AngleAxisf(-docking_angle, body_z)) * att_est;
 
-        _px4_io.set_attitude_offset(attitude_offset); // TODO finish implementing this function
+        // Zero out heading so that the reference X-axis is aligned with the AVIATA frame front direction
+        float heading = heading_from_att_q(att_est);
+        att_est = Eigen::Quaternionf(Eigen::AngleAxisf(-heading, Eigen::Vector3f::UnitZ())) * att_est;
+
+        // Represent in terms of this drone's body axes
+        body_z = body_z_from_att_q(att_est);
+        att_est = Eigen::Quaternionf(Eigen::AngleAxisf(docking_angle, body_z)) * att_est;
+
+        // Reference attitude (in terms of AVIATA frame axes, with reference X-axis aligned to AVIATA front)
+        Eigen::Quaternionf att_ref(reference_attitude->q[0], reference_attitude->q[1], reference_attitude->q[2], reference_attitude->q[3]);
+
+        // Represent reference attitude in terms of this drone's body axes
+        body_z = body_z_from_att_q(att_ref);
+        att_ref = Eigen::Quaternionf(Eigen::AngleAxisf(docking_angle, body_z)) * att_ref;
+
+        // Calculate the rotation we need to apply to attitude setpoints to match attitude error with the other drones
+        Eigen::Quaternionf att_off = att_est * att_ref.inverse();
+
+        float attitude_offset[4] { att_off.w(), att_off.x(), att_off.y(), att_off.z() };
+        _px4_io.set_attitude_offset(attitude_offset);
     });
 }
 
@@ -320,6 +341,32 @@ void Drone::init_leader() {
 
     // TODO create ROS2 timer that publishes this drone's attitude to the REFERENCE_ATTITUDE publisher.
     // You could write a helper function in network.cpp e.g. "start_timer()"
+    // The code below will go in the timer callback:
+    {
+        // Get this drone's (the leader's) attitude estimate
+        Eigen::Quaternionf att_ref(_px4_telem.att_q.w, _px4_telem.att_q.x, _px4_telem.att_q.y, _px4_telem.att_q.z);
+
+        // Represent this drone's attitude in terms of the AVIATA frame axes
+        float docking_angle = _frame_info.drone_angle[_docking_slot];
+        Eigen::Vector3f body_z = body_z_from_att_q(att_ref);
+        att_ref = Eigen::Quaternionf(Eigen::AngleAxisf(-docking_angle, body_z)) * att_ref;
+
+        // Zero out heading so that the reference X-axis is aligned with the AVIATA frame front direction
+        float heading = heading_from_att_q(att_ref);
+        att_ref = Eigen::Quaternionf(Eigen::AngleAxisf(-heading, Eigen::Vector3f::UnitZ())) * att_ref;
+
+        aviata::msg::ReferenceAttitude reference_attitude;
+        reference_attitude.q[0] = att_ref.w();
+        reference_attitude.q[1] = att_ref.x();
+        reference_attitude.q[2] = att_ref.y();
+        reference_attitude.q[3] = att_ref.z();
+        _network->publish<REFERENCE_ATTITUDE>(reference_attitude);
+
+        // Ensure that the leader drone has no attitude offset
+        Eigen::Quaternionf att_off = Eigen::Quaternionf::Identity();
+        float attitude_offset[4] { att_off.w(), att_off.x(), att_off.y(), att_off.z() };
+        _px4_io.set_attitude_offset(attitude_offset);
+    }
 }
 
 void Drone::init_standby() {
@@ -336,7 +383,7 @@ void Drone::transition_standby_to_docking() {
 
     // wait until we're done taking off before proceeding
     Telemetry::LandedState curr_state = _px4_io.telemetry_ptr()->landed_state();
-    //TODO update instances of _px4_io.telemetry_ptr()->subscribe... to use mavsdk_callback_manager.subscribe_mavsdk_callback() in px4_io.cpp.
+    //TODO update instances of _px4_io.telemetry_ptr()->subscribe... to use mavsdk_callback_manager.subscribe_mavsdk_callback() in px4_io.cpp (or run docking stuff in separate thread).
     _px4_io.telemetry_ptr()->subscribe_landed_state([this, &curr_state](Telemetry::LandedState landed_state) {
         if (curr_state != landed_state) {
             curr_state = landed_state;

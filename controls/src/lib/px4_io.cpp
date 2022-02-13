@@ -397,15 +397,11 @@ int PX4IO::set_mixer_undocked()
 }
 
 int PX4IO::set_attitude_offset(float (&att_offset)[4]) {
-
-    // This could send a MAVLINK Message or a MAVLINK Command
-    // A MAVLINK Command is probably fine
-
     MavlinkPassthrough::CommandLong cmd;
     cmd.target_sysid = sys->get_system_id();
     cmd.target_compid = 0;
 
-    cmd.command = MAV_CMD_AVIATA_SET_ATT_OFFSET; // TODO make new command ID
+    cmd.command = MAV_CMD_AVIATA_SET_ATT_OFFSET;
 
     cmd.param1 = att_offset[0];
     cmd.param2 = att_offset[1];
