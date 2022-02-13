@@ -113,6 +113,7 @@ public:
 private:
     const std::string drone_id;
 
+    // Produces warning: "‘Network’ has a field ‘Network::pubsubs’ whose type uses the anonymous namespace", but it should be ok.
     std::tuple<PubSub<DRONE_STATUS>, 
                PubSub<DRONE_DEBUG>,
                PubSub<FRAME_ARM>,

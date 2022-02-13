@@ -31,7 +31,6 @@ enum DroneState {
 };
 
 struct DroneStatus {
-// struct DroneStatus_Docked { // update naming convention?
     std::string drone_id;
     std::string ip_address {""};
     uint8_t mavlink_sys_id {0};
@@ -42,18 +41,6 @@ struct DroneStatus {
     float gps_position[4] {0};
     float yaw {0};
 };
-
-// struct DroneStatus_Attitude {
-//     std::string drone_id;
-
-
-// };
-
-// struct DroneStatus_ {
-//     std::string drone_id;
-
-
-// };
 
 class DockingStatus{
     public:

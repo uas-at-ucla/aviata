@@ -240,7 +240,7 @@ int PX4IO::goto_gps_position(double lat, double lon, float alt, float yaw)
     return 1;
 }
 
-void PX4IO::subscribe_attitude_target(std::function<void(const mavlink_attitude_target_t&)> user_callback)
+void PX4IO::subscribe_attitude_target(const std::function<void(const mavlink_attitude_target_t&)>& user_callback)
 {
     mavsdk_callback_manager.subscribe_mavsdk_callback<const mavlink_message_t&>(
         [this](std::function<void(const mavlink_message_t&)> callback) {
@@ -307,45 +307,6 @@ int PX4IO::set_attitude_target(mavlink_set_attitude_target_t& att_target_struct)
         return 0;
     }
     return 1;    
-}
-
-void PX4IO::subscribe_flight_mode(std::function<void(Telemetry::FlightMode)> user_callback) {
-        mavsdk_callback_manager.subscribe_mavsdk_callback<Telemetry::FlightMode>(
-        [this](std::function<void(Telemetry::FlightMode)> callback) {
-            telemetry->subscribe_flight_mode(callback);
-        },
-        user_callback
-    );
-}
-
-void PX4IO::unsubscribe_flight_mode() {
-    telemetry->subscribe_flight_mode(nullptr);
-}
-
-void PX4IO::subscribe_status_text(std::function<void(Telemetry::StatusText)> user_callback) {
-        mavsdk_callback_manager.subscribe_mavsdk_callback<Telemetry::StatusText>(
-        [this](std::function<void(Telemetry::StatusText)> callback) {
-            telemetry->subscribe_status_text(callback);
-        },
-        user_callback
-    );
-}
-
-void PX4IO::unsubscribe_status_text() {
-    telemetry->subscribe_status_text(nullptr);
-}
-
-void PX4IO::subscribe_armed(std::function<void(bool)> user_callback) {
-        mavsdk_callback_manager.subscribe_mavsdk_callback<bool>(
-        [this](std::function<void(bool)> callback) {
-            telemetry->subscribe_armed(callback);
-        },
-        user_callback
-    );
-}
-
-void PX4IO::unsubscribe_armed() {
-    telemetry->subscribe_armed(nullptr);
 }
 
 int PX4IO::set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing)

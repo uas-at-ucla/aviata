@@ -3,7 +3,7 @@
 #include <chrono>
 #include <QApplication>
 #include "lib/network.hpp"
-#include "lib/dronestatus.hpp"
+#include "lib/drone_types.hpp"
 #include "lib_ground/main_window.hpp"
 
 using namespace std::chrono_literals;

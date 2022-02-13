@@ -12,7 +12,7 @@
 #include "MAVSDK/src/plugins/mavlink_passthrough/include/plugins/mavlink_passthrough/mavlink_passthrough.h"
 
 #include "mavsdk_callback_manager.hpp"
-#include "dronestatus.hpp"
+#include "drone_types.hpp"
 
 #define ERROR_CONSOLE_TEXT "\033[31m" // Turn text on console red
 #define TELEMETRY_CONSOLE_TEXT "\033[34m" // Turn text on console blue
@@ -93,23 +93,30 @@ public:
 
     int goto_gps_position(double lat, double lon, float alt, float yaw);
 
-    void subscribe_attitude_target(std::function<void(const mavlink_attitude_target_t&)> user_callback);
+    void subscribe_attitude_target(const std::function<void(const mavlink_attitude_target_t&)>& user_callback);
     void unsubscribe_attitude_target();
     int set_attitude_target(mavlink_set_attitude_target_t& att_target_struct);
-
-    void subscribe_flight_mode(std::function<void(Telemetry::FlightMode)> user_callback);
-    void unsubscribe_flight_mode();
-    void subscribe_status_text(std::function<void(Telemetry::StatusText)> user_callback);
-    void unsubscribe_status_text();
-
-    void subscribe_armed(std::function<void(bool)> user_callback);
-    void unsubscribe_armed();
 
     int set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing);
     int set_mixer_configuration(uint8_t* missing_drones, uint8_t n_missing);
     int set_mixer_undocked();
 
-    int set_attitude_offset(Telemetry::Quaternion att_offset);
+    int set_attitude_offset(float (&att_offset)[4]);
+
+    template<typename T>
+    void subscribe_telemetry(void (Telemetry::*subscribe_function)(std::function<void(T)>), const std::function<void(T)>& user_callback) {
+        mavsdk_callback_manager.subscribe_mavsdk_callback<T>(
+            [this, subscribe_function](std::function<void(T)> callback) {
+                ((*telemetry).*subscribe_function)(callback);
+            },
+            user_callback
+        );
+    }
+
+    template<typename T>
+    void unsubscribe_telemetry(void (Telemetry::*subscribe_function)(std::function<void(T)>)) {
+        ((*telemetry).*subscribe_function)(nullptr);
+    }
 
     int takeoff_and_land_test(int argc, char** argv);
 

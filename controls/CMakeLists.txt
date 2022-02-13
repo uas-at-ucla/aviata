@@ -29,6 +29,7 @@ find_package(rosidl_default_generators REQUIRED)
 
 find_package(OpenCV REQUIRED)
 find_package(apriltag REQUIRED)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 link_directories(/usr/local/lib)
 
 find_package(Qt5Widgets CONFIG)
@@ -86,6 +87,7 @@ target_link_libraries(aviata_lib
     mavsdk_offboard
     ${OpenCV_LIBS}
     apriltag
+    Eigen3::Eigen
 )
 target_include_directories(aviata_lib SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/src/MAVSDK/src/third_party/mavlink/include)
 
