@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g -std=c++17
 
 rpi_updates: driver.o
 	$(CC) $(CFLAGS) -o rpi_updates driver.o -lssh
