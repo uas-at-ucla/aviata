@@ -1,7 +1,9 @@
 #!/usr/bin/expect
-        set pass $1 $2 $3
-        spawn scp  -r $1 $2:~/central_node
+        set pass [lindex $argv 2];
+        set filepath [lindex $argv 0];
+        set username [lindex $argv 1];
+        spawn scp  -r $filepath $username:~/central_node
 
         expect {
-        password: {send "$3\r"; exp_continue}
+        password: {send "$pass\r"; exp_continue}
                   }

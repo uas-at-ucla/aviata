@@ -132,7 +132,7 @@ int main(int argc, char* argv[])
     int rc;
     const char password[] = "password";
     const char connection_string[] = "chirag-singh@localhost";
-    const char *hosts[] = {"localhost", "localhost", "localhost", "localhost"};
+    const char *hosts[] = {"localhost", "chirag-singh@192.168.187.104", "localhost", "localhost"};
     const char *passwords[] = {"password", "password", "password", "password"};
     const int num_nodes = 4;
 
@@ -140,14 +140,21 @@ int main(int argc, char* argv[])
     std::string h_str(connection_string);
     std::string path = std::filesystem::current_path().string() + "/central_node";
 
+    cout << "Copying central node files" << endl;
+
     const std::string file_commands[] = {"chmod +x file_copy.sh && expect file_copy.sh ",
         path+" ",
         h_str+" ",
         p_str
     };
     char* file_trans = str_to_chararr(file_commands, 4);
+
+    cout << file_trans << endl;
+
     int file_copy = system(file_trans);
     delete file_trans;
+
+    cout << "Files copied successfully" << endl;
 
     my_ssh_session = ssh_new();
     if (my_ssh_session == NULL)
