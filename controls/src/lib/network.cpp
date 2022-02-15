@@ -137,3 +137,7 @@ void Network::check_command_requests()
         }
     }
 }
+
+void Network::start_timer(function timerCallback){
+    auto timer_ = this->create_wall_timer(std::chrono::seconds(1), timerCallback);
+}
