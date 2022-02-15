@@ -137,9 +137,3 @@ void Network::check_command_requests()
         }
     }
 }
-
-// timer for leader
-void Network::start_timer(){
-    rclcpp::TimerBase::SharedPtr timer_;
-    timer_ = this->create_wall_timer(std::chrono::seconds(1),std::bind(Drone::init_leader::timerCallback,this));
-}
