@@ -342,6 +342,7 @@ void Drone::init_leader() {
     // TODO create ROS2 timer that publishes this drone's attitude to the REFERENCE_ATTITUDE publisher.
     // You could write a helper function in network.cpp e.g. "start_timer()"
     // The code below will go in the timer callback:
+    rclcpp::TimerBase::SharedPtr timer_;
     timer_ = this->create_wall_timer(std::chrono::seconds(1),[this]() {
         // Get this drone's (the leader's) attitude estimate
         Eigen::Quaternionf att_ref(_px4_telem.att_q.w, _px4_telem.att_q.x, _px4_telem.att_q.y, _px4_telem.att_q.z);
@@ -367,7 +368,6 @@ void Drone::init_leader() {
         float attitude_offset[4] { att_off.w(), att_off.x(), att_off.y(), att_off.z() };
         _px4_io.set_attitude_offset(attitude_offset);
     });
-    rclcpp::TimerBase::SharedPtr timer_;
 }
 
 void Drone::init_standby() {
