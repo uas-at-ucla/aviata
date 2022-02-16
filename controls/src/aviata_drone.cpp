@@ -10,7 +10,7 @@ int print_use_guide() {
     std::cout << "  --state (-s): Initial state (standby, follower, leader), defaults to standby" << std::endl;
     std::cout << "  --docking-slot (-d): Docking slot" << std::endl;
     std::cout << "  --connection-url (-c): Defaults to RPi serial port" << std::endl;
-    std::cout << "  --num-drones (-n): Total number of drones in the frame, defaults to 4" << std::endl;
+    std::cout << "  --frame (-f): AVIATA airframe in use ('4', '4_alt', or '2_sim'). Defaults to '4'" << std::endl;
     std::cout << "  --max-missing (-m): Number of drones in the frame missing to still fly, defaults to 0" << std::endl;
     std::cout << "  With no arguments, this starts a drone in STANDBY with ID based on the machine hostname, and connects to the RPi serial port." << std::endl;
     return EINVAL;
