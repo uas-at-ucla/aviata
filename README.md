@@ -79,20 +79,22 @@ Source your ROS2 setup script, then run this:
 
 A shortcut for these things on RPi is `./rpi_tools/env_setup.sh`.
 
-Next, run the `aviata_drone` executable from within the controls/build folder. The usage is `./aviata_drone [drone_id] [initial_state] [docking_slot] [connection_url]` (With defaults - `drone_id`: derived from machine hostname; `initial_state`: standby; `docking_slot`: -1 (invalid); `connection_url`: serial:///dev/ttyAMA0:921600). For example, you can run these two commands in separate terminals if you are using multi-vehicle simulation:
+Next, run the `aviata_drone` executable from within the controls/build folder. For example, you can run these two commands in separate terminals if you are using multi-vehicle simulation:
 ```bash
-./aviata_drone drone1 leader 0 udp://:14540
+./aviata_drone -i drone1 -s leader -d 0 -c udp://:14540 -f 2_sim
 ```
 ```bash
-./aviata_drone drone2 follower 1 udp://:14541
+./aviata_drone -i drone2 -s follower -d 1 -c udp://:14541 -f 2_sim
 ```
 
 The drone that was initiated as the leader can be controlled from QGroundControl, and the follower should roughly copy it, although expect some deviations since the program expects the drones to be docked.
 
 Drones can also be started in `standby` mode, meaning they are idle (presumably at the ground station). While we do not have real-life docking, drones can be transitioned from STANDBY to a new state by sending an INIT_STATE command to the drone's DroneCommand ROS service.
 ```bash
-./aviata_drone drone2 standby 1 udp://:14541
+./aviata_drone -i drone2 -s standby -d 1 -c udp://:14541 -f 2_sim
 ```
+
+For more details, run `./aviata_drone --help`.
 
 The `aviata_ground` executable currently allows you to specify the leader drone name, and will tell the drone to hand off the leader role to another drone. The new leader can then be controlled from QGroundControl. The ground station is in progress, so more features to come.
 
