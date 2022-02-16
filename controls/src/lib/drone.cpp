@@ -339,13 +339,9 @@ void Drone::init_leader() {
             _network->publish<FOLLOWER_SETPOINT>(follower_setpoint);
         }
     });
-    _network->init_publisher<REFERENCE_ATTITUDE>();
 
-    // TODO create ROS2 timer that publishes this drone's attitude to the REFERENCE_ATTITUDE publisher.
-    // You could write a helper function in network.cpp e.g. "start_timer()"
-    // The code below will go in the timer callback:
-    Network::start_timer(timer, 
-    {
+    _network->init_publisher<REFERENCE_ATTITUDE>();
+    _network->start_timer(milliseconds(500), [this]() {
         // Get this drone's (the leader's) attitude estimate
         Eigen::Quaternionf att_ref(_px4_telem.att_q.w, _px4_telem.att_q.x, _px4_telem.att_q.y, _px4_telem.att_q.z);
 
@@ -425,6 +421,7 @@ void Drone::transition_leader_to_follower() {
     _network->deinit_publisher<FOLLOWER_SETPOINT>();
     _px4_io.unsubscribe_attitude_target();
     _network->deinit_publisher<REFERENCE_ATTITUDE>();
+    _network->stop_timer();
 
     _drone_state = DOCKED_FOLLOWER;
     init_follower();
