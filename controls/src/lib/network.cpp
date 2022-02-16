@@ -138,6 +138,10 @@ void Network::check_command_requests()
     }
 }
 
-void Network::start_timer(function timerCallback){
-    auto timer_ = this->create_wall_timer(std::chrono::seconds(1), timerCallback);
+void Network::start_timer(rclcpp::timer::WallTimer<std::function<void()>>::SharedPtr timer, function timerCallback){
+    timer = this->create_wall_timer(std::chrono::seconds(1), timerCallback);
+}
+
+void Network::stop_timer(rclcpp::timer::WallTimer<std::function<void()>>::SharedPtr timer){
+    timer->cancel();
 }

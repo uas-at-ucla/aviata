@@ -342,7 +342,8 @@ void Drone::init_leader() {
     // TODO create ROS2 timer that publishes this drone's attitude to the REFERENCE_ATTITUDE publisher.
     // You could write a helper function in network.cpp e.g. "start_timer()"
     // The code below will go in the timer callback:
-    Network::start_timer({
+    Network::start_timer(timer, 
+    {
         // Get this drone's (the leader's) attitude estimate
         Eigen::Quaternionf att_ref(_px4_telem.att_q.w, _px4_telem.att_q.x, _px4_telem.att_q.y, _px4_telem.att_q.z);
 
