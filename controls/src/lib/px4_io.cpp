@@ -240,7 +240,7 @@ int PX4IO::goto_gps_position(double lat, double lon, float alt, float yaw)
     return 1;
 }
 
-void PX4IO::subscribe_attitude_target(std::function<void(const mavlink_attitude_target_t&)> user_callback)
+void PX4IO::subscribe_attitude_target(const std::function<void(const mavlink_attitude_target_t&)>& user_callback)
 {
     mavsdk_callback_manager.subscribe_mavsdk_callback<const mavlink_message_t&>(
         [this](std::function<void(const mavlink_message_t&)> callback) {
@@ -309,45 +309,6 @@ int PX4IO::set_attitude_target(mavlink_set_attitude_target_t& att_target_struct)
     return 1;    
 }
 
-void PX4IO::subscribe_flight_mode(std::function<void(Telemetry::FlightMode)> user_callback) {
-        mavsdk_callback_manager.subscribe_mavsdk_callback<Telemetry::FlightMode>(
-        [this](std::function<void(Telemetry::FlightMode)> callback) {
-            telemetry->subscribe_flight_mode(callback);
-        },
-        user_callback
-    );
-}
-
-void PX4IO::unsubscribe_flight_mode() {
-    telemetry->subscribe_flight_mode(nullptr);
-}
-
-void PX4IO::subscribe_status_text(std::function<void(Telemetry::StatusText)> user_callback) {
-        mavsdk_callback_manager.subscribe_mavsdk_callback<Telemetry::StatusText>(
-        [this](std::function<void(Telemetry::StatusText)> callback) {
-            telemetry->subscribe_status_text(callback);
-        },
-        user_callback
-    );
-}
-
-void PX4IO::unsubscribe_status_text() {
-    telemetry->subscribe_status_text(nullptr);
-}
-
-void PX4IO::subscribe_armed(std::function<void(bool)> user_callback) {
-        mavsdk_callback_manager.subscribe_mavsdk_callback<bool>(
-        [this](std::function<void(bool)> callback) {
-            telemetry->subscribe_armed(callback);
-        },
-        user_callback
-    );
-}
-
-void PX4IO::unsubscribe_armed() {
-    telemetry->subscribe_armed(nullptr);
-}
-
 int PX4IO::set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing)
 {
     if (!drone_settings.modify_px4_mixers) {
@@ -408,7 +369,7 @@ int PX4IO::set_mixer_configuration(uint8_t* missing_drones, uint8_t n_missing)
     
     MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
     if (result != MavlinkPassthrough::Result::Success) {
-        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send docking MAVLink command." 
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send AVIATA_SET_CONFIGURATION MAVLink command." 
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
     }
@@ -429,6 +390,47 @@ int PX4IO::set_mixer_undocked()
     MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
     if (result != MavlinkPassthrough::Result::Success) {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send undocking MAVLink command." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+int PX4IO::set_aviata_frame(uint8_t frame_id) {
+    if (!drone_settings.modify_px4_mixers) {
+        return 1;
+    }
+
+    MavlinkPassthrough::CommandLong cmd;
+    cmd.target_sysid = sys->get_system_id();
+    cmd.target_compid = 0;
+    cmd.command = MAV_CMD_AVIATA_SET_FRAME;
+    cmd.param1 = frame_id;
+
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
+    if (result != MavlinkPassthrough::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send AVIATA_SET_FRAME MAVLink command." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+int PX4IO::set_attitude_offset(float (&att_offset)[4]) {
+    MavlinkPassthrough::CommandLong cmd;
+    cmd.target_sysid = sys->get_system_id();
+    cmd.target_compid = 0;
+
+    cmd.command = MAV_CMD_AVIATA_SET_ATT_OFFSET;
+
+    cmd.param1 = att_offset[0];
+    cmd.param2 = att_offset[1];
+    cmd.param3 = att_offset[2];
+    cmd.param4 = att_offset[3];
+    
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
+    if (result != MavlinkPassthrough::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send attitude offset MAVLink command." 
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
     }

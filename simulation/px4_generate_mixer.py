@@ -241,6 +241,18 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
     buf.write(u"#define AVIATA_MAX_NUM_ROTORS {}\n".format(max_num_rotors))
     buf.write(u"\n")
 
+    buf.write(u"#ifdef NEED_MIXER_TYPES\n")
+    buf.write(u"typedef uint16_t MultirotorGeometryUnderlyingType;\n\n")
+    buf.write(u"namespace MultirotorMixer {\n")
+    buf.write(u"\tstruct Rotor {\n")
+    buf.write(u"\t\tfloat\troll_scale;\t\t/**< scales roll for this rotor */\n")
+    buf.write(u"\t\tfloat\tpitch_scale;\t/**< scales pitch for this rotor */\n")
+    buf.write(u"\t\tfloat\tyaw_scale;\t\t/**< scales yaw for this rotor */\n")
+    buf.write(u"\t\tfloat\tthrust_scale;\t/**< scales thrust for this rotor */\n")
+    buf.write(u"\t};\n")
+    buf.write(u"}\n")
+    buf.write(u"#endif\n\n")
+
     buf.write(u"enum AviataAirframe {\n")
     for constants in constants_list:
         buf.write(u"\t{},\n".format(constants.name.upper()))
@@ -248,7 +260,7 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
     buf.write(u"};\n\n")
 
     buf.write(u"struct AviataFrameInfo {\n")
-    buf.write(u"\tuint32_t start_index;\n")
+    buf.write(u"\tMultirotorGeometryUnderlyingType start_index;\n")
     buf.write(u"\tuint8_t num_drones;\n")
     buf.write(u"\tuint8_t num_rotors;\n")
     buf.write(u"\tuint8_t max_missing_drones;\n")
@@ -271,11 +283,11 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
 
     buf.write(u"static constexpr AviataFrameInfo _config_aviata_frame_info[AVIATA_NUM_AIRFRAMES] {\n")
     for constants in constants_list:
-        buf.write(u"\t[{}] = {{\n".format(constants.name.upper()))
-        buf.write(u"\t\t.start_index = (uint32_t) AviataMultirotorGeometry::{}_MISSING_,\n".format(constants.name.upper()))
-        buf.write(u"\t\t.num_drones = {},\n".format(constants.num_drones))
-        buf.write(u"\t\t.num_rotors = {},\n".format(constants.num_rotors))
-        buf.write(u"\t\t.max_missing_drones = {},\n".format(constants.max_missing_drones))
+        buf.write(u"\t/*[{}] =*/ {{\n".format(constants.name.upper()))
+        buf.write(u"\t\t/*.start_index =*/ (MultirotorGeometryUnderlyingType) AviataMultirotorGeometry::{}_MISSING_,\n".format(constants.name.upper()))
+        buf.write(u"\t\t/*.num_drones =*/ {},\n".format(constants.num_drones))
+        buf.write(u"\t\t/*.num_rotors =*/ {},\n".format(constants.num_rotors))
+        buf.write(u"\t\t/*.max_missing_drones =*/ {},\n".format(constants.max_missing_drones))
 
         drone_angles = next((g['drone_angles'] for g in geometries_list if g['info']['key'] == "{}_missing_".format(constants.name)), None)
         for i in range(len(drone_angles)):
@@ -284,20 +296,20 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
             while drone_angles[i] < -np.pi:
                 drone_angles[i] += 2*np.pi
 
-        buf.write(u"\t\t.drone_angle = {\n")
+        buf.write(u"\t\t/*.drone_angle =*/ {\n")
         for drone_angle in drone_angles:
             buf.write(u"\t\t\t{:9f}, // {:.1f} degrees\n".format(drone_angle, np.rad2deg(drone_angle)))
         buf.write(u"\t\t},\n")
-        buf.write(u"\t\t.drone_angle_cos = {\n")
+        buf.write(u"\t\t/*.drone_angle_cos =*/ {\n")
         for drone_angle in drone_angles:
             buf.write(u"\t\t\t{:9f},\n".format(np.cos(drone_angle)))
         buf.write(u"\t\t},\n")
-        buf.write(u"\t\t.drone_angle_sin = {\n")
+        buf.write(u"\t\t/*.drone_angle_sin =*/ {\n")
         for drone_angle in drone_angles:
             buf.write(u"\t\t\t{:9f},\n".format(np.sin(drone_angle)))
         buf.write(u"\t\t},\n")
 
-        buf.write(u"\t\t.relative_drone_angle = {\n")
+        buf.write(u"\t\t/*.relative_drone_angle =*/ {\n")
         for drone_angle in drone_angles:
             buf.write(u"\t\t\t{ ")
             for drone_angle_ref in drone_angles:
@@ -310,7 +322,7 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
             buf.write(u"},\n")
         buf.write(u"\t\t},\n")
 
-        buf.write(u"\t\t.relative_drone_angle_cos = {\n")
+        buf.write(u"\t\t/*.relative_drone_angle_cos =*/ {\n")
         for drone_angle in drone_angles:
             buf.write(u"\t\t\t{ ")
             for drone_angle_ref in drone_angles:
@@ -318,7 +330,7 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
             buf.write(u"},\n")
         buf.write(u"\t\t},\n")
 
-        buf.write(u"\t\t.relative_drone_angle_sin = {\n")
+        buf.write(u"\t\t/*.relative_drone_angle_sin =*/ {\n")
         for drone_angle in drone_angles:
             buf.write(u"\t\t\t{ ")
             for drone_angle_ref in drone_angles:
@@ -326,7 +338,7 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
             buf.write(u"},\n")
         buf.write(u"\t\t},\n")
 
-        buf.write(u"\t},\n")
+        buf.write(u"\t},\n\n")
     buf.write(u"};\n\n")
 
     # Print mixer gains

@@ -6,6 +6,7 @@
 #include <vector>
 #include <future>
 #include <memory>
+#include <Eigen/Dense>
 
 #include "MAVSDK/src/core/mavsdk.h"
 #include "MAVSDK/src/plugins/telemetry/include/plugins/telemetry/telemetry.h"
@@ -13,8 +14,8 @@
 #include "MAVSDK/src/plugins/offboard/include/plugins/offboard/offboard.h"
 #include "MAVSDK/src/core/geometry.h"
 
-#include "dronestatus.hpp"
-#include "dronetelemetry.hpp"
+#include "drone_types.hpp"
+#include "px4_telemetry.hpp"
 #include "px4_io.hpp"
 #include "network.hpp"
 
@@ -42,6 +43,7 @@
 const float ALTITUDE_DISP = BOOM_LENGTH / 2 / tan(to_radians(CAMERA_FOV_VERTICAL / 2)) * 1.4;
 
 using namespace mavsdk;
+
 class Drone
 {
 public:
@@ -59,7 +61,7 @@ private:
     // APIs
     std::shared_ptr<Network> _network;
     PX4IO _px4_io;
-    DroneTelemetry _telem_values;
+    PX4Telemetry _px4_telem;
 
     // State
     DroneState _drone_state;
@@ -68,16 +70,16 @@ private:
     int8_t _docking_slot;
     bool _kill_switch_engaged = false;
     bool _armed = false;
-    mavsdk::Telemetry::FlightMode _flight_mode = mavsdk::Telemetry::FlightMode::Unknown;
+    Telemetry::FlightMode _flight_mode = Telemetry::FlightMode::Unknown;
     uint8_t _leader_seq_num = 0;
     int64_t _last_status_publish_time = 0;
     int64_t _last_setpoint_msg_time;
     bool _need_to_enter_hold_mode = false; // used when transitioning from follower to leader
     bool _need_to_discover_more_drones = false;
+    const AviataFrameInfo& _frame_info;
     std::vector<bool> _docking_slot_is_occupied;
 
     //Docking members
-    Mavsdk mavsdk;
     Camera camera;
     ImageAnalyzer image_analyzer;
     Target m_target_info;

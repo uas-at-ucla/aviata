@@ -80,10 +80,9 @@ RUN git clone https://github.com/AprilRobotics/apriltag.git \
 #     && rm mavsdk_0.44.0_ubuntu18.04_amd64.deb
 
 # pigpio
-RUN apt install unzip -y 
+RUN apt-get update && apt-get install -y unzip 
 RUN wget https://github.com/joan2937/pigpio/archive/master.zip \
     && unzip master.zip \
     && cd pigpio-master \
     && make \
     && sudo make install 
-

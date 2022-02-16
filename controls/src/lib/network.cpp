@@ -137,3 +137,17 @@ void Network::check_command_requests()
         }
     }
 }
+
+void Network::start_timer(std::chrono::nanoseconds interval, std::function<void()> timerCallback) {
+    if (timer != nullptr) {
+        timer->cancel();
+    }
+    timer = this->create_wall_timer(interval, timerCallback);
+}
+
+void Network::stop_timer() {
+    if (timer != nullptr) {
+        timer->cancel();
+    }
+    timer = nullptr;
+}

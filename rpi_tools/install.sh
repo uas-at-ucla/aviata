@@ -16,14 +16,14 @@ sudo locale-gen en_US en_US.UTF-8
 sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-# MAVSDK
-cd ~
-(git clone https://github.com/mavlink/MAVSDK.git && sudo apt install -y colordiff doxygen && \
-cd MAVSDK && \
-git submodule update --init --recursive && \
-cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -Bbuild/default -H. -DCMAKE_CXX_STANDARD_LIBRARIES="-latomic" && \
-cmake --build build/default && \
-sudo cmake --build build/default --target install) || echo "Skipping MAVSDK"
+# # MAVSDK (now included as a git submodule in controls/src)
+# cd ~
+# (git clone https://github.com/mavlink/MAVSDK.git && sudo apt install -y colordiff doxygen && \
+# cd MAVSDK && \
+# git submodule update --init --recursive && \
+# cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -Bbuild/default -H. -DCMAKE_CXX_STANDARD_LIBRARIES="-latomic" && \
+# cmake --build build/default && \
+# sudo cmake --build build/default --target install) || echo "Skipping MAVSDK"
 
 # apriltag
 cd ~

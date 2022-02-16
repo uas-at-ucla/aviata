@@ -6,11 +6,12 @@ using namespace mavsdk;
 using std::this_thread::sleep_for;
 
 Drone::Drone(std::string drone_id, DroneSettings drone_settings, Target t) : 
-    _drone_id(drone_id), _drone_settings(drone_settings), 
-    _px4_io(drone_id, drone_settings), _telem_values(_px4_io), camera(t), 
-    image_analyzer(), m_target_info(t), m_north(0), m_east(0), m_down(-5), m_yaw(0), 
+    _drone_id(drone_id), _drone_settings(drone_settings),
     _follower_setpoint_timeout(drone_settings.sim ? 2000 : 1000),
-    _docking_slot_is_occupied(drone_settings.n_docking_slots, false)
+    _px4_io(drone_id, drone_settings), _px4_telem(_px4_io), 
+    _frame_info(_config_aviata_frame_info[drone_settings.frame]),
+    _docking_slot_is_occupied(_frame_info.num_drones, false),
+    camera(t), image_analyzer(), m_target_info(t), m_north(0), m_east(0), m_down(-5), m_yaw(0)
 {
     Network::init();
     _network = std::make_shared<Network>(drone_id);
@@ -28,9 +29,9 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
     }
 
     // Universal initialization
-    _telem_values.init_telem();
+    _px4_telem.init();
 
-    _px4_io.subscribe_status_text([this](mavsdk::Telemetry::StatusText status_text) {
+    _px4_io.subscribe_telemetry(&Telemetry::subscribe_status_text, std::function([this](Telemetry::StatusText status_text) {
         if (status_text.text == "Kill-switch engaged") {
             _kill_switch_engaged = true;
             if (_drone_state == DOCKED_LEADER) {
@@ -40,20 +41,20 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
         } else if (status_text.text == "Kill-switch disengaged") {
             _kill_switch_engaged = false;
         }
-    });
+    }));
 
-    _px4_io.subscribe_armed([this](bool is_armed) {
+    _px4_io.subscribe_telemetry(&Telemetry::subscribe_armed, std::function([this](bool is_armed) {
         if (_drone_state == DOCKED_LEADER && _armed && !is_armed) {
             // Disarm followers if leader was disarmed
             aviata::msg::Empty disarm;
             _network->publish<FOLLOWER_DISARM>(disarm);
         }
         _armed = is_armed;
-    });
+    }));
 
-    _px4_io.subscribe_flight_mode([this](mavsdk::Telemetry::FlightMode flight_mode) {
+    _px4_io.subscribe_telemetry(&Telemetry::subscribe_flight_mode, std::function([this](Telemetry::FlightMode flight_mode) {
         _flight_mode = flight_mode;
-    });
+    }));
 
     // init publishers
     _network->init_publisher<FRAME_DISARM>(); // TODO Temporary failsafe option until we have something more robust
@@ -85,6 +86,7 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
         command_handler(request, response);
     });
 
+    while (_px4_io.set_aviata_frame(_drone_settings.frame) != 1) {}
     while (_px4_io.set_mixer_undocked() != 1) {}
     _network->publish_drone_debug("Initialized PX4 mixer to undocked.");
 
@@ -141,7 +143,7 @@ void Drone::run()
             case DOCKED_LEADER:
                 if (_need_to_enter_hold_mode) {
                     if (_px4_io.set_hold_mode() == 1) {
-                        _flight_mode = mavsdk::Telemetry::FlightMode::Hold;
+                        _flight_mode = Telemetry::FlightMode::Hold;
                         _need_to_enter_hold_mode = false;
                     }
                 }
@@ -204,11 +206,10 @@ void Drone::init_docked() {
 
     std::vector<uint8_t> missing_drones = generate_missing_drones_list();
     if (missing_drones.size() <= _drone_settings.max_missing_drones) {
-        if (_px4_io.set_mixer_docked(_docking_slot, missing_drones.data(), missing_drones.size()) == 1) {
-            _network->publish_drone_debug("MAVLink docking command sent successfully!");
-        } else {
-            _network->publish_drone_debug("MAVLink docking command failed, and that's pretty bad becuase there's no failsafe here!");
+        while (_px4_io.set_mixer_docked(_docking_slot, missing_drones.data(), missing_drones.size()) != 1) {
+            _network->publish_drone_debug("MAVLink docking command failed. Retrying.");
         }
+        _network->publish_drone_debug("MAVLink docking command sent successfully!");
     } else {
         _network->publish_drone_debug("Not ready for docked flight - Need to discover more drones.");
         _need_to_discover_more_drones = true;
@@ -242,7 +243,14 @@ void Drone::init_follower() {
 
     //subscribe follower stuff
     _network->subscribe<FOLLOWER_ARM>([this](const aviata::msg::Empty::SharedPtr follower_arm) {    arm_drone();    });
-    _network->subscribe<FOLLOWER_DISARM>([this](const aviata::msg::Empty::SharedPtr follower_disarm) {  disarm_drone();    });
+
+    _network->subscribe<FOLLOWER_DISARM>([this](const aviata::msg::Empty::SharedPtr follower_disarm) {
+        disarm_drone();
+        if (_flight_mode == Telemetry::FlightMode::Offboard) {
+            _px4_io.set_hold_mode(); // Take out of offboard mode to prevent annoying failsafe beeps
+        }
+    });
+
     _network->subscribe<FOLLOWER_SETPOINT>([this](const aviata::msg::FollowerSetpoint::SharedPtr follower_setpoint) {
         if (!valid_leader_msg(follower_setpoint->leader_seq_num)) {
             return;
@@ -259,18 +267,48 @@ void Drone::init_follower() {
         attitude_target.body_pitch_rate = (float) follower_setpoint->aviata_docking_slot; // body_pitch_rate indicates aviata_docking_slot
         _px4_io.set_attitude_target(attitude_target);
 
-        if (_flight_mode != mavsdk::Telemetry::FlightMode::Offboard) {
+        if (_flight_mode != Telemetry::FlightMode::Offboard) {
             if (_px4_io.set_offboard_mode() == 1) {
-                _flight_mode = mavsdk::Telemetry::FlightMode::Offboard;
+                _flight_mode = Telemetry::FlightMode::Offboard;
             }
         }
-        if (_flight_mode == mavsdk::Telemetry::FlightMode::Offboard && !_armed) {
+        if (_flight_mode == Telemetry::FlightMode::Offboard && !_armed) {
             if (_px4_io.arm() == 1) {
                 _armed = true;
             }
         }
     });
-    _network->subscribe<REFERENCE_ATTITUDE>([this](const aviata::msg::ReferenceAttitude::SharedPtr reference_attitude) {  });
+
+    _network->subscribe<REFERENCE_ATTITUDE>([this](const aviata::msg::ReferenceAttitude::SharedPtr reference_attitude) {
+        // Get this drone's attitude estimate
+        Eigen::Quaternionf att_est(_px4_telem.att_q.w, _px4_telem.att_q.x, _px4_telem.att_q.y, _px4_telem.att_q.z);
+
+        // Represent this drone's attitude in terms of the AVIATA frame axes
+        float docking_angle = _frame_info.drone_angle[_docking_slot];
+        Eigen::Vector3f body_z = body_z_from_att_q(att_est);
+        att_est = Eigen::Quaternionf(Eigen::AngleAxisf(-docking_angle, body_z)) * att_est;
+
+        // Zero out heading so that the reference X-axis is aligned with the AVIATA frame front direction
+        float heading = heading_from_att_q(att_est);
+        att_est = Eigen::Quaternionf(Eigen::AngleAxisf(-heading, Eigen::Vector3f::UnitZ())) * att_est;
+
+        // Represent in terms of this drone's body axes
+        body_z = body_z_from_att_q(att_est);
+        att_est = Eigen::Quaternionf(Eigen::AngleAxisf(docking_angle, body_z)) * att_est;
+
+        // Reference attitude (in terms of AVIATA frame axes, with reference X-axis aligned to AVIATA front)
+        Eigen::Quaternionf att_ref(reference_attitude->q[0], reference_attitude->q[1], reference_attitude->q[2], reference_attitude->q[3]);
+
+        // Represent reference attitude in terms of this drone's body axes
+        body_z = body_z_from_att_q(att_ref);
+        att_ref = Eigen::Quaternionf(Eigen::AngleAxisf(docking_angle, body_z)) * att_ref;
+
+        // Calculate the rotation we need to apply to attitude setpoints to match attitude error with the other drones
+        Eigen::Quaternionf att_off = att_est * att_ref.inverse();
+
+        float attitude_offset[4] { att_off.w(), att_off.x(), att_off.y(), att_off.z() };
+        _px4_io.set_attitude_offset(attitude_offset);
+    });
 }
 
 void Drone::init_leader() {
@@ -301,7 +339,33 @@ void Drone::init_leader() {
             _network->publish<FOLLOWER_SETPOINT>(follower_setpoint);
         }
     });
+
     _network->init_publisher<REFERENCE_ATTITUDE>();
+    _network->start_timer(milliseconds(500), [this]() {
+        // Get this drone's (the leader's) attitude estimate
+        Eigen::Quaternionf att_ref(_px4_telem.att_q.w, _px4_telem.att_q.x, _px4_telem.att_q.y, _px4_telem.att_q.z);
+
+        // Represent this drone's attitude in terms of the AVIATA frame axes
+        float docking_angle = _frame_info.drone_angle[_docking_slot];
+        Eigen::Vector3f body_z = body_z_from_att_q(att_ref);
+        att_ref = Eigen::Quaternionf(Eigen::AngleAxisf(-docking_angle, body_z)) * att_ref;
+
+        // Zero out heading so that the reference X-axis is aligned with the AVIATA frame front direction
+        float heading = heading_from_att_q(att_ref);
+        att_ref = Eigen::Quaternionf(Eigen::AngleAxisf(-heading, Eigen::Vector3f::UnitZ())) * att_ref;
+
+        aviata::msg::ReferenceAttitude reference_attitude;
+        reference_attitude.q[0] = att_ref.w();
+        reference_attitude.q[1] = att_ref.x();
+        reference_attitude.q[2] = att_ref.y();
+        reference_attitude.q[3] = att_ref.z();
+        _network->publish<REFERENCE_ATTITUDE>(reference_attitude);
+
+        // Ensure that the leader drone has no attitude offset
+        Eigen::Quaternionf att_off = Eigen::Quaternionf::Identity();
+        float attitude_offset[4] { att_off.w(), att_off.x(), att_off.y(), att_off.z() };
+        _px4_io.set_attitude_offset(attitude_offset);
+    });
 }
 
 void Drone::init_standby() {
@@ -318,7 +382,7 @@ void Drone::transition_standby_to_docking() {
 
     // wait until we're done taking off before proceeding
     Telemetry::LandedState curr_state = _px4_io.telemetry_ptr()->landed_state();
-    //TODO update instances of _px4_io.telemetry_ptr()->subscribe... to use mavsdk_callback_manager.subscribe_mavsdk_callback() in px4_io.cpp.
+    //TODO update instances of _px4_io.telemetry_ptr()->subscribe... to use mavsdk_callback_manager.subscribe_mavsdk_callback() in px4_io.cpp (or run docking stuff in separate thread).
     _px4_io.telemetry_ptr()->subscribe_landed_state([this, &curr_state](Telemetry::LandedState landed_state) {
         if (curr_state != landed_state) {
             curr_state = landed_state;
@@ -338,7 +402,7 @@ void Drone::transition_standby_to_docking() {
     _px4_io.offboard_ptr()->set_velocity_body(initial_setpoint);
     
     if (_px4_io.set_offboard_mode() == 1) {
-        _flight_mode = mavsdk::Telemetry::FlightMode::Offboard;
+        _flight_mode = Telemetry::FlightMode::Offboard;
         std::cout << "Offboard successfully started for docking drone" << std::endl;
     }
     _drone_state = ARRIVING;
@@ -357,6 +421,7 @@ void Drone::transition_leader_to_follower() {
     _network->deinit_publisher<FOLLOWER_SETPOINT>();
     _px4_io.unsubscribe_attitude_target();
     _network->deinit_publisher<REFERENCE_ATTITUDE>();
+    _network->stop_timer();
 
     _drone_state = DOCKED_FOLLOWER;
     init_follower();
@@ -378,7 +443,7 @@ void Drone::transition_follower_to_leader() {
     _drone_state = DOCKED_LEADER;
     _need_to_enter_hold_mode = true;
     if (_px4_io.set_hold_mode() == 1) { // try to enter hold mode once, but if it fails it will continue to try in run()
-        _flight_mode = mavsdk::Telemetry::FlightMode::Hold;
+        _flight_mode = Telemetry::FlightMode::Hold;
         _need_to_enter_hold_mode = false;
     }
     init_leader();
@@ -414,9 +479,12 @@ void Drone::publish_drone_status()
     drone_status.mavlink_sys_id = _px4_io.drone_system_id();
     drone_status.drone_state = _drone_state;
     drone_status.docking_slot = _docking_slot;
-    std::copy(std::begin(_telem_values.dronePosition), std::end(_telem_values.dronePosition), std::begin(drone_status.gps_position));
-    drone_status.yaw = _telem_values.droneEulerAngle.yaw_deg;
-    drone_status.battery_percent = _telem_values.droneBattery.remaining_percent;
+    drone_status.gps_position[0] = _px4_telem.position.latitude_deg;
+    drone_status.gps_position[1] = _px4_telem.position.longitude_deg;
+    drone_status.gps_position[2] = _px4_telem.position.absolute_altitude_m;
+    drone_status.gps_position[3] = _px4_telem.position.relative_altitude_m;
+    drone_status.yaw = _px4_telem.att_euler.yaw_deg;
+    drone_status.battery_percent = _px4_telem.battery.remaining_percent;
     _network->publish<DRONE_STATUS>(drone_status);
 }
 
@@ -441,11 +509,10 @@ void Drone::receive_drone_status(const DroneStatus& rec) {
 
             if (_need_to_discover_more_drones) {
                 if (missing_drones.size() <= _drone_settings.max_missing_drones) {
-                    if (_px4_io.set_mixer_docked(_docking_slot, missing_drones.data(), missing_drones.size()) == 1) {
-                        _network->publish_drone_debug("MAVLink docking command sent successfully!");
-                    } else {
-                        _network->publish_drone_debug("MAVLink docking command failed, and that's pretty bad becuase there's no failsafe here!");
+                    while (_px4_io.set_mixer_docked(_docking_slot, missing_drones.data(), missing_drones.size()) != 1) {
+                        _network->publish_drone_debug("MAVLink docking command failed. Retrying.");
                     }
+                    _network->publish_drone_debug("MAVLink docking command sent successfully!");
                     _need_to_discover_more_drones = false;
                 }
             } else {
@@ -999,6 +1066,7 @@ void Drone::command_handler(const aviata::srv::DroneCommand::Request::SharedPtr 
     {
     case DroneCommand::INIT_STATE:
         response->ack = init_state(static_cast<DroneState>(request->param1), request->param2);
+        break;
     case DroneCommand::UNDOCK:
         response->ack = undock();
         break;

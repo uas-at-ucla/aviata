@@ -110,9 +110,14 @@ public:
 
     void check_command_requests();
 
+    // Timer functions. Currently only allows 1 timer to be running.
+    void start_timer(std::chrono::nanoseconds interval, std::function<void()> timerCallback);
+    void stop_timer();
+
 private:
     const std::string drone_id;
 
+    // Produces warning: "‘Network’ has a field ‘Network::pubsubs’ whose type uses the anonymous namespace", but it should be ok.
     std::tuple<PubSub<DRONE_STATUS>, 
                PubSub<DRONE_DEBUG>,
                PubSub<FRAME_ARM>,
@@ -126,6 +131,8 @@ private:
                PubSub<DOCKING_INFO>,
                PubSub<REFERENCE_ATTITUDE>
     > pubsubs;
+
+    rclcpp::WallTimer<std::function<void()>>::SharedPtr timer;
 
     rclcpp::Service<aviata::srv::DroneCommand>::SharedPtr drone_command_service;
     std::map<std::string, rclcpp::Client<aviata::srv::DroneCommand>::SharedPtr> drone_command_clients;

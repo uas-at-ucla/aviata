@@ -1,1 +1,1 @@
-float32[4] reference_attitude #estimated leader attitude quaternion
+float32[4] q # estimated leader attitude quaternion

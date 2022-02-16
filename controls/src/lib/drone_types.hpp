@@ -1,6 +1,9 @@
 #ifndef DRONESTATUS_HPP
 #define DRONESTATUS_HPP
 
+#define NEED_MIXER_TYPES
+#include "aviata_mixers.h"
+
 #include "pid_controller.hpp"
 #include <opencv2/core.hpp>
 #include <opencv2/core/types.hpp>
@@ -14,7 +17,7 @@
 struct DroneSettings {
     bool sim;
     bool modify_px4_mixers;
-    uint8_t n_docking_slots;
+    AviataAirframe frame;
     uint8_t max_missing_drones;
 };
 
@@ -31,7 +34,6 @@ enum DroneState {
 };
 
 struct DroneStatus {
-// struct DroneStatus_Docked { // update naming convention?
     std::string drone_id;
     std::string ip_address {""};
     uint8_t mavlink_sys_id {0};
@@ -42,18 +44,6 @@ struct DroneStatus {
     float gps_position[4] {0};
     float yaw {0};
 };
-
-// struct DroneStatus_Attitude {
-//     std::string drone_id;
-
-
-// };
-
-// struct DroneStatus_ {
-//     std::string drone_id;
-
-
-// };
 
 class DockingStatus{
     public:
@@ -91,7 +81,7 @@ struct SetupOptions {
     DroneState state;
     int8_t docking_slot;
     std::string connection_url;
-    int8_t num_drones;
+    AviataAirframe frame;
     int8_t max_missing_drones;
 };
 
