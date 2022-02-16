@@ -14,8 +14,6 @@
 #include "MAVSDK/src/plugins/offboard/include/plugins/offboard/offboard.h"
 #include "MAVSDK/src/core/geometry.h"
 
-#define NEED_MIXER_TYPES
-#include "aviata_mixers.h"
 #include "drone_types.hpp"
 #include "px4_telemetry.hpp"
 #include "px4_io.hpp"
@@ -78,8 +76,8 @@ private:
     int64_t _last_setpoint_msg_time;
     bool _need_to_enter_hold_mode = false; // used when transitioning from follower to leader
     bool _need_to_discover_more_drones = false;
+    const AviataFrameInfo& _frame_info;
     std::vector<bool> _docking_slot_is_occupied;
-    AviataFrameInfo _frame_info = _config_aviata_frame_info[AVIATA_4]; // TODO set frame based on user input
 
     //Docking members
     Camera camera;

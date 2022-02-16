@@ -1,6 +1,9 @@
 #ifndef DRONESTATUS_HPP
 #define DRONESTATUS_HPP
 
+#define NEED_MIXER_TYPES
+#include "aviata_mixers.h"
+
 #include "pid_controller.hpp"
 #include <opencv2/core.hpp>
 #include <opencv2/core/types.hpp>
@@ -14,7 +17,7 @@
 struct DroneSettings {
     bool sim;
     bool modify_px4_mixers;
-    uint8_t n_docking_slots;
+    AviataAirframe frame;
     uint8_t max_missing_drones;
 };
 
@@ -78,7 +81,7 @@ struct SetupOptions {
     DroneState state;
     int8_t docking_slot;
     std::string connection_url;
-    int8_t num_drones;
+    AviataAirframe frame;
     int8_t max_missing_drones;
 };
 

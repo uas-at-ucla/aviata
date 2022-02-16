@@ -9,7 +9,8 @@ Drone::Drone(std::string drone_id, DroneSettings drone_settings, Target t) :
     _drone_id(drone_id), _drone_settings(drone_settings),
     _follower_setpoint_timeout(drone_settings.sim ? 2000 : 1000),
     _px4_io(drone_id, drone_settings), _px4_telem(_px4_io), 
-    _docking_slot_is_occupied(drone_settings.n_docking_slots, false),
+    _frame_info(_config_aviata_frame_info[drone_settings.frame]),
+    _docking_slot_is_occupied(_frame_info.num_drones, false),
     camera(t), image_analyzer(), m_target_info(t), m_north(0), m_east(0), m_down(-5), m_yaw(0)
 {
     Network::init();
