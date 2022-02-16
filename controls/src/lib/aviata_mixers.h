@@ -24,7 +24,7 @@ namespace MultirotorMixer {
 enum AviataAirframe {
 	AVIATA_4,
 	AVIATA_4_ALT,
-	AVIATA_2,
+	AVIATA_2_SIM,
 	AVIATA_NUM_AIRFRAMES
 };
 
@@ -44,7 +44,7 @@ struct AviataFrameInfo {
 enum class AviataMultirotorGeometry : MultirotorGeometryUnderlyingType {
 	AVIATA_4_MISSING_,             // aviata_4 with these drones missing:  (text key aviata_4_missing_)
 	AVIATA_4_ALT_MISSING_,         // aviata_4_alt with these drones missing:  (text key aviata_4_alt_missing_)
-	AVIATA_2_MISSING_,             // aviata_2 with these drones missing:  (text key aviata_2_missing_)
+	AVIATA_2_SIM_MISSING_,         // aviata_2_sim with these drones missing:  (text key aviata_2_sim_missing_)
 
 	MAX_GEOMETRY
 }; // enum class AviataMultirotorGeometry
@@ -136,34 +136,34 @@ static constexpr AviataFrameInfo _config_aviata_frame_info[AVIATA_NUM_AIRFRAMES]
 		},
 	},
 
-	/*[AVIATA_2] =*/ {
-		/*.start_index =*/ (MultirotorGeometryUnderlyingType) AviataMultirotorGeometry::AVIATA_2_MISSING_,
+	/*[AVIATA_2_SIM] =*/ {
+		/*.start_index =*/ (MultirotorGeometryUnderlyingType) AviataMultirotorGeometry::AVIATA_2_SIM_MISSING_,
 		/*.num_drones =*/ 2,
 		/*.num_rotors =*/ 6,
 		/*.max_missing_drones =*/ 0,
 		/*.drone_angle =*/ {
 			 0.000000, // 0.0 degrees
-			-0.785398, // -45.0 degrees
+			 0.000000, // 0.0 degrees
 		},
 		/*.drone_angle_cos =*/ {
 			 1.000000,
-			 0.707107,
+			 1.000000,
 		},
 		/*.drone_angle_sin =*/ {
 			 0.000000,
-			-0.707107,
+			 0.000000,
 		},
 		/*.relative_drone_angle =*/ {
-			{  0.000000,  0.785398, },
-			{ -0.785398,  0.000000, },
+			{  0.000000,  0.000000, },
+			{  0.000000,  0.000000, },
 		},
 		/*.relative_drone_angle_cos =*/ {
-			{  1.000000,  0.707107, },
-			{  0.707107,  1.000000, },
+			{  1.000000,  1.000000, },
+			{  1.000000,  1.000000, },
 		},
 		/*.relative_drone_angle_sin =*/ {
-			{  0.000000,  0.707107, },
-			{ -0.707107,  0.000000, },
+			{  0.000000,  0.000000, },
+			{  0.000000,  0.000000, },
 		},
 	},
 
@@ -224,38 +224,38 @@ static constexpr MultirotorMixer::Rotor _config_aviata_aviata_4_alt_missing_[] {
 	{  0.030201,  0.030201,  0.424202,  0.774201 },
 };
 
-static constexpr MultirotorMixer::Rotor _config_aviata_aviata_2_missing_[] {
-	{ -0.030069, -0.004809, -0.149920,  1.081320 },
-	{ -0.030069,  0.004809,  0.149920,  1.081320 },
-	{ -0.030069,  0.021088, -0.149920,  1.081320 },
-	{ -0.030069, -0.021088,  0.149920,  1.081320 },
-	{ -0.030069,  0.021088,  0.149920,  1.081320 },
-	{ -0.030069, -0.021088, -0.149920,  1.081320 },
-	{  0.030069,  0.021088, -0.149920,  1.081320 },
-	{  0.030069, -0.021088,  0.149920,  1.081320 },
-	{  0.030069,  0.004809, -0.149920,  1.081320 },
-	{  0.030069, -0.004809,  0.149920,  1.081320 },
-	{  0.030069,  0.021088,  0.149920,  1.081320 },
-	{  0.030069, -0.021088, -0.149920,  1.081320 },
+static constexpr MultirotorMixer::Rotor _config_aviata_aviata_2_sim_missing_[] {
+	{ -1.000000,  0.000000, -1.000000,  1.000000 },
+	{  1.000000,  0.000000,  1.000000,  1.000000 },
+	{  0.500000,  0.866025, -1.000000,  1.000000 },
+	{ -0.500000, -0.866025,  1.000000,  1.000000 },
+	{ -0.500000,  0.866025,  1.000000,  1.000000 },
+	{  0.500000, -0.866025, -1.000000,  1.000000 },
+	{ -1.000000,  0.000000, -1.000000,  1.000000 },
+	{  1.000000,  0.000000,  1.000000,  1.000000 },
+	{  0.500000,  0.866025, -1.000000,  1.000000 },
+	{ -0.500000, -0.866025,  1.000000,  1.000000 },
+	{ -0.500000,  0.866025,  1.000000,  1.000000 },
+	{  0.500000, -0.866025, -1.000000,  1.000000 },
 };
 
 static constexpr const MultirotorMixer::Rotor *_config_aviata_index[] {
 	&_config_aviata_aviata_4_missing_[0],
 	&_config_aviata_aviata_4_alt_missing_[0],
-	&_config_aviata_aviata_2_missing_[0],
+	&_config_aviata_aviata_2_sim_missing_[0],
 };
 
 static constexpr unsigned _config_aviata_rotor_count[] {
 	24, /* aviata_4_missing_ */
 	24, /* aviata_4_alt_missing_ */
-	12, /* aviata_2_missing_ */
+	6, /* aviata_2_sim_missing_ */
 };
 
 __attribute__((unused)) // Not really unused, but fixes compilation error
 const char* _config_aviata_key[] {
 	"aviata_4_missing_",	/* aviata_4_missing_ */
 	"aviata_4_alt_missing_",	/* aviata_4_alt_missing_ */
-	"aviata_2_missing_",	/* aviata_2_missing_ */
+	"aviata_2_sim_missing_",	/* aviata_2_sim_missing_ */
 };
 
 } // anonymous namespace

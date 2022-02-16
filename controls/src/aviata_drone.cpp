@@ -81,6 +81,9 @@ int main(int argc, char** argv) {
                     else if (strcmp(argv[i], "4_alt") == 0) {
                         opt.frame = AVIATA_4_ALT;
                     }
+                    else if (strcmp(argv[i], "2_sim") == 0) {
+                        opt.frame = AVIATA_2_SIM;
+                    }                    
                     else {
                         std::cout << "Invalid frame: " << argv[i] << std::endl;
                         return EINVAL;
@@ -119,11 +122,9 @@ int main(int argc, char** argv) {
     if (opt.connection_url.rfind("udp://", 0) == 0) { // if connection_url starts with "udp://"
         // If using UDP, assume we're in the simulator that does not support physical docking.
         drone_settings.sim = true;
-        drone_settings.modify_px4_mixers = false;
     }
     else {
         drone_settings.sim = false;
-        drone_settings.modify_px4_mixers = true;
     }
 
     std::cout<< "Running aviata_drone for drone " << opt.drone_id<< " with settings: "<< std::endl;

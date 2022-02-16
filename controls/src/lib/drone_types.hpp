@@ -16,7 +16,6 @@
 
 struct DroneSettings {
     bool sim;
-    bool modify_px4_mixers;
     AviataAirframe frame;
     uint8_t max_missing_drones;
 };

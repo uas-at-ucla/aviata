@@ -311,10 +311,6 @@ int PX4IO::set_attitude_target(mavlink_set_attitude_target_t& att_target_struct)
 
 int PX4IO::set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing)
 {
-    if (!drone_settings.modify_px4_mixers) {
-        return 1;
-    }
-
     if (n_missing > 6) { // too many missing
         return 0;
     }
@@ -345,10 +341,6 @@ int PX4IO::set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8
 
 int PX4IO::set_mixer_configuration(uint8_t* missing_drones, uint8_t n_missing)
 {
-    if (!drone_settings.modify_px4_mixers) {
-        return 1;
-    }
-
     if (n_missing > 6) { // too many missing
         return 0;
     }
@@ -378,10 +370,6 @@ int PX4IO::set_mixer_configuration(uint8_t* missing_drones, uint8_t n_missing)
 
 int PX4IO::set_mixer_undocked()
 {
-    if (!drone_settings.modify_px4_mixers) {
-        return 1;
-    }
-
     MavlinkPassthrough::CommandLong cmd;
     cmd.target_sysid = sys->get_system_id();
     cmd.target_compid = 0;
@@ -397,10 +385,6 @@ int PX4IO::set_mixer_undocked()
 }
 
 int PX4IO::set_aviata_frame(uint8_t frame_id) {
-    if (!drone_settings.modify_px4_mixers) {
-        return 1;
-    }
-
     MavlinkPassthrough::CommandLong cmd;
     cmd.target_sysid = sys->get_system_id();
     cmd.target_compid = 0;
