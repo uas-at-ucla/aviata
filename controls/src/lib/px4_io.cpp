@@ -369,7 +369,7 @@ int PX4IO::set_mixer_configuration(uint8_t* missing_drones, uint8_t n_missing)
     
     MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
     if (result != MavlinkPassthrough::Result::Success) {
-        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send docking MAVLink command." 
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send AVIATA_SET_CONFIGURATION MAVLink command." 
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
     }
@@ -390,6 +390,26 @@ int PX4IO::set_mixer_undocked()
     MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
     if (result != MavlinkPassthrough::Result::Success) {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send undocking MAVLink command." 
+                  << NORMAL_CONSOLE_TEXT << std::endl;
+        return 0;
+    }
+    return 1;
+}
+
+int PX4IO::set_aviata_frame(uint8_t frame_id) {
+    if (!drone_settings.modify_px4_mixers) {
+        return 1;
+    }
+
+    MavlinkPassthrough::CommandLong cmd;
+    cmd.target_sysid = sys->get_system_id();
+    cmd.target_compid = 0;
+    cmd.command = MAV_CMD_AVIATA_SET_FRAME;
+    cmd.param1 = frame_id;
+
+    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
+    if (result != MavlinkPassthrough::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send AVIATA_SET_FRAME MAVLink command." 
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
     }

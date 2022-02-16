@@ -100,6 +100,7 @@ public:
     int set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8_t n_missing);
     int set_mixer_configuration(uint8_t* missing_drones, uint8_t n_missing);
     int set_mixer_undocked();
+    int set_aviata_frame(uint8_t frame_id);
 
     int set_attitude_offset(float (&att_offset)[4]);
 

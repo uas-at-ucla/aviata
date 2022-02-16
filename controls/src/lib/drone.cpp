@@ -86,6 +86,7 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
         command_handler(request, response);
     });
 
+    while (_px4_io.set_aviata_frame(_drone_settings.frame) != 1) {}
     while (_px4_io.set_mixer_undocked() != 1) {}
     _network->publish_drone_debug("Initialized PX4 mixer to undocked.");
 
