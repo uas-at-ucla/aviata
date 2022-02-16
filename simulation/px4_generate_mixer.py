@@ -338,7 +338,7 @@ def generate_mixer_multirotor_header(geometries_list, use_normalized_mix=False, 
             buf.write(u"},\n")
         buf.write(u"\t\t},\n")
 
-        buf.write(u"\t},\n")
+        buf.write(u"\t},\n\n")
     buf.write(u"};\n\n")
 
     # Print mixer gains

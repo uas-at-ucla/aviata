@@ -2,13 +2,16 @@
 
 import px4_generate_mixer
 
+import constants_two_drones
 import constants_4_drones
 import constants_4_drones_alt
+import generate_matrices_two_drones
 import generate_matrices_aviata
 
 configs = [
     (constants_4_drones    , generate_matrices_aviata),
     (constants_4_drones_alt, generate_matrices_aviata),
+    (constants_two_drones  , generate_matrices_two_drones),
 ]
 
 all_geometries_list = []
