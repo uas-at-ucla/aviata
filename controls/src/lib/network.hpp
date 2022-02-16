@@ -110,6 +110,10 @@ public:
 
     void check_command_requests();
 
+    rclcpp::timer::WallTimer<std::function<void()>>::SharedPtr timer;
+    void start_timer(rclcpp::timer::WallTimer<std::function<void()>>::SharedPtr timer, function timerCallback);
+    void stop_timer(rclcpp::timer::WallTimer<std::function<void()>>::SharedPtr timer);
+
 private:
     const std::string drone_id;
 
