@@ -11,10 +11,11 @@ using namespace mavsdk;
 class PX4Telemetry
 {
 public:
-    Telemetry::Position   position;  // https://mavsdk.mavlink.io/main/en/cpp/api_reference/structmavsdk_1_1_telemetry_1_1_position.html
-    Telemetry::Battery    battery;   // https://mavsdk.mavlink.io/main/en/cpp/api_reference/structmavsdk_1_1_telemetry_1_1_battery.html
-    Telemetry::Quaternion att_q;     // https://mavsdk.mavlink.io/main/en/cpp/api_reference/structmavsdk_1_1_telemetry_1_1_quaternion.html
-    Telemetry::EulerAngle att_euler; // https://mavsdk.mavlink.io/main/en/cpp/api_reference/structmavsdk_1_1_telemetry_1_1_euler_angle.html
+    Telemetry::Position    position;  // https://mavsdk.mavlink.io/main/en/cpp/api_reference/structmavsdk_1_1_telemetry_1_1_position.html
+    Telemetry::Battery     battery;   // https://mavsdk.mavlink.io/main/en/cpp/api_reference/structmavsdk_1_1_telemetry_1_1_battery.html
+    Telemetry::Quaternion  att_q;     // https://mavsdk.mavlink.io/main/en/cpp/api_reference/structmavsdk_1_1_telemetry_1_1_quaternion.html
+    Telemetry::EulerAngle  att_euler; // https://mavsdk.mavlink.io/main/en/cpp/api_reference/structmavsdk_1_1_telemetry_1_1_euler_angle.html
+    Telemetry::VelocityNed velocity;  // https://mavsdk.mavlink.io/main/en/cpp/api_reference/structmavsdk_1_1_telemetry_1_1_velocity_ned.html
 
     PX4Telemetry(PX4IO& px4_io);
     ~PX4Telemetry();

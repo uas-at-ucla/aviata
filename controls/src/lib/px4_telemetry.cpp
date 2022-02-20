@@ -24,4 +24,5 @@ void PX4Telemetry::init()
     subscribe_variable(&Telemetry::subscribe_battery,             this->battery);
     subscribe_variable(&Telemetry::subscribe_attitude_quaternion, this->att_q);
     subscribe_variable(&Telemetry::subscribe_attitude_euler,      this->att_euler);
+    subscribe_variable(&Telemetry::subscribe_velocity_ned,        this->velocity);
 }

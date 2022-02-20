@@ -262,8 +262,24 @@ void Drone::init_follower() {
         attitude_target.q[1] = follower_setpoint->q[1];
         attitude_target.q[2] = follower_setpoint->q[2];
         attitude_target.q[3] = follower_setpoint->q[3];
+
         attitude_target.thrust = follower_setpoint->thrust;
-        attitude_target.body_roll_rate = follower_setpoint->aviata_yaw_est; // body_roll_rate indicates aviata_yaw_est
+        if (_drone_settings.sim) {
+            // Altitude controller to keep drones at the same altitude in the simulator
+            constexpr float P_thrust = 0.1f;
+            constexpr float D_thrust = 0.05f;
+            attitude_target.thrust += P_thrust * (follower_setpoint->aviata_yaw_est - _px4_telem.position.relative_altitude_m) // aviata_yaw_est is altitude in the simulator
+                                    + D_thrust * _px4_telem.velocity.down_m_s;
+        }
+
+        if (_drone_settings.sim) {
+            // Set aviata_yaw_est to this drone's yaw in the simulator
+            Eigen::Quaternionf q(_px4_telem.att_q.w, _px4_telem.att_q.x, _px4_telem.att_q.y, _px4_telem.att_q.z);
+            attitude_target.body_roll_rate = heading_from_att_q(q);
+        } else {
+            attitude_target.body_roll_rate = follower_setpoint->aviata_yaw_est; // body_roll_rate indicates aviata_yaw_est
+        }
+
         attitude_target.body_pitch_rate = (float) follower_setpoint->aviata_docking_slot; // body_pitch_rate indicates aviata_docking_slot
         _px4_io.set_attitude_target(attitude_target);
 
@@ -306,6 +322,12 @@ void Drone::init_follower() {
         // Calculate the rotation we need to apply to attitude setpoints to match attitude error with the other drones
         Eigen::Quaternionf att_off = att_est * att_ref.inverse();
 
+        // Don't apply attitude offset in simulator
+        if (_drone_settings.sim) {
+            att_off = att_off.inverse(); // fun experiment - this could potentially help align the drones in the simulator.
+            // att_off = Eigen::Quaternionf::Identity();
+        }
+
         float attitude_offset[4] { att_off.w(), att_off.x(), att_off.y(), att_off.z() };
         _px4_io.set_attitude_offset(attitude_offset);
     });
@@ -333,7 +355,14 @@ void Drone::init_leader() {
             follower_setpoint.q[2] = attitude_target.q[2];
             follower_setpoint.q[3] = attitude_target.q[3];
             follower_setpoint.thrust = attitude_target.thrust;
-            follower_setpoint.aviata_yaw_est = attitude_target.body_roll_rate; // body_roll_rate indicates aviata_yaw_est
+
+            if (_drone_settings.sim) {
+                // In the simulator, we don't do the yaw adjustment that assumes the drones are docked. Use this field for a simulator-only altitude controller.
+                follower_setpoint.aviata_yaw_est = _px4_telem.position.relative_altitude_m;
+            } else {
+                follower_setpoint.aviata_yaw_est = attitude_target.body_roll_rate; // body_roll_rate indicates aviata_yaw_est
+            }
+
             follower_setpoint.aviata_docking_slot = (uint8_t) (attitude_target.body_pitch_rate+0.5f); // body_pitch_rate indicates aviata_docking_slot
             follower_setpoint.leader_seq_num = _leader_seq_num;
             _network->publish<FOLLOWER_SETPOINT>(follower_setpoint);
