@@ -71,6 +71,14 @@ Run in the PX4-Autopilot folder:
 ```bash
 Tools/gazebo_sitl_multiple_run.sh -m typhoon_h480 -n 2
 ```
+* If you have made changes to PX4 and need to rebuild, run `make px4_sitl` first.
+
+After the simulator exits, the PX4 log from each drone will be located at:
+* **build/px4_sitl_default/instance_0/out.log**
+* **build/px4_sitl_default/instance_1/out.log**
+* ...
+
+Tip: There's a lot going on in the simulator, and sometimes something goes wrong during startup or shutdown. If you have problems (e.g. the drone cannot be found by MAVSDK), try restarting the simulator. If you still have problems, restart your computer.
 
 ### Run AVIATA Controls Code
 Source your ROS2 setup script, then run this:
