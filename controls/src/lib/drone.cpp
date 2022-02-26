@@ -273,8 +273,11 @@ void Drone::init_follower() {
         }
 
         if (_drone_settings.sim) {
-            // Set aviata_yaw_est to this drone's yaw in the simulator
+            // Set aviata_yaw_est to this drone's yaw in the simulator (adjusted based on docking slot)
+            float docking_offset = _frame_info.relative_drone_angle[_docking_slot][follower_setpoint->aviata_docking_slot];
             Eigen::Quaternionf q(_px4_telem.att_q.w, _px4_telem.att_q.x, _px4_telem.att_q.y, _px4_telem.att_q.z);
+            Eigen::Vector3f body_z = body_z_from_att_q(q);
+            q = Eigen::Quaternionf(Eigen::AngleAxisf(-docking_offset, body_z)) * q;
             attitude_target.body_roll_rate = heading_from_att_q(q);
         } else {
             attitude_target.body_roll_rate = follower_setpoint->aviata_yaw_est; // body_roll_rate indicates aviata_yaw_est
@@ -324,8 +327,10 @@ void Drone::init_follower() {
 
         // Don't apply attitude offset in simulator
         if (_drone_settings.sim) {
-            att_off = att_off.inverse(); // fun experiment - this could potentially help align the drones in the simulator.
-            // att_off = Eigen::Quaternionf::Identity();
+            att_off = Eigen::Quaternionf::Identity();
+            // att_off = att_off.inverse(); // fun experiment - this could potentially help align the drones in the simulator.
+            // att_off = att_off; // another fun experiment (keep att_off as is) - this should "amplify" "mistakes" the follower drone makes in tracking the leader drone.
+            // att_off = att_off * att_off; // another fun experiment - this should make the follower drone go out of control.
         }
 
         float attitude_offset[4] { att_off.w(), att_off.x(), att_off.y(), att_off.z() };
