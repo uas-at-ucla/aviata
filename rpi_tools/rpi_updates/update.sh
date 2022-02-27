@@ -41,6 +41,8 @@ do
     esac
 done
 
+# Root
+su -
 # Edit /etc/wpa_supplicant/wpa_supplicant.conf
 # Replace the line starting with ssid with ssid="{network name}", where {network name} is the name of the network we will connect the raspberry pi to
 sed -i "/ssid/c\ssid=$network" /etc/wpa_supplicant/wpa_supplicant.conf
