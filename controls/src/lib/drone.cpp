@@ -123,6 +123,8 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
 void Drone::run()
 {
     while (true) {
+        int64_t current_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    
         switch (_drone_state)
         {
             case DOCKED_FOLLOWER:
@@ -139,12 +141,7 @@ void Drone::run()
                 break;
             
             case DOCKED_LEADER:
-                if (_need_to_enter_hold_mode) {
-                    if (_px4_io.set_hold_mode() == 1) {
-                        _flight_mode = Telemetry::FlightMode::Hold;
-                        _need_to_enter_hold_mode = false;
-                    }
-                }
+                // Nothing to do here
                 break;
             case ARRIVING:
                 if (fly_to_central_target()) {
@@ -473,11 +470,8 @@ void Drone::transition_follower_to_leader() {
     _network->unsubscribe<REFERENCE_ATTITUDE>();
 
     _drone_state = DOCKED_LEADER;
-    _need_to_enter_hold_mode = true;
-    if (_px4_io.set_hold_mode() == 1) { // try to enter hold mode once, but if it fails it will continue to try in run()
-        _flight_mode = Telemetry::FlightMode::Hold;
-        _need_to_enter_hold_mode = false;
-    }
+    while (_px4_io.set_hold_mode() != 1) {}
+    _flight_mode = Telemetry::FlightMode::Hold;
     init_leader();
 }
 
