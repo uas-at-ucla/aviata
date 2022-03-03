@@ -11,7 +11,7 @@ class MavsdkCallbackManager
 {
 public:
     template<typename T>
-    void subscribe_mavsdk_callback(std::function<void(std::function<void(T)>)> subscribe, std::function<void(T)> user_callback) {
+    void subscribe_mavsdk_callback(const std::function<void(const std::function<void(T)>&)>& subscribe, std::function<void(T)> user_callback) {
         uint32_t this_id = id;
         subscribe([this, this_id, user_callback](T arg) {
             std::lock_guard<std::mutex> guard(mutex);

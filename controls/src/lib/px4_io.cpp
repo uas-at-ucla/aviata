@@ -173,6 +173,12 @@ int PX4IO::arm()
                   << std::endl;
         return 0;
     }
+
+    if (armed_callback) {
+        armed_callback(true); // Give callback the most up-to-date info (armed)
+        armed_updated_early = true;
+    }
+
     return 1;
 }
 
@@ -192,6 +198,12 @@ int PX4IO::disarm()
                   << std::endl;
         return 0;
     }
+
+    if (armed_callback) {
+        armed_callback(false); // Give callback the most up-to-date info (disarmed)
+        armed_updated_early = true;
+    }
+
     return 1;
 }
 
@@ -213,6 +225,12 @@ int PX4IO::set_offboard_mode() {
     if (result != MavlinkPassthrough::Result::Success) {
         return 0;
     }
+
+    if (flight_mode_callback) {
+        flight_mode_callback(Telemetry::FlightMode::Offboard); // Give callback the most up-to-date info
+        flight_mode_updated_early = true;
+    }
+
     return 1;
 }
 
@@ -235,6 +253,12 @@ int PX4IO::set_hold_mode() {
     if (result != MavlinkPassthrough::Result::Success) {
         return 0;
     }
+
+    if (flight_mode_callback) {
+        flight_mode_callback(Telemetry::FlightMode::Hold); // Give callback the most up-to-date info
+        flight_mode_updated_early = true;
+    }
+
     return 1;
 }
 
