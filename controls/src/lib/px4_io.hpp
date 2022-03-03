@@ -77,6 +77,9 @@ public:
 
     void call_queued_mavsdk_callbacks();
 
+    bool cmd_was_transmitted(MavlinkPassthrough::Result result);
+    bool cmd_was_transmitted(Action::Result result);
+
     int wait_for_arm();
     int wait_for_disarm();
 
@@ -102,7 +105,7 @@ public:
     int set_mixer_undocked();
     int set_aviata_frame(uint8_t frame_id);
 
-    int set_attitude_offset(float (&att_offset)[4]);
+    void set_attitude_offset_aync(float (&att_offset)[4], std::function<void(MavlinkPassthrough::Result)> callback = nullptr);
 
     template<typename T>
     void subscribe_telemetry(void (Telemetry::*subscribe_function)(std::function<void(T)>), const std::function<void(T)>& user_callback) {
