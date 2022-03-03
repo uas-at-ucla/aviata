@@ -60,6 +60,12 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
     _network->init_publisher<FRAME_DISARM>(); // TODO Temporary failsafe option until we have something more robust
     _network->init_publisher<DRONE_STATUS>();
     _network->init_publisher<DRONE_DEBUG>();
+
+    // send status every second
+    _network->start_timer<TIMER_DRONE_STATUS>(seconds(1), [this]() {
+        publish_drone_status();
+    });
+
     // subscribe drone status (also updates command clients)
     _network->subscribe<DRONE_STATUS>([this](const aviata::msg::DroneStatus::SharedPtr ds_rec) {
         // Don't process own ID
@@ -117,14 +123,6 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
 void Drone::run()
 {
     while (true) {
-        int64_t current_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-
-        // Send status every second
-        if (current_time - _last_status_publish_time >= 1000) {
-            publish_drone_status();
-            _last_status_publish_time = current_time;
-        }
-
         switch (_drone_state)
         {
             case DOCKED_FOLLOWER:
@@ -375,7 +373,7 @@ void Drone::init_leader() {
     });
 
     _network->init_publisher<REFERENCE_ATTITUDE>();
-    _network->start_timer(milliseconds(500), [this]() {
+    _network->start_timer<TIMER_ATT_REFERENCE>(milliseconds(500), [this]() {
         // Get this drone's (the leader's) attitude estimate
         Eigen::Quaternionf att_ref(_px4_telem.att_q.w, _px4_telem.att_q.x, _px4_telem.att_q.y, _px4_telem.att_q.z);
 
@@ -455,7 +453,7 @@ void Drone::transition_leader_to_follower() {
     _network->deinit_publisher<FOLLOWER_SETPOINT>();
     _px4_io.unsubscribe_attitude_target();
     _network->deinit_publisher<REFERENCE_ATTITUDE>();
-    _network->stop_timer();
+    _network->stop_timer<TIMER_ATT_REFERENCE>();
 
     _drone_state = DOCKED_FOLLOWER;
     init_follower();

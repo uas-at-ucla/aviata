@@ -92,6 +92,22 @@ public:
         std::get<PubSub<ros_topic>>(pubsubs).subscription = nullptr;
     }
 
+    template<TimerTopic n>
+    void start_timer(std::chrono::nanoseconds interval, std::function<void()> timerCallback) {
+        if (timers[n] != nullptr) {
+            timers[n]->cancel();
+        }
+        timers[n] = this->create_wall_timer(interval, timerCallback);
+    }
+
+    template<TimerTopic n>
+    void stop_timer() {
+        if (timers[n] != nullptr) {
+            timers[n]->cancel();
+        }
+        timers[n] = nullptr;
+    }
+
     void publish_drone_debug(const std::string & debug_msg, uint8_t code = 0);
 
 
@@ -109,10 +125,6 @@ public:
                             std::function<void(uint8_t ack)> callback);
 
     void check_command_requests();
-
-    // Timer functions. Currently only allows 1 timer to be running.
-    void start_timer(std::chrono::nanoseconds interval, std::function<void()> timerCallback);
-    void stop_timer();
 
 private:
     const std::string drone_id;
@@ -132,7 +144,7 @@ private:
                PubSub<REFERENCE_ATTITUDE>
     > pubsubs;
 
-    rclcpp::WallTimer<std::function<void()>>::SharedPtr timer;
+    rclcpp::WallTimer<std::function<void()>>::SharedPtr timers[NUM_TIMERS];
 
     rclcpp::Service<aviata::srv::DroneCommand>::SharedPtr drone_command_service;
     std::map<std::string, rclcpp::Client<aviata::srv::DroneCommand>::SharedPtr> drone_command_clients;
