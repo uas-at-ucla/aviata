@@ -123,7 +123,7 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
 void Drone::run()
 {
     while (true) {
-        int64_t current_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        double current_time = _network->now().seconds();
     
         switch (_drone_state)
         {
@@ -234,7 +234,7 @@ void Drone::init_docked() {
 }
 
 void Drone::init_follower() {
-    _last_setpoint_msg_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    _last_setpoint_msg_time = _network->now().seconds();
 
     //subscribe follower stuff
     _network->subscribe<FOLLOWER_ARM>([this](const aviata::msg::Empty::SharedPtr follower_arm) {    arm_drone();    });
@@ -251,7 +251,7 @@ void Drone::init_follower() {
             return;
         }
         
-        _last_setpoint_msg_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        _last_setpoint_msg_time = _network->now().seconds();
         mavlink_set_attitude_target_t attitude_target;
         attitude_target.q[0] = follower_setpoint->q[0];
         attitude_target.q[1] = follower_setpoint->q[1];
