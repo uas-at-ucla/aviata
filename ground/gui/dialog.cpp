@@ -13,22 +13,13 @@ Dialog::Dialog(QWidget *parent)
     //Populate table
     //set left column (drone number)
     int numDrones = 8;      //READ THIS IN?
-    ui->tableWidget->setRowCount(numDrones+1);
-    for(int i=0; i<=numDrones; i++){
-        QString num = QString::number(i);
-        if(i==0){
-            num = "";
-        }
-        QTableWidgetItem *temp = new QTableWidgetItem;
-        temp->setText(num);
-        ui->tableWidget->setVerticalHeaderItem(i, temp);
-    }
+    ui->tableWidget->setRowCount(numDrones);
 
     //PUT THESE INTO THE UPDATE LOOP?
     //set drone hostnames
     int col = 0;
     QString drones[] = {"192.168.7.74", "192.241.4.32", "14.198.7.74", "0", "0", "0", "0", "0"};
-    for(int i=1; i<=numDrones; i++){
+    for(int i=0; i<numDrones; i++){
         QTableWidgetItem *temp = ui->tableWidget->item(i, col);
         if(!temp){
             temp = new QTableWidgetItem;
@@ -36,11 +27,11 @@ Dialog::Dialog(QWidget *parent)
         }
         //set hostname
         //ui->tableWidget->item(i, col)->setText("Drone" + QString::number(i+1) + "_HOSTNAME");
-        ui->tableWidget->item(i, col)->setText(drones[i-1]);
+        ui->tableWidget->item(i, col)->setText(drones[i]);
     }
     //set drone statuses
     col = 1;
-    for(int i=1; i<ui->tableWidget->rowCount(); i++){
+    for(int i=0; i<ui->tableWidget->rowCount(); i++){
         QTableWidgetItem *temp = ui->tableWidget->item(i, col);
         if(!temp){
             temp = new QTableWidgetItem;
@@ -57,9 +48,11 @@ Dialog::Dialog(QWidget *parent)
     QPalette q = ui->textBrowser_3->palette();
     q.setColor(QPalette::Active, QPalette::Base, Qt::black);
     ui->textBrowser_3->setPalette(q);
+    ui->textBrowser_3->setTextColor(Qt::white);
+    //ui->textBrowser_3->setText?;     //CHECK IF THIS EXISTS, might have to change from a text browser to something else?
     //round console edges
-    ui->textBrowser_2->setStyleSheet("border: 1px solid; border-radius:1px; background-color: palette(black)");
-    ui->textBrowser_3->setStyleSheet("border: 1px solid; border-radius:10px; background-color: palette(black)");
+    //ui->textBrowser_2->setStyleSheet("border: 1px solid; border-radius:1px; background-color: palette(black)");
+    //ui->textBrowser_3->setStyleSheet("border: 1px solid; border-radius:10px; background-color: palette(black)");
 }
 
 Dialog::~Dialog()
