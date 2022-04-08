@@ -617,7 +617,10 @@ uint8_t Drone::disarm_drone()
 {
     if (_drone_state == STANDBY || _drone_state == DOCKED_FOLLOWER || _drone_state == NEEDS_SERVICE) {
         // return _px4_io.wait_for_disarm(); // waits for the drone to not be in the air
-        return _px4_io.disarm();
+        while (_px4_io.disarm() != 1) {
+            _network->publish_drone_debug("Error disarming drone");
+        }
+        return 1;
     }
 
     _network->publish_drone_debug("Disarm Drone FAILED: improper DroneState = " + std::to_string(_drone_state));
