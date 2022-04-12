@@ -3,6 +3,8 @@
 #include "ui_dialog.h"
 #include <QDialog>
 
+const int MAX_LOGS = 10;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class Dialog; }
 QT_END_NAMESPACE
@@ -23,6 +25,9 @@ private:
     Ui::Dialog *ui;
 
     void initialize_update_fields();
+    void log(std::string text);
+
+    std::vector<std::string> logs;
     QTextEdit* id_fields[8];
     QComboBox* status_fields[8];
     QSpinBox* docking_fields[8];

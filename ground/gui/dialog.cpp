@@ -1,5 +1,6 @@
 #include "dialog.h"
 #include "ui_dialog.h"
+#include <ctime>
 #include <iostream>
 using namespace std;
 
@@ -42,16 +43,17 @@ Dialog::Dialog(QWidget *parent)
     }
 
     //CONSOLE
-    QPalette p = ui->textBrowser_2->palette();
+    QPalette p = ui->log_text->palette();
     p.setColor(QPalette::Active, QPalette::Base, Qt::black);
-    ui->textBrowser_2->setPalette(p);
+    ui->log_text->setPalette(p);
     QPalette q = ui->textBrowser_3->palette();
     q.setColor(QPalette::Active, QPalette::Base, Qt::black);
     ui->textBrowser_3->setPalette(q);
     ui->textBrowser_3->setTextColor(Qt::white);
+    ui->log_text->setTextColor(Qt::white);
     //ui->textBrowser_3->setText?;     //CHECK IF THIS EXISTS, might have to change from a text browser to something else?
     //round console edges
-    //ui->textBrowser_2->setStyleSheet("border: 1px solid; border-radius:1px; background-color: palette(black)");
+    //ui->log_text->setStyleSheet("border: 1px solid; border-radius:1px; background-color: palette(black)");
     //ui->textBrowser_3->setStyleSheet("border: 1px solid; border-radius:10px; background-color: palette(black)");
     connect(ui->updateButton, &QPushButton::pressed, this, &Dialog::on_updateButtonPressed);
     initialize_update_fields();
@@ -60,6 +62,21 @@ Dialog::Dialog(QWidget *parent)
 Dialog::~Dialog()
 {
     delete ui;
+}
+
+void Dialog::log(std::string text){
+    std::string str;
+    if(logs.size() > MAX_LOGS){
+        logs.pop_back();
+    }
+    logs.insert(logs.begin(), text);
+    for(int i = 0; i < logs.size(); i++){
+        str+=logs.at(i);
+        str+="\n";
+    }
+
+    QString t = QString::fromStdString(str);
+    ui->log_text->setText(t);
 }
 
 void Dialog::initialize_update_fields(){
@@ -93,9 +110,9 @@ void Dialog::initialize_update_fields(){
 
 void Dialog::on_updateButtonPressed(){
     int num_drones = ui->num_drones_spinner->value();
-    cout << "Updating drone software for " << num_drones << " drones" << endl;
+    log("Updating drone software for " + std::to_string(num_drones)+" drones");
     for(int i = 0; i < num_drones; i++){
-        cout << id_fields[i]->toPlainText().toStdString() << ": " << status_fields[i]->currentText().toStdString() << ", " << docking_fields[i]->value() << std::endl;
+        log(id_fields[i]->toPlainText().toStdString() + ": " + status_fields[i]->currentText().toStdString() + ", " + std::to_string(docking_fields[i]->value()));
     }
 }
 

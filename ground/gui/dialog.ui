@@ -111,7 +111,7 @@
     </property>
    </item>
   </widget>
-  <widget class="QTextBrowser" name="textBrowser_2">
+  <widget class="QTextBrowser" name="log_text">
    <property name="geometry">
     <rect>
      <x>150</x>
