@@ -207,3 +207,7 @@ We use a version of the Pixhawk that uses DF13 connectors (which, unfortunately,
 
 For making new connectors, a kit like this can be very useful:
 https://www.amazon.com/1-25mm-Connectors-Pre-Crimped-Pixhawk-Silicone/dp/B07S18D3RN/
+    
+# GPL Acknowledgement
+    
+All ground station UI code is developed with QT Open Source license covered under the GPL3 license.
