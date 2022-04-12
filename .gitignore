@@ -24,3 +24,6 @@ controls/build
 .vs/slnx.sqlite
 .vs/VSWorkspaceState.json
 *.json
+
+# Ground station build
+ground/build*
