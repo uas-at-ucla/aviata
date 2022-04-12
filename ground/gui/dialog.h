@@ -1,6 +1,6 @@
 #ifndef DIALOG_H
 #define DIALOG_H
-
+#include "ui_dialog.h"
 #include <QDialog>
 
 QT_BEGIN_NAMESPACE
@@ -17,8 +17,14 @@ public:
 
 private slots:
     void on_tableWidget_cellClicked(int row, int column);
+    void on_updateButtonPressed();
 
 private:
     Ui::Dialog *ui;
+
+    void initialize_update_fields();
+    QTextEdit* id_fields[8];
+    QComboBox* status_fields[8];
+    QSpinBox* docking_fields[8];
 };
 #endif // DIALOG_H

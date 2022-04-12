@@ -163,7 +163,7 @@ font-size: 10px;</string>
    <property name="title">
     <string>FRAME CMD</string>
    </property>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="updateButton">
     <property name="geometry">
      <rect>
       <x>70</x>
