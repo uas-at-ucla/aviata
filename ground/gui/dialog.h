@@ -26,6 +26,7 @@ private:
 
     void initialize_update_fields();
     void log(std::string text);
+    void log(char* text);
 
     std::vector<std::string> logs;
     QTextEdit* id_fields[8];

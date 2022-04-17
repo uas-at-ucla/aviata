@@ -2,6 +2,10 @@
 #include "ui_dialog.h"
 #include <ctime>
 #include <iostream>
+#include <string>
+#include <cstring>
+#include <filesystem>
+#include <libssh/libssh.h>
 using namespace std;
 
 Dialog::Dialog(QWidget *parent)
@@ -79,6 +83,11 @@ void Dialog::log(std::string text){
     ui->log_text->setText(t);
 }
 
+void Dialog::log(char* text){
+    std::string st(text);
+    log(st);
+}
+
 void Dialog::initialize_update_fields(){
     id_fields[0] = ui->drone_id_0;
     id_fields[1] = ui->drone_id_1;
@@ -109,11 +118,74 @@ void Dialog::initialize_update_fields(){
 }
 
 void Dialog::on_updateButtonPressed(){
-    int num_drones = ui->num_drones_spinner->value();
+    //Print drone updates
+    int num_nodes = ui->num_drones_spinner->value();
     log("Updating drone software for " + std::to_string(num_drones)+" drones");
     for(int i = 0; i < num_drones; i++){
         log(id_fields[i]->toPlainText().toStdString() + ": " + status_fields[i]->currentText().toStdString() + ", " + std::to_string(docking_fields[i]->value()));
     }
+
+    //Initialize standard values;
+    const char password[] = "raspberry";
+    const char *hosts[] = new char*[num_nodes];
+    for(int i = 0; i < num_drones; i++){
+        hosts[i] = id_fields[i]->toPlainText().toStdString();
+    }
+    const char *passwords[] = {"password", "password", "password", "password"};
+    std::string p_str(password);
+    std::string h_str = "pi@rpi-" + id_fields[0]->toPlainText().toStdString();
+    std::string path = std::filesystem::current_path().string() + "/central_node";
+
+    //Copy central node files to central node
+    log("Copying central node files");
+    const std::string file_commands[] = {"chmod +x file_copy.sh && expect file_copy.sh ",
+        path+" ",
+        h_str+" ",
+        p_str
+    };
+    char* file_trans = str_to_chararr(file_commands, 4);
+    log(file_trans);
+    int file_copy = system(file_trans);
+    delete file_trans;
+    log("Files copied successfully");
+
+    //Create new SSH session to central node
+    my_ssh_session = ssh_new();
+    if (my_ssh_session == NULL)
+        return 1;
+
+    ssh_options_set(my_ssh_session, SSH_OPTIONS_HOST, connection_string);
+
+    log("SSH connecting to: " + h_str);
+    rc = ssh_connect(my_ssh_session);
+    if (rc != SSH_OK)
+    {
+        fprintf(stderr, "Error connecting to localhost: %s\n",
+                ssh_get_error(my_ssh_session));
+        ssh_free(my_ssh_session);
+        return 1;
+    }
+    log("SSH connection succes, authenticating");
+
+    rc = ssh_userauth_password(my_ssh_session, NULL, password);
+    if (rc != SSH_AUTH_SUCCESS)
+    {
+        fprintf(stderr, "Error authenticating with password: %s\n",
+                ssh_get_error(my_ssh_session));
+        ssh_disconnect(my_ssh_session);
+        ssh_free(my_ssh_session);
+        return 1;
+    }
+    log("Authentication success");
+
+    //Execute commands
+    rc = execute_commands(my_ssh_session, connection_string, hosts, passwords, num_nodes, release);
+
+    //Cleanup and close
+    ssh_disconnect(my_ssh_session);
+    ssh_free(my_ssh_session);
+    log("SSH session closed, updates complete");
+
 }
 
 void Dialog::on_tableWidget_cellClicked(int row, int column)
