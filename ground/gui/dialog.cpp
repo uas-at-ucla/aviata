@@ -1,5 +1,7 @@
 #include "dialog.h"
 #include "ui_dialog.h"
+#include "util.h"
+
 #include <ctime>
 #include <iostream>
 #include <string>
@@ -120,20 +122,22 @@ void Dialog::initialize_update_fields(){
 void Dialog::on_updateButtonPressed(){
     //Print drone updates
     int num_nodes = ui->num_drones_spinner->value();
-    log("Updating drone software for " + std::to_string(num_drones)+" drones");
-    for(int i = 0; i < num_drones; i++){
+    log("Updating drone software for " + std::to_string(num_nodes)+" drones");
+    for(int i = 0; i < num_nodes; i++){
         log(id_fields[i]->toPlainText().toStdString() + ": " + status_fields[i]->currentText().toStdString() + ", " + std::to_string(docking_fields[i]->value()));
     }
 
     //Initialize standard values;
+    ssh_session my_ssh_session;
+    int rc;
     const char password[] = "raspberry";
-    const char *hosts[] = new char*[num_nodes];
-    for(int i = 0; i < num_drones; i++){
+    std::string* hosts = new std::string[num_nodes];
+    for(int i = 0; i < num_nodes; i++){
         hosts[i] = id_fields[i]->toPlainText().toStdString();
     }
-    const char *passwords[] = {"password", "password", "password", "password"};
     std::string p_str(password);
     std::string h_str = "pi@rpi-" + id_fields[0]->toPlainText().toStdString();
+    char* connection_string = strcpy(new char[h_str.length()+1], h_str.c_str());
     std::string path = std::filesystem::current_path().string() + "/central_node";
 
     //Copy central node files to central node
@@ -146,13 +150,17 @@ void Dialog::on_updateButtonPressed(){
     char* file_trans = str_to_chararr(file_commands, 4);
     log(file_trans);
     int file_copy = system(file_trans);
+    if(file_copy != 0){
+        log("File copying failed, aborting");
+        return;
+    }
     delete file_trans;
     log("Files copied successfully");
 
     //Create new SSH session to central node
     my_ssh_session = ssh_new();
     if (my_ssh_session == NULL)
-        return 1;
+        return;
 
     ssh_options_set(my_ssh_session, SSH_OPTIONS_HOST, connection_string);
 
@@ -163,7 +171,7 @@ void Dialog::on_updateButtonPressed(){
         fprintf(stderr, "Error connecting to localhost: %s\n",
                 ssh_get_error(my_ssh_session));
         ssh_free(my_ssh_session);
-        return 1;
+        return;
     }
     log("SSH connection succes, authenticating");
 
@@ -174,16 +182,18 @@ void Dialog::on_updateButtonPressed(){
                 ssh_get_error(my_ssh_session));
         ssh_disconnect(my_ssh_session);
         ssh_free(my_ssh_session);
-        return 1;
+        return;
     }
     log("Authentication success");
 
     //Execute commands
-    rc = execute_commands(my_ssh_session, connection_string, hosts, passwords, num_nodes, release);
+    rc = execute_commands(my_ssh_session, connection_string, hosts, password, num_nodes);
 
     //Cleanup and close
     ssh_disconnect(my_ssh_session);
     ssh_free(my_ssh_session);
+    delete[] hosts;
+    delete[] connection_string;
     log("SSH session closed, updates complete");
 
 }
