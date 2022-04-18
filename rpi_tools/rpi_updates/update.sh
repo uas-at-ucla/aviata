@@ -41,33 +41,44 @@ do
     esac
 done
 
-# Root
-su -
-# Edit /etc/wpa_supplicant/wpa_supplicant.conf
-# Replace the line starting with ssid with ssid="{network name}", where {network name} is the name of the network we will connect the raspberry pi to
-sed -i "/ssid/c\ssid=$network" /etc/wpa_supplicant/wpa_supplicant.conf
-# Replace the line starting with psk with psk="{network password}, where {network password} is the password of the network we will connect to
-sed -i "/psk/c\psk=$password" /etc/wpa_supplicant/wpa_supplicant.conf
-# Restart wifi service
-wpa_cli -i wlan0 reconfigure
-# Kill aviata_drone process if it is currently running
+rm -rf aviata
 killall aviata_drone
-# Remove output file from build folder if it currently exists
-rm aviata_drone.out
-# Navigate to correct folder
-cd ~/aviata/
-# Pull from origin
-git pull origin
-# Source ROS2 startup script
-chmod +x rpi_tools/env_setup.sh && ./rpi_tools/env_setup.sh
-# Build most recent code
+source rpi_tools/env_setup.sh
 cd controls
 mkdir build && cd build
 cmake ..
 make
-# Edit most recent crontab
+
+@reboot cd ~/OONF && ./run.sh wlan1 &
 @reboot bash -c "export PATH="$PATH:/usr/sbin" && cd ~/aviata/controls/build && source ../../rpi_tools/env_setup.sh && $sh && ../../rpi_tools/wait_for_mesh_network.sh && ./aviata_drone $INPUTARGS &>aviata_drone.out &"
-# Reboot the Rpi
-sudo reboot
-# Concatenate and return the output file from build folder (aviata_drone.out I think)
-cat ~/aviata/controls/build/aviata_drone.out    
+
+# # Root
+# su -
+# # Edit /etc/wpa_supplicant/wpa_supplicant.conf
+# # Replace the line starting with ssid with ssid="{network name}", where {network name} is the name of the network we will connect the raspberry pi to
+# sed -i "/ssid/c\ssid=$network" /etc/wpa_supplicant/wpa_supplicant.conf
+# # Replace the line starting with psk with psk="{network password}, where {network password} is the password of the network we will connect to
+# sed -i "/psk/c\psk=$password" /etc/wpa_supplicant/wpa_supplicant.conf
+# # Restart wifi service
+# wpa_cli -i wlan0 reconfigure
+# # Kill aviata_drone process if it is currently running
+# killall aviata_drone
+# # Remove output file from build folder if it currently exists
+# rm aviata_drone.out
+# # Navigate to correct folder
+# cd ~/aviata/
+# # Pull from origin
+# git pull origin
+# # Source ROS2 startup script
+# chmod +x rpi_tools/env_setup.sh && ./rpi_tools/env_setup.sh
+# # Build most recent code
+# cd controls
+# mkdir build && cd build
+# cmake ..
+# make
+# # Edit most recent crontab
+# @reboot bash -c "export PATH="$PATH:/usr/sbin" && cd ~/aviata/controls/build && source ../../rpi_tools/env_setup.sh && $sh && ../../rpi_tools/wait_for_mesh_network.sh && ./aviata_drone $INPUTARGS &>aviata_drone.out &"
+# # Reboot the Rpi
+# sudo reboot
+# # Concatenate and return the output file from build folder (aviata_drone.out I think)
+# cat ~/aviata/controls/build/aviata_drone.out    
