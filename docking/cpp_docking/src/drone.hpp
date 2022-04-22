@@ -22,6 +22,7 @@
 #include "docking_detector.hpp"
 #include "raspi_camera.hpp"
 typedef RaspiCamera Camera;
+#define SERVO_ATTEMPTS 5
 #else
 #include "camera_simulator.hpp"
 typedef CameraSimulator Camera;

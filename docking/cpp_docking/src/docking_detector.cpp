@@ -52,7 +52,8 @@ DockingDetector::DockingDetector()
         */
         int ret1 = gpioSetMode(INPUT_PIN, PI_INPUT);
         int ret2 = gpioSetMode(OUTPUT_PIN, PI_OUTPUT);
-        if (ret1 != 0 || ret2 != 0)
+        int ret3 = gpioSetMode(SERVO_PIN, PI_OUTPUT);
+        if (ret1 != 0 || ret2 != 0 || ret3 != 0)
         {
             log(tag, "Failed to set input or output pin", true);
             gpioTerminate();
@@ -148,5 +149,30 @@ bool DockingDetector::is_docked()
     {
         log("GPIO", "Unable to determine docking status due to improperly initialized GPIO pins", true);
         return false;
+    }
+}
+
+bool DockingDetector::disengage_servo(){
+    if(_gpio_initialized)
+    {
+        int ret = gpioPWM(SERVO_PIN, 0);
+        if(ret == -1){
+            log("GPIO","Error disengaging servo", true);
+            return false;
+        }
+        return true;
+    }
+}
+
+bool DockingDetector::engage_servo()
+{
+    if(_gpio_initialized)
+    {
+        int ret = gpioPWM(SERVO_PIN, SERVO_PWM);
+        if(ret == -1){
+            log("GPIO","Error engaging servo", true);
+            return false;
+        }
+        return true;
     }
 }

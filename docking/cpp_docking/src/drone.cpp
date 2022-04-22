@@ -203,6 +203,11 @@ void Drone::initiate_docking(int target_id, bool full_docking)
     telemetry->subscribe_attitude_euler([this](Telemetry::EulerAngle e)
                                         { set_yaw(e.yaw_deg); });
 
+    //Disengage servo if not already
+    #if PLATFORM == RASPBERRY_PI
+        docking_detector.disengage_servo();
+#endif
+
     // begin docking
     if (full_docking)
     { // do complete 2-stage docking
@@ -371,6 +376,12 @@ bool Drone::dock(int target_id, int stage)
             if (docking_detector.is_docked())
             {
                 log(log_tag, "Successfully docked!");
+                for(int i = 0; i < SERVO_ATTEMPTS; i++){
+                    if(docking_detector.engage_servo()){
+                        break;
+                        sleep_for(milliseconds(300));
+                    }
+                }
                 break;
             }
             else
