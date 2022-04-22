@@ -142,7 +142,7 @@ For more instructions and troubleshooting, see: https://docs.google.com/document
 4. Run `./aviata/rpi_tools/install.sh`. Make sure you can let it do its thing for a while, since ROS2 takes a long time to install.
 5. Enable the serial port on the Pi. See 23:40-25:51 of [this video](https://youtu.be/kB9YyG2V-nA?t=1420).
 6. Enable the camera on the Pi (Interfacing Options in `sudo raspi-config`).
-7. Choose a unique name for this drone. Using `sudo raspi-config` -> System Options -> Hostname, set the hostname to **rpi-<NAME>**. Note that only alphanumeric characters and hyphens are allowed.
+7. Choose a unique name for this drone. Using `sudo raspi-config` -> System Options -> Hostname, set the hostname to **rpi-\<NAME>**. Note that only alphanumeric characters and hyphens are allowed.
 8. Decide on a unique mesh network ID. See [Comms Code](#comms-code) for details.
 9. To run the comms code and/or controls code on startup, use `crontab -e` and add the line: `@reboot <command_goes_here> &`.
   * e.g. to enable the mesh network: `@reboot cd ~/OONF && ./run.sh wlan1 &`
@@ -154,6 +154,7 @@ Four drones' RPi's have been setup with these mesh network IP addresses and host
 * 10.10.0.2: rpi-DN
 * 10.10.0.3: rpi-Hopper
 * 10.10.0.4: rpi-Krispy
+
 The ground station just needs to have it's own unique mesh network ID, and it will be able to connect to all the drones. Not sure if an ID of 0 is allowed.
 
 ## Setting PX4 Params
