@@ -89,6 +89,25 @@ void PX4IO::call_queued_mavsdk_callbacks() {
     mavsdk_callback_manager.call_queued_mavsdk_callbacks();
 }
 
+bool PX4IO::cmd_was_transmitted(MavlinkPassthrough::Result result) {
+    return (
+        result == MavlinkPassthrough::Result::Success ||
+        result == MavlinkPassthrough::Result::CommandDenied ||
+        result == MavlinkPassthrough::Result::CommandUnsupported
+    );
+}
+
+bool PX4IO::cmd_was_transmitted(Action::Result result) {
+    return (
+        result == Action::Result::Success ||
+        result == Action::Result::CommandDenied ||
+        result == Action::Result::CommandDeniedLandedStateUnknown ||
+        result == Action::Result::CommandDeniedNotLanded /* ||
+        // result == Action::Result::VtolTransitionSupportUnknown || // Not expected
+        // result == Action::Result::NoVtolTransitionSupport */
+    );
+}
+
 // @return 1 if successful, 0 otherwise
 int PX4IO::wait_for_arm()
 {
@@ -142,12 +161,24 @@ int PX4IO::wait_for_disarm()
 int PX4IO::arm()
 {
     std::cout << "Arming " << drone_id << std::endl;
-    const Action::Result result = action->arm();
+
+    // Ensure successful transmission
+    Action::Result result = Action::Result::Unknown;
+    while (!cmd_was_transmitted(result)) {
+        result = action->arm();
+    }
+
     if (result != Action::Result::Success) {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to arm: " << result << NORMAL_CONSOLE_TEXT
                   << std::endl;
         return 0;
     }
+
+    if (armed_callback) {
+        armed_callback(true); // Give callback the most up-to-date info (armed)
+        armed_updated_early = true;
+    }
+
     return 1;
 }
 
@@ -155,12 +186,24 @@ int PX4IO::arm()
 int PX4IO::disarm()
 {
     std::cout << "Disarming " << drone_id << std::endl;
-    const Action::Result result = action->disarm();
+
+    // Ensure successful transmission
+    Action::Result result = Action::Result::Unknown;
+    while (!cmd_was_transmitted(result)) {
+        result = action->disarm();
+    }
+
     if (result != Action::Result::Success) {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to disarm: " << result << NORMAL_CONSOLE_TEXT
                   << std::endl;
         return 0;
     }
+
+    if (armed_callback) {
+        armed_callback(false); // Give callback the most up-to-date info (disarmed)
+        armed_updated_early = true;
+    }
+
     return 1;
 }
 
@@ -172,10 +215,22 @@ int PX4IO::set_offboard_mode() {
     offboard_command.command = MAV_CMD_DO_SET_MODE;
     offboard_command.param1 = VEHICLE_MODE_FLAG_CUSTOM_MODE_ENABLED;
     offboard_command.param2 = PX4_CUSTOM_MAIN_MODE_OFFBOARD;
-    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(offboard_command);
+
+    // Ensure successful transmission
+    MavlinkPassthrough::Result result = MavlinkPassthrough::Result::Unknown;
+    while (!cmd_was_transmitted(result)) {
+        result = mavlink_passthrough->send_command_long(offboard_command);
+    }
+
     if (result != MavlinkPassthrough::Result::Success) {
         return 0;
     }
+
+    if (flight_mode_callback) {
+        flight_mode_callback(Telemetry::FlightMode::Offboard); // Give callback the most up-to-date info
+        flight_mode_updated_early = true;
+    }
+
     return 1;
 }
 
@@ -188,10 +243,22 @@ int PX4IO::set_hold_mode() {
     command.param1 = VEHICLE_MODE_FLAG_CUSTOM_MODE_ENABLED;
     command.param2 = PX4_CUSTOM_MAIN_MODE_AUTO;
     command.param3 = PX4_CUSTOM_SUB_MODE_AUTO_LOITER;
-    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(command);
+
+    // Ensure successful transmission
+    MavlinkPassthrough::Result result = MavlinkPassthrough::Result::Unknown;
+    while (!cmd_was_transmitted(result)) {
+        result = mavlink_passthrough->send_command_long(command);
+    }
+
     if (result != MavlinkPassthrough::Result::Success) {
         return 0;
     }
+
+    if (flight_mode_callback) {
+        flight_mode_callback(Telemetry::FlightMode::Hold); // Give callback the most up-to-date info
+        flight_mode_updated_early = true;
+    }
+
     return 1;
 }
 
@@ -205,9 +272,15 @@ int PX4IO::takeoff_system()
     }
 
     std::cout << drone_id << " taking off..." << std::endl;
-    const Action::Result takeoff_result = action->takeoff();
-    if (takeoff_result != Action::Result::Success) {
-        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to takeoff:" << takeoff_result
+
+    // Ensure successful transmission
+    Action::Result result = Action::Result::Unknown;
+    while (!cmd_was_transmitted(result)) {
+        result = action->takeoff();
+    }
+
+    if (result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to takeoff:" << result
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
     }
@@ -218,9 +291,15 @@ int PX4IO::takeoff_system()
 int PX4IO::land_system()
 {
     std::cout << drone_id << " landing..." << std::endl;
-    const Action::Result land_result = action->land();
-    if (land_result != Action::Result::Success) {
-        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to land:" << land_result 
+
+    // Ensure successful transmission
+    Action::Result result = Action::Result::Unknown;
+    while (!cmd_was_transmitted(result)) {
+        result = action->land();
+    }
+
+    if (result != Action::Result::Success) {
+        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to land:" << result 
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
     }
@@ -231,8 +310,13 @@ int PX4IO::land_system()
 int PX4IO::goto_gps_position(double lat, double lon, float alt, float yaw)
 // for DOCKED_LEADER (send attitude and thrust to followers)
 {
-    const Action::Result goto_result = action->goto_location(lat, lon, alt, yaw);
-    if (goto_result != Action::Result::Success) {
+    // Ensure successful transmission
+    Action::Result result = Action::Result::Unknown;
+    while (!cmd_was_transmitted(result)) {
+        result = action->goto_location(lat, lon, alt, yaw);
+    }
+
+    if (result != Action::Result::Success) {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to go to:" << lat << " " << lon
                   << NORMAL_CONSOLE_TEXT << std::endl;
         return 0;
@@ -329,8 +413,13 @@ int PX4IO::set_mixer_docked(uint8_t docking_slot, uint8_t* missing_drones, uint8
     for (; i < 6; i++) {
         *missing_drone_ptrs[i] = NAN;
     }
-    
-    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
+
+    // Ensure successful transmission
+    MavlinkPassthrough::Result result = MavlinkPassthrough::Result::Unknown;
+    while (!cmd_was_transmitted(result)) {
+        result = mavlink_passthrough->send_command_long(cmd);
+    }
+
     if (result != MavlinkPassthrough::Result::Success) {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send docking MAVLink command." 
                   << NORMAL_CONSOLE_TEXT << std::endl;
@@ -358,8 +447,13 @@ int PX4IO::set_mixer_configuration(uint8_t* missing_drones, uint8_t n_missing)
     for (; i < 6; i++) {
         *missing_drone_ptrs[i] = NAN;
     }
+
+    // Ensure successful transmission
+    MavlinkPassthrough::Result result = MavlinkPassthrough::Result::Unknown;
+    while (!cmd_was_transmitted(result)) {
+        result = mavlink_passthrough->send_command_long(cmd);
+    }
     
-    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
     if (result != MavlinkPassthrough::Result::Success) {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send AVIATA_SET_CONFIGURATION MAVLink command." 
                   << NORMAL_CONSOLE_TEXT << std::endl;
@@ -374,8 +468,13 @@ int PX4IO::set_mixer_undocked()
     cmd.target_sysid = sys->get_system_id();
     cmd.target_compid = 0;
     cmd.command = MAV_CMD_AVIATA_SET_STANDALONE;
+
+    // Ensure successful transmission
+    MavlinkPassthrough::Result result = MavlinkPassthrough::Result::Unknown;
+    while (!cmd_was_transmitted(result)) {
+        result = mavlink_passthrough->send_command_long(cmd);
+    }
     
-    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
     if (result != MavlinkPassthrough::Result::Success) {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send undocking MAVLink command." 
                   << NORMAL_CONSOLE_TEXT << std::endl;
@@ -391,7 +490,12 @@ int PX4IO::set_aviata_frame(uint8_t frame_id) {
     cmd.command = MAV_CMD_AVIATA_SET_FRAME;
     cmd.param1 = frame_id;
 
-    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
+    // Ensure successful transmission
+    MavlinkPassthrough::Result result = MavlinkPassthrough::Result::Unknown;
+    while (!cmd_was_transmitted(result)) {
+        result = mavlink_passthrough->send_command_long(cmd);
+    }
+
     if (result != MavlinkPassthrough::Result::Success) {
         std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send AVIATA_SET_FRAME MAVLink command." 
                   << NORMAL_CONSOLE_TEXT << std::endl;
@@ -400,7 +504,7 @@ int PX4IO::set_aviata_frame(uint8_t frame_id) {
     return 1;
 }
 
-int PX4IO::set_attitude_offset(float (&att_offset)[4]) {
+void PX4IO::set_attitude_offset_aync(float (&att_offset)[4], std::function<void(MavlinkPassthrough::Result)> callback) {
     MavlinkPassthrough::CommandLong cmd;
     cmd.target_sysid = sys->get_system_id();
     cmd.target_compid = 0;
@@ -412,14 +516,9 @@ int PX4IO::set_attitude_offset(float (&att_offset)[4]) {
     cmd.param3 = att_offset[2];
     cmd.param4 = att_offset[3];
     
-    MavlinkPassthrough::Result result = mavlink_passthrough->send_command_long(cmd);
-    if (result != MavlinkPassthrough::Result::Success) {
-        std::cout << ERROR_CONSOLE_TEXT << drone_id << " failed to send attitude offset MAVLink command." 
-                  << NORMAL_CONSOLE_TEXT << std::endl;
-        return 0;
-    }
-    return 1;
+    mavlink_passthrough->send_command_long_async(cmd, callback);
 }
+
 
 ////////////////////////////////////////////
 // example code below

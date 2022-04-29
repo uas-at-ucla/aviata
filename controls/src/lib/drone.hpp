@@ -56,7 +56,7 @@ public:
 private:
     const std::string _drone_id;
     const DroneSettings _drone_settings;
-    const int64_t _follower_setpoint_timeout;
+    const double _follower_setpoint_timeout;
 
     // APIs
     std::shared_ptr<Network> _network;
@@ -72,9 +72,7 @@ private:
     bool _armed = false;
     Telemetry::FlightMode _flight_mode = Telemetry::FlightMode::Unknown;
     uint8_t _leader_seq_num = 0;
-    int64_t _last_status_publish_time = 0;
-    int64_t _last_setpoint_msg_time;
-    bool _need_to_enter_hold_mode = false; // used when transitioning from follower to leader
+    double _last_setpoint_msg_time;
     bool _need_to_discover_more_drones = false;
     const AviataFrameInfo& _frame_info;
     std::vector<bool> _docking_slot_is_occupied;

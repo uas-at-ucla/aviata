@@ -102,4 +102,11 @@ struct PubSub {
     typename rclcpp::Subscription<typename RosTopicConfig<ros_topic>::msg_type>::SharedPtr subscription;
 };
 
+// Timer Topics
+enum TimerTopic {
+    TIMER_DRONE_STATUS,
+    TIMER_ATT_REFERENCE,
+    NUM_TIMERS
+};
+
 #endif

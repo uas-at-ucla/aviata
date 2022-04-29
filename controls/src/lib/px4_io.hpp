@@ -77,6 +77,9 @@ public:
 
     void call_queued_mavsdk_callbacks();
 
+    bool cmd_was_transmitted(MavlinkPassthrough::Result result);
+    bool cmd_was_transmitted(Action::Result result);
+
     int wait_for_arm();
     int wait_for_disarm();
 
@@ -102,22 +105,13 @@ public:
     int set_mixer_undocked();
     int set_aviata_frame(uint8_t frame_id);
 
-    int set_attitude_offset(float (&att_offset)[4]);
+    void set_attitude_offset_aync(float (&att_offset)[4], std::function<void(MavlinkPassthrough::Result)> callback = nullptr);
 
     template<typename T>
-    void subscribe_telemetry(void (Telemetry::*subscribe_function)(std::function<void(T)>), const std::function<void(T)>& user_callback) {
-        mavsdk_callback_manager.subscribe_mavsdk_callback<T>(
-            [this, subscribe_function](std::function<void(T)> callback) {
-                ((*telemetry).*subscribe_function)(callback);
-            },
-            user_callback
-        );
-    }
+    void subscribe_telemetry(void (Telemetry::*subscribe_function)(std::function<void(T)>), std::function<void(T)> user_callback);
 
     template<typename T>
-    void unsubscribe_telemetry(void (Telemetry::*subscribe_function)(std::function<void(T)>)) {
-        ((*telemetry).*subscribe_function)(nullptr);
-    }
+    void unsubscribe_telemetry(void (Telemetry::*subscribe_function)(std::function<void(T)>));
 
     int takeoff_and_land_test(int argc, char** argv);
 
@@ -138,8 +132,97 @@ private:
 
     MavsdkCallbackManager mavsdk_callback_manager;
 
+    std::function<void(bool)> armed_callback;
+    bool armed_updated_early{false};
+    std::function<void(Telemetry::FlightMode)> flight_mode_callback;
+    bool flight_mode_updated_early{false};
+
+    template<typename T>
+    void subscribe_telemetry_base(void (Telemetry::*subscribe_function)(std::function<void(T)>), const std::function<void(T)>& user_callback);
+
+    template<typename T>
+    void unsubscribe_telemetry_base(void (Telemetry::*subscribe_function)(std::function<void(T)>));
+
     void usage(std::string bin_name);
     void component_discovered(ComponentType component_type);
 };
+
+
+template<typename T>
+inline void PX4IO::subscribe_telemetry_base(void (Telemetry::*subscribe_function)(std::function<void(T)>), const std::function<void(T)>& user_callback) {
+    mavsdk_callback_manager.subscribe_mavsdk_callback<T>(
+        [this, subscribe_function](const std::function<void(T)>& callback) {
+            ((*telemetry).*subscribe_function)(callback);
+        },
+        user_callback
+    );
+}
+
+template<typename T>
+inline void PX4IO::subscribe_telemetry(void (Telemetry::*subscribe_function)(std::function<void(T)>), std::function<void(T)> user_callback) {
+    subscribe_telemetry_base(subscribe_function, user_callback);
+}
+
+template<>
+inline void PX4IO::subscribe_telemetry<bool>(void (Telemetry::*subscribe_function)(std::function<void(bool)>), std::function<void(bool)> user_callback) {
+    if (subscribe_function == &Telemetry::subscribe_armed) {
+        armed_callback = user_callback;
+        user_callback = [this, user_callback](bool armed) {
+            if (armed_updated_early) {
+                armed_updated_early = false;
+            } else {
+                user_callback(armed);
+            }
+        };
+    }
+
+    subscribe_telemetry_base(subscribe_function, user_callback);
+}
+
+template<>
+inline void PX4IO::subscribe_telemetry<Telemetry::FlightMode>(void (Telemetry::*subscribe_function)(std::function<void(Telemetry::FlightMode)>), std::function<void(Telemetry::FlightMode)> user_callback) {
+    if (subscribe_function == &Telemetry::subscribe_flight_mode) {
+        flight_mode_callback = user_callback;
+        user_callback = [this, user_callback](Telemetry::FlightMode flight_mode) {
+            if (flight_mode_updated_early) {
+                flight_mode_updated_early = false;
+            } else {
+                user_callback(flight_mode);
+            }
+        };
+    }
+
+    subscribe_telemetry_base(subscribe_function, user_callback);
+}
+
+template<typename T>
+inline void PX4IO::unsubscribe_telemetry_base(void (Telemetry::*subscribe_function)(std::function<void(T)>)) {
+    ((*telemetry).*subscribe_function)(nullptr);
+}
+
+template<typename T>
+inline void PX4IO::unsubscribe_telemetry(void (Telemetry::*subscribe_function)(std::function<void(T)>)) {
+    unsubscribe_telemetry_base(subscribe_function);
+}
+
+template<>
+inline void PX4IO::unsubscribe_telemetry<bool>(void (Telemetry::*subscribe_function)(std::function<void(bool)>)) {
+    unsubscribe_telemetry_base(subscribe_function);
+
+    if (subscribe_function == &Telemetry::subscribe_armed) {
+        armed_callback = nullptr;
+        armed_updated_early = false;
+    }
+}
+
+template<>
+inline void PX4IO::unsubscribe_telemetry<Telemetry::FlightMode>(void (Telemetry::*subscribe_function)(std::function<void(Telemetry::FlightMode)>)) {
+    unsubscribe_telemetry_base(subscribe_function);
+
+    if (subscribe_function == &Telemetry::subscribe_flight_mode) {
+        flight_mode_callback = nullptr;
+        flight_mode_updated_early = false;
+    }
+}
 
 #endif

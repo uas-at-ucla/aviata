@@ -7,7 +7,7 @@ using std::this_thread::sleep_for;
 
 Drone::Drone(std::string drone_id, DroneSettings drone_settings, Target t) : 
     _drone_id(drone_id), _drone_settings(drone_settings),
-    _follower_setpoint_timeout(drone_settings.sim ? 2000 : 1000),
+    _follower_setpoint_timeout(drone_settings.sim ? 2.0 : 1.0),
     _px4_io(drone_id, drone_settings), _px4_telem(_px4_io), 
     _frame_info(_config_aviata_frame_info[drone_settings.frame]),
     _docking_slot_is_occupied(_frame_info.num_drones, false),
@@ -35,8 +35,7 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
         if (status_text.text == "Kill-switch engaged") {
             _kill_switch_engaged = true;
             if (_drone_state == DOCKED_LEADER) {
-                aviata::msg::Empty disarm;
-                _network->publish<FOLLOWER_DISARM>(disarm);
+                _network->publish<FOLLOWER_DISARM>(aviata::msg::Empty());
             }
         } else if (status_text.text == "Kill-switch disengaged") {
             _kill_switch_engaged = false;
@@ -46,8 +45,7 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
     _px4_io.subscribe_telemetry(&Telemetry::subscribe_armed, std::function([this](bool is_armed) {
         if (_drone_state == DOCKED_LEADER && _armed && !is_armed) {
             // Disarm followers if leader was disarmed
-            aviata::msg::Empty disarm;
-            _network->publish<FOLLOWER_DISARM>(disarm);
+            _network->publish<FOLLOWER_DISARM>(aviata::msg::Empty());
         }
         _armed = is_armed;
     }));
@@ -57,9 +55,15 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
     }));
 
     // init publishers
-    _network->init_publisher<FRAME_DISARM>(); // TODO Temporary failsafe option until we have something more robust
+    _network->init_publisher<FRAME_DISARM>();
     _network->init_publisher<DRONE_STATUS>();
     _network->init_publisher<DRONE_DEBUG>();
+
+    // send status every second
+    _network->start_timer<TIMER_DRONE_STATUS>(seconds(1), [this]() {
+        publish_drone_status();
+    });
+
     // subscribe drone status (also updates command clients)
     _network->subscribe<DRONE_STATUS>([this](const aviata::msg::DroneStatus::SharedPtr ds_rec) {
         // Don't process own ID
@@ -86,8 +90,8 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
         command_handler(request, response);
     });
 
-    while (_px4_io.set_aviata_frame(_drone_settings.frame) != 1) {}
-    while (_px4_io.set_mixer_undocked() != 1) {}
+    _px4_io.set_aviata_frame(_drone_settings.frame);
+    _px4_io.set_mixer_undocked();
     _network->publish_drone_debug("Initialized PX4 mixer to undocked.");
 
     // State-specific initialization
@@ -117,36 +121,25 @@ bool Drone::init(DroneState initial_state, int8_t docking_slot, std::string conn
 void Drone::run()
 {
     while (true) {
-        int64_t current_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-
-        // Send status every second
-        if (current_time - _last_status_publish_time >= 1000) {
-            publish_drone_status();
-            _last_status_publish_time = current_time;
-        }
-
+        double current_time = _network->now().seconds();
+    
         switch (_drone_state)
         {
             case DOCKED_FOLLOWER:
-                if (current_time - _last_setpoint_msg_time > _follower_setpoint_timeout) {
-                    if (_armed) {
-                        aviata::msg::Empty disarm;
-                        _network->publish<FRAME_DISARM>(disarm); // TODO Temporary failsafe option. Eventually, some sort of landing failsafe might be better than disarming. In this particular case, we have to plan for possible future network outages.
-                        if (_px4_io.disarm() == 1) {
-                            _armed = false;
-                            _px4_io.set_hold_mode(); // Take out of offboard mode to prevent annoying failsafe beeps
-                        }
-                    }
+                if (_armed && current_time - _last_setpoint_msg_time > _follower_setpoint_timeout) {
+                    // TODO If this happens in the air (indicates a problem with the mesh network), a safe landing mode might be preferred.
+                    _network->publish<FRAME_DISARM>(aviata::msg::Empty());
+                    _px4_io.disarm();
                 }
+
+                if (!_armed && _flight_mode == Telemetry::FlightMode::Offboard) {
+                    _px4_io.set_hold_mode(); // Take out of offboard mode to prevent annoying failsafe beeps
+                }
+
                 break;
             
             case DOCKED_LEADER:
-                if (_need_to_enter_hold_mode) {
-                    if (_px4_io.set_hold_mode() == 1) {
-                        _flight_mode = Telemetry::FlightMode::Hold;
-                        _need_to_enter_hold_mode = false;
-                    }
-                }
+                // Nothing to do here
                 break;
             case ARRIVING:
                 if (fly_to_central_target()) {
@@ -206,9 +199,7 @@ void Drone::init_docked() {
 
     std::vector<uint8_t> missing_drones = generate_missing_drones_list();
     if (missing_drones.size() <= _drone_settings.max_missing_drones) {
-        while (_px4_io.set_mixer_docked(_docking_slot, missing_drones.data(), missing_drones.size()) != 1) {
-            _network->publish_drone_debug("MAVLink docking command failed. Retrying.");
-        }
+        _px4_io.set_mixer_docked(_docking_slot, missing_drones.data(), missing_drones.size());
         _network->publish_drone_debug("MAVLink docking command sent successfully!");
     } else {
         _network->publish_drone_debug("Not ready for docked flight - Need to discover more drones.");
@@ -239,16 +230,13 @@ void Drone::init_docked() {
 }
 
 void Drone::init_follower() {
-    _last_setpoint_msg_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    _last_setpoint_msg_time = _network->now().seconds();
 
     //subscribe follower stuff
-    _network->subscribe<FOLLOWER_ARM>([this](const aviata::msg::Empty::SharedPtr follower_arm) {    arm_drone();    });
+    _network->subscribe<FOLLOWER_ARM>([this](const aviata::msg::Empty::SharedPtr) {    arm_drone();    });
 
-    _network->subscribe<FOLLOWER_DISARM>([this](const aviata::msg::Empty::SharedPtr follower_disarm) {
+    _network->subscribe<FOLLOWER_DISARM>([this](const aviata::msg::Empty::SharedPtr) {
         disarm_drone();
-        if (_flight_mode == Telemetry::FlightMode::Offboard) {
-            _px4_io.set_hold_mode(); // Take out of offboard mode to prevent annoying failsafe beeps
-        }
     });
 
     _network->subscribe<FOLLOWER_SETPOINT>([this](const aviata::msg::FollowerSetpoint::SharedPtr follower_setpoint) {
@@ -256,7 +244,7 @@ void Drone::init_follower() {
             return;
         }
         
-        _last_setpoint_msg_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        _last_setpoint_msg_time = _network->now().seconds();
         mavlink_set_attitude_target_t attitude_target;
         attitude_target.q[0] = follower_setpoint->q[0];
         attitude_target.q[1] = follower_setpoint->q[1];
@@ -287,14 +275,10 @@ void Drone::init_follower() {
         _px4_io.set_attitude_target(attitude_target);
 
         if (_flight_mode != Telemetry::FlightMode::Offboard) {
-            if (_px4_io.set_offboard_mode() == 1) {
-                _flight_mode = Telemetry::FlightMode::Offboard;
-            }
+            _px4_io.set_offboard_mode();
         }
         if (_flight_mode == Telemetry::FlightMode::Offboard && !_armed) {
-            if (_px4_io.arm() == 1) {
-                _armed = true;
-            }
+            _px4_io.arm();
         }
     });
 
@@ -334,7 +318,7 @@ void Drone::init_follower() {
         }
 
         float attitude_offset[4] { att_off.w(), att_off.x(), att_off.y(), att_off.z() };
-        _px4_io.set_attitude_offset(attitude_offset);
+        _px4_io.set_attitude_offset_aync(attitude_offset);
     });
 }
 
@@ -344,10 +328,10 @@ void Drone::init_leader() {
     _network->init_publisher<FOLLOWER_DISARM>();
 
     // subscribe leader topics
-    _network->subscribe<FRAME_ARM>([this](const aviata::msg::Empty::SharedPtr frame_arm) {    arm_frame();    });
-    _network->subscribe<FRAME_DISARM>([this](const aviata::msg::Empty::SharedPtr frame_disarm) {    disarm_frame();    });
-    _network->subscribe<FRAME_TAKEOFF>([this](const aviata::msg::Empty::SharedPtr frame_takeoff) {    takeoff_frame();    });
-    _network->subscribe<FRAME_LAND>([this](const aviata::msg::Empty::SharedPtr frame_land) {    land_frame();    });    
+    _network->subscribe<FRAME_ARM>([this](const aviata::msg::Empty::SharedPtr) {    arm_frame();    });
+    _network->subscribe<FRAME_DISARM>([this](const aviata::msg::Empty::SharedPtr) {    disarm_frame();    });
+    _network->subscribe<FRAME_TAKEOFF>([this](const aviata::msg::Empty::SharedPtr) {    takeoff_frame();    });
+    _network->subscribe<FRAME_LAND>([this](const aviata::msg::Empty::SharedPtr) {    land_frame();    });    
     _network->subscribe<FRAME_SETPOINT>([this](const aviata::msg::FrameSetpoint::SharedPtr frame_setpoint) {    /* TODO */    });    
 
     // send follower setpoints
@@ -375,7 +359,7 @@ void Drone::init_leader() {
     });
 
     _network->init_publisher<REFERENCE_ATTITUDE>();
-    _network->start_timer(milliseconds(500), [this]() {
+    _network->start_timer<TIMER_ATT_REFERENCE>(milliseconds(500), [this]() {
         // Get this drone's (the leader's) attitude estimate
         Eigen::Quaternionf att_ref(_px4_telem.att_q.w, _px4_telem.att_q.x, _px4_telem.att_q.y, _px4_telem.att_q.z);
 
@@ -398,7 +382,7 @@ void Drone::init_leader() {
         // Ensure that the leader drone has no attitude offset
         Eigen::Quaternionf att_off = Eigen::Quaternionf::Identity();
         float attitude_offset[4] { att_off.w(), att_off.x(), att_off.y(), att_off.z() };
-        _px4_io.set_attitude_offset(attitude_offset);
+        _px4_io.set_attitude_offset_aync(attitude_offset);
     });
 }
 
@@ -436,7 +420,6 @@ void Drone::transition_standby_to_docking() {
     _px4_io.offboard_ptr()->set_velocity_body(initial_setpoint);
     
     if (_px4_io.set_offboard_mode() == 1) {
-        _flight_mode = Telemetry::FlightMode::Offboard;
         std::cout << "Offboard successfully started for docking drone" << std::endl;
     }
     _drone_state = ARRIVING;
@@ -455,7 +438,7 @@ void Drone::transition_leader_to_follower() {
     _network->deinit_publisher<FOLLOWER_SETPOINT>();
     _px4_io.unsubscribe_attitude_target();
     _network->deinit_publisher<REFERENCE_ATTITUDE>();
-    _network->stop_timer();
+    _network->stop_timer<TIMER_ATT_REFERENCE>();
 
     _drone_state = DOCKED_FOLLOWER;
     init_follower();
@@ -475,11 +458,7 @@ void Drone::transition_follower_to_leader() {
     _network->unsubscribe<REFERENCE_ATTITUDE>();
 
     _drone_state = DOCKED_LEADER;
-    _need_to_enter_hold_mode = true;
-    if (_px4_io.set_hold_mode() == 1) { // try to enter hold mode once, but if it fails it will continue to try in run()
-        _flight_mode = Telemetry::FlightMode::Hold;
-        _need_to_enter_hold_mode = false;
-    }
+    _px4_io.set_hold_mode();
     init_leader();
 }
 
@@ -543,9 +522,7 @@ void Drone::receive_drone_status(const DroneStatus& rec) {
 
             if (_need_to_discover_more_drones) {
                 if (missing_drones.size() <= _drone_settings.max_missing_drones) {
-                    while (_px4_io.set_mixer_docked(_docking_slot, missing_drones.data(), missing_drones.size()) != 1) {
-                        _network->publish_drone_debug("MAVLink docking command failed. Retrying.");
-                    }
+                    _px4_io.set_mixer_docked(_docking_slot, missing_drones.data(), missing_drones.size());
                     _network->publish_drone_debug("MAVLink docking command sent successfully!");
                     _need_to_discover_more_drones = false;
                 }
@@ -554,8 +531,7 @@ void Drone::receive_drone_status(const DroneStatus& rec) {
                     _px4_io.set_mixer_configuration(missing_drones.data(), missing_drones.size());
                 } else {
                     _network->publish_drone_debug("FATAL: Too many missing drones!");
-                    aviata::msg::Empty disarm;
-                    _network->publish<FRAME_DISARM>(disarm); // TODO Temporary failsafe option. Eventually, some sort of landing failsafe might be better than disarming.
+                    _network->publish<FRAME_DISARM>(aviata::msg::Empty()); // TODO Temporary failsafe option. Eventually, some sort of landing failsafe might be better than disarming.
                 }
             }
         }
@@ -579,8 +555,7 @@ uint8_t Drone::arm_frame() // for DOCKED_LEADER (send arm_drone() to followers)
 {
     if (_drone_state == DOCKED_LEADER)
     {
-        aviata::msg::Empty arm;
-        _network->publish<FOLLOWER_ARM>(arm);
+        _network->publish<FOLLOWER_ARM>(aviata::msg::Empty());
         _network->publish_drone_debug("ARM FRAME");        
         // TODO: check if all drones on frame have armed
 
@@ -631,8 +606,7 @@ uint8_t Drone::disarm_frame()
 {
     if (_drone_state == DOCKED_LEADER)
     {
-        aviata::msg::Empty disarm;
-        _network->publish<FOLLOWER_DISARM>(disarm);
+        _network->publish<FOLLOWER_DISARM>(aviata::msg::Empty());
         _network->publish_drone_debug("DISARM FRAME");
         // TODO: check if all drones on frame have disarmed
         
