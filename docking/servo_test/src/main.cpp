@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-int main(int argc, char*[]argv){
+int main(int argc, char*argv[]){
     if(argc != 2){
         std::cout << "One argument required: pwm cycle for servo" << std::endl;
         return 1;
