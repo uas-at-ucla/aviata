@@ -27,3 +27,7 @@ controls/build
 
 # Ground station build
 ground/build*
+
+# Simulation
+simulation/aviata_sim
+simulation/__pychache__
