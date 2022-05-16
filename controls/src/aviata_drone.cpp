@@ -83,6 +83,9 @@ int main(int argc, char** argv) {
                     }
                     else if (strcmp(argv[i], "2_sim") == 0) {
                         opt.frame = AVIATA_2_SIM;
+                    }
+                    else if (strcmp(argv[i], "8") == 0){
+                        opt.frame = AVIATA_8;
                     }                    
                     else {
                         std::cout << "Invalid frame: " << argv[i] << std::endl;
