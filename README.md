@@ -56,7 +56,7 @@ make
 The controls code relies on the **release/1.11-aviata** branch of this fork of PX4-Autopilot: https://github.com/uas-at-ucla-dependencies/PX4-Autopilot/tree/release/1.11-aviata.
 ```
 git clone https://github.com/uas-at-ucla-dependencies/PX4-Autopilot.git
-git checkout release/1.11-aviata
+cd PX4-Autopilot && git checkout release/1.11-aviata
 ```
 To see what has been changed from PX4 v1.11, check out this webpage, which is a modified version of a pull request which shows the relevant changed files: https://uas-at-ucla-dependencies.github.io/aviata-px4-diff. The version of mavlink used can be found in the **aviata** branch of this fork of mavlink: https://github.com/uas-at-ucla-dependencies/mavlink/tree/aviata.
 
