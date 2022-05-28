@@ -3,7 +3,7 @@
 
 #define OUTPUT_PIN 26
 #define INPUT_PIN 16
-#define SERVO_PIN 25
+#define SERVO_PIN 18
 #define SERVO_PWM 64
 
 class DockingDetector
