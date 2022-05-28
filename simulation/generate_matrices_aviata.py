@@ -195,8 +195,8 @@ def generate_aviata_permutations():
 
 
 def main():
-    import constants_4_drones
-    configure_constants(constants_4_drones)
+    import constants_8_drones
+    configure_constants(constants_8_drones)
 
     combined_geometries, combined_geometries_list = generate_aviata_permutations()
 
