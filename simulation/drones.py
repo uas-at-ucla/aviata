@@ -289,7 +289,8 @@ class PhysicalWorld:
         torque = forces[:3]
         force = forces[3:]
 
-        ang_acc = np.dot(self.structure.geometry['Iinv'], torque - np.cross(self.structure.att_rate, np.dot(self.structure.geometry['I'], self.structure.att_rate)))
+        att_rate_body = self.structure.att.inverse.rotate(self.structure.att_rate)
+        ang_acc = np.dot(self.structure.geometry['Iinv'], torque - np.cross(att_rate_body, np.dot(self.structure.geometry['I'], att_rate_body)))
         lin_acc = force / self.structure.geometry['M']
 
         # transform from body frame to global frame
